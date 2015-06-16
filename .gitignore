@@ -7,3 +7,6 @@ bazel-blaze_root
 
 # vim
 *.swp
+
+# ycm
+.ycm_extra_conf.pyc

@@ -2,9 +2,16 @@
 
 #include <string>
 
-int main(int argc, char** argv) {
+#include <glog/logging.h>
+
+int main(int /* argc */, char** argv) {
+  google::InitGoogleLogging(argv[0]);
+  FLAGS_logtostderr = 1;
+
   genesis::Visualizer visualizer;
-  visualizer.Init();
+  if (!visualizer.Init()) {
+    return 1;
+  }
   visualizer.Run();
   return 0;
 }
