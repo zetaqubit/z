@@ -6,11 +6,16 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 
+#include "src/third_party/leap_motion/include/Leap.h"
+
 namespace genesis {
 
 class Visualizer {
  public:
-  Visualizer();
+
+  // @param controller The Leap Motion controller whose images and hand output
+  //        we are visualizing. Does not take ownership.
+  Visualizer(Leap::Controller* controller);
   ~Visualizer();
   bool Init();
   void Run();
@@ -29,8 +34,15 @@ class Visualizer {
 
   // GL resources
   GLint program_;
+  GLuint raw_left_texture_;
+  GLuint raw_right_texture_;
+  GLuint distortion_left_texture_;
+  GLuint distortion_right_texture_;
 
   bool should_run_;
+
+  // Non-owning pointer to the Leap Motion controller.
+  Leap::Controller* controller_;
 };
 
 }  // namespace genesis
