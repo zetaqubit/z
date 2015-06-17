@@ -1,6 +1,9 @@
 #include "src/genesis/gl_utils.h"
 
+// #define _USE_MAN_DEFINES
+
 #include <fstream>
+#include <cmath>
 
 #include <glog/logging.h>
 
@@ -9,33 +12,31 @@ using std::string;
 namespace genesis {
 
 GLint CreateProgram(const string& vertex_file, const string& fragment_file) {
-  LOG(ERROR) << "Creating program: error state: " << glGetError();
-
+  LOG(ERROR) << "Creating program.";
   GLint program = glCreateProgram();
 
   LOG(ERROR) << "Compiling vertex shader";
-
   GLint vertex_shader = CompileShader(GL_VERTEX_SHADER, vertex_file);
 
   LOG(ERROR) << "Compiling fragment shader";
-
   GLint fragment_shader = CompileShader(GL_FRAGMENT_SHADER, fragment_file);
   if (vertex_shader < 0 || fragment_shader < 0) {
     return -1;
   }
 
   LOG(ERROR) << "Attaching shaders.";
-
   glAttachShader(program, vertex_shader);
   glAttachShader(program, fragment_shader);
 
   LOG(ERROR) << "Linking program.";
-
   glLinkProgram(program);
   GLint status;
   glGetProgramiv(program, GL_COMPILE_STATUS, &status);
   if (status == GL_FALSE) {
-    LOG(ERROR) << "Unable to link program.";
+    LOG(ERROR) << "Unable to link program: ";
+    GLchar log[1024];
+    glGetProgramInfoLog(program, 1024, NULL, log);
+    LOG(ERROR) << log;
     return -1;
   }
 
@@ -85,6 +86,24 @@ bool ReadFileContents(const string& filename, string* contents) {
     LOG(ERROR) << "Caught generic exception.";
   }
   return false;
+}
+
+GLuint CreateTextureReference() {
+  GLuint texture_id;
+  glGenTextures(1, &texture_id);
+  glBindTexture(GL_TEXTURE_2D, texture_id);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  return texture_id;
+}
+
+void SetPerspectiveFrustum(
+    GLdouble fov_y, GLdouble aspect, GLdouble near_plane, GLdouble far_plane) {
+  GLdouble f_h = tan(fov_y * M_PI / 360) * near_plane;
+  GLdouble f_w = f_h * aspect;
+  glFrustum(-f_w, f_w, -f_h, f_h, near_plane, far_plane);
 }
 
 }  // namespace genesis
