@@ -1,6 +1,5 @@
 #pragma once
 
-#include "RenderableEventHandler.h"
 #include "RenderState.h"
 #include "Primitives.h"
 
@@ -39,7 +38,7 @@ struct SkeletonHand {
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
-class InteractionLayer : public RenderableEventHandler {
+class InteractionLayer {
 public:
   InteractionLayer(const EigenTypes::Vector3f& initialEyePos, const std::string& shaderName = "material");
   void UpdateEyePos(const EigenTypes::Vector3f& eyePos) { m_EyePos = eyePos; }

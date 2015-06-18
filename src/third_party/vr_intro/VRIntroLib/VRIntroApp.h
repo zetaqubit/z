@@ -2,7 +2,6 @@
 
 #include "Application.h"
 #include "GLController.h"
-#include "RenderableEventHandler.h"
 #include "SDLController.h"
 #include "OculusVR.h"
 #include "PassthroughLayer.h"
@@ -69,7 +68,7 @@ private:
 
     // Give each application layer a chance to handle the event, stopping if one returns EventHandlerAction::CONSUME.
     for (auto it = m_Layers.rbegin(); it != m_Layers.rend(); ++it) {
-      RenderableEventHandler &layer = **it;
+      InteractionLayer &layer = **it;
       if ((layer.*HandleEvent)(ev) == EventHandlerAction::CONSUME) {
         return EventHandlerAction::CONSUME;
       }
