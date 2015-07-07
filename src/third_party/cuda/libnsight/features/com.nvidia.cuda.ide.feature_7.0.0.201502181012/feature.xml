@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.nvidia.cuda.ide.feature"
+      label="Nsight Eclipse Edition"
+      version="7.0.0.201502181012"
+      provider-name="NVIDIA"
+      plugin="com.nvidia.cuda.ide"
+      os="linux,macosx"
+      ws="cocoa,gtk"
+      arch="x86,x86_64">
+
+   <description>
+      NVIDIA Nsight Eclipse Edition
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <includes
+         id="com.nvidia.viper.ide.feature"
+         version="7.0.0.201502181012"/>
+
+   <includes
+         id="com.nvidia.cuda.ide.remote.feature"
+         version="7.0.0.201502181012"/>
+
+   <requires>
+      <import feature="org.eclipse.cdt" version="8.1.2.nvidia"/>
+      <import feature="org.eclipse.cdt.launch.remote" version="6.0.0.201302132326"/>
+      <import feature="org.eclipse.rse.terminals" version="1.2.1.201301071106" match="greaterOrEqual"/>
+      <import feature="org.eclipse.tm.terminal" version="3.2.2.201301071106" match="greaterOrEqual"/>
+      <import feature="org.eclipse.rse.ftp" version="3.1.0.201302062102" match="greaterOrEqual"/>
+      <import feature="org.eclipse.rse.telnet" version="2.3.0.201205241511" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="com.nvidia.cuda.ide.build"
+         download-size="339"
+         install-size="744"
+         version="7.0.0.201502181012"
+         unpack="false"/>
+
+   <plugin
+         id="com.nvidia.cuda.ide.debug"
+         download-size="909"
+         install-size="2029"
+         version="7.0.0.201502181012"
+         unpack="false"/>
+
+   <plugin
+         id="com.nvidia.cuda.ide.sdk"
+         download-size="27"
+         install-size="48"
+         version="7.0.0.201502181012"
+         unpack="false"/>
+
+   <plugin
+         id="com.nvidia.cuda.ide"
+         download-size="624"
+         install-size="1038"
+         version="7.0.0.201502181012"/>
+
+   <plugin
+         id="com.nvidia.cuda.ide.cdt"
+         download-size="83"
+         install-size="189"
+         version="7.0.0.201502181012"
+         unpack="false"/>
+
+   <plugin
+         id="com.nvidia.cuda.ide.editor"
+         download-size="112"
+         install-size="237"
+         version="7.0.0.201502181012"
+         unpack="false"/>
+
+   <plugin
+         id="com.nvidia.cuda.help"
+         download-size="4728"
+         install-size="10142"
+         version="7.0.0.201502181012"/>
+
+   <plugin
+         id="com.nvidia.cuda.ide.remote"
+         download-size="210"
+         install-size="449"
+         version="7.0.0.201502181012"
+         unpack="false"/>
+
+   <plugin
+         id="com.nvidia.common"
+         download-size="68"
+         install-size="123"
+         version="7.0.0.201502181012"
+         unpack="false"/>
+
+</feature>
