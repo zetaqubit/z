@@ -12,6 +12,10 @@ proto_library(
   visibility = ["//visibility:public"],
 )
 
+COMMON_FLAGS = [
+  "-DUSE_CUDNN",
+]
+
 cc_library(
   name = "caffe",
   srcs = glob(
@@ -38,5 +42,43 @@ cc_library(
 
     # TODO: add cuda sources
   ],
+  copts = [
+    "-pthread",
+    "-fPIC",
+    "-MMD",
+    "-MP",
+
+  ] + COMMON_FLAGS,
+
+  linkopts = [
+    # Library dir
+    "-L../cuda/lib64",
+    "-L../cuda/lib",
+    "-L../open_blas/lib",
+    "-L.",
+
+    # LDFLAGS
+    #"-lcudart",
+    "-lcublas",
+    #"-lcurand",
+    "-lcuda",
+    #"-lcudnn",
+
+    "-lglog",
+    "-lgflags",
+    "-lprotobuf",
+    "-lleveldb",
+    "-lsnappy",
+    "-llmdb",
+    #"-lhdf5_h1",
+    "-lhdf5",
+
+    "-lboost_thread",
+    "-lstdc++",
+
+    "-lopenblas",
+
+    "-lm",
+  ] + COMMON_FLAGS,
 )
 
