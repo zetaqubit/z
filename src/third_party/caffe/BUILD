@@ -17,6 +17,29 @@ COMMON_FLAGS = [
 ]
 
 cc_library(
+  name = "caffe_lib",
+  srcs = [
+    "build/lib/libcaffe.so",
+  ],
+  hdrs = glob([
+    "includes/**/*.hpp",
+  ]),
+  includes = [
+    "include",
+    "src",
+    "../cuda/include",
+    "../open_blas/include",
+  ],
+  deps = [
+    ":caffe_protos",
+    "//src/third_party/cuda:cublas",
+    "//src/third_party/open_blas",
+
+    # TODO: add cuda sources
+  ],
+)
+
+cc_library(
   name = "caffe",
   srcs = glob(
     [
@@ -37,8 +60,8 @@ cc_library(
   ],
   deps = [
     ":caffe_protos",
-    "//src/third_party/open_blas",
     "//src/third_party/cuda:cublas",
+    "//src/third_party/open_blas",
 
     # TODO: add cuda sources
   ],
