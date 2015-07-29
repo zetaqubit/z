@@ -32,7 +32,7 @@ int64_t cluster_seedgen(void) {
 
 void GlobalInit(int* pargc, char*** pargv) {
   // Google flags.
-  ::gflags::ParseCommandLineFlags(pargc, pargv, true);
+  //::gflags::ParseCommandLineFlags(pargc, pargv, true);
   // Google logging.
   ::google::InitGoogleLogging(*(pargv)[0]);
   // Provide a backtrace on segfault.
