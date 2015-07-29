@@ -69,9 +69,9 @@ static BrewFunction GetBrewFunction(const caffe::string& name) {
 
 // Device Query: show diagnostic information for a GPU device.
 int device_query() {
-  //CHECK_GT(FLAGS_gpu, -1) << "Need a device ID to query.";
-  //LOG(INFO) << "Querying device ID = " << FLAGS_gpu;
-  caffe::Caffe::SetDevice(0 /*FLAGS_gpu*/);
+  CHECK_GT(FLAGS_gpu, -1) << "Need a device ID to query.";
+  LOG(INFO) << "Querying device ID = " << FLAGS_gpu;
+  caffe::Caffe::SetDevice(FLAGS_gpu);
   caffe::Caffe::DeviceQuery();
   return 0;
 }
@@ -290,6 +290,12 @@ int time() {
 }
 RegisterBrewFunction(time);
 
+int CustomExit(int retval) {
+  LOG(INFO) << "Exiting with return value: " << retval;
+  while(1);
+  return retval;
+}
+
 int main(int argc, char** argv) {
   // Print output to stderr (while still logging).
   FLAGS_alsologtostderr = 1;
@@ -302,13 +308,12 @@ int main(int argc, char** argv) {
       "  device_query    show GPU diagnostic information\n"
       "  time            benchmark model execution time");
   // Run tool or show usage.
-  caffe::Caffe::SetDevice(0 /*FLAGS_gpu*/);
-  caffe::Caffe::DeviceQuery();
-  return 0;
   caffe::GlobalInit(&argc, &argv);
   if (argc == 2) {
-    return GetBrewFunction(caffe::string(argv[1]))();
+    int retval = GetBrewFunction(caffe::string(argv[1]))();
+    return CustomExit(retval);
   } else {
     gflags::ShowUsageWithFlagsRestrict(argv[0], "tools/caffe");
   }
+  return CustomExit(0);
 }
