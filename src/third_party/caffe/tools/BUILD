@@ -7,5 +7,6 @@ cc_binary(
   linkopts = [
     "-lglog",
     "-lgflags",
+    "-lpthread",
   ],
 )

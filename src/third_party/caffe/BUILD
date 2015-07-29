@@ -97,7 +97,7 @@ cc_library(
     "-lhdf5",
 
     "-lboost_thread",
-    "-lstdc++",
+    #"-lstdc++",
 
     "-lopenblas",
 
