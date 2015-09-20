@@ -1,0 +1,22 @@
+syntax = "proto2";
+
+package genesis.proto;
+
+message LeapFrame {
+  optional int64 timestamp_ms = 1;
+  optional Image left = 2;
+  optional Image right = 3;
+  optional Pose hand_pose = 4;
+}
+
+message Image {
+  optional int32 width = 1;
+  optional int32 height = 2;
+  repeated float data = 3 [packed = true];
+}
+
+message Pose {
+  optional float x = 1;
+  optional float y = 2;
+  optional float z = 3;
+}
