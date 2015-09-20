@@ -19,11 +19,15 @@ static const int kWindowHeight = 768;
 static const string kVertexShaderFile = "src/genesis/data/vertex.glsl";
 static const string kFragmentShaderFile = "src/genesis/data/fragment.glsl";
 
+static const string kDataOutputDirectory = "/tmp/hand_tracking_output";
+
 }  // namespace
 
 
 Visualizer::Visualizer(Leap::Controller* controller)
-  : should_run_(true), controller_(controller) {}
+  : should_run_(true), controller_(controller),
+    recorder_(new FrameRecorder(kDataOutputDirectory))
+{}
 
 Visualizer::~Visualizer() {
   SDL_Quit();
@@ -146,8 +150,11 @@ void Visualizer::HandleEvent(const SDL_Event& event) {
 void Visualizer::Update() {
   Leap::Frame frame = controller_->frame();
   if (!frame.isValid()) {
+    LOG(INFO) << "Skipping invalid frame.";
     return;
   }
+
+  recorder_->Record(frame);
 
   // Update image and distortion textures.
   Leap::Image left = frame.images()[0];

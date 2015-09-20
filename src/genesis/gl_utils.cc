@@ -21,6 +21,8 @@ GLint CreateProgram(const string& vertex_file, const string& fragment_file) {
   LOG(ERROR) << "Compiling fragment shader";
   GLint fragment_shader = CompileShader(GL_FRAGMENT_SHADER, fragment_file);
   if (vertex_shader < 0 || fragment_shader < 0) {
+    LOG(ERROR) << "Could not compile shader. Vertex: " << vertex_shader
+        << ". Fragment: " << fragment_shader;
     return -1;
   }
 
@@ -46,6 +48,7 @@ GLint CreateProgram(const string& vertex_file, const string& fragment_file) {
 GLint CompileShader(GLenum shader_type, const string& source_filename) {
   string source;
   if (!ReadFileContents(source_filename, &source)) {
+    LOG(ERROR) << "Could not read shader: " << source_filename;
     return -1;
   }
 

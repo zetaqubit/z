@@ -1,10 +1,10 @@
 package(default_visibility = ["//visibility:public"])
 
 cc_binary(
-  name = "main",
+  name = "visualizer",
   srcs = ["main.cc"],
   deps = [
-    ":visualizer",
+    ":visualizer_lib",
     "//src/third_party/leap_motion:api",
   ],
   linkopts = [
@@ -13,7 +13,7 @@ cc_binary(
 )
 
 cc_library(
-  name = "visualizer",
+  name = "visualizer_lib",
   srcs = [
     "visualizer.cc",
   ],
@@ -22,10 +22,11 @@ cc_library(
   ],
   deps = [
     ":gl_utils",
+    ":frame_recorder",
     "//src/third_party/leap_motion:api",
   ],
   data = glob([
-    "data/*",
+    "data/**",
   ]),
   linkopts = [
     "-lSDL2",
@@ -33,6 +34,20 @@ cc_library(
     "-lGLU",
     "-lGL",
     "-lglog",
+  ],
+)
+
+cc_library(
+  name = "frame_recorder",
+  srcs = [
+    "frame_recorder.cc",
+  ],
+  hdrs = [
+    "frame_recorder.h",
+  ],
+  deps = [
+    "//src/third_party/leap_motion:api",
+    "//src/genesis/proto:genesis_protos",
   ],
 )
 

@@ -7,6 +7,7 @@
 #include <GL/glew.h>
 
 #include "src/third_party/leap_motion/include/Leap.h"
+#include "src/genesis/frame_recorder.h"
 
 namespace genesis {
 
@@ -43,6 +44,8 @@ class Visualizer {
 
   // Non-owning pointer to the Leap Motion controller.
   Leap::Controller* controller_;
+
+  FrameRecorder* recorder_;
 };
 
 }  // namespace genesis
