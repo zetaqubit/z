@@ -10,6 +10,9 @@ int main(int /* argc */, char** argv) {
   FLAGS_logtostderr = 1;
 
   Leap::Controller controller;
+  while (!controller.isConnected()) {
+    // wait for connection.
+  }
 
   genesis::Visualizer visualizer(&controller);
   if (!visualizer.Init()) {
