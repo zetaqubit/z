@@ -25,7 +25,9 @@ static const string kDataOutputDirectory = "/tmp/hand_tracking_output";
 
 
 Visualizer::Visualizer(Leap::Controller* controller)
-  : should_run_(true), controller_(controller),
+  : should_run_(true),
+    should_record_(false),
+    controller_(controller),
     recorder_(new FrameRecorder(kDataOutputDirectory))
 {}
 
@@ -142,39 +144,51 @@ void Visualizer::Run() {
 }
 
 void Visualizer::HandleEvent(const SDL_Event& event) {
-  if (event.type == SDL_QUIT) {
-    should_run_ = false;
+  switch (event.type) {
+    case SDL_QUIT:
+      should_run_ = false;
+      break;
+    case SDL_KEYDOWN:
+      switch (event.key.keysym.sym) {
+        case SDLK_r:
+          should_record_ = !should_record_;
+          LOG(INFO) << (should_record_ ? "Started" : "Stopped") << " recording";
+          break;
+      }
+      break;
+    case SDL_KEYUP:
+      break;
   }
 }
 
 void Visualizer::Update() {
   Leap::Frame frame = controller_->frame();
-  if (!frame.isValid()) {
+  Leap::Image left = frame.images()[0];
+  Leap::Image right = frame.images()[1];
+  if (!frame.isValid() || left.width() <= 0 || left.height() <= 0
+      || right.width() <= 0 || right.height() <= 0) {
     LOG(INFO) << "Skipping invalid frame.";
     return;
   }
 
-  recorder_->Record(frame);
+  if (should_record_) {
+    recorder_->Record(frame);
+  }
 
   // Update image and distortion textures.
-  Leap::Image left = frame.images()[0];
-  if (left.width() > 0) {
-    glBindTexture(GL_TEXTURE_2D, raw_left_texture_);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, left.width(), left.height(), 0,
-        GL_RED, GL_UNSIGNED_BYTE, left.data());
-    glBindTexture(GL_TEXTURE_2D, distortion_left_texture_);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RG, left.distortionWidth() / 2,
-        left.distortionHeight(), 0, GL_RG, GL_FLOAT, left.distortion());
-  }
-  Leap::Image right = frame.images()[0];
-  if (right.width() > 0) {
-    glBindTexture(GL_TEXTURE_2D, raw_right_texture_);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, right.width(), right.height(), 0,
-        GL_RED, GL_UNSIGNED_BYTE, right.data());
-    glBindTexture(GL_TEXTURE_2D, distortion_right_texture_);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RG, right.distortionWidth() / 2,
-        right.distortionHeight(), 0, GL_RG, GL_FLOAT, right.distortion());
-  }
+  glBindTexture(GL_TEXTURE_2D, raw_left_texture_);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, left.width(), left.height(), 0,
+      GL_RED, GL_UNSIGNED_BYTE, left.data());
+  glBindTexture(GL_TEXTURE_2D, distortion_left_texture_);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RG, left.distortionWidth() / 2,
+      left.distortionHeight(), 0, GL_RG, GL_FLOAT, left.distortion());
+
+  glBindTexture(GL_TEXTURE_2D, raw_right_texture_);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, right.width(), right.height(), 0,
+      GL_RED, GL_UNSIGNED_BYTE, right.data());
+  glBindTexture(GL_TEXTURE_2D, distortion_right_texture_);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RG, right.distortionWidth() / 2,
+      right.distortionHeight(), 0, GL_RG, GL_FLOAT, right.distortion());
 }
 
 void Visualizer::Render() {
