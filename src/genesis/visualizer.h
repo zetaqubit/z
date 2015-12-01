@@ -41,6 +41,7 @@ class Visualizer {
   GLuint distortion_right_texture_;
 
   bool should_run_;
+  bool should_record_;
 
   // Non-owning pointer to the Leap Motion controller.
   Leap::Controller* controller_;
