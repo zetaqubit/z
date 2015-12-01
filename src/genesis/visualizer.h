@@ -27,6 +27,7 @@ class Visualizer {
   void HandleEvent(const SDL_Event& event);
   void Update();
   void Render();
+  void RenderTrackedHand();
 
   // SDL resources.
   std::shared_ptr<SDL_Window> window_;
@@ -39,12 +40,14 @@ class Visualizer {
   GLuint raw_right_texture_;
   GLuint distortion_left_texture_;
   GLuint distortion_right_texture_;
+  GLUquadric* fingertips_[10];
 
   bool should_run_;
   bool should_record_;
 
   // Non-owning pointer to the Leap Motion controller.
   Leap::Controller* controller_;
+  Leap::Frame frame_;
 
   FrameRecorder* recorder_;
 };
