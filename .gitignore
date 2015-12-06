@@ -10,3 +10,6 @@ bazel-blaze_root
 
 # ycm
 .ycm_extra_conf.pyc
+
+# LMDB
+**/lock.mdb

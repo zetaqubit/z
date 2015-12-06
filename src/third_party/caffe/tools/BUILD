@@ -9,4 +9,5 @@ cc_binary(
     "-lgflags",
     "-lpthread",
   ],
+  visibility = ["//visibility:public"],
 )
