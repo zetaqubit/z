@@ -17,11 +17,11 @@ namespace {
 static const int kWindowWidth = 800;
 static const int kAspect = 1.1478;  // Leap device has fov of 2.304 x 2.007
 static const int kWindowHeight = kWindowWidth / kAspect;
-static const string kVertexShaderFile = "src/genesis/data/vertex.glsl";
-static const string kFragmentShaderFile = "src/genesis/data/fragment.glsl";
+static const string kVertexShaderFile = "src/genesis/assets/vertex.glsl";
+static const string kFragmentShaderFile = "src/genesis/assets/fragment.glsl";
 
-static const string kDataOutputDirectory = "/tmp/hand_tracking_output";
-
+static const string kProtoDataOutputDirectory =
+    "/home/z/hand_tracking/blaze_root/src/genesis/data/proto";
 }  // namespace
 
 
@@ -29,7 +29,7 @@ Visualizer::Visualizer(Leap::Controller* controller)
   : should_run_(true),
     should_record_(false),
     controller_(controller),
-    recorder_(new FrameRecorder(kDataOutputDirectory))
+    recorder_(new FrameRecorder(kProtoDataOutputDirectory))
 {}
 
 Visualizer::~Visualizer() {

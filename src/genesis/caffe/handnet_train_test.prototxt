@@ -21,6 +21,7 @@ layer {
   include {
     phase: TRAIN
   }
+  ### TODO: remember, only do this if image is [0, 255]
   transform_param {
     scale: 0.00390625
   }

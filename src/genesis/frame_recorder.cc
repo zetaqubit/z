@@ -18,8 +18,8 @@ namespace {
 }  // namespace
 
 
-FrameRecorder::FrameRecorder(string output_dir)
-  : output_dir_(output_dir),
+FrameRecorder::FrameRecorder(const string& proto_output_dir)
+  : proto_output_dir_(proto_output_dir),
     frame_number_(0)
 {}
 
@@ -78,9 +78,13 @@ void FrameRecorder::Record(const Leap::Frame& frame) {
     *leap_frame.mutable_right() = ConvertImageToProto(right);
   }
 
-  string filename = output_dir_ + "/" + std::to_string(frame_number_) + ".pb";
+  string filename = 
+      proto_output_dir_ + "/" + std::to_string(frame_number_) + ".pb";
   frame_number_++;
-  WriteProto(filename, leap_frame);
+
+  if (!proto_output_dir_.empty()) {
+    WriteProto(filename, leap_frame);
+  }
 }
 
 }  // namespace genesis

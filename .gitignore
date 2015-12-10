@@ -13,3 +13,6 @@ bazel-blaze_root
 
 # LMDB
 **/lock.mdb
+
+# data
+src/genesis/data/
