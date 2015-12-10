@@ -26,7 +26,7 @@ cc_library(
     "//src/third_party/leap_motion:api",
   ],
   data = glob([
-    "data/**",
+    "assets/**",
   ]),
   linkopts = [
     "-lSDL2",
@@ -46,6 +46,7 @@ cc_library(
     "frame_recorder.h",
   ],
   deps = [
+    ":lmdb_storage",
     "//src/third_party/leap_motion:api",
     "//src/genesis/proto:genesis_protos",
   ],
@@ -66,6 +67,51 @@ cc_library(
     "-lGL",
     "-lglog",
     "-lm",
+  ],
+)
+
+cc_library(
+  name = "lmdb_storage",
+  srcs = [
+    "lmdb_storage.cc"
+  ],
+  hdrs = [
+    "lmdb_storage.h"
+  ],
+  deps = [
+    "//src/genesis/proto:genesis_protos",
+    "//src/third_party/caffe:caffe_protos"
+  ],
+  linkopts = [
+    "-lglog",
+    "-llmdb",
+  ],
+)
+
+cc_library(
+  name = "proto_to_lmdb_converter",
+  srcs = [
+    "proto_to_lmdb_converter.cc",
+  ],
+  hdrs = [
+    "proto_to_lmdb_converter.h",
+  ],
+  deps = [
+    ":lmdb_storage",
+    "//src/genesis/proto:genesis_protos",
+  ],
+  linkopts = [
+    "-lglog",
+  ],
+)
+
+cc_binary(
+  name = "converter",
+  srcs = [
+    "proto_to_lmdb_converter_main.cc",
+  ],
+  deps = [
+    ":proto_to_lmdb_converter",
   ],
 )
 
