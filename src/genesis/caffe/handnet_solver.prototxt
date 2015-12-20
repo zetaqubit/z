@@ -14,6 +14,6 @@ power: 0.75
 display: 100
 max_iter: 10000
 snapshot: 5000
-snapshot_prefix: "handnet"
+snapshot_prefix: "snapshots/handnet"
 
 solver_mode: GPU
