@@ -163,6 +163,11 @@ void Visualizer::HandleEvent(const SDL_Event& event) {
           should_record_ = !should_record_;
           LOG(INFO) << (should_record_ ? "Started" : "Stopped") << " recording";
           break;
+        // Q or Esc exits.
+        case SDLK_q:
+        case SDLK_ESCAPE:
+          should_run_ = false;
+          break;
       }
       break;
     case SDL_KEYUP:
