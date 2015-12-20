@@ -292,7 +292,7 @@ RegisterBrewFunction(time);
 
 int CustomExit(int retval) {
   LOG(INFO) << "Exiting with return value: " << retval;
-  while(1);
+  // while(1);
   return retval;
 }
 
