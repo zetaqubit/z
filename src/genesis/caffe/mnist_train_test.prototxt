@@ -14,7 +14,7 @@ name: "HandNet"
 #}
 
 layer {
-  name: "handnet"
+  name: "mnist"
   type: "Data"
   top: "data"
   top: "label"
@@ -27,13 +27,13 @@ layer {
     scale: 0.00390625
   }
   data_param {
-    source: "input/handnet_train_lmdb"
+    source: "input/mnist_train_lmdb"
     batch_size: 64
     backend: LMDB
   }
 }
 layer {
-  name: "handnet"
+  name: "mnist"
   type: "Data"
   top: "data"
   top: "label"
@@ -44,7 +44,7 @@ layer {
     scale: 0.00390625
   }
   data_param {
-    source: "input/handnet_test_lmdb"
+    source: "input/mnist_test_lmdb"
     batch_size: 100
     backend: LMDB
   }
@@ -156,7 +156,7 @@ layer {
     lr_mult: 2
   }
   inner_product_param {
-    num_output: 1
+    num_output: 10
     weight_filler {
       type: "xavier"
     }
@@ -177,7 +177,7 @@ layer {
 }
 layer {
   name: "loss"
-  type: "HingeLoss"
+  type: "SoftmaxWithLoss"
   bottom: "ip2"
   bottom: "label"
   top: "loss"
