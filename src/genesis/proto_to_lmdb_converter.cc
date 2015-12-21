@@ -35,10 +35,10 @@ int ProtoToLmdbConverter::Convert(uint32_t starting_file_number,
 
     std::fstream input(filename, std::fstream::in | std::ios::binary);
     if (!input) {
-      LOG(ERROR) << "Skipping " << filename << ": unable to open.";
+      //LOG(ERROR) << "Skipping " << filename << ": unable to open.";
       continue;
     } else if (!proto.ParseFromIstream(&input)) {
-      LOG(ERROR) << "Skipping " << filename << ": unable to parse proto.";
+      //LOG(ERROR) << "Skipping " << filename << ": unable to parse proto.";
       continue;
     }
     if (!storage_.Write(i, proto)) {

@@ -5,8 +5,6 @@
 
 #include <glog/logging.h>
 
-using std::cout;
-using std::cerr;
 using std::endl;
 using std::fstream;
 using std::ios;
@@ -27,9 +25,9 @@ void FrameRecorder::ReadProto(string filename) {
   fstream input(filename, ios::in | ios::binary);
   proto::LeapFrame leap_frame;
   if (!input) {
-    cout << filename << ": File not found" << endl;
+    LOG(INFO) << filename << ": File not found" << endl;
   } else if (!leap_frame.ParseFromIstream(&input)) {
-    cerr << "Failed to parse Leap frame proto." << endl;
+    LOG(ERROR) << "Failed to parse Leap frame proto." << endl;
     return;
   }
 }
@@ -37,11 +35,11 @@ void FrameRecorder::ReadProto(string filename) {
 void FrameRecorder::WriteProto(string filename, proto::LeapFrame leap_frame) {
   fstream output(filename, ios::out | ios::trunc | ios::binary);
   if (!output) {
-    cerr << "Could not open " << filename << " for writing." << endl;
+    LOG(ERROR) << "Could not open " << filename << " for writing." << endl;
     return;
   }
   if (!leap_frame.SerializeToOstream(&output)) {
-    cerr << "Failed to write Leap frame proto." << endl;
+    LOG(ERROR) << "Failed to write Leap frame proto." << endl;
     return;
   }
 }
@@ -63,7 +61,7 @@ void FrameRecorder::Record(const Leap::Frame& frame) {
     return;
   }
 
-  //cout << "Recording frame: " << std::to_string(frame_number_) << endl;
+  //LOG(INFO) << "Recording frame: " << std::to_string(frame_number_) << endl;
 
   proto::LeapFrame leap_frame;
   leap_frame.set_timestamp_ms(frame.timestamp());
@@ -76,6 +74,23 @@ void FrameRecorder::Record(const Leap::Frame& frame) {
   Leap::Image right = frame.images()[1];
   if (right.width() > 0) {
     *leap_frame.mutable_right() = ConvertImageToProto(right);
+  }
+
+  // Update hand pose.
+  Leap::HandList hands = frame.hands();
+  for (auto hl = hands.begin(); hl != hands.end(); hl++) {
+    Leap::Hand hand = *hl;
+    if (hand.isLeft()) {
+      proto::Pose pose;
+      Leap::Vector position = hand.palmPosition();
+      pose.set_x(position.x);
+      pose.set_y(position.y);
+      pose.set_z(position.z);
+      *leap_frame.mutable_hand_pose() = pose;
+      //LOG(INFO) << "Left hand pose: " << position.x << ", " << position.y << ", "
+      //    << position.z;
+      break;
+    }
   }
 
   string filename = 
