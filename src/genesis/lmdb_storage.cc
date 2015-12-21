@@ -105,7 +105,8 @@ bool LmdbStorage::Write(uint32_t key, const proto::LeapFrame& proto) {
     return false;
   }
 
-  LOG(INFO) << "Wrote item: " << key;
+  LOG(INFO) << "Wrote item: " << key << ". [" << datum.width() << "x"
+      << datum.height() << ", has_hand=" << datum.label() << "]";
 
   if (key % 100 == 0) {
     if (!Flush()) {

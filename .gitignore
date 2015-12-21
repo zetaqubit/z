@@ -16,3 +16,5 @@ bazel-blaze_root
 
 # data
 src/genesis/data/
+src/genesis/caffe/input/
+src/genesis/caffe/snapshots/
