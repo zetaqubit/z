@@ -49,10 +49,41 @@ bool LmdbStorage::Write(uint32_t key, const proto::LeapFrame& proto) {
 
   Datum datum;
   datum.set_channels(1);
-  datum.set_width(width);
-  datum.set_height(height);
 
-  datum.mutable_float_data()->CopyFrom(proto.left().data());
+  const bool DOWNSAMPLE = true;
+
+  if (DOWNSAMPLE) {
+    float x_scale = width / 28.0f;
+    float y_scale = height / 28.0f;
+    datum.set_width(28);
+    datum.set_height(28);
+
+    uint8_t pixels[28 * 28];
+    for (int r = 0; r < 28; r++) {
+      for (int c = 0; c < 28; c++) {
+        int r_s = r * y_scale;
+        int c_s = c * x_scale;
+        pixels[c + r * 28] = 255 * proto.left().data().data()[c_s + r_s * width];
+      }
+    }
+    datum.set_data(pixels, 28 * 28);
+  } else {
+    datum.set_width(width);
+    datum.set_height(height);
+
+    const bool WRITE_FLOAT_DATA  = false;
+    if (WRITE_FLOAT_DATA) {
+      datum.mutable_float_data()->CopyFrom(proto.left().data());
+    } else {
+      uint8_t* pixels = new uint8_t[width * height];
+      for (int i = 0; i < width * height; i++) {
+        pixels[i] = 255 * proto.left().data().data()[i];
+      }
+      datum.set_data(pixels, width * height);
+      delete[] pixels;
+    }
+  }
+
   datum.set_label(has_hand ? 1 : 0);
 
   const int kMaxKeyLength = 10;
