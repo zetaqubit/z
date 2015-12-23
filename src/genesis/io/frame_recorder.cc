@@ -1,4 +1,4 @@
-#include "src/genesis/frame_recorder.h"
+#include "src/genesis/io/frame_recorder.h"
 
 #include <glog/logging.h>
 #include <sys/stat.h>

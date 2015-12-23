@@ -1,5 +1,5 @@
-#ifndef SRC_GENESIS_VISUALIZER_H_
-#define SRC_GENESIS_VISUALIZER_H_
+#ifndef SRC_GENESIS_VISUALIZATION_VISUALIZER_H_
+#define SRC_GENESIS_VISUALIZATION_VISUALIZER_H_
 
 #include <memory>
 
@@ -7,10 +7,10 @@
 #include <GL/glew.h>
 
 #include "src/third_party/leap_motion/include/Leap.h"
-#include "src/genesis/frame_recorder.h"
-#include "src/genesis/gl_window.h"
-#include "src/genesis/undistorted_texture_shader.h"
-#include "src/genesis/image_viewer.h"
+#include "src/genesis/io/frame_recorder.h"
+#include "src/genesis/visualization/gl_window.h"
+#include "src/genesis/visualization/undistorted_texture_shader.h"
+#include "src/genesis/visualization/image_viewer.h"
 
 namespace genesis {
 
@@ -49,4 +49,4 @@ class Visualizer {
 
 }  // namespace genesis
 
-#endif  // SRC_GENESIS_VISUALIZER_H_
+#endif  // SRC_GENESIS_VISUALIZATION_VISUALIZER_H_

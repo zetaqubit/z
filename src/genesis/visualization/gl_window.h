@@ -1,5 +1,5 @@
-#ifndef SRC_GENESIS_GL_WINDOW_H_
-#define SRC_GENESIS_GL_WINDOW_H_
+#ifndef SRC_GENESIS_VISUALIZATION_GL_WINDOW_H_
+#define SRC_GENESIS_VISUALIZATION_GL_WINDOW_H_
 
 #include <SDL2/SDL.h>
 #include <memory>
@@ -26,4 +26,4 @@ class GlWindow {
 
 }  // namespace genesis
 
-#endif  // SRC_GENESIS_GL_WINDOW_H_
+#endif  // SRC_GENESIS_VISUALIZATION_GL_WINDOW_H_

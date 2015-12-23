@@ -1,4 +1,4 @@
-#include "src/genesis/proto_to_lmdb_converter.h"
+#include "src/genesis/io/proto_to_lmdb_converter.h"
 
 #include <stdint.h>
 #include <string>

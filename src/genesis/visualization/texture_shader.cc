@@ -1,16 +1,16 @@
-#include "src/genesis/texture_shader.h"
+#include "src/genesis/visualization/texture_shader.h"
 
 #include <glog/logging.h>
 #include <string>
 
-#include "src/genesis/gl_utils.h"
+#include "src/genesis/visualization/gl_utils.h"
 
 namespace {
 
 static const std::string kVertexShaderFile =
-    "src/genesis/assets/fullscreen_quad.vert";
+    "src/genesis/visualization/shaders/fullscreen_quad.vert";
 static const std::string kFragmentShaderFile =
-    "src/genesis/assets/texture.frag";
+    "src/genesis/visualization/shaders/texture.frag";
 
 }  // namespace
 

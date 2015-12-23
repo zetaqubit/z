@@ -1,11 +1,11 @@
-#ifndef SRC_GENESIS_LMDB_STORAGE_H_
-#define SRC_GENESIS_LMDB_STORAGE_H_
+#ifndef SRC_GENESIS_IO_LMDB_STORAGE_H_
+#define SRC_GENESIS_IO_LMDB_STORAGE_H_
 
 #include <string>
 #include <lmdb.h>
 
 #include "src/genesis/proto/leap_frame.pb.h"
-#include "src/genesis/image_viewer.h"
+#include "src/genesis/visualization/image_viewer.h"
 
 namespace genesis {
 
@@ -32,4 +32,4 @@ class LmdbStorage {
 
 }  // namespace genesis
 
-#endif  // SRC_GENESIS_LMDB_STORAGE_H_
+#endif  // SRC_GENESIS_IO_LMDB_STORAGE_H_

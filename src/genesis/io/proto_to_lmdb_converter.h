@@ -1,10 +1,10 @@
-#ifndef SRC_GENESIS_PROTO_TO_LMDB_CONVERTER_H_
-#define SRC_GENESIS_PROTO_TO_LMDB_CONVERTER_H_
+#ifndef SRC_GENESIS_IO_PROTO_TO_LMDB_CONVERTER_H_
+#define SRC_GENESIS_IO_PROTO_TO_LMDB_CONVERTER_H_
 
 #include <stdint.h>
 #include <string>
 
-#include "src/genesis/lmdb_storage.h"
+#include "src/genesis/io/lmdb_storage.h"
 
 namespace genesis {
 
@@ -31,4 +31,4 @@ class ProtoToLmdbConverter {
 
 }  // namespace genesis
 
-#endif  // SRC_GENESIS_PROTO_TO_LMDB_CONVERTER_H_
+#endif  // SRC_GENESIS_IO_PROTO_TO_LMDB_CONVERTER_H_
