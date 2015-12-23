@@ -13,7 +13,7 @@ using caffe::Datum;
 LmdbStorage::LmdbStorage(const std::string& db_path, WriteMode mode) {
   // Create LMDB directory if it does not already exist.
   LOG(INFO) << "Opening lmdb " << db_path;
-  int mkdir_failed = mkdir(db_path.c_str(), 0744);
+  int mkdir_failed = mkdir(db_path.c_str(), 0700);
 
   if (mode == OVERWRITE) {
     LOG(INFO) << "Overwriting database.";

@@ -7,9 +7,9 @@
 namespace {
 
 static const std::string kProtoDir = 
-    "/home/z/hand_tracking/blaze_root/src/genesis/data/proto";
+    "/home/z/hand_tracking/blaze_root/data/genesis/current/proto";
 static const std::string kLmdbDir =
-    "/home/z/hand_tracking/blaze_root/src/genesis/data/lmdb";
+    "/home/z/hand_tracking/blaze_root/data/genesis/current/lmdb";
 
 }  // namespace
 

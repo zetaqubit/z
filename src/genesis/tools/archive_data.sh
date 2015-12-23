@@ -5,13 +5,11 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
-destProtoDir=~/hand_tracking/blaze_root/src/genesis/data/saved/proto/"$1"
-destLmdbDir=~/hand_tracking/blaze_root/src/genesis/data/saved/lmdb/"$1"
+destProtoDir=~/hand_tracking/blaze_root/data/genesis/saved/proto/"$1"
+destLmdbDir=~/hand_tracking/blaze_root/data/genesis/saved/lmdb/"$1"
 
 rm -rif "$destProtoDir"
 rm -rif "$destLmdbDir"
 
-mv ~/hand_tracking/blaze_root/src/genesis/data/proto "$destProtoDir"
-mv ~/hand_tracking/blaze_root/src/genesis/data/lmdb "$destLmdbDir"
-
-mkdir ~/hand_tracking/blaze_root/src/genesis/data/proto/
+mv ~/hand_tracking/blaze_root/data/genesis/current/proto "$destProtoDir"
+mv ~/hand_tracking/blaze_root/data/genesis/current/lmdb "$destLmdbDir"

@@ -1,9 +1,9 @@
 #include "src/genesis/frame_recorder.h"
 
+#include <glog/logging.h>
+#include <sys/stat.h>
 #include <fstream>
 #include <iostream>
-
-#include <glog/logging.h>
 
 using std::endl;
 using std::fstream;
@@ -18,8 +18,10 @@ namespace {
 
 FrameRecorder::FrameRecorder(const string& proto_output_dir)
   : proto_output_dir_(proto_output_dir),
-    frame_number_(0)
-{}
+    frame_number_(0) {
+  // Create directory if it does not already exist.
+  mkdir(proto_output_dir.c_str(), 0700);
+}
 
 void FrameRecorder::ReadProto(string filename) {
   fstream input(filename, ios::in | ios::binary);

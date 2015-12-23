@@ -22,7 +22,7 @@ static const string kFragmentShaderFile =
     "src/genesis/assets/texture_undistort.frag";
 
 static const string kProtoDataOutputDirectory =
-    "/home/z/hand_tracking/blaze_root/src/genesis/data/proto";
+    "/home/z/hand_tracking/blaze_root/data/genesis/current/proto";
 }  // namespace
 
 

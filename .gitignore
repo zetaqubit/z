@@ -15,6 +15,4 @@ bazel-blaze_root
 **/lock.mdb
 
 # data
-src/genesis/data/
-src/genesis/caffe/input/
-src/genesis/caffe/snapshots/
+data/
