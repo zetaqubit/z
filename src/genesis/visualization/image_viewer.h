@@ -1,10 +1,10 @@
-#ifndef SRC_GENESIS_IMAGE_VIEWER_H_
-#define SRC_GENESIS_IMAGE_VIEWER_H_
+#ifndef SRC_GENESIS_VISUALIZATION_IMAGE_VIEWER_H_
+#define SRC_GENESIS_VISUALIZATION_IMAGE_VIEWER_H_
 
 #include <string>
 
-#include "src/genesis/gl_window.h"
-#include "src/genesis/texture_shader.h"
+#include "src/genesis/visualization/gl_window.h"
+#include "src/genesis/visualization/texture_shader.h"
 
 namespace genesis {
 
@@ -20,4 +20,4 @@ class ImageViewer {
 
 }  // namespace genesis
 
-#endif  // SRC_GENESIS_IMAGE_VIEWER_H_
+#endif  // SRC_GENESIS_VISUALIZATION_IMAGE_VIEWER_H_

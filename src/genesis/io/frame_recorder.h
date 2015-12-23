@@ -1,5 +1,5 @@
-#ifndef SRC_GENESIS_FRAME_RECORDER_H_
-#define SRC_GENESIS_FRAME_RECORDER_H_
+#ifndef SRC_GENESIS_IO_FRAME_RECORDER_H_
+#define SRC_GENESIS_IO_FRAME_RECORDER_H_
 
 #include <string>
 
@@ -23,4 +23,4 @@ class FrameRecorder {
 
 }  // namespace genesis
 
-#endif  // SRC_GENESIS_FRAME_RECORDER_H_
+#endif  // SRC_GENESIS_IO_FRAME_RECORDER_H_

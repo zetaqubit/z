@@ -1,4 +1,4 @@
-#include "src/genesis/visualizer.h"
+#include "src/genesis/visualization/visualizer.h"
 
 #include <string>
 #include <glog/logging.h>

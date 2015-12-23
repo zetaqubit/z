@@ -1,9 +1,9 @@
-#include "src/genesis/visualizer.h"
+#include "src/genesis/visualization/visualizer.h"
 
 #include <glog/logging.h>
 #include <iostream>
 
-#include "src/genesis/gl_utils.h"
+#include "src/genesis/visualization/gl_utils.h"
 
 using std::cout;
 using std::endl;
@@ -16,9 +16,10 @@ namespace {
 static const int kWindowWidth = 800;
 static const int kAspect = 1.1478;  // Leap device has fov of 2.304 x 2.007
 static const int kWindowHeight = kWindowWidth / kAspect;
-static const string kVertexShaderFile = "src/genesis/assets/passthrough.vert";
+static const string kVertexShaderFile =
+    "src/genesis/visualization/shaders/passthrough.vert";
 static const string kFragmentShaderFile =
-    "src/genesis/assets/texture_undistort.frag";
+    "src/genesis/visualization/shaders/texture_undistort.frag";
 
 static const string kProtoDataOutputDirectory =
     "/home/z/hand_tracking/blaze_root/data/genesis/current/proto";

@@ -1,4 +1,4 @@
-#include "src/genesis/image_viewer.h"
+#include "src/genesis/visualization/image_viewer.h"
 
 #include <GL/glew.h>
 #include <glog/logging.h>

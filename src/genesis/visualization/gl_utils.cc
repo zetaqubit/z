@@ -1,4 +1,4 @@
-#include "src/genesis/gl_utils.h"
+#include "src/genesis/visualization/gl_utils.h"
 
 #include <fstream>
 #include <cmath>

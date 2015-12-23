@@ -1,16 +1,16 @@
-#include "src/genesis/undistorted_texture_shader.h"
+#include "src/genesis/visualization/undistorted_texture_shader.h"
 
 #include <glog/logging.h>
 #include <string>
 
-#include "src/genesis/gl_utils.h"
+#include "src/genesis/visualization/gl_utils.h"
 
 namespace {
 
 static const std::string kVertexShaderFile =
-    "src/genesis/assets/passthrough.vert";
+    "src/genesis/visualization/shaders/passthrough.vert";
 static const std::string kFragmentShaderFile =
-    "src/genesis/assets/texture_undistort.frag";
+    "src/genesis/visualization/shaders/texture_undistort.frag";
 
 }  // namespace
 
