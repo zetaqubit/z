@@ -1,13 +1,60 @@
 #include "src/genesis/gl_utils.h"
 
-// #define _USE_MAN_DEFINES
-
 #include <fstream>
 #include <cmath>
 
 #include <glog/logging.h>
 
 using std::string;
+
+namespace {
+
+bool ReadFileContents(const string& filename, string* contents) {
+  try {
+    std::ifstream in;
+    in.open(filename);
+
+    if (!in) {
+      LOG(ERROR) << "Unable to open " << filename << " for reading: " << errno;
+      return false;
+    }
+
+    in.seekg(0, std::ios::end);
+    contents->resize(in.tellg());
+    in.seekg(0, std::ios::beg);
+    in.read(&((*contents)[0]), contents->size());
+    in.close();
+    return true;
+  } catch (...) {
+    LOG(ERROR) << "Caught generic exception.";
+  }
+  return false;
+}
+
+GLint CompileShader(GLenum shader_type, const string& source_filename) {
+  string source;
+  if (!ReadFileContents(source_filename, &source)) {
+    LOG(ERROR) << "Could not read shader: " << source_filename;
+    return -1;
+  }
+
+  GLuint shader = glCreateShader(shader_type);
+  const GLchar* source_str = static_cast<const GLchar *>(source.c_str());
+  glShaderSource(shader, 1, &source_str, NULL);
+  glCompileShader(shader);
+
+  GLint status;
+  glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+  if (status == GL_FALSE) {
+    LOG(ERROR) << "Unable to compile "
+               << (shader_type == GL_VERTEX_SHADER ? "vertex" : "fragment")
+               << "shader: " << status;
+    return -1;
+  }
+  return shader;
+}
+
+}  // namespace
 
 namespace genesis {
 
@@ -58,52 +105,6 @@ GLint CreateProgram(const string& vertex_file, const string& fragment_file) {
   }
 
   return program;
-}
-
-GLint CompileShader(GLenum shader_type, const string& source_filename) {
-  string source;
-  if (!ReadFileContents(source_filename, &source)) {
-    LOG(ERROR) << "Could not read shader: " << source_filename;
-    return -1;
-  }
-
-  GLuint shader = glCreateShader(shader_type);
-  const GLchar* source_str = static_cast<const GLchar *>(source.c_str());
-  glShaderSource(shader, 1, &source_str, NULL);
-  glCompileShader(shader);
-
-  GLint status;
-  glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-  if (status == GL_FALSE) {
-    LOG(ERROR) 
-        << "Unable to compile "
-        << (shader_type == GL_VERTEX_SHADER ? "vertex" : "fragment") 
-        << "shader: " << status;
-    return -1;
-  }
-  return shader;
-}
-
-bool ReadFileContents(const string& filename, string* contents) {
-  try {
-    std::ifstream in;
-    in.open(filename);
-
-    if (!in) {
-      LOG(ERROR) << "Unable to open " << filename << " for reading: " << errno;
-      return false;
-    }
-
-    in.seekg(0, std::ios::end);
-    contents->resize(in.tellg());
-    in.seekg(0, std::ios::beg);
-    in.read(&((*contents)[0]), contents->size());
-    in.close();
-    return true;
-  } catch (...) {
-    LOG(ERROR) << "Caught generic exception.";
-  }
-  return false;
 }
 
 GLuint CreateTextureReference() {
