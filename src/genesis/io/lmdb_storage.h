@@ -4,7 +4,7 @@
 #include <string>
 #include <lmdb.h>
 
-#include "src/genesis/proto/leap_frame.pb.h"
+#include "src/genesis/io/proto/leap_frame.pb.h"
 #include "src/genesis/visualization/image_viewer.h"
 
 namespace genesis {
