@@ -8,6 +8,7 @@
 
 #include "src/third_party/leap_motion/include/Leap.h"
 #include "src/genesis/frame_recorder.h"
+#include "src/genesis/gl_window.h"
 
 namespace genesis {
 
@@ -22,17 +23,11 @@ class Visualizer {
   void Run();
 
  private:
-  bool InitSdl();
   bool InitScene();
   void HandleEvent(const SDL_Event& event);
   void Update();
   void Render();
   void RenderTrackedHand();
-
-  // SDL resources.
-  std::shared_ptr<SDL_Window> window_;
-  SDL_GLContext gl_context_;
-  std::shared_ptr<SDL_Renderer> renderer_;
 
   // GL resources
   GLint program_;
@@ -49,7 +44,10 @@ class Visualizer {
   Leap::Controller* controller_;
   Leap::Frame frame_;
 
-  FrameRecorder* recorder_;
+  FrameRecorder recorder_;
+
+  GlWindow image_viewer_;
+  GlWindow left_image_distorted_viewer_;
 };
 
 }  // namespace genesis

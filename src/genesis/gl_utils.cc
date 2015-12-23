@@ -11,6 +11,13 @@ using std::string;
 
 namespace genesis {
 
+void AssertNoGlError(string msg) {
+  GLenum err = glGetError();
+  if (err != GL_NO_ERROR) {
+    LOG(FATAL) << "GL error: " << err << " [" << msg << "]";
+  }
+}
+
 GLint CreateProgram(const string& vertex_file, const string& fragment_file) {
   LOG(ERROR) << "Creating program.";
   GLint program = glCreateProgram();
@@ -26,19 +33,27 @@ GLint CreateProgram(const string& vertex_file, const string& fragment_file) {
     return -1;
   }
 
+  AssertNoGlError("After compiling shaders");
+
   LOG(ERROR) << "Attaching shaders.";
   glAttachShader(program, vertex_shader);
   glAttachShader(program, fragment_shader);
 
+  AssertNoGlError("After attaching shaders: ");
+
   LOG(ERROR) << "Linking program.";
   glLinkProgram(program);
+
+  AssertNoGlError("After linking program: ");
+
   GLint status;
-  glGetProgramiv(program, GL_COMPILE_STATUS, &status);
+  glGetProgramiv(program, GL_LINK_STATUS, &status);
   if (status == GL_FALSE) {
     LOG(ERROR) << "Unable to link program: ";
     GLchar log[1024];
-    glGetProgramInfoLog(program, 1024, NULL, log);
-    LOG(ERROR) << log;
+    GLsizei len;
+    glGetProgramInfoLog(program, 1024, &len, log);
+    LOG(ERROR) << "Error (length " << len << "): " << log;
     return -1;
   }
 

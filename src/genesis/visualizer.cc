@@ -17,8 +17,9 @@ namespace {
 static const int kWindowWidth = 800;
 static const int kAspect = 1.1478;  // Leap device has fov of 2.304 x 2.007
 static const int kWindowHeight = kWindowWidth / kAspect;
-static const string kVertexShaderFile = "src/genesis/assets/vertex.glsl";
-static const string kFragmentShaderFile = "src/genesis/assets/fragment.glsl";
+static const string kVertexShaderFile = "src/genesis/assets/passthrough.vert";
+static const string kFragmentShaderFile =
+    "src/genesis/assets/texture_undistort.frag";
 
 static const string kProtoDataOutputDirectory =
     "/home/z/hand_tracking/blaze_root/src/genesis/data/proto";
@@ -29,7 +30,9 @@ Visualizer::Visualizer(Leap::Controller* controller)
   : should_run_(true),
     should_record_(false),
     controller_(controller),
-    recorder_(new FrameRecorder(kProtoDataOutputDirectory))
+    recorder_(FrameRecorder(kProtoDataOutputDirectory)),
+    image_viewer_(GlWindow("Hand Visualizer", kWindowWidth, kWindowHeight)),
+    left_image_distorted_viewer_(GlWindow("Left distorted", 640, 480))
 {}
 
 Visualizer::~Visualizer() {
@@ -38,65 +41,15 @@ Visualizer::~Visualizer() {
 
 bool Visualizer::Init() {
   controller_->setPolicyFlags(Leap::Controller::POLICY_IMAGES);
-  return InitSdl() && InitScene();
-}
+  image_viewer_.BeginFrame();
+  bool ret = InitScene();
+  image_viewer_.EndFrame();
 
-bool Visualizer::InitSdl() {
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    LOG(ERROR) << "Unable to SDL_Init: " << SDL_GetError();
-    return false;
-  }
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+  left_image_distorted_viewer_.BeginFrame();
+  ret = InitScene();
+  left_image_distorted_viewer_.EndFrame();
 
-  if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
-    LOG(ERROR) << "Unable to SDL_SetHint: " << SDL_GetError();
-    return false;
-  }
-
-  window_.reset(
-      SDL_CreateWindow(
-          "Hand Visualizer",
-          SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-          kWindowWidth, kWindowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL),
-      SDL_DestroyWindow);
-  if (!window_) {
-    LOG(ERROR) << "Unable to SDL_CreateWindow: " << SDL_GetError();
-    return false;
-  }
-
-  gl_context_ = SDL_GL_CreateContext(window_.get());
-  if (!gl_context_) {
-    LOG(ERROR) << "Unable to SDL_GL_CreateContext: " << SDL_GetError();
-    return false;
-  }
-
-  renderer_.reset(SDL_CreateRenderer(window_.get(), -1, SDL_RENDERER_ACCELERATED),
-      SDL_DestroyRenderer);
-  if (!renderer_) {
-    LOG(ERROR) << "Unable to SDL_CreateRenderer: " << SDL_GetError();
-    return false;
-  }
-
-  if (SDL_GL_MakeCurrent(window_.get(), gl_context_) < 0) {
-    LOG(ERROR) << "Unable to SDL_GL_MakeCurrent: " << SDL_GetError();
-    return false;
-  }
-
-  // GLEW setup.
-  GLint status = glewInit();
-  if (status != GLEW_OK) {
-    LOG(ERROR) << "Unable to glewInit(): " << glewGetErrorString(status);
-    return false;
-  }
-
-  // Debugging info.
-  LOG(ERROR) << "GL_VENDOR: " << glGetString(GL_VENDOR);
-  LOG(ERROR) << "GL_RENDERER: " << glGetString(GL_RENDERER);
-  LOG(ERROR) << "GL_VERSION: " << glGetString(GL_VERSION);
-  LOG(ERROR) << "GLSL_VERSION: " << glGetString(GL_SHADING_LANGUAGE_VERSION);
-
-  return true;
+  return ret;
 }
 
 bool Visualizer::InitScene() {
@@ -129,7 +82,6 @@ bool Visualizer::InitScene() {
   //    1 /* near_plane */, 20 /* far_plane */);
   glOrtho(-1, 1, -1, 1, -1, 1);
   glMatrixMode(GL_MODELVIEW);
-
   return true;
 }
 
@@ -146,8 +98,16 @@ void Visualizer::Run() {
       HandleEvent(event);
     }
 
+    image_viewer_.BeginFrame();
     Update();
     Render();
+    image_viewer_.EndFrame();
+
+    left_image_distorted_viewer_.BeginFrame();
+    Update();
+    Render();
+    left_image_distorted_viewer_.EndFrame();
+
     SDL_Delay(1);
   }
 }
@@ -186,7 +146,7 @@ void Visualizer::Update() {
   }
 
   if (should_record_) {
-    recorder_->Record(frame_);
+    recorder_.Record(frame_);
   }
 
   // Update image and distortion textures.
@@ -206,8 +166,7 @@ void Visualizer::Update() {
 }
 
 void Visualizer::Render() {
-  SDL_RenderClear(renderer_.get());
-  glClearColor(0.f, 1.f, 1.f, 1.f);
+  glClearColor(0.f, 0.f, 1.f, 1.f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glMatrixMode(GL_MODELVIEW);
@@ -222,12 +181,17 @@ void Visualizer::Render() {
 
   glEnable(GL_TEXTURE_2D);
   glUseProgram(program_);
+  AssertNoGlError("glUseProgram");
 
   // Draw the left image.
   glActiveTexture(GL_TEXTURE0);
+  AssertNoGlError("glActiveTexture");
   glBindTexture(GL_TEXTURE_2D, raw_left_texture_);
+  AssertNoGlError("glBindTexture");
   glActiveTexture(GL_TEXTURE1);
+  AssertNoGlError("glActiveTexture");
   glBindTexture(GL_TEXTURE_2D, distortion_left_texture_);
+  AssertNoGlError("glBindTexture");
   glBegin(GL_QUADS);
   float a = 1 / kAspect;
   glTexCoord2f(0.f, 1.f); glVertex3f(-1.f,  a, 0.f); // Top Left
@@ -235,12 +199,12 @@ void Visualizer::Render() {
   glTexCoord2f(1.f, 0.f); glVertex3f( 1.f, -a, 0.f); // Bottom Right
   glTexCoord2f(0.f, 0.f); glVertex3f(-1.f, -a, 0.f); // Bottom Left
   glEnd();
+  AssertNoGlError("After drawing quad");
 
   RenderTrackedHand();
+  AssertNoGlError("After drawing tracked hand");
 
   glPopMatrix();
-
-  SDL_GL_SwapWindow(window_.get());
 }
 
 void Visualizer::RenderTrackedHand() {
@@ -263,7 +227,7 @@ void Visualizer::RenderTrackedHand() {
 
     //Pixel coordinates from [0..1] to [0..width/height]
     Leap::Vector pixel(ray.x * 2 - 1, -(ray.y * 2 - 1) / kAspect, 0);
-    LOG(INFO) << "Finger " << id << " position: "  << pixel.x << ", " << pixel.y;
+    //LOG(INFO) << "Finger " << id << " position: "  << pixel.x << ", " << pixel.y;
     glPushMatrix();
     glTranslatef(pixel.x, pixel.y, 0);
     gluDisk(fingertips_[id], 0, 0.01, 10 /* slices */, 1 /* loops */);

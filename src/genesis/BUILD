@@ -21,8 +21,9 @@ cc_library(
     "visualizer.h",
   ],
   deps = [
-    ":gl_utils",
     ":frame_recorder",
+    ":gl_utils",
+    ":gl_window",
     "//src/third_party/leap_motion:api",
   ],
   data = glob([
@@ -33,6 +34,26 @@ cc_library(
     "-lGLEW",
     "-lGLU",
     "-lGL",
+    "-lglog",
+  ],
+)
+
+cc_library(
+  name = "gl_window",
+  srcs = [
+    "gl_window.cc",
+  ],
+  hdrs = [
+    "gl_window.h",
+  ],
+  deps = [
+    ":gl_utils",
+  ],
+  data = glob([
+    "assets/**",
+  ]),
+  linkopts = [
+    "-lSDL2",
     "-lglog",
   ],
 )
@@ -61,11 +82,7 @@ cc_library(
     "gl_utils.h",
   ],
   linkopts = [
-    "-lSDL2",
     "-lGLEW",
-    "-lGLU",
-    "-lGL",
-    "-lglog",
     "-lm",
   ],
 )
