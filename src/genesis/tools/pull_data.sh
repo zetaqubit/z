@@ -5,11 +5,11 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
-srcTrainDir=~/hand_tracking/blaze_root/src/genesis/data/saved/lmdb/"$1"_train
-srcTestDir=~/hand_tracking/blaze_root/src/genesis/data/saved/lmdb/"$1"_test
+srcTrainDir=~/hand_tracking/blaze_root/data/genesis/saved/lmdb/"$1"_train
+srcTestDir=~/hand_tracking/blaze_root/data/genesis/saved/lmdb/"$1"_test
 
-destTrainDir=~/hand_tracking/blaze_root/src/genesis/caffe/input/handnet_train_lmdb
-destTestDir=~/hand_tracking/blaze_root/src/genesis/caffe/input/handnet_test_lmdb
+destTrainDir=~/hand_tracking/blaze_root/data/genesis/caffe/handnet_train_lmdb
+destTestDir=~/hand_tracking/blaze_root/data/genesis/caffe/handnet_test_lmdb
 
 rm -rf "$destTrainDir"
 rm -rf "$destTestDir"
