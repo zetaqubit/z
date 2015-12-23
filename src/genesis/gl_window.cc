@@ -5,7 +5,13 @@
 
 namespace genesis {
 
-GlWindow::GlWindow(std::string window_title, int width, int height) 
+GlWindow::GlWindow(const std::string& window_title)
+    : window_(nullptr, SDL_DestroyWindow) {
+  EnsureSdlInitialized();
+  CreateWindow(window_title, 0, 0);
+}
+
+GlWindow::GlWindow(const std::string& window_title, int width, int height)
     : window_(nullptr, SDL_DestroyWindow) {
   EnsureSdlInitialized();
   CreateWindow(window_title, width, height);
@@ -16,10 +22,17 @@ void GlWindow::BeginFrame() {
     LOG(ERROR) << "Unable to SDL_GL_MakeCurrent: " << SDL_GetError();
     return;
   }
+
+  glClearColor(1.f, 1.f, 0.f, 1.f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void GlWindow::EndFrame() {
   SDL_GL_SwapWindow(window_.get());
+}
+
+void GlWindow::Resize(int width, int height) {
+  SDL_SetWindowSize(window_.get(), width, height);
 }
 
 bool GlWindow::EnsureSdlInitialized() {
@@ -52,7 +65,8 @@ bool GlWindow::EnsureSdlInitialized() {
   return true;
 }
 
-bool GlWindow::CreateWindow(std::string window_title, int width, int height) {
+bool GlWindow::CreateWindow(const std::string& window_title,
+                            int width, int height) {
   window_.reset(SDL_CreateWindow(
       window_title.c_str(),
       SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,

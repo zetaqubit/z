@@ -24,6 +24,8 @@ cc_library(
     ":frame_recorder",
     ":gl_utils",
     ":gl_window",
+    ":image_viewer",
+    ":shaders",
     "//src/third_party/leap_motion:api",
   ],
   data = glob([
@@ -49,11 +51,41 @@ cc_library(
   deps = [
     ":gl_utils",
   ],
+  linkopts = [
+    "-lSDL2",
+    "-lglog",
+  ],
+)
+
+cc_library(
+  name = "image_viewer",
+  srcs = [
+    "image_viewer.cc",
+  ],
+  hdrs = [
+    "image_viewer.h",
+  ],
+  deps = [
+    ":shaders",
+    ":gl_window",
+  ],
   data = glob([
     "assets/**",
   ]),
+)
+
+cc_library(
+  name = "shaders",
+  srcs = [
+    "texture_shader.cc",
+    "undistorted_texture_shader.cc",
+  ],
+  hdrs = [
+    "texture_shader.h",
+    "undistorted_texture_shader.h",
+  ],
   linkopts = [
-    "-lSDL2",
+    "-lGLEW",
     "-lglog",
   ],
 )

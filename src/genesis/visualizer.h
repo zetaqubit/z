@@ -9,6 +9,8 @@
 #include "src/third_party/leap_motion/include/Leap.h"
 #include "src/genesis/frame_recorder.h"
 #include "src/genesis/gl_window.h"
+#include "src/genesis/undistorted_texture_shader.h"
+#include "src/genesis/image_viewer.h"
 
 namespace genesis {
 
@@ -29,12 +31,6 @@ class Visualizer {
   void Render();
   void RenderTrackedHand();
 
-  // GL resources
-  GLint program_;
-  GLuint raw_left_texture_;
-  GLuint raw_right_texture_;
-  GLuint distortion_left_texture_;
-  GLuint distortion_right_texture_;
   GLUquadric* fingertips_[10];
 
   bool should_run_;
@@ -46,8 +42,9 @@ class Visualizer {
 
   FrameRecorder recorder_;
 
+  UndistortedTextureShader shader_;
   GlWindow image_viewer_;
-  GlWindow left_image_distorted_viewer_;
+  ImageViewer debug_image_viewer_;
 };
 
 }  // namespace genesis
