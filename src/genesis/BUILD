@@ -53,6 +53,7 @@ cc_library(
   ],
   linkopts = [
     "-lSDL2",
+    "-lGL",
     "-lglog",
   ],
 )
@@ -128,6 +129,7 @@ cc_library(
     "lmdb_storage.h"
   ],
   deps = [
+    ":image_viewer",  # for debugging
     "//src/genesis/proto:genesis_protos",
     "//src/third_party/caffe:caffe_protos"
   ],

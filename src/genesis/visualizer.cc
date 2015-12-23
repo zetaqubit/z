@@ -44,8 +44,6 @@ bool Visualizer::Init() {
   bool ret = InitScene();
   image_viewer_.EndFrame();
 
-  debug_image_viewer_.Init();
-
   return ret;
 }
 

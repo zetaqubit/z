@@ -12,7 +12,7 @@ ProtoToLmdbConverter::ProtoToLmdbConverter(const std::string& input_dir,
                                            LmdbStorage::WriteMode mode)
     : input_dir_(input_dir),
       output_dir_(output_dir),
-      storage_(LmdbStorage(output_dir, mode)) {
+      storage_(output_dir, mode) {
 
   // Open all proto files in input_dir.
   // Read them and write to storage_.

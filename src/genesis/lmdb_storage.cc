@@ -10,7 +10,9 @@ namespace genesis {
 
 using caffe::Datum;
 
-LmdbStorage::LmdbStorage(const std::string& db_path, WriteMode mode) {
+LmdbStorage::LmdbStorage(const std::string& db_path, WriteMode mode)
+    : full_image_("Full Image", 640, 480),
+      scaled_image_("Scaled Image", 100, 100) {
   // Create LMDB directory if it does not already exist.
   LOG(INFO) << "Opening lmdb " << db_path;
   int mkdir_failed = mkdir(db_path.c_str(), 0700);
@@ -51,7 +53,6 @@ bool LmdbStorage::Write(uint32_t key, const proto::LeapFrame& proto) {
   datum.set_channels(1);
 
   const bool DOWNSAMPLE = true;
-
   if (DOWNSAMPLE) {
     float x_scale = width / 28.0f;
     float y_scale = height / 28.0f;
@@ -63,10 +64,12 @@ bool LmdbStorage::Write(uint32_t key, const proto::LeapFrame& proto) {
       for (int c = 0; c < 28; c++) {
         int r_s = r * y_scale;
         int c_s = c * x_scale;
-        pixels[c + r * 28] = 255 * proto.left().data().data()[c_s + r_s * width];
+        pixels[c + r * 28] = proto.left().data().data()[c_s + r_s * width];
       }
     }
     datum.set_data(pixels, 28 * 28);
+
+    scaled_image_.Update(pixels, 28, 28);
   } else {
     datum.set_width(width);
     datum.set_height(height);
@@ -77,7 +80,7 @@ bool LmdbStorage::Write(uint32_t key, const proto::LeapFrame& proto) {
     } else {
       uint8_t* pixels = new uint8_t[width * height];
       for (int i = 0; i < width * height; i++) {
-        pixels[i] = 255 * proto.left().data().data()[i];
+        pixels[i] = proto.left().data().data()[i];
       }
       datum.set_data(pixels, width * height);
       delete[] pixels;
