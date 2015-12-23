@@ -9,6 +9,8 @@ namespace genesis {
 
 using std::string;
 
+void AssertNoGlError(std::string msg = "");
+
 GLint CreateProgram(const string& vertex_file, const string& fragment_file);
 GLint CompileShader(GLenum shader_type, const string& source_filename);
 bool ReadFileContents(const string& filename, string* contents);
