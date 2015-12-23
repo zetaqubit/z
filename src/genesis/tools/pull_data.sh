@@ -5,14 +5,29 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
-srcTrainDir=~/hand_tracking/blaze_root/data/genesis/saved/lmdb/"$1"_train
-srcTestDir=~/hand_tracking/blaze_root/data/genesis/saved/lmdb/"$1"_test
+ROOT=~/hand_tracking/blaze_root
 
-destTrainDir=~/hand_tracking/blaze_root/data/genesis/caffe/handnet_train_lmdb
-destTestDir=~/hand_tracking/blaze_root/data/genesis/caffe/handnet_test_lmdb
+srcTrainDir="$ROOT"/data/genesis/saved/lmdb/"$1"_train
+srcTestDir="$ROOT"/data/genesis/saved/lmdb/"$1"_test
+
+destTrainDir="$ROOT"/data/genesis/caffe/handnet_train_lmdb
+destTestDir="$ROOT"/data/genesis/caffe/handnet_test_lmdb
+
+if [ ! -e "$srcTrainDir" ]; then
+  echo "$srcTrainDir does not exist"
+  exit 1
+fi
+
+if [ ! -e "$srcTestDir" ]; then
+  echo "$srcTestDir does not exist"
+  exit 1
+fi
 
 rm -rf "$destTrainDir"
 rm -rf "$destTestDir"
 
 cp -rf "$srcTrainDir" "$destTrainDir"
 cp -rf "$srcTestDir" "$destTestDir"
+
+"$ROOT"/src/third_party/caffe/build/tools/compute_image_mean "$destTrainDir"{,_mean.binaryproto}
+"$ROOT"/src/third_party/caffe/build/tools/compute_image_mean "$destTestDir"{,_mean.binaryproto}

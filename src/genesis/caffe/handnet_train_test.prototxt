@@ -23,12 +23,13 @@ layer {
   }
   ### TODO: remember, only do this if image is [0, 255]
   transform_param {
-    # Feature scaling coefficient: this maps the [0, 255] MNIST data to [0, 1]
+    # Feature scaling coefficient: this maps the [0, 255] data to [0, 1]
     scale: 0.00390625
+    mean_file: "/home/z/hand_tracking/blaze_root/data/genesis/caffe/handnet_train_lmdb_mean.binaryproto"
   }
   data_param {
     source: "/home/z/hand_tracking/blaze_root/data/genesis/caffe/handnet_train_lmdb"
-    batch_size: 64
+    batch_size: 32
     backend: LMDB
   }
 }
@@ -40,12 +41,14 @@ layer {
   include {
     phase: TEST
   }
+  ### TODO: remember, only do this if image is [0, 255]
   transform_param {
     scale: 0.00390625
+    mean_file: "/home/z/hand_tracking/blaze_root/data/genesis/caffe/handnet_test_lmdb_mean.binaryproto"
   }
   data_param {
     source: "/home/z/hand_tracking/blaze_root/data/genesis/caffe/handnet_test_lmdb"
-    batch_size: 100
+    batch_size: 50
     backend: LMDB
   }
 }
@@ -156,7 +159,7 @@ layer {
     lr_mult: 2
   }
   inner_product_param {
-    num_output: 1
+    num_output: 2
     weight_filler {
       type: "xavier"
     }
@@ -177,8 +180,15 @@ layer {
 }
 layer {
   name: "loss"
-  type: "HingeLoss"
+  type: "SoftmaxWithLoss"
   bottom: "ip2"
   bottom: "label"
   top: "loss"
 }
+#layer {
+#  name: "loss"
+#  type: "HingeLoss"
+#  bottom: "ip2"
+#  bottom: "label"
+#  top: "loss"
+#}
