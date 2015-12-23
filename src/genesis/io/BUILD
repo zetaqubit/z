@@ -11,7 +11,7 @@ cc_library(
   deps = [
     ":lmdb_storage",
     "//src/third_party/leap_motion:api",
-    "//src/genesis/proto:genesis_protos",
+    "//src/genesis/io/proto:genesis_protos",
   ],
 )
 
@@ -24,7 +24,7 @@ cc_library(
     "lmdb_storage.h"
   ],
   deps = [
-    "//src/genesis/proto:genesis_protos",
+    "//src/genesis/io/proto:genesis_protos",
     "//src/genesis/visualization:image_viewer",  # for debugging
     "//src/third_party/caffe:caffe_protos"
   ],
@@ -44,7 +44,7 @@ cc_library(
   ],
   deps = [
     ":lmdb_storage",
-    "//src/genesis/proto:genesis_protos",
+    "//src/genesis/io/proto:genesis_protos",
   ],
   linkopts = [
     "-lglog",

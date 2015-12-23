@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "src/genesis/proto/leap_frame.pb.h"
+#include "src/genesis/io/proto/leap_frame.pb.h"
 #include "src/third_party/leap_motion/include/Leap.h"
 
 namespace genesis {

@@ -3,7 +3,7 @@
 #include <fstream>
 #include <glog/logging.h>
 
-#include "src/genesis/proto/leap_frame.pb.h"
+#include "src/genesis/io/proto/leap_frame.pb.h"
 
 namespace genesis {
 
