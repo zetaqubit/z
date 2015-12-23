@@ -1,8 +1,7 @@
 #include "src/genesis/visualizer.h"
 
-#include <iostream>
-
 #include <glog/logging.h>
+#include <iostream>
 
 #include "src/genesis/gl_utils.h"
 
@@ -32,7 +31,7 @@ Visualizer::Visualizer(Leap::Controller* controller)
     controller_(controller),
     recorder_(FrameRecorder(kProtoDataOutputDirectory)),
     image_viewer_(GlWindow("Hand Visualizer", kWindowWidth, kWindowHeight)),
-    left_image_distorted_viewer_(GlWindow("Left distorted", 640, 480))
+    debug_image_viewer_("Left distorted", 640, 480)
 {}
 
 Visualizer::~Visualizer() {
@@ -45,30 +44,15 @@ bool Visualizer::Init() {
   bool ret = InitScene();
   image_viewer_.EndFrame();
 
-  left_image_distorted_viewer_.BeginFrame();
-  ret = InitScene();
-  left_image_distorted_viewer_.EndFrame();
+  debug_image_viewer_.Init();
 
   return ret;
 }
 
 bool Visualizer::InitScene() {
-  // Create the program.
-  program_ = CreateProgram(kVertexShaderFile, kFragmentShaderFile);
-  if (program_ < 0) {
+  if (!shader_.Init()) {
     return false;
   }
-  glUseProgram(program_);
-  GLuint raw_sampler = glGetUniformLocation(program_, "rawTexture");
-  GLuint distortion_sampler = glGetUniformLocation(program_, "distortionTexture");
-  glUniform1i(raw_sampler, 0);
-  glUniform1i(distortion_sampler, 1);
-
-  // Create the textures.
-  raw_left_texture_ = CreateTextureReference();
-  raw_right_texture_ = CreateTextureReference();
-  distortion_left_texture_ = CreateTextureReference();
-  distortion_right_texture_ = CreateTextureReference();
 
   // Create circles representing fingertips.
   for (int i = 0; i < 10; i++) {
@@ -103,10 +87,10 @@ void Visualizer::Run() {
     Render();
     image_viewer_.EndFrame();
 
-    left_image_distorted_viewer_.BeginFrame();
-    Update();
-    Render();
-    left_image_distorted_viewer_.EndFrame();
+    if (frame_.images().count() > 0 && frame_.images()[0].width() > 0) {
+      auto left = frame_.images()[0];
+      debug_image_viewer_.Update(left.data(), left.width(), left.height());
+    }
 
     SDL_Delay(1);
   }
@@ -150,25 +134,13 @@ void Visualizer::Update() {
   }
 
   // Update image and distortion textures.
-  glBindTexture(GL_TEXTURE_2D, raw_left_texture_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, left.width(), left.height(), 0,
-      GL_RED, GL_UNSIGNED_BYTE, left.data());
-  glBindTexture(GL_TEXTURE_2D, distortion_left_texture_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RG, left.distortionWidth() / 2,
-      left.distortionHeight(), 0, GL_RG, GL_FLOAT, left.distortion());
+  shader_.UpdateRawTexture(left.data(), left.width(), left.height());
+  shader_.UpdateDistortionTexture(left.distortion(), left.distortionWidth() / 2,
+                                  left.distortionHeight());
 
-  glBindTexture(GL_TEXTURE_2D, raw_right_texture_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, right.width(), right.height(), 0,
-      GL_RED, GL_UNSIGNED_BYTE, right.data());
-  glBindTexture(GL_TEXTURE_2D, distortion_right_texture_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RG, right.distortionWidth() / 2,
-      right.distortionHeight(), 0, GL_RG, GL_FLOAT, right.distortion());
 }
 
 void Visualizer::Render() {
-  glClearColor(0.f, 0.f, 1.f, 1.f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   //glTranslatef(0., 0., -10.);
@@ -179,27 +151,7 @@ void Visualizer::Render() {
   //glScalef(50., 50., 1.);
   //glTranslatef(0., 0., -10.);
 
-  glEnable(GL_TEXTURE_2D);
-  glUseProgram(program_);
-  AssertNoGlError("glUseProgram");
-
-  // Draw the left image.
-  glActiveTexture(GL_TEXTURE0);
-  AssertNoGlError("glActiveTexture");
-  glBindTexture(GL_TEXTURE_2D, raw_left_texture_);
-  AssertNoGlError("glBindTexture");
-  glActiveTexture(GL_TEXTURE1);
-  AssertNoGlError("glActiveTexture");
-  glBindTexture(GL_TEXTURE_2D, distortion_left_texture_);
-  AssertNoGlError("glBindTexture");
-  glBegin(GL_QUADS);
-  float a = 1 / kAspect;
-  glTexCoord2f(0.f, 1.f); glVertex3f(-1.f,  a, 0.f); // Top Left
-  glTexCoord2f(1.f, 1.f); glVertex3f( 1.f,  a, 0.f); // Top Right
-  glTexCoord2f(1.f, 0.f); glVertex3f( 1.f, -a, 0.f); // Bottom Right
-  glTexCoord2f(0.f, 0.f); glVertex3f(-1.f, -a, 0.f); // Bottom Left
-  glEnd();
-  AssertNoGlError("After drawing quad");
+  shader_.Draw(kAspect);
 
   RenderTrackedHand();
   AssertNoGlError("After drawing tracked hand");

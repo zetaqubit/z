@@ -9,13 +9,15 @@ namespace genesis {
 
 class GlWindow {
  public:
-  GlWindow(std::string window_title, int width, int height);
+  explicit GlWindow(const std::string& window_title);
+  GlWindow(const std::string& window_title, int width, int height);
   void BeginFrame();
   void EndFrame();
+  void Resize(int width, int height);
 
  private:
   bool EnsureSdlInitialized();
-  bool CreateWindow(std::string window_title, int width, int height);
+  bool CreateWindow(const std::string& window_title, int width, int height);
 
   // SDL resources.
   SDL_GLContext gl_context_;

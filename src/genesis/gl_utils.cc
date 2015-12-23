@@ -31,6 +31,16 @@ bool ReadFileContents(const string& filename, string* contents) {
   return false;
 }
 
+void LogShaderError(GLuint shader) {
+  GLint max_length = 0;
+  glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &max_length);
+
+  // The max_length includes the NULL character
+  std::vector<GLchar> error_log(max_length);
+  glGetShaderInfoLog(shader, max_length, &max_length, error_log.data());
+  LOG(ERROR) << error_log.data();
+}
+
 GLint CompileShader(GLenum shader_type, const string& source_filename) {
   string source;
   if (!ReadFileContents(source_filename, &source)) {
@@ -49,6 +59,7 @@ GLint CompileShader(GLenum shader_type, const string& source_filename) {
     LOG(ERROR) << "Unable to compile "
                << (shader_type == GL_VERTEX_SHADER ? "vertex" : "fragment")
                << "shader: " << status;
+    LogShaderError(shader);
     return -1;
   }
   return shader;
