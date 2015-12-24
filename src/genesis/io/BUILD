@@ -9,9 +9,25 @@ cc_library(
     "frame_recorder.h",
   ],
   deps = [
+    ":conversion_utils",
     ":lmdb_storage",
     "//src/third_party/leap_motion:api",
     "//src/genesis/io/proto:genesis_protos",
+  ],
+)
+
+cc_library(
+  name = "conversion_utils",
+  srcs = [
+    "conversion_utils.cc",
+  ],
+  hdrs = [
+    "conversion_utils.h",
+  ],
+  deps = [
+    "//src/genesis/io/proto:genesis_protos",
+    "//src/third_party/leap_motion:api",
+    "//src/third_party/caffe:caffe_protos"
   ],
 )
 
@@ -24,6 +40,7 @@ cc_library(
     "lmdb_storage.h"
   ],
   deps = [
+    ":conversion_utils",
     "//src/genesis/io/proto:genesis_protos",
     "//src/genesis/visualization:image_viewer",  # for debugging
     "//src/third_party/caffe:caffe_protos"

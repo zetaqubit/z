@@ -29,5 +29,8 @@ rm -rf "$destTestDir"
 cp -rf "$srcTrainDir" "$destTrainDir"
 cp -rf "$srcTestDir" "$destTestDir"
 
-"$ROOT"/src/third_party/caffe/build/tools/compute_image_mean "$destTrainDir"{,_mean.binaryproto}
-"$ROOT"/src/third_party/caffe/build/tools/compute_image_mean "$destTestDir"{,_mean.binaryproto}
+# TODO: enable if need to do mean subtract.
+#rm "$destTrainDir"_mean.binaryproto
+#rm "$destTestDir"_mean.binaryproto
+#"$ROOT"/src/third_party/caffe/build/tools/compute_image_mean "$destTrainDir"{,_mean.binaryproto}
+#"$ROOT"/src/third_party/caffe/build/tools/compute_image_mean "$destTestDir"{,_mean.binaryproto}

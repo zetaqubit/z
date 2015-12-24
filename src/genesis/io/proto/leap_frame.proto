@@ -12,6 +12,8 @@ message LeapFrame {
 message Image {
   optional int32 width = 1;
   optional int32 height = 2;
+
+  // Pixel values in range [0, 255].
   repeated float data = 3 [packed = true];
 }
 

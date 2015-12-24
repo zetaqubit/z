@@ -5,6 +5,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "src/genesis/io/conversion_utils.h"
+
 using std::endl;
 using std::fstream;
 using std::ios;
@@ -12,50 +14,11 @@ using std::string;
 
 namespace genesis {
 
-namespace {
-}  // namespace
-
-
 FrameRecorder::FrameRecorder(const string& proto_output_dir)
   : proto_output_dir_(proto_output_dir),
     frame_number_(0) {
   // Create directory if it does not already exist.
   mkdir(proto_output_dir.c_str(), 0700);
-}
-
-void FrameRecorder::ReadProto(string filename) {
-  fstream input(filename, ios::in | ios::binary);
-  proto::LeapFrame leap_frame;
-  if (!input) {
-    LOG(INFO) << filename << ": File not found" << endl;
-  } else if (!leap_frame.ParseFromIstream(&input)) {
-    LOG(ERROR) << "Failed to parse Leap frame proto." << endl;
-    return;
-  }
-}
-
-void FrameRecorder::WriteProto(string filename, proto::LeapFrame leap_frame) {
-  fstream output(filename, ios::out | ios::trunc | ios::binary);
-  if (!output) {
-    LOG(ERROR) << "Could not open " << filename << " for writing." << endl;
-    return;
-  }
-  if (!leap_frame.SerializeToOstream(&output)) {
-    LOG(ERROR) << "Failed to write Leap frame proto." << endl;
-    return;
-  }
-}
-
-proto::Image ConvertImageToProto(const Leap::Image& image) {
-  proto::Image proto;
-  proto.set_width(image.width());
-  proto.set_height(image.height());
-  for (int r = 0; r < image.height(); r++) {
-    for (int c = 0; c < image.width(); c++) {
-      proto.add_data(image.data()[c + r * image.width()]);
-    }
-  }
-  return proto;
 }
 
 void FrameRecorder::Record(const Leap::Frame& frame) {

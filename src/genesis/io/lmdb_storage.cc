@@ -4,6 +4,7 @@
 #include <sys/stat.h>
 #include <glog/logging.h>
 
+#include "src/genesis/io/conversion_utils.h"
 #include "src/third_party/caffe/src/caffe/proto/caffe.pb.h"
 
 namespace genesis {
@@ -45,49 +46,7 @@ LmdbStorage::~LmdbStorage() {
 }
 
 bool LmdbStorage::Write(uint32_t key, const proto::LeapFrame& proto) {
-  int width = proto.left().width();
-  int height = proto.left().height();
-  bool has_hand = proto.has_hand_pose();
-
-  Datum datum;
-  datum.set_channels(1);
-
-  const bool DOWNSAMPLE = true;
-  if (DOWNSAMPLE) {
-    float x_scale = width / 28.0f;
-    float y_scale = height / 28.0f;
-    datum.set_width(28);
-    datum.set_height(28);
-
-    uint8_t pixels[28 * 28];
-    for (int r = 0; r < 28; r++) {
-      for (int c = 0; c < 28; c++) {
-        int r_s = r * y_scale;
-        int c_s = c * x_scale;
-        pixels[c + r * 28] = proto.left().data().data()[c_s + r_s * width];
-      }
-    }
-    datum.set_data(pixels, 28 * 28);
-
-    scaled_image_.Update(pixels, 28, 28);
-  } else {
-    datum.set_width(width);
-    datum.set_height(height);
-
-    const bool WRITE_FLOAT_DATA  = false;
-    if (WRITE_FLOAT_DATA) {
-      datum.mutable_float_data()->CopyFrom(proto.left().data());
-    } else {
-      uint8_t* pixels = new uint8_t[width * height];
-      for (int i = 0; i < width * height; i++) {
-        pixels[i] = proto.left().data().data()[i];
-      }
-      datum.set_data(pixels, width * height);
-      delete[] pixels;
-    }
-  }
-
-  datum.set_label(has_hand ? 1 : 0);
+  Datum datum = ProtoToDatum(proto);
 
   const int kMaxKeyLength = 10;
   char key_cstr[kMaxKeyLength];
@@ -95,7 +54,6 @@ bool LmdbStorage::Write(uint32_t key, const proto::LeapFrame& proto) {
   snprintf(key_cstr, kMaxKeyLength, "%08d", key);
   datum.SerializeToString(&value);
   std::string keystr(key_cstr);
-
 
   // Write in database
   MDB_val mdb_key, mdb_data;
