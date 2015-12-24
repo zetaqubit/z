@@ -6,6 +6,8 @@
 #include <iostream>
 #include <valarray>
 
+#include "src/genesis/visualization/image_viewer.h"
+
 using std::ios;
 using std::fstream;
 using std::string;
@@ -84,6 +86,7 @@ caffe::Datum ProtoToDatum(const proto::LeapFrame& proto) {
   std::vector<float> normalized_pixels =
       NormalizeAndSubtractMean(intensity, width * height);
 
+  static ImageViewer dbg("ProtoToDatum", 128, 128);
 
   const bool DOWNSAMPLE = true;
   if (DOWNSAMPLE) {
@@ -92,16 +95,17 @@ caffe::Datum ProtoToDatum(const proto::LeapFrame& proto) {
     datum.set_width(28);
     datum.set_height(28);
 
-    float pixels[28 * 28];
+    uint8_t pixels[28 * 28];
     for (int r = 0; r < 28; r++) {
       for (int c = 0; c < 28; c++) {
         int r_s = r * y_scale;
         int c_s = c * x_scale;
         float scaled_pixel = normalized_pixels[c_s + r_s * width];
-        pixels[c + r * 28] = scaled_pixel;
+        pixels[c + r * 28] = static_cast<uint8_t>(128 * (1.0f + scaled_pixel));
         datum.add_float_data(scaled_pixel);
       }
     }
+    dbg.Update(pixels, 28, 28);
     //datum.set_float_data(pixels, 28 * 28);
   } else {
     datum.set_width(width);
