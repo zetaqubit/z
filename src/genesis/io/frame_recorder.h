@@ -14,9 +14,6 @@ class FrameRecorder {
   void Record(const Leap::Frame& frame);
 
  private:
-  void ReadProto(std::string filename);
-  void WriteProto(std::string filename, proto::LeapFrame leap_frame);
-
   std::string proto_output_dir_;
   int frame_number_;
 };
