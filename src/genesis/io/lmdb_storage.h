@@ -5,7 +5,6 @@
 #include <lmdb.h>
 
 #include "src/genesis/io/proto/leap_frame.pb.h"
-#include "src/genesis/visualization/image_viewer.h"
 
 namespace genesis {
 
@@ -25,9 +24,6 @@ class LmdbStorage {
   MDB_env *mdb_env_;
   MDB_dbi mdb_dbi_;
   MDB_txn *mdb_txn_;
-
-  ImageViewer full_image_;
-  ImageViewer scaled_image_;
 };
 
 }  // namespace genesis

@@ -11,9 +11,7 @@ namespace genesis {
 
 using caffe::Datum;
 
-LmdbStorage::LmdbStorage(const std::string& db_path, WriteMode mode)
-    : full_image_("Full Image", 640, 480),
-      scaled_image_("Scaled Image", 100, 100) {
+LmdbStorage::LmdbStorage(const std::string& db_path, WriteMode mode) {
   // Create LMDB directory if it does not already exist.
   LOG(INFO) << "Opening lmdb " << db_path;
   int mkdir_failed = mkdir(db_path.c_str(), 0700);
