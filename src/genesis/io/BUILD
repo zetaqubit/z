@@ -27,6 +27,7 @@ cc_library(
   deps = [
     "//src/genesis/io/proto:genesis_protos",
     "//src/genesis/visualization:image_viewer",  # for debugging
+    "//src/third_party/cimg:cimg",
     "//src/third_party/leap_motion:api",
     "//src/third_party/caffe:caffe_protos"
   ],

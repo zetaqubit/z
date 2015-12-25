@@ -15,15 +15,6 @@ HandNeuralNet::HandNeuralNet(const std::string& model_prototxt,
   caffe_net_.CopyTrainedLayersFrom(weights_prototxt);
 }
 
-std::vector<float> ConvertImageToNetInput(const float* frame, int width,
-                                          int height) {
-  std::vector<float> normalized_pixels =
-      NormalizeAndSubtractMean(frame, width * height);
-  auto scaled = ScaleImage(normalized_pixels, width, height,
-                           28 /* scaled_w */, 28 /* scaled_h */);
-  return scaled;
-}
-
 int MaxIndex(const std::vector<float>& data) {
   const float* a = data.data();
   return std::distance(a, std::max_element(a, a + data.size()));

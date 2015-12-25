@@ -3,9 +3,8 @@
 
 #include <string>
 
-#include "caffe/caffe.hpp"
-
 #include "src/genesis/visualization/image_viewer.h"
+#include "src/third_party/caffe/include/caffe/caffe.hpp"
 
 using caffe::Blob;
 using caffe::Caffe;
