@@ -9,7 +9,7 @@ namespace genesis {
 HandNeuralNet::HandNeuralNet(const std::string& model_prototxt,
                              const std::string& weights_prototxt)
     : caffe_net_(model_prototxt, caffe::TEST),
-      debug_viewer_("Image sent to NN", 200, 200) {
+      debug_viewer_("CNN inference", 200, 200) {
 
   Caffe::set_mode(Caffe::GPU);
   caffe_net_.CopyTrainedLayersFrom(weights_prototxt);

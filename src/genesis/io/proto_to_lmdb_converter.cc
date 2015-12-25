@@ -3,7 +3,9 @@
 #include <fstream>
 #include <glog/logging.h>
 
+#include "src/genesis/io/conversion_utils.h"
 #include "src/genesis/io/proto/leap_frame.pb.h"
+#include "src/third_party/caffe/src/caffe/proto/caffe.pb.h"
 
 namespace genesis {
 
@@ -41,7 +43,12 @@ int ProtoToLmdbConverter::Convert(uint32_t starting_file_number,
       //LOG(ERROR) << "Skipping " << filename << ": unable to parse proto.";
       continue;
     }
-    if (!storage_.Write(i, proto)) {
+
+    caffe::Datum datum = ProtoToDatum(proto);
+    std::string value;
+    datum.SerializeToString(&value);
+
+    if (!storage_.Write(i, value)) {
       LOG(ERROR) << "Stopping at " << filename << ": could not write to LMDB.";
       break;
     }

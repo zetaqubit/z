@@ -21,9 +21,9 @@ layer {
   include {
     phase: TRAIN
   }
-  ### TODO: remember, only do this if image is [0, 255]
+  ### TODO: remember, only do this if image is [0, 256)
   transform_param {
-    # Feature scaling coefficient: this maps the [0, 255] MNIST data to [0, 1]
+    # Feature scaling coefficient: this maps the [0, 256) MNIST data to [0, 1)
     scale: 0.00390625
   }
   data_param {
