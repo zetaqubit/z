@@ -6,4 +6,7 @@ cc_library(
   visibility = [
     "//visibility:public",
   ],
+  linkopts = [
+    "-lX11",
+  ],
 )
