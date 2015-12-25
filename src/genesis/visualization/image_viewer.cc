@@ -2,6 +2,7 @@
 
 #include <GL/glew.h>
 #include <glog/logging.h>
+#include <vector>
 
 namespace genesis {
 
@@ -20,5 +21,12 @@ void ImageViewer::Update(const uint8_t* data, int width, int height) {
   window_.EndFrame();
 }
 
+void ImageViewer::UpdateNormalized(const float* data, int width, int height) {
+  std::vector<uint8_t> converted(width * height);
+  for (int i = 0; i < width * height; i++) {
+    converted[i] = static_cast<uint8_t>(128 * (1.0f + data[i]));
+  }
+  Update(converted.data(), width, height);
+}
 
 }  // namespace genesis

@@ -23,6 +23,17 @@ static const string kFragmentShaderFile =
 
 static const string kProtoDataOutputDirectory =
     "/home/z/hand_tracking/blaze_root/data/genesis/current/proto";
+
+static const string kHandnetModel =
+    "src/genesis/caffe/handnet_deploy.prototxt";
+static const string kHandnetWeights =
+    "data/genesis/caffe/model_snapshots/handnet_iter_10000.caffemodel";
+
+static const string kMnistModel =
+    "src/genesis/caffe/mnist_deploy.prototxt";
+static const string kMnistWeights =
+    "data/genesis/caffe/model_snapshots/mnist_iter_10000.caffemodel";
+
 }  // namespace
 
 
@@ -33,7 +44,14 @@ Visualizer::Visualizer(Leap::Controller* controller)
     recorder_(FrameRecorder(kProtoDataOutputDirectory)),
     image_viewer_(GlWindow("Hand Visualizer", kWindowWidth, kWindowHeight)),
     debug_image_viewer_("Left distorted", 640, 480)
-{}
+{
+  LOG(INFO) << "Initializing neural network from model: [" << kHandnetModel
+      << "]; weights: [" << kHandnetWeights << "]";
+  handnet_.reset(new HandNeuralNet(
+      //kHandnetModel, kHandnetWeights
+      kMnistModel, kMnistWeights
+  ));
+}
 
 Visualizer::~Visualizer() {
   SDL_Quit();
@@ -86,10 +104,18 @@ void Visualizer::Run() {
     Render();
     image_viewer_.EndFrame();
 
-    if (frame_.images().count() > 0 && frame_.images()[0].width() > 0) {
-      auto left = frame_.images()[0];
-      debug_image_viewer_.Update(left.data(), left.width(), left.height());
+    if (frame_.images().count() <= 0 || frame_.images()[0].width() <= 0) {
+      continue;
     }
+
+    auto left = frame_.images()[0];
+    debug_image_viewer_.Update(left.data(), left.width(), left.height());
+
+    std::vector<float> float_data(left.width() * left.height());
+    for (int i = 0; i < left.width() * left.height(); i++) {
+      float_data[i] = left.data()[i];
+    }
+    handnet_->RunInferenceOnFrame(float_data.data(), left.width(), left.height());
 
     SDL_Delay(1);
   }
