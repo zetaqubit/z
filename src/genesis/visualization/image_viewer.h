@@ -12,6 +12,7 @@ class ImageViewer {
  public:
   ImageViewer(const std::string& window_title, int win_width, int win_height);
   void Update(const uint8_t* data, int width, int height);
+  void UpdateNormalized(const float* data, int width, int height);
 
  private:
   GlWindow window_;

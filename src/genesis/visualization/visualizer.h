@@ -7,6 +7,7 @@
 #include <GL/glew.h>
 
 #include "src/third_party/leap_motion/include/Leap.h"
+#include "src/genesis/caffe/hand_neural_net.h"
 #include "src/genesis/io/frame_recorder.h"
 #include "src/genesis/visualization/gl_window.h"
 #include "src/genesis/visualization/undistorted_texture_shader.h"
@@ -45,6 +46,8 @@ class Visualizer {
   UndistortedTextureShader shader_;
   GlWindow image_viewer_;
   ImageViewer debug_image_viewer_;
+
+  std::unique_ptr<HandNeuralNet> handnet_;
 };
 
 }  // namespace genesis

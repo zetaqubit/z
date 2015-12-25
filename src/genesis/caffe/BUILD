@@ -1,9 +1,30 @@
+package(default_visibility = ["//visibility:public"])
 
-# Not working. Need to write only main.cc that depends on caffe:caffe
-cc_binary(
-  name = "handnet",
-  data = glob(["*.prototxt"]),
-  deps = [
-      "//src/third_party/caffe/tools:caffe",
+cc_library(
+  name = "handnet_inference",
+  srcs = [
+    "hand_neural_net.cc",
   ],
+  hdrs = [
+    "hand_neural_net.h",
+  ],
+  data = [
+    ":model",
+    "//data/genesis/caffe:trained_weights",
+  ],
+  deps = [
+    "//src/genesis/visualization:image_viewer",
+    "//src/genesis/io:conversion_utils",
+    "//src/third_party/caffe:caffe_lib",
+  ],
+  linkopts = [
+    "-lglog",
+  ],
+)
+
+filegroup(
+  name = "model",
+  srcs = glob([
+    "*.prototxt",
+  ]),
 )

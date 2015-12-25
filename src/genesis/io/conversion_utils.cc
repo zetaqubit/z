@@ -71,6 +71,24 @@ std::vector<float> NormalizeAndSubtractMean(const float* array, int length) {
   return output;
 }
 
+std::vector<float> ScaleImage(const std::vector<float>& img, int orig_w,
+                              int orig_h, int scaled_w, int scaled_h) {
+  std::vector<float> output(scaled_w * scaled_h);
+
+  // Naive quantized sampling.
+  float x_scale = orig_w / static_cast<float>(scaled_w);
+  float y_scale = orig_h / static_cast<float>(scaled_h);
+  for (int r = 0; r < scaled_h; r++) {
+    for (int c = 0; c < scaled_w; c++) {
+      int r_s = r * y_scale;
+      int c_s = c * x_scale;
+      output[c + r * scaled_w] = img[c_s + r_s * orig_w];
+    }
+  }
+  return output;
+}
+
+
 caffe::Datum ProtoToDatum(const proto::LeapFrame& proto) {
   caffe::Datum datum;
 
@@ -90,23 +108,18 @@ caffe::Datum ProtoToDatum(const proto::LeapFrame& proto) {
 
   const bool DOWNSAMPLE = true;
   if (DOWNSAMPLE) {
-    float x_scale = width / 28.0f;
-    float y_scale = height / 28.0f;
+    auto scaled = ScaleImage(normalized_pixels, width, height,
+                             28 /* scaled_w */, 28 /* scaled_h */);
+
     datum.set_width(28);
     datum.set_height(28);
 
     uint8_t pixels[28 * 28];
-    for (int r = 0; r < 28; r++) {
-      for (int c = 0; c < 28; c++) {
-        int r_s = r * y_scale;
-        int c_s = c * x_scale;
-        float scaled_pixel = normalized_pixels[c_s + r_s * width];
-        pixels[c + r * 28] = static_cast<uint8_t>(128 * (1.0f + scaled_pixel));
-        datum.add_float_data(scaled_pixel);
-      }
+    for (int i = 0; i < 28 * 28; i++) {
+      pixels[i] = static_cast<uint8_t>(128 * (1.0f + scaled[i]));
+      datum.add_float_data(scaled[i]);
     }
     dbg.Update(pixels, 28, 28);
-    //datum.set_float_data(pixels, 28 * 28);
   } else {
     datum.set_width(width);
     datum.set_height(height);

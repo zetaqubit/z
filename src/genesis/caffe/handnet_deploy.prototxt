@@ -1,54 +1,27 @@
-name: "MNIST"
+name: "HandNet"
+
+input: "data"
+input_shape {
+  dim: 1 # batch
+  dim: 1 # channels
+  dim: 28 # height
+  dim: 28 # width
+}
 
 #layer {
-#  name: "memory_frame"
+#  name: "handnet"
 #  type: "MemoryData"
-#  memory_data_param {
-#    channels: 1
-#    width: 640
-#    height: 480
-#    batch_size: 1 
-#  }
 #  top: "data"
 #  top: "label"
+#
+#  memory_data_param {
+#    channels: 1
+#    width: 28
+#    height: 28
+#    batch_size: 1
+#  }
 #}
 
-layer {
-  name: "mnist"
-  type: "Data"
-  top: "data"
-  top: "label"
-  include {
-    phase: TRAIN
-  }
-  ### TODO: remember, only do this if image is [0, 255]
-  transform_param {
-    # Feature scaling coefficient: this maps the [0, 255] MNIST data to [0, 1]
-    scale: 0.00390625
-  }
-  data_param {
-    source: "/home/z/hand_tracking/blaze_root/data/genesis/caffe/mnist_train_lmdb"
-    batch_size: 64
-    backend: LMDB
-  }
-}
-layer {
-  name: "mnist"
-  type: "Data"
-  top: "data"
-  top: "label"
-  include {
-    phase: TEST
-  }
-  transform_param {
-    scale: 0.00390625
-  }
-  data_param {
-    source: "/home/z/hand_tracking/blaze_root/data/genesis/caffe/mnist_test_lmdb"
-    batch_size: 100
-    backend: LMDB
-  }
-}
 layer {
   name: "conv1"
   type: "Convolution"
@@ -156,7 +129,7 @@ layer {
     lr_mult: 2
   }
   inner_product_param {
-    num_output: 10
+    num_output: 2
     weight_filler {
       type: "xavier"
     }
@@ -165,20 +138,21 @@ layer {
     }
   }
 }
-layer {
-  name: "accuracy"
-  type: "Accuracy"
-  bottom: "ip2"
-  bottom: "label"
-  top: "accuracy"
-  include {
-    phase: TEST
-  }
-}
-layer {
-  name: "loss"
-  type: "SoftmaxWithLoss"
-  bottom: "ip2"
-  bottom: "label"
-  top: "loss"
-}
+
+#layer {
+#  name: "accuracy"
+#  type: "Accuracy"
+#  bottom: "ip2"
+#  bottom: "label"
+#  top: "accuracy"
+#  include {
+#    phase: TEST
+#  }
+#}
+#layer {
+#  name: "loss"
+#  type: "SoftmaxWithLoss"
+#  bottom: "ip2"
+#  bottom: "label"
+#  top: "loss"
+#}
