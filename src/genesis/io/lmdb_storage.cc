@@ -4,12 +4,7 @@
 #include <sys/stat.h>
 #include <glog/logging.h>
 
-#include "src/genesis/io/conversion_utils.h"
-#include "src/third_party/caffe/src/caffe/proto/caffe.pb.h"
-
 namespace genesis {
-
-using caffe::Datum;
 
 LmdbStorage::LmdbStorage(const std::string& db_path, WriteMode mode) {
   // Create LMDB directory if it does not already exist.
@@ -43,29 +38,22 @@ LmdbStorage::~LmdbStorage() {
   mdb_env_close(mdb_env_);
 }
 
-bool LmdbStorage::Write(uint32_t key, const proto::LeapFrame& proto) {
-  Datum datum = ProtoToDatum(proto);
-
+bool LmdbStorage::Write(uint32_t key, std::string value) {
   const int kMaxKeyLength = 10;
   char key_cstr[kMaxKeyLength];
-  std::string value;
   snprintf(key_cstr, kMaxKeyLength, "%08d", key);
-  datum.SerializeToString(&value);
   std::string keystr(key_cstr);
 
   // Write in database
   MDB_val mdb_key, mdb_data;
-  mdb_data.mv_size = value.size();
-  mdb_data.mv_data = reinterpret_cast<void*>(&value[0]);
   mdb_key.mv_size = keystr.size();
   mdb_key.mv_data = reinterpret_cast<void*>(&keystr[0]);
+  mdb_data.mv_size = value.size();
+  mdb_data.mv_data = reinterpret_cast<void*>(&value[0]);
   if (mdb_put(mdb_txn_, mdb_dbi_, &mdb_key, &mdb_data, 0) != MDB_SUCCESS) {
     LOG(ERROR) << "mdb_put failed";
     return false;
   }
-
-  LOG(INFO) << "Wrote item: " << key << ". [" << datum.width() << "x"
-      << datum.height() << ", has_hand=" << datum.label() << "]";
 
   if (key % 100 == 0) {
     if (!Flush()) {

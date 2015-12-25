@@ -57,7 +57,7 @@ proto::Image ConvertImageToProto(const Leap::Image& image) {
   return proto;
 }
 
-// Converts an array of values in range [0, 255] to a normalized range [0, 1],
+// Converts an array of values in range [0, 256) to a normalized range [0, 1),
 // and then subtract the mean from each value.
 std::vector<float> NormalizeAndSubtractMean(const std::vector<float>& array) {
   std::vector<float> output(array.size());
@@ -68,7 +68,7 @@ std::vector<float> NormalizeAndSubtractMean(const std::vector<float>& array) {
   float mean = static_cast<float>(sum / array.size());
 
   for (int i = 0; i < array.size(); i++) {
-    output[i] = (array[i] - mean) / 255.0f;
+    output[i] = (array[i] - mean) / 256.0f;
   }
   return output;
 }

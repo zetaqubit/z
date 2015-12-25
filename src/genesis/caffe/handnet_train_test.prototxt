@@ -21,9 +21,9 @@ layer {
   include {
     phase: TRAIN
   }
-  ### TODO: remember, only do this if image is [0, 255]
+  ### TODO: remember, only do this if image is [0, 256)
   #transform_param {
-  #  # Feature scaling coefficient: this maps the [0, 255] data to [0, 1]
+  #  # Feature scaling coefficient: this maps the [0, 256) data to [0, 1)
   #  scale: 0.00390625
   #  mean_file: "/home/z/hand_tracking/blaze_root/data/genesis/caffe/handnet_train_lmdb_mean.binaryproto"
   #}
@@ -41,7 +41,7 @@ layer {
   include {
     phase: TEST
   }
-  ### TODO: remember, only do this if image is [0, 255]
+  ### TODO: remember, only do this if image is [0, 256)
   #transform_param {
   #  scale: 0.00390625
   #  mean_file: "/home/z/hand_tracking/blaze_root/data/genesis/caffe/handnet_test_lmdb_mean.binaryproto"

@@ -1,10 +1,8 @@
 #ifndef SRC_GENESIS_IO_LMDB_STORAGE_H_
 #define SRC_GENESIS_IO_LMDB_STORAGE_H_
 
-#include <string>
 #include <lmdb.h>
-
-#include "src/genesis/io/proto/leap_frame.pb.h"
+#include <string>
 
 namespace genesis {
 
@@ -15,7 +13,7 @@ class LmdbStorage {
 
   LmdbStorage(const std::string& db_path, WriteMode mode);
   virtual ~LmdbStorage();
-  bool Write(uint32_t key, const proto::LeapFrame& proto);
+  bool Write(uint32_t key, std::string value);
   bool Flush();
 
  private:
