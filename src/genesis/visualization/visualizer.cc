@@ -48,8 +48,8 @@ Visualizer::Visualizer(Leap::Controller* controller)
   LOG(INFO) << "Initializing neural network from model: [" << kHandnetModel
       << "]; weights: [" << kHandnetWeights << "]";
   handnet_.reset(new HandNeuralNet(
-      //kHandnetModel, kHandnetWeights
-      kMnistModel, kMnistWeights
+      kHandnetModel, kHandnetWeights
+      //kMnistModel, kMnistWeights
   ));
 }
 
