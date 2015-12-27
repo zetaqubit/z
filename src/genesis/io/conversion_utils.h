@@ -24,6 +24,8 @@ std::vector<float> ScaleImage(const std::vector<float>& img, int orig_w,
 std::vector<float> ConvertImageToNetInput(const float* frame, int width,
                                           int height);
 
+int ExtractLabel(const Leap::Frame& frame);
+
 }  // namespace genesis
 
 #endif  // SRC_GENESIS_IO_CONVERSION_UTILS_H_

@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "src/genesis/visualization/gl_utils.h"
+#include "src/genesis/io/conversion_utils.h"
 
 using std::cout;
 using std::endl;
@@ -29,6 +30,11 @@ static const string kHandnetModel =
 static const string kHandnetWeights =
     "data/genesis/caffe/model_snapshots/handnet_iter_10000.caffemodel";
 
+static const std::string kHandnetSolver =
+    "src/genesis/caffe/handnet_solver_deploy.prototxt";
+static const std::string kHandnetRestore =
+    "data/genesis/caffe/model_snapshots/handnet_iter_10000.solverstate";
+
 static const string kMnistModel =
     "src/genesis/caffe/mnist_deploy.prototxt";
 static const string kMnistWeights =
@@ -40,6 +46,7 @@ static const string kMnistWeights =
 Visualizer::Visualizer(Leap::Controller* controller)
   : should_run_(true),
     should_record_(false),
+    should_train_(false),
     controller_(controller),
     recorder_(FrameRecorder(kProtoDataOutputDirectory)),
     image_viewer_(GlWindow("Hand Visualizer", kWindowWidth, kWindowHeight)),
@@ -48,7 +55,7 @@ Visualizer::Visualizer(Leap::Controller* controller)
   LOG(INFO) << "Initializing neural network from model: [" << kHandnetModel
       << "]; weights: [" << kHandnetWeights << "]";
   handnet_.reset(new HandNeuralNet(
-      kHandnetModel, kHandnetWeights
+      kHandnetSolver, kHandnetRestore
       //kMnistModel, kMnistWeights
   ));
 }
@@ -99,23 +106,35 @@ void Visualizer::Run() {
       HandleEvent(event);
     }
 
+    frame_ = controller_->frame();
+    if (!frame_.isValid() || frame_.images().count() < 2) {
+      continue;
+    }
+    Leap::Image left = frame_.images()[0], right = frame_.images()[1];
+    if (left.width() <= 0 || left.height() <= 0
+       || right.width() <= 0 || right.height() <= 0) {
+      continue;
+    }
+
     image_viewer_.BeginFrame();
     Update();
     Render();
     image_viewer_.EndFrame();
 
-    if (frame_.images().count() <= 0 || frame_.images()[0].width() <= 0) {
-      continue;
-    }
-
-    auto left = frame_.images()[0];
     debug_image_viewer_.Update(left.data(), left.width(), left.height());
 
     std::vector<float> float_data(left.width() * left.height());
     for (int i = 0; i < left.width() * left.height(); i++) {
       float_data[i] = left.data()[i];
     }
-    handnet_->RunInferenceOnFrame(float_data.data(), left.width(), left.height());
+
+    int label = ExtractLabel(frame_);
+
+    if (should_train_) {
+      handnet_->Train(float_data.data(), left.width(), left.height(), label);
+    } else {
+      handnet_->Infer(float_data.data(), left.width(), left.height(), label);
+    }
 
     SDL_Delay(1);
   }
@@ -128,9 +147,15 @@ void Visualizer::HandleEvent(const SDL_Event& event) {
       break;
     case SDL_KEYDOWN:
       switch (event.key.keysym.sym) {
+        // r to toggle recording.
         case SDLK_r:
           should_record_ = !should_record_;
           LOG(INFO) << (should_record_ ? "Started" : "Stopped") << " recording";
+          break;
+        // t to toggle training.
+        case SDLK_t:
+          should_train_ = !should_train_;
+          LOG(INFO) << (should_train_ ? "Started" : "Stopped") << " training";
           break;
         // Q or Esc exits.
         case SDLK_q:
@@ -145,14 +170,8 @@ void Visualizer::HandleEvent(const SDL_Event& event) {
 }
 
 void Visualizer::Update() {
-  frame_ = controller_->frame();
   Leap::Image left = frame_.images()[0];
   Leap::Image right = frame_.images()[1];
-  if (!frame_.isValid() || left.width() <= 0 || left.height() <= 0
-      || right.width() <= 0 || right.height() <= 0) {
-    LOG(INFO) << "Skipping invalid frame.";
-    return;
-  }
 
   if (should_record_) {
     recorder_.Record(frame_);

@@ -8,6 +8,14 @@ input_shape {
   dim: 28 # width
 }
 
+input: "label"
+input_shape {
+  dim: 1 # batch
+  dim: 1 # channels
+  dim: 1 # height
+  dim: 1 # width
+}
+
 #layer {
 #  name: "handnet"
 #  type: "MemoryData"
@@ -149,10 +157,11 @@ layer {
 #    phase: TEST
 #  }
 #}
-#layer {
-#  name: "loss"
-#  type: "SoftmaxWithLoss"
-#  bottom: "ip2"
-#  bottom: "label"
-#  top: "loss"
-#}
+
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "ip2"
+  bottom: "label"
+  top: "loss"
+}
