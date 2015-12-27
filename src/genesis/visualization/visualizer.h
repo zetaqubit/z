@@ -36,6 +36,7 @@ class Visualizer {
 
   bool should_run_;
   bool should_record_;
+  bool should_train_;
 
   // Non-owning pointer to the Leap Motion controller.
   Leap::Controller* controller_;

@@ -26,6 +26,7 @@ cc_library(
     ":image_viewer",
     ":shaders",
     "//src/genesis/caffe:handnet_inference",
+    "//src/genesis/io:conversion_utils",
     "//src/genesis/io:frame_recorder",
     "//src/third_party/leap_motion:api",
   ],

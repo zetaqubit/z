@@ -155,4 +155,21 @@ caffe::Datum ProtoToDatum(const proto::LeapFrame& proto) {
   return datum;
 }
 
+int ExtractLabel(const Leap::Frame& frame) {
+#if 1
+  int label = 0;
+  Leap::HandList hands = frame.hands();
+  for (auto hl = hands.begin(); hl != hands.end(); hl++) {
+    Leap::Hand hand = *hl;
+    if (hand.isLeft()) {
+      label = 1;
+      break;
+    }
+  }
+#else
+  int label = (frame.hands().Count() > 0 ? 1 : 0);
+#endif
+  return label;
+}
+
 }  // namespace genesis
