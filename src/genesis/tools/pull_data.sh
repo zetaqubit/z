@@ -20,7 +20,8 @@ fi
 
 if [ ! -e "$srcTestDir" ]; then
   echo "$srcTestDir does not exist"
-  exit 1
+  echo "Using training set as test set: $srcTrainDir"
+  srcTestDir="$srcTrainDir"
 fi
 
 rm -rf "$destTrainDir"
