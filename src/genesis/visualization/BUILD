@@ -70,7 +70,6 @@ cc_library(
   linkopts = [
     "-lSDL2",
     "-lGL",
-    "-lglog",
   ],
 )
 
@@ -85,6 +84,7 @@ cc_library(
   deps = [
     ":shaders",
     ":gl_window",
+    "//src/genesis/io:datatypes",
   ],
   data = glob([
     "shaders/**",

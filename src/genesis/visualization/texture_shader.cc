@@ -1,6 +1,5 @@
 #include "src/genesis/visualization/texture_shader.h"
 
-#include <glog/logging.h>
 #include <string>
 
 #include "src/genesis/visualization/gl_utils.h"
@@ -36,6 +35,12 @@ void TextureShader::UpdateTexture(const uint8_t* bytes, int width, int height) {
   glBindTexture(GL_TEXTURE_2D, texture_);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED,
                GL_UNSIGNED_BYTE, bytes);
+}
+
+void TextureShader::UpdateTexture(const float* data, int width, int height) {
+  glBindTexture(GL_TEXTURE_2D, texture_);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED,
+               GL_FLOAT, data);
 }
 
 void TextureShader::Draw() {

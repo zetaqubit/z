@@ -1,14 +1,9 @@
 #include "src/genesis/visualization/visualizer.h"
 
 #include <glog/logging.h>
-#include <iostream>
 
-#include "src/genesis/visualization/gl_utils.h"
 #include "src/genesis/io/conversion_utils.h"
-
-using std::cout;
-using std::endl;
-using std::string;
+#include "src/genesis/visualization/gl_utils.h"
 
 namespace genesis {
 
@@ -17,17 +12,17 @@ namespace {
 static const int kWindowWidth = 800;
 static const int kAspect = 1.1478;  // Leap device has fov of 2.304 x 2.007
 static const int kWindowHeight = kWindowWidth / kAspect;
-static const string kVertexShaderFile =
+static const std::string kVertexShaderFile =
     "src/genesis/visualization/shaders/passthrough.vert";
-static const string kFragmentShaderFile =
+static const std::string kFragmentShaderFile =
     "src/genesis/visualization/shaders/texture_undistort.frag";
 
-static const string kProtoDataOutputDirectory =
+static const std::string kProtoDataOutputDirectory =
     "/home/z/hand_tracking/blaze_root/data/genesis/current/proto";
 
-static const string kHandnetModel =
+static const std::string kHandnetModel =
     "src/genesis/caffe/handnet_deploy.prototxt";
-static const string kHandnetWeights =
+static const std::string kHandnetWeights =
     "data/genesis/caffe/model_snapshots/handnet_iter_10000.caffemodel";
 
 static const std::string kHandnetSolver =
@@ -35,9 +30,9 @@ static const std::string kHandnetSolver =
 static const std::string kHandnetRestore =
     "data/genesis/caffe/model_snapshots/handnet_iter_10000.solverstate";
 
-static const string kMnistModel =
+static const std::string kMnistModel =
     "src/genesis/caffe/mnist_deploy.prototxt";
-static const string kMnistWeights =
+static const std::string kMnistWeights =
     "data/genesis/caffe/model_snapshots/mnist_iter_10000.caffemodel";
 
 }  // namespace
@@ -94,13 +89,11 @@ bool Visualizer::InitScene() {
 }
 
 void Visualizer::Run() {
-  cout << "Let there be light!" << endl;
-
-  SDL_Event event;
-
+  LOG(INFO) << "Let there be light!";
   LOG(INFO) << "Camera fov: " << controller_->devices()[0].horizontalViewAngle()
       << " x " << controller_->devices()[0].verticalViewAngle();
 
+  SDL_Event event;
   while (should_run_) {
     while (SDL_PollEvent(&event) != 0) {
       HandleEvent(event);
@@ -121,19 +114,16 @@ void Visualizer::Run() {
     Render();
     image_viewer_.EndFrame();
 
-    debug_image_viewer_.Update(left.data(), left.width(), left.height());
-
-    std::vector<float> float_data(left.width() * left.height());
-    for (int i = 0; i < left.width() * left.height(); i++) {
-      float_data[i] = left.data()[i];
-    }
+    Image image(left.data(), left.width(), left.height());
+    debug_image_viewer_.Update(image);
 
     int label = ExtractLabel(frame_);
 
+    ConvertImageToNetInput(&image);
     if (should_train_) {
-      handnet_->Train(float_data.data(), left.width(), left.height(), label);
+      handnet_->Train(image, label);
     } else {
-      handnet_->Infer(float_data.data(), left.width(), left.height(), label);
+      handnet_->Infer(image, label);
     }
 
     SDL_Delay(1);

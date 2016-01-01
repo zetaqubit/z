@@ -1,7 +1,7 @@
 #include "src/genesis/visualization/visualizer.h"
 
-#include <string>
 #include <glog/logging.h>
+#include <string>
 
 #include "src/third_party/leap_motion/include/Leap.h"
 

@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "src/genesis/io/datatypes.h"
 #include "src/genesis/visualization/gl_window.h"
 #include "src/genesis/visualization/texture_shader.h"
 
@@ -11,8 +12,12 @@ namespace genesis {
 class ImageViewer {
  public:
   ImageViewer(const std::string& window_title, int win_width, int win_height);
-  void Update(const uint8_t* data, int width, int height);
-  void UpdateNormalized(const float* data, int width, int height);
+
+  // Displays an image in range [0, 256).
+  void Update(const Image& image);
+
+  // Displays an image in range (-1, 1).
+  void UpdateNormalized(const Image& image);
 
  private:
   GlWindow window_;

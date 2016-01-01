@@ -1,9 +1,5 @@
 #include "src/genesis/visualization/image_viewer.h"
 
-#include <GL/glew.h>
-#include <glog/logging.h>
-#include <vector>
-
 namespace genesis {
 
 ImageViewer::ImageViewer(const std::string& window_title, int win_w, int win_h)
@@ -14,19 +10,16 @@ ImageViewer::ImageViewer(const std::string& window_title, int win_w, int win_h)
   window_.EndFrame();
 }
 
-void ImageViewer::Update(const uint8_t* data, int width, int height) {
+void ImageViewer::Update(const Image& image) {
   window_.BeginFrame();
-  shader_.UpdateTexture(data, width, height);
+  Image scaled_image = image / 256.0f;
+  shader_.UpdateTexture(scaled_image.data(), image.width(), image.height());
   shader_.Draw();
   window_.EndFrame();
 }
 
-void ImageViewer::UpdateNormalized(const float* data, int width, int height) {
-  std::vector<uint8_t> converted(width * height);
-  for (int i = 0; i < width * height; i++) {
-    converted[i] = static_cast<uint8_t>(128 * (1.0f + data[i]));
-  }
-  Update(converted.data(), width, height);
+void ImageViewer::UpdateNormalized(const Image& image) {
+  Update((image + 1.0f) * 128.0f);
 }
 
 }  // namespace genesis
