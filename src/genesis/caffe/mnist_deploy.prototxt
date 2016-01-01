@@ -4,8 +4,8 @@ input: "data"
 input_shape {
   dim: 1 # batch
   dim: 1 # channels
-  dim: 28 # height
-  dim: 28 # width
+  dim: 128 # height
+  dim: 128 # width
 }
 
 layer {

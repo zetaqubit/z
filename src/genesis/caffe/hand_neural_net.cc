@@ -32,13 +32,13 @@ void HandNeuralNet::LoadInputIntoNN(const float* frame, int width, int height,
                                     int label) {
   // Normalize and visualize the frame.
   auto scaled = ConvertImageToNetInput(frame, width, height);
-  debug_viewer_.UpdateNormalized(scaled.data(), 28, 28);
+  debug_viewer_.UpdateNormalized(scaled.data(), 128, 128);
 
   // Load the frame data.
   caffe::Net<float>* net = solver_->net().get();
   caffe::Blob<float>* input_layer = net->input_blobs()[0];
   float* input_data = input_layer->mutable_cpu_data();
-  for (int i = 0; i < 28 * 28; i++) {
+  for (int i = 0; i < 128 * 128; i++) {
     input_data[i] = scaled[i];
   }
 
