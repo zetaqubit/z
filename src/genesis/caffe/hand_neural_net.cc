@@ -70,13 +70,13 @@ InferenceResult HandNeuralNet::ReadOutputFromNN() {
 #endif
 
   bool has_hand = (max_index == 1);
-  return InferenceResult(has_hand);
+  return InferenceResult(has_hand, loss);
 }
 
 InferenceResult HandNeuralNet::Infer(const float* frame, int width, int height,
                                      int label) {
   actual_label_ = label;
-  LoadInputIntoNN(frame, width, height, -1 /* label */);
+  LoadInputIntoNN(frame, width, height, label);
   solver_->net()->ForwardPrefilled();
   return ReadOutputFromNN();
 }
@@ -85,6 +85,20 @@ InferenceResult HandNeuralNet::Train(const float* frame, int width, int height,
                                      int label) {
   actual_label_ = label;
   LoadInputIntoNN(frame, width, height, label);
+
+  // Do a forward pass to check loss. Backprop only if loss is large enough.
+  // This prevents the NN from being flooded with easy examples.
+  solver_->net()->ForwardPrefilled();
+  InferenceResult result = ReadOutputFromNN();
+  //if (result.has_hand == (label == 1)) {
+  //  return result;
+  //}
+  if (result.loss < 0.1) {
+    LOG(INFO) << "Loss is " << std::to_string(result.loss) << ". Not training.";
+    return result;
+  }
+  LOG(INFO) << "Training w/ loss = " << result.loss;
+
   solver_->Step(1);
   return ReadOutputFromNN();
 }

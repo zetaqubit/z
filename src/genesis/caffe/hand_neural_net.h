@@ -10,11 +10,13 @@ namespace genesis {
 
 class InferenceResult {
  public:
-  explicit InferenceResult(bool has_hand) {
+  InferenceResult(bool has_hand, float loss) {
     this->has_hand = has_hand;
+    this->loss = loss;
   };
 
   bool has_hand;
+  float loss;
 };
 
 class HandNeuralNet {
@@ -26,8 +28,7 @@ class HandNeuralNet {
   //
   // @param frame the data given to the first layer of the NN.
   // @param label the ground truth label (used only for debug output).
-  InferenceResult Infer(const float* frame, int width, int height,
-                        int label = -1);
+  InferenceResult Infer(const float* frame, int width, int height, int label);
 
   // Trains the NN using |frame| and its corresponding ground truth label.
   // @param frame the data given to the first layer of the NN.
