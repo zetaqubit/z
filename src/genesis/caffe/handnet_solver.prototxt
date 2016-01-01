@@ -3,7 +3,7 @@ net: "/home/z/hand_tracking/blaze_root/src/genesis/caffe/handnet_train_test.prot
 test_iter: 100
 test_interval: 500
 
-base_lr: 0.0005 # was 0.01
+base_lr: 0.001 # was 0.01
 momentum: 0.9
 weight_decay: 0.0005
 

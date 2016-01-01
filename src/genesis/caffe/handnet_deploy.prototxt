@@ -4,8 +4,8 @@ input: "data"
 input_shape {
   dim: 1 # batch
   dim: 1 # channels
-  dim: 28 # height
-  dim: 28 # width
+  dim: 128 # height
+  dim: 128 # width
 }
 
 input: "label"
@@ -24,8 +24,8 @@ input_shape {
 #
 #  memory_data_param {
 #    channels: 1
-#    width: 28
-#    height: 28
+#    width: 128
+#    height: 128
 #    batch_size: 1
 #  }
 #}
@@ -42,9 +42,9 @@ layer {
     lr_mult: 2
   }
   convolution_param {
-    num_output: 20
-    kernel_size: 5
-    stride: 1
+    num_output: 60  # was 20
+    kernel_size: 11  # was 5
+    stride: 4  # was 1
     weight_filler {
       type: "xavier"
     }

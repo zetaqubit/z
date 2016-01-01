@@ -29,7 +29,7 @@ layer {
   #}
   data_param {
     source: "/home/z/hand_tracking/blaze_root/data/genesis/caffe/handnet_train_lmdb"
-    batch_size: 32
+    batch_size: 16
     backend: LMDB
   }
 }
@@ -64,9 +64,9 @@ layer {
     lr_mult: 2
   }
   convolution_param {
-    num_output: 20
-    kernel_size: 5
-    stride: 1
+    num_output: 60 # was 20
+    kernel_size: 11  # was 5
+    stride: 4 # was 1
     weight_filler {
       type: "xavier"
     }

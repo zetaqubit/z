@@ -106,7 +106,7 @@ std::vector<float> ScaleImage(const std::vector<float>& orig, int orig_w,
 std::vector<float> ConvertImageToNetInput(const float* frame, int width,
                                           int height) {
   std::vector<float> orig(frame, frame + width * height);
-  std::vector<float> scaled = ScaleImage(orig, width, height, 28, 28);
+  std::vector<float> scaled = ScaleImage(orig, width, height, 128, 128);
   std::vector<float> output = NormalizeAndSubtractMean(scaled);
   return output;
 }
@@ -125,15 +125,15 @@ caffe::Datum ProtoToDatum(const proto::LeapFrame& proto) {
   const float* intensity = proto.left().data().data();
   auto scaled = ConvertImageToNetInput(intensity, width, height);
 
-  datum.set_width(28);
-  datum.set_height(28);
+  datum.set_width(128);
+  datum.set_height(128);
 
-  for (int i = 0; i < 28 * 28; i++) {
+  for (int i = 0; i < 128 * 128; i++) {
     datum.add_float_data(scaled[i]);
   }
 
   static ImageViewer dbg("ProtoToDatum", 128, 128);
-  dbg.UpdateNormalized(scaled.data(), 28, 28);
+  dbg.UpdateNormalized(scaled.data(), 128, 128);
 
 #if 0
   datum.set_width(width);
