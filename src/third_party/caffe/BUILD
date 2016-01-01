@@ -2,7 +2,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("/src/third_party/caffe/gen_proto", "proto_library")
+load("/src/genesis/io/proto/gen_proto", "proto_library")
 
 proto_library(
   name = "caffe_protos",
