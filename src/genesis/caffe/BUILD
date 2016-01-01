@@ -13,8 +13,8 @@ cc_library(
     "//data/genesis/caffe:trained_weights",
   ],
   deps = [
+    "//src/genesis/io:datatypes",
     "//src/genesis/visualization:image_viewer",
-    "//src/genesis/io:conversion_utils",
     "//src/third_party/caffe:caffe_lib",
   ],
   linkopts = [

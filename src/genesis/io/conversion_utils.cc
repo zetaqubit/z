@@ -4,15 +4,34 @@
 #include <stdint.h>
 #include <fstream>
 #include <iostream>
-#include <valarray>
 
 #include "src/genesis/visualization/image_viewer.h"
-#include "src/third_party/cimg/CImg.h"
 
-using cimg_library::CImg;
 using std::ios;
 using std::fstream;
 using std::string;
+
+namespace {
+
+// Converts an array of values in range [0, 256) to a normalized range [0, 1),
+// and then subtract the mean from each value.
+void NormalizeAndSubtractMean(genesis::Image* img) {
+  *img /= 256.0f;
+  float mean = img->mean();
+  *img -= mean;
+}
+
+void ScaleImage(genesis::Image* img, int scaled_w, int scaled_h) {
+  // Experiment with cropping and keeping only the center region of image.
+  //int x_bound = (orig_w + scaled_w) / 4;
+  //int y_bound = (orig_h + scaled_h) / 4;
+  //img.crop(x_bound, y_bound, 0, 0, orig_w - x_bound, orig_h - y_bound, 1, 1);
+
+  img->resize(scaled_w, scaled_h, 1 /* size_z */, 1 /* size_c */,
+              5 /* cubic interpolation */);
+}
+
+}  // namespace
 
 namespace genesis {
 
@@ -43,72 +62,22 @@ bool WriteProto(const string& filename, const proto::LeapFrame& proto) {
   return true;
 }
 
-proto::Image ConvertImageToProto(const Leap::Image& image) {
-  proto::Image proto;
-  proto.set_width(image.width());
-  proto.set_height(image.height());
+proto::Image ImageToProto(const Leap::Image& image) {
+  int w = image.width(), h = image.height();
 
-  for (int r = 0; r < image.height(); r++) {
-    for (int c = 0; c < image.width(); c++) {
-      uint8_t pixel = image.data()[c + r * image.width()];
-      proto.add_data(pixel);
-    }
-  }
+  proto::Image proto;
+  proto.set_width(w);
+  proto.set_height(h);
+
+  const uint8_t* data = image.data();
+  proto.mutable_data()->Resize(w * h, 0);
+  std::copy(data, data + w * h, proto.mutable_data()->begin());
   return proto;
 }
 
-// Converts an array of values in range [0, 256) to a normalized range [0, 1),
-// and then subtract the mean from each value.
-std::vector<float> NormalizeAndSubtractMean(const std::vector<float>& array) {
-  std::vector<float> output(array.size());
-  double sum = 0;
-  for (int i = 0; i < array.size(); i++) {
-    sum += array[i];
-  }
-  float mean = static_cast<float>(sum / array.size());
-
-  for (int i = 0; i < array.size(); i++) {
-    output[i] = (array[i] - mean) / 256.0f;
-  }
-  return output;
-}
-
-std::vector<float> ScaleImage(const std::vector<float>& orig, int orig_w,
-                              int orig_h, int scaled_w, int scaled_h) {
-
-#if 0
-  std::vector<float> output(scaled_w * scaled_h);
-  // Naive quantized sampling.
-  float x_scale = orig_w / static_cast<float>(scaled_w);
-  float y_scale = orig_h / static_cast<float>(scaled_h);
-  for (int r = 0; r < scaled_h; r++) {
-    for (int c = 0; c < scaled_w; c++) {
-      int r_s = r * y_scale;
-      int c_s = c * x_scale;
-      output[c + r * scaled_w] = orig[c_s + r_s * orig_w];
-    }
-  }
-  return output;
-#else
-  CImg<float> img(orig.data(), orig_w, orig_h);
-
-  // Experiment with cropping and keeping only the center region of image.
-  //int x_bound = (orig_w + scaled_w) / 4;
-  //int y_bound = (orig_h + scaled_h) / 4;
-  //img.crop(x_bound, y_bound, 0, 0, orig_w - x_bound, orig_h - y_bound, 1, 1);
-
-  img.resize(scaled_w, scaled_h, 1 /* size_z */, 1 /* size_c */,
-             5 /* cubic interpolation */);
-  return std::vector<float>(img.data(), img.data() + img.size());
-#endif
-}
-
-std::vector<float> ConvertImageToNetInput(const float* frame, int width,
-                                          int height) {
-  std::vector<float> orig(frame, frame + width * height);
-  std::vector<float> scaled = ScaleImage(orig, width, height, 128, 128);
-  std::vector<float> output = NormalizeAndSubtractMean(scaled);
-  return output;
+void ConvertImageToNetInput(Image* image) {
+  ScaleImage(image, kNNImageWidth, kNNImageHeight);
+  NormalizeAndSubtractMean(image);
 }
 
 caffe::Datum ProtoToDatum(const proto::LeapFrame& proto) {
@@ -119,38 +88,21 @@ caffe::Datum ProtoToDatum(const proto::LeapFrame& proto) {
 
   datum.set_channels(1);
 
-  int width = proto.left().width();
-  int height = proto.left().height();
+  Image scaled(proto.left().data().data(),
+               proto.left().width(), proto.left().height());
+  ConvertImageToNetInput(&scaled);
 
-  const float* intensity = proto.left().data().data();
-  auto scaled = ConvertImageToNetInput(intensity, width, height);
+  int scaled_w = scaled.width();
+  int scaled_h = scaled.height();
 
-  datum.set_width(128);
-  datum.set_height(128);
+  datum.set_width(scaled_w);
+  datum.set_height(scaled_h);
 
-  for (int i = 0; i < 128 * 128; i++) {
-    datum.add_float_data(scaled[i]);
-  }
+  datum.mutable_float_data()->Resize(scaled_w * scaled_h, 0);
+  std::copy(scaled.begin(), scaled.end(), datum.mutable_float_data()->begin());
 
-  static ImageViewer dbg("ProtoToDatum", 128, 128);
-  dbg.UpdateNormalized(scaled.data(), 128, 128);
-
-#if 0
-  datum.set_width(width);
-  datum.set_height(height);
-
-  const bool WRITE_FLOAT_DATA  = false;
-  if (WRITE_FLOAT_DATA) {
-    //datum.mutable_float_data()->CopyFrom(normalized_pixels.data());
-  } else {
-    uint8_t* pixels = new uint8_t[width * height];
-    for (int i = 0; i < width * height; i++) {
-      pixels[i] = proto.left().data().data()[i];
-    }
-    datum.set_data(pixels, width * height);
-    delete[] pixels;
-  }
-#endif
+  static ImageViewer dbg("ProtoToDatum", scaled_w, scaled_h);
+  dbg.UpdateNormalized(scaled);
 
   return datum;
 }

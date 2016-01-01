@@ -2,7 +2,6 @@
 
 #include <glog/logging.h>
 
-#include "src/genesis/io/conversion_utils.h"
 #include "src/third_party/caffe/include/caffe/solver.hpp"
 
 namespace genesis {
@@ -28,19 +27,15 @@ int MaxIndex(const std::vector<float>& data) {
   return std::distance(a, std::max_element(a, a + data.size()));
 }
 
-void HandNeuralNet::LoadInputIntoNN(const float* frame, int width, int height,
-                                    int label) {
-  // Normalize and visualize the frame.
-  auto scaled = ConvertImageToNetInput(frame, width, height);
-  debug_viewer_.UpdateNormalized(scaled.data(), 128, 128);
+void HandNeuralNet::LoadInputIntoNN(const Image& image, int label) {
+  // Visualize the image.
+  debug_viewer_.UpdateNormalized(image);
 
-  // Load the frame data.
+  // Load the image data.
   caffe::Net<float>* net = solver_->net().get();
   caffe::Blob<float>* input_layer = net->input_blobs()[0];
   float* input_data = input_layer->mutable_cpu_data();
-  for (int i = 0; i < 128 * 128; i++) {
-    input_data[i] = scaled[i];
-  }
+  std::copy(image.begin(), image.end(), input_data);
 
   // Load the label data, if any.
   if (label != -1) {
@@ -73,18 +68,16 @@ InferenceResult HandNeuralNet::ReadOutputFromNN() {
   return InferenceResult(has_hand, loss);
 }
 
-InferenceResult HandNeuralNet::Infer(const float* frame, int width, int height,
-                                     int label) {
+InferenceResult HandNeuralNet::Infer(const Image& image, int label) {
   actual_label_ = label;
-  LoadInputIntoNN(frame, width, height, label);
+  LoadInputIntoNN(image, label);
   solver_->net()->ForwardPrefilled();
   return ReadOutputFromNN();
 }
 
-InferenceResult HandNeuralNet::Train(const float* frame, int width, int height,
-                                     int label) {
+InferenceResult HandNeuralNet::Train(const Image& image, int label) {
   actual_label_ = label;
-  LoadInputIntoNN(frame, width, height, label);
+  LoadInputIntoNN(image, label);
 
   // Do a forward pass to check loss. Backprop only if loss is large enough.
   // This prevents the NN from being flooded with easy examples.

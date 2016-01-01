@@ -6,12 +6,12 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 
-#include "src/third_party/leap_motion/include/Leap.h"
 #include "src/genesis/caffe/hand_neural_net.h"
 #include "src/genesis/io/frame_recorder.h"
 #include "src/genesis/visualization/gl_window.h"
-#include "src/genesis/visualization/undistorted_texture_shader.h"
 #include "src/genesis/visualization/image_viewer.h"
+#include "src/genesis/visualization/undistorted_texture_shader.h"
+#include "src/third_party/leap_motion/include/Leap.h"
 
 namespace genesis {
 

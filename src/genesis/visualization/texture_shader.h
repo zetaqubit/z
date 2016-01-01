@@ -9,6 +9,7 @@ class TextureShader {
  public:
   bool Init();
   void UpdateTexture(const uint8_t* bytes, int width, int height);
+  void UpdateTexture(const float* bytes, int width, int height);
   void Draw();
 
  private:
