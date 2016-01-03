@@ -31,8 +31,7 @@ class Visualizer {
   void Update();
   void Render();
   void RenderTrackedHand();
-
-  GLUquadric* fingertips_[10];
+  void DrawWorldPoint(const Leap::Vector& position);
 
   bool should_run_;
   bool should_record_;

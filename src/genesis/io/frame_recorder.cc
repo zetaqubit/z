@@ -21,35 +21,7 @@ void FrameRecorder::Record(const Leap::Frame& frame) {
 
   //LOG(INFO) << "Recording frame: " << std::to_string(frame_number_);
 
-  proto::LeapFrame leap_frame;
-  leap_frame.set_timestamp_ms(frame.timestamp());
-
-  // Update image and distortion textures.
-  Leap::Image left = frame.images()[0];
-  if (left.width() > 0) {
-    *leap_frame.mutable_left() = ImageToProto(left);
-  }
-  Leap::Image right = frame.images()[1];
-  if (right.width() > 0) {
-    *leap_frame.mutable_right() = ImageToProto(right);
-  }
-
-  // Update hand pose.
-  Leap::HandList hands = frame.hands();
-  for (auto hl = hands.begin(); hl != hands.end(); hl++) {
-    Leap::Hand hand = *hl;
-    if (hand.isLeft()) {
-      proto::Pose pose;
-      Leap::Vector position = hand.palmPosition();
-      pose.set_x(position.x);
-      pose.set_y(position.y);
-      pose.set_z(position.z);
-      *leap_frame.mutable_hand_pose() = pose;
-      //LOG(INFO) << "Left hand pose: " << position.x << ", " << position.y << ", "
-      //    << position.z;
-      break;
-    }
-  }
+  proto::LeapFrame leap_frame = FrameToProto(frame);
 
   std::string filename =
       proto_output_dir_ + "/" + std::to_string(frame_number_) + ".pb";

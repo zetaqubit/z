@@ -29,7 +29,7 @@ int MaxIndex(const std::vector<float>& data) {
 
 void HandNeuralNet::LoadInputIntoNN(const Image& image, int label) {
   // Visualize the image.
-  debug_viewer_.UpdateNormalized(image);
+  debug_viewer_.UpdateNormalized(image).EndFrame();
 
   // Load the image data.
   caffe::Net<float>* net = solver_->net().get();

@@ -17,13 +17,17 @@ namespace genesis {
 // Proto conversions.
 std::unique_ptr<proto::LeapFrame> ReadProto(const std::string& filename);
 bool WriteProto(const std::string& filename, const proto::LeapFrame& proto);
-proto::Image ImageToProto(const Leap::Image& image);
+proto::LeapFrame FrameToProto(const Leap::Frame& frame);
 caffe::Datum ProtoToDatum(const proto::LeapFrame& proto);
+
+// Geometric operations.
+const Leap::Vector ProjectToScreenUndistorted(const Leap::Vector& p,
+                                              const Leap::Image& image);
+const Leap::Vector ProjectToScreenDistorted(const Leap::Vector& p,
+                                            const Leap::Image& image);
 
 // Image operations.
 void ConvertImageToNetInput(Image* image);
-
-int ExtractLabel(const Leap::Frame& frame);
 
 }  // namespace genesis
 

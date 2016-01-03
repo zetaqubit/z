@@ -85,6 +85,7 @@ cc_library(
     ":shaders",
     ":gl_window",
     "//src/genesis/io:datatypes",
+    "//src/genesis/io/proto:genesis_protos",
   ],
   data = glob([
     "shaders/**",

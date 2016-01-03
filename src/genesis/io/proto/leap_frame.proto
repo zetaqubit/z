@@ -4,9 +4,11 @@ package genesis.proto;
 
 message LeapFrame {
   optional int64 timestamp_ms = 1;
-  optional Image left = 2;
-  optional Image right = 3;
-  optional Pose hand_pose = 4;
+  optional Image left_image = 2;
+  optional Image right_image = 3;
+
+  optional Hand left_hand = 4;
+  optional Hand right_hand = 5;
 }
 
 message Image {
@@ -17,8 +19,43 @@ message Image {
   repeated float data = 3 [packed = true];
 }
 
+message Hand {
+  enum Identity {
+    UNKNOWN = 0;
+    LEFT = 1;
+    RIGHT = 2;
+  }
+
+  optional Identity identity = 1 [default = UNKNOWN];
+  optional KeyPoint palm = 2;
+  optional KeyPoint thumb = 3;
+  optional KeyPoint index = 4;
+  optional KeyPoint middle = 5;
+  optional KeyPoint ring = 6;
+  optional KeyPoint pinky = 7;
+}
+
+// Feature of interest (e.g. fingertip, palm center).
+message KeyPoint {
+  // (x, y, z) of point in world space
+  optional Pose world_pose = 1;
+
+  // (u, v) of point in left image
+  optional ScreenCoords left_screen_coords = 2;
+
+  // (u, v) of point in right image
+  optional ScreenCoords right_screen_coords = 3;
+}
+
+// (x, y, z) in world coordinates (in mm).
 message Pose {
   optional float x = 1;
   optional float y = 2;
   optional float z = 3;
+}
+
+// (u, v) in screen coordinates. Normalized to [0, 1]^2.
+message ScreenCoords {
+  optional float u = 1;
+  optional float v = 2;
 }
