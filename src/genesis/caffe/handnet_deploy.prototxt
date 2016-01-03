@@ -1,11 +1,19 @@
 name: "HandNet"
 
-input: "data"
+input: "image"
 input_shape {
   dim: 1 # batch
-  dim: 1 # channels
+  dim: 1 # channel
   dim: 128 # height
   dim: 128 # width
+}
+
+input: "hand_model"
+input_shape {
+  dim: 1 # batch
+  dim: 42 # channel
+  dim: 1 # height
+  dim: 1 # width
 }
 
 input: "label"
@@ -31,9 +39,37 @@ input_shape {
 #}
 
 layer {
+  name: "extract_fingers"
+  type: "Slice"
+  bottom: "hand_model"
+  top: "palm_xyz"
+  top: "palm_uv_l"
+  top: "palm_uv_r"
+  top: "thumb_xyz"
+  top: "thumb_uv_l"
+  top: "thumb_uv_r"
+  top: "index_xyz"
+  top: "index_uv_l"
+  top: "index_uv_r"
+  top: "unused"
+  slice_param {
+    axis: 1
+    slice_point: 3 # palm_xyz
+    slice_point: 5
+    slice_point: 7
+    slice_point: 10 # thumb_xyz
+    slice_point: 12
+    slice_point: 14
+    slice_point: 17 # index_xyz
+    slice_point: 19
+    slice_point: 21
+  }
+}
+
+layer {
   name: "conv1"
   type: "Convolution"
-  bottom: "data"
+  bottom: "image"
   top: "conv1"
   param {
     lr_mult: 1
@@ -42,9 +78,9 @@ layer {
     lr_mult: 2
   }
   convolution_param {
-    num_output: 60  # was 20
-    kernel_size: 11  # was 5
-    stride: 4  # was 1
+    num_output: 40  # was 20
+    kernel_size: 7  # was 5
+    stride: 2  # was 1
     weight_filler {
       type: "xavier"
     }
@@ -76,7 +112,7 @@ layer {
     lr_mult: 2
   }
   convolution_param {
-    num_output: 50
+    num_output: 40
     kernel_size: 5
     stride: 1
     weight_filler {
@@ -99,9 +135,43 @@ layer {
   }
 }
 layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "pool2"
+  top: "conv3"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 30
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "pool3"
+  type: "Pooling"
+  bottom: "conv3"
+  top: "pool3"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
   name: "ip1"
   type: "InnerProduct"
-  bottom: "pool2"
+  bottom: "pool3"
   top: "ip1"
   param {
     lr_mult: 1
@@ -160,8 +230,16 @@ layer {
 
 layer {
   name: "loss"
-  type: "SoftmaxWithLoss"
+  type: "EuclideanLoss"
   bottom: "ip2"
-  bottom: "label"
+  bottom: "index_uv_l"
   top: "loss"
 }
+
+#layer {
+#  name: "loss"
+#  type: "SoftmaxWithLoss"
+#  bottom: "ip2"
+#  bottom: "label"
+#  top: "loss"
+#}

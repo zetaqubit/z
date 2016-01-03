@@ -4,6 +4,7 @@
 #include <string>
 
 #include "src/genesis/io/datatypes.h"
+#include "src/genesis/io/proto/leap_frame.pb.h"
 #include "src/genesis/visualization/image_viewer.h"
 #include "src/third_party/caffe/include/caffe/caffe.hpp"
 
@@ -28,23 +29,25 @@ class HandNeuralNet {
   // Infers the classification of |frame|. Does not train NN.
   //
   // @param frame the data given to the first layer of the NN.
-  // @param label the ground truth label (used only for debug output).
-  InferenceResult Infer(const Image& image, int label);
+  // @param ground_truth the ground truth label/pose
+  //        (used only for debug output).
+  InferenceResult Infer(const Image& image,
+                        const proto::LeapFrame& ground_truth);
 
   // Trains the NN using |frame| and its corresponding ground truth label.
   // @param frame the data given to the first layer of the NN.
-  // @param label ground truth label for the NN to learn
-  InferenceResult Train(const Image& image, int label);
+  // @param ground_truth the ground truth label/pose for the NN to learn
+  InferenceResult Train(const Image& image,
+                        const proto::LeapFrame& ground_truth);
 
  private:
-  // Loads the image frame and label (if any) into the bottom layers of the NN.
-  void LoadInputIntoNN(const Image& image, int label);
-  InferenceResult ReadOutputFromNN();
+  // Loads the image frame and ground truth into the bottom layers of the NN.
+  void LoadInputIntoNN(const Image& image,
+                       const proto::LeapFrame& ground_truth);
+  InferenceResult ReadOutputFromNN(const proto::LeapFrame& ground_truth);
 
   std::unique_ptr<caffe::Solver<float> > solver_;
-
   ImageViewer debug_viewer_;
-  int actual_label_;
 };
 
 }  // namespace genesis

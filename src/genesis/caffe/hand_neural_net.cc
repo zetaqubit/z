@@ -3,6 +3,7 @@
 #include <glog/logging.h>
 
 #include "src/third_party/caffe/include/caffe/solver.hpp"
+#include "src/genesis/io/conversion_utils.h"
 
 namespace genesis {
 
@@ -27,73 +28,88 @@ int MaxIndex(const std::vector<float>& data) {
   return std::distance(a, std::max_element(a, a + data.size()));
 }
 
-void HandNeuralNet::LoadInputIntoNN(const Image& image, int label) {
+void HandNeuralNet::LoadInputIntoNN(const Image& image,
+                                    const proto::LeapFrame& ground_truth) {
   // Visualize the image.
-  debug_viewer_.UpdateNormalized(image).EndFrame();
+  debug_viewer_.UpdateNormalized(image);
 
-  // Load the image data.
+  // Load the input data.
   caffe::Net<float>* net = solver_->net().get();
-  caffe::Blob<float>* input_layer = net->input_blobs()[0];
-  float* input_data = input_layer->mutable_cpu_data();
-  std::copy(image.begin(), image.end(), input_data);
+  caffe::Blob<float>* image_blob = net->input_blobs()[0];
+  float* image_cpu_data = image_blob->mutable_cpu_data();
+  std::copy(image.begin(), image.end(), image_cpu_data);
 
-  // Load the label data, if any.
-  if (label != -1) {
-    caffe::Blob<float>* input_label = net->input_blobs()[1];
-    float* input_label_data = input_label->mutable_cpu_data();
-    input_label_data[0] = label;
-  }
+  // Load hand ground truth.
+  caffe::Blob<float>* hand_blob = net->input_blobs()[1];
+  float* hand_cpu_data = hand_blob->mutable_cpu_data();
+  std::vector<float> hand_gt;
+  SerializeHand(ground_truth.left_hand(), &hand_gt);
+  std::copy(hand_gt.begin(), hand_gt.end(), hand_cpu_data);
+
+  // Load the label data.
+  caffe::Blob<float>* label_blob = net->input_blobs()[2];
+  float* label_cpu_data = label_blob->mutable_cpu_data();
+  label_cpu_data[0] = ground_truth.has_left_hand() ? 1 : 0;
 }
 
-InferenceResult HandNeuralNet::ReadOutputFromNN() {
+InferenceResult HandNeuralNet::ReadOutputFromNN(
+    const proto::LeapFrame& ground_truth) {
   caffe::Net<float>* net = solver_->net().get();
 
   auto output_layer = net->blob_by_name("ip2");
   const float* begin = output_layer->cpu_data();
   const float* end = begin + output_layer->channels();
   auto result = std::vector<float>(begin, end);
+  float predicted_x = result[0];
+  float predicted_y = result[1];
   int max_index = MaxIndex(result);
 
+  float actual_x = ground_truth.left_hand().index().left_screen_coords().u();
+  float actual_y = ground_truth.left_hand().index().left_screen_coords().v();
   auto loss_layer = net->blob_by_name("loss");
   float loss = loss_layer->cpu_data()[0];
-#if 1
+#if 0
   LOG(INFO) << "Predict: " << max_index
             << (actual_label_ == -1 ? "" : ". actual: ")
             << (actual_label_ == -1 ? "" : std::to_string(actual_label_))
             << ". prob: " << result[max_index]
             << ". loss: " << loss;
+#else
+  LOG(INFO) << Format("Pre [Act]: %7.4f|%7.4f || %7.4f|%7.4f ||" /* %7.4f[%7.4f]" */,
+                      predicted_x, actual_x, predicted_y, actual_y
+                      /* 0, 0 */)
+            << ". loss: " << loss;
 #endif
+
+  debug_viewer_.DrawPoint(predicted_x, 1 - predicted_y, 4.0f);
+  debug_viewer_.EndFrame();
 
   bool has_hand = (max_index == 1);
   return InferenceResult(has_hand, loss);
 }
 
-InferenceResult HandNeuralNet::Infer(const Image& image, int label) {
-  actual_label_ = label;
-  LoadInputIntoNN(image, label);
+InferenceResult HandNeuralNet::Infer(const Image& image,
+                                     const proto::LeapFrame& ground_truth) {
+  LoadInputIntoNN(image, ground_truth);
   solver_->net()->ForwardPrefilled();
-  return ReadOutputFromNN();
+  return ReadOutputFromNN(ground_truth);
 }
 
-InferenceResult HandNeuralNet::Train(const Image& image, int label) {
-  actual_label_ = label;
-  LoadInputIntoNN(image, label);
+InferenceResult HandNeuralNet::Train(const Image& image,
+                                     const proto::LeapFrame& ground_truth) {
 
   // Do a forward pass to check loss. Backprop only if loss is large enough.
   // This prevents the NN from being flooded with easy examples.
-  solver_->net()->ForwardPrefilled();
-  InferenceResult result = ReadOutputFromNN();
-  //if (result.has_hand == (label == 1)) {
-  //  return result;
-  //}
-  if (result.loss < 0.1) {
-    LOG(INFO) << "Loss is " << std::to_string(result.loss) << ". Not training.";
+  InferenceResult result = Infer(image, ground_truth);
+  if (result.loss < 0.001) {
+    LOG(INFO) << "Loss is " << result.loss << ". Not training.";
     return result;
   }
   LOG(INFO) << "Training w/ loss = " << result.loss;
 
+  LoadInputIntoNN(image, ground_truth);
   solver_->Step(1);
-  return ReadOutputFromNN();
+  return ReadOutputFromNN(ground_truth);
 }
 
 }  // namespace genesis

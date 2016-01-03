@@ -14,11 +14,24 @@
 
 namespace genesis {
 
+// String logging.
+template<typename ... Args>
+std::string Format(const std::string& format, Args... args) {
+  // Extra space for '\0'
+  size_t size = snprintf( nullptr, 0, format.c_str(), args...) + 1;
+  std::unique_ptr<char[]> buf(new char[size]);
+  snprintf(buf.get(), size, format.c_str(), args...);
+  return std::string( buf.get(), buf.get() + size - 1); // strip '\0'
+}
+
+
 // Proto conversions.
 std::unique_ptr<proto::LeapFrame> ReadProto(const std::string& filename);
 bool WriteProto(const std::string& filename, const proto::LeapFrame& proto);
 proto::LeapFrame FrameToProto(const Leap::Frame& frame);
 caffe::Datum ProtoToDatum(const proto::LeapFrame& proto);
+std::vector<float> SerializeInputToNN(const proto::LeapFrame& proto);
+void SerializeHand(const proto::Hand& hand, std::vector<float>* output);
 
 // Geometric operations.
 const Leap::Vector ProjectToScreenUndistorted(const Leap::Vector& p,

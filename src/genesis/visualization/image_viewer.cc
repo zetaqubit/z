@@ -46,14 +46,15 @@ ImageViewer& ImageViewer::DrawCoords(const proto::ScreenCoords& coords) {
 }
 
 ImageViewer& ImageViewer::DrawHand(const proto::Hand& hand, ImageId id) {
-  proto::KeyPoint fingers[] = {
-    hand.thumb(), hand.index(), hand.middle(), hand.ring(), hand.pinky()
+  proto::KeyPoint key_points[] = {
+    hand.palm(), hand.thumb(), hand.index(), hand.middle(), hand.ring(),
+    hand.pinky()
   };
-  for (const proto::KeyPoint& finger : fingers) {
+  for (const proto::KeyPoint& key_point : key_points) {
     if (id == LEFT_IMAGE) {
-      DrawCoords(finger.left_screen_coords());
+      DrawCoords(key_point.left_screen_coords());
     } else if (id == RIGHT_IMAGE) {
-      DrawCoords(finger.right_screen_coords());
+      DrawCoords(key_point.right_screen_coords());
     }
   }
 }

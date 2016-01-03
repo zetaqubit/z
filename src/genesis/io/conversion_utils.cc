@@ -191,29 +191,62 @@ void ConvertImageToNetInput(Image* image) {
   NormalizeAndSubtractMean(image);
 }
 
-caffe::Datum ProtoToDatum(const proto::LeapFrame& proto) {
-  caffe::Datum datum;
+static void SerializeKeyPoint(const proto::KeyPoint& key_point,
+                              std::vector<float>* output) {
+  output->push_back(key_point.world_pose().x());
+  output->push_back(key_point.world_pose().y());
+  output->push_back(key_point.world_pose().z());
+  output->push_back(key_point.left_screen_coords().u());
+  output->push_back(key_point.left_screen_coords().v());
+  output->push_back(key_point.right_screen_coords().u());
+  output->push_back(key_point.right_screen_coords().v());
+}
 
-  bool has_hand = proto.has_left_hand();
-  datum.set_label(has_hand ? 1 : 0);
+void SerializeHand(const proto::Hand& hand, std::vector<float>* output) {
+  SerializeKeyPoint(hand.palm(), output);
+  SerializeKeyPoint(hand.thumb(), output);
+  SerializeKeyPoint(hand.index(), output);
+  SerializeKeyPoint(hand.middle(), output);
+  SerializeKeyPoint(hand.ring(), output);
+  SerializeKeyPoint(hand.pinky(), output);
+}
 
-  datum.set_channels(1);
+std::vector<float> SerializeInputToNN(const proto::LeapFrame& proto) {
+  std::vector<float> input_vector;
 
+  // Serialize the image.
   Image scaled(proto.left_image().data().data(),
                proto.left_image().width(), proto.left_image().height());
   ConvertImageToNetInput(&scaled);
+  input_vector.resize(scaled.width() * scaled.height());
+  std::copy(scaled.begin(), scaled.end(), input_vector.begin());
 
-  int scaled_w = scaled.width();
-  int scaled_h = scaled.height();
+  // Serialize the hand.
+  SerializeHand(proto.left_hand(), &input_vector);
 
-  datum.set_width(scaled_w);
-  datum.set_height(scaled_h);
+  // Debug visualization.
+  static ImageViewer dbg("ProtoToDatum", scaled.width(), scaled.height());
+  dbg.UpdateNormalized(scaled);
+  if (proto.has_left_hand()) {
+    dbg.DrawHand(proto.left_hand(), LEFT_IMAGE);
+  }
+  dbg.EndFrame();
 
-  datum.mutable_float_data()->Resize(scaled_w * scaled_h, 0);
-  std::copy(scaled.begin(), scaled.end(), datum.mutable_float_data()->begin());
+  return input_vector;
+}
 
-  static ImageViewer dbg("ProtoToDatum", scaled_w, scaled_h);
-  dbg.UpdateNormalized(scaled).EndFrame();
+caffe::Datum ProtoToDatum(const proto::LeapFrame& proto) {
+  caffe::Datum datum;
+
+  std::vector<float> input = SerializeInputToNN(proto);
+  datum.set_channels(input.size());
+  datum.set_width(1);
+  datum.set_height(1);
+  datum.set_label(proto.has_left_hand() ? 1 : 0);
+
+  // Copy the data into Datum.
+  datum.mutable_float_data()->Resize(input.size(), 0);
+  std::copy(input.begin(), input.end(), datum.mutable_float_data()->begin());
 
   return datum;
 }
