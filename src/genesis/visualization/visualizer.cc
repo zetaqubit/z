@@ -73,17 +73,10 @@ bool Visualizer::InitScene() {
     return false;
   }
 
-  // Create circles representing fingertips.
-  for (int i = 0; i < 10; i++) {
-    fingertips_[i] = gluNewQuadric();
-  }
-
   // Setup projection and view matrices.
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  //SetPerspectiveFrustum(132 /* fov */, kWindowWidth / kWindowHeight,
-  //    1 /* near_plane */, 20 /* far_plane */);
-  glOrtho(-1, 1, -1, 1, -1, 1);
+  glOrtho(-0.8, 0.8, -0.8, 0.8, -0.8, 0.8);
   glMatrixMode(GL_MODELVIEW);
   return true;
 }
@@ -114,11 +107,18 @@ void Visualizer::Run() {
     Render();
     image_viewer_.EndFrame();
 
+    proto::LeapFrame proto = FrameToProto(frame_);
+
+    // Visualize debug image.
     Image image(left.data(), left.width(), left.height());
     debug_image_viewer_.Update(image);
+    if (proto.has_left_hand()) {
+      debug_image_viewer_.DrawHand(proto.left_hand(), LEFT_IMAGE);
+    }
+    debug_image_viewer_.EndFrame();
 
-    int label = ExtractLabel(frame_);
-
+    // Feed the frame to convnet for inference/training.
+    int label = proto.has_left_hand() ? 1 : 0;
     ConvertImageToNetInput(&image);
     if (should_train_) {
       handnet_->Train(image, label);
@@ -175,53 +175,37 @@ void Visualizer::Update() {
 }
 
 void Visualizer::Render() {
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  //glTranslatef(0., 0., -10.);
-
-  // Move sensor images away from camera and scale to maintain distance-to-size
-  // ratio of 4:1.
-  glPushMatrix();
-  //glScalef(50., 50., 1.);
-  //glTranslatef(0., 0., -10.);
-
   shader_.Draw(kAspect);
 
   RenderTrackedHand();
   AssertNoGlError("After drawing tracked hand");
+}
 
-  glPopMatrix();
+void Visualizer::DrawWorldPoint(const Leap::Vector& position) {
+  Leap::Vector ndc = ProjectToScreenUndistorted(position, frame_.images()[0]);
+
+  // Pixel coordinates from [0, 1] to [-1, 1]
+  Leap::Vector pixel(ndc.x * 2 - 1, -(ndc.y * 2 - 1) / kAspect, 0);
+
+  glUseProgram(0);
+  glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+  glPointSize(5.0f);
+  glBegin(GL_POINTS);
+  glVertex2f(pixel.x, pixel.y);
+  glEnd();
 }
 
 void Visualizer::RenderTrackedHand() {
-  // TODO: debug why color is not working.
-  glColor3f(0.5f, 0.2f, 0.3f);
   Leap::FingerList fingers = frame_.fingers();
-  int id = 0;
+
+  DrawWorldPoint(frame_.hands()[0].palmPosition());
+
   for (auto fl = fingers.begin(); fl != fingers.end(); fl++) {
-    //Convert finger tip position to a ray from the camera POV
-    Leap::Vector tip = (*fl).tipPosition();
-    int i = 0;  // 0 = left, 1 = right.
-    float horizontal_slope = -(tip.x + 20 * (2 * i - 1))/tip.y;
-    float vertical_slope = tip.z/tip.y;
-
-    // Normalize ray from [-4..4] to [0..1] (the inverse of how the undistorted
-    // image was drawn earlier)
-    Leap::Image image = frame_.images()[0];
-    Leap::Vector ray(horizontal_slope * image.rayScaleX() + image.rayOffsetX(),
-        vertical_slope   * image.rayScaleY() + image.rayOffsetY(), 0);
-
-    //Pixel coordinates from [0..1] to [0..width/height]
-    Leap::Vector pixel(ray.x * 2 - 1, -(ray.y * 2 - 1) / kAspect, 0);
-    //LOG(INFO) << "Finger " << id << " position: "  << pixel.x << ", " << pixel.y;
-    glPushMatrix();
-    glTranslatef(pixel.x, pixel.y, 0);
-    gluDisk(fingertips_[id], 0, 0.01, 10 /* slices */, 1 /* loops */);
-    glPopMatrix();
-    id++;
-    //Leap::Vector pixel(ray.x * targetWidth, ray.y * targetHeight, 0);
-    //gl::color(.5, 0, 1, .5);
-    //gl::drawSolidCircle(Vec2f(pixel.x + origin.x, pixel.y + origin.y), 5);
+    for(int b = 1; b < 4; b++) {
+      Leap::Bone::Type bone_type = static_cast<Leap::Bone::Type>(b);
+      Leap::Vector p = (*fl).bone(bone_type).center();
+      DrawWorldPoint(p);
+    }
   }
 }
 

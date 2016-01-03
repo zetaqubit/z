@@ -31,6 +31,14 @@ void ScaleImage(genesis::Image* img, int scaled_w, int scaled_h) {
               5 /* cubic interpolation */);
 }
 
+genesis::proto::Pose LeapVectorToProto(const Leap::Vector& vector) {
+  genesis::proto::Pose pose;
+  pose.set_x(vector.x);
+  pose.set_y(vector.y);
+  pose.set_z(vector.z);
+  return pose;
+}
+
 }  // namespace
 
 namespace genesis {
@@ -62,6 +70,75 @@ bool WriteProto(const string& filename, const proto::LeapFrame& proto) {
   return true;
 }
 
+const Leap::Vector ProjectToScreenUndistorted(const Leap::Vector& p,
+                                              const Leap::Image& image) {
+  // Convert world position to a ray from the camera POV
+  float horizontal_slope = -(p.x + (image.id() == 0 ? -20 : 20)) / p.y;
+  float vertical_slope = p.z / p.y;
+
+  // Normalize ray from [-4..4] to [0..1] (the inverse of how the undistorted
+  // image was drawn earlier)
+  Leap::Vector ndc(
+      horizontal_slope * image.rayScaleX() + image.rayOffsetX(),
+      vertical_slope   * image.rayScaleY() + image.rayOffsetY(), 0);
+
+  return ndc;
+}
+
+const Leap::Vector ProjectToScreenDistorted(const Leap::Vector& p,
+                                            const Leap::Image& image) {
+  // Convert world position to a ray from the camera POV
+  float h_slope = -(p.x + (image.id() == 0 ? -20 : 20)) / p.y;
+  float v_slope = p.z / p.y;
+
+  Leap::Vector ndc = image.warp(Leap::Vector(h_slope, v_slope, 0));
+  ndc.x /= image.width();
+  ndc.y /= image.height();
+  return ndc;
+}
+
+proto::KeyPoint ExtractKeyPoint(const Leap::Vector& position,
+                                const Leap::Frame& frame) {
+  proto::KeyPoint key_point;
+  *key_point.mutable_world_pose() = LeapVectorToProto(position);
+
+  // Project the world pose into the left and right images.
+  Leap::Vector left_coords = ProjectToScreenDistorted(
+      position, frame.images()[0]);
+  key_point.mutable_left_screen_coords()->set_u(left_coords.x);
+  key_point.mutable_left_screen_coords()->set_v(left_coords.y);
+
+  Leap::Vector right_coords = ProjectToScreenDistorted(
+      position, frame.images()[1]);
+  key_point.mutable_right_screen_coords()->set_u(right_coords.x);
+  key_point.mutable_right_screen_coords()->set_v(right_coords.y);
+  return key_point;
+}
+
+proto::Hand HandToProto(const Leap::Hand& hand, const Leap::Frame& frame) {
+  proto::Hand proto;
+  if (hand.isLeft()) {
+    proto.set_identity(proto::Hand_Identity_LEFT);
+  } else if (hand.isRight()) {
+    proto.set_identity(proto::Hand_Identity_RIGHT);
+  }
+
+  *proto.mutable_palm() = ExtractKeyPoint(hand.palmPosition(), frame);
+  proto::KeyPoint* mutable_fingers[] = {
+    proto.mutable_thumb(), proto.mutable_index(), proto.mutable_middle(),
+    proto.mutable_ring(), proto.mutable_pinky()
+  };
+  for (int i = 0; i < hand.fingers().count(); i++) {
+    Leap::Finger finger = hand.fingers()[i];
+    Leap::Bone tip = finger.bone(Leap::Bone::TYPE_DISTAL);
+    if (tip.isValid()) {
+      *mutable_fingers[i] = ExtractKeyPoint(tip.center(), frame);
+    }
+  }
+
+  return proto;
+}
+
 proto::Image ImageToProto(const Leap::Image& image) {
   int w = image.width(), h = image.height();
 
@@ -75,6 +152,40 @@ proto::Image ImageToProto(const Leap::Image& image) {
   return proto;
 }
 
+proto::LeapFrame FrameToProto(const Leap::Frame& frame) {
+  proto::LeapFrame leap_frame;
+
+  leap_frame.set_timestamp_ms(frame.timestamp());
+
+  // Update image and distortion textures.
+  Leap::Image left = frame.images()[0];
+  if (left.width() > 0) {
+    *leap_frame.mutable_left_image() = ImageToProto(left);
+  }
+  Leap::Image right = frame.images()[1];
+  if (right.width() > 0) {
+    *leap_frame.mutable_right_image() = ImageToProto(right);
+  }
+
+  bool has_left_hand = false, has_right_hand = false;
+  for (int i = 0; i < frame.hands().count(); i++) {
+    Leap::Hand hand = frame.hands()[i];
+    if (!hand.isValid()) {
+      continue;
+    }
+    if (hand.isLeft() && !has_left_hand) {
+      *leap_frame.mutable_left_hand() = HandToProto(hand, frame);
+      has_left_hand = true;
+    }
+    if (hand.isRight() && !has_right_hand) {
+      *leap_frame.mutable_right_hand() = HandToProto(hand, frame);
+      has_right_hand = true;
+    }
+  }
+
+  return leap_frame;
+}
+
 void ConvertImageToNetInput(Image* image) {
   ScaleImage(image, kNNImageWidth, kNNImageHeight);
   NormalizeAndSubtractMean(image);
@@ -83,13 +194,13 @@ void ConvertImageToNetInput(Image* image) {
 caffe::Datum ProtoToDatum(const proto::LeapFrame& proto) {
   caffe::Datum datum;
 
-  bool has_hand = proto.has_hand_pose();
+  bool has_hand = proto.has_left_hand();
   datum.set_label(has_hand ? 1 : 0);
 
   datum.set_channels(1);
 
-  Image scaled(proto.left().data().data(),
-               proto.left().width(), proto.left().height());
+  Image scaled(proto.left_image().data().data(),
+               proto.left_image().width(), proto.left_image().height());
   ConvertImageToNetInput(&scaled);
 
   int scaled_w = scaled.width();
@@ -102,26 +213,9 @@ caffe::Datum ProtoToDatum(const proto::LeapFrame& proto) {
   std::copy(scaled.begin(), scaled.end(), datum.mutable_float_data()->begin());
 
   static ImageViewer dbg("ProtoToDatum", scaled_w, scaled_h);
-  dbg.UpdateNormalized(scaled);
+  dbg.UpdateNormalized(scaled).EndFrame();
 
   return datum;
-}
-
-int ExtractLabel(const Leap::Frame& frame) {
-#if 1
-  int label = 0;
-  Leap::HandList hands = frame.hands();
-  for (auto hl = hands.begin(); hl != hands.end(); hl++) {
-    Leap::Hand hand = *hl;
-    if (hand.isLeft()) {
-      label = 1;
-      break;
-    }
-  }
-#else
-  int label = (frame.hands().Count() > 0 ? 1 : 0);
-#endif
-  return label;
 }
 
 }  // namespace genesis
