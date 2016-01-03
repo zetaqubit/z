@@ -3,9 +3,9 @@ net: "/home/z/hand_tracking/blaze_root/src/genesis/caffe/handnet_deploy.prototxt
 #test_iter: 10
 #test_interval: 500
 
-base_lr: 0.00005 # was 0.01
-momentum: 0.9 # was 0.9
-weight_decay: 0.0005 # was 0.0005
+base_lr: 0.001 # was 0.01
+momentum: 0.9
+weight_decay: 0.01 # was 0.0005
 
 lr_policy: "fixed"  # was inv
 gamma: 0.0001

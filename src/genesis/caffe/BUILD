@@ -13,6 +13,7 @@ cc_library(
     "//data/genesis/caffe:trained_weights",
   ],
   deps = [
+    "//src/genesis/io:conversion_utils",
     "//src/genesis/io:datatypes",
     "//src/genesis/visualization:image_viewer",
     "//src/third_party/caffe:caffe_lib",

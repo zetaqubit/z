@@ -121,9 +121,9 @@ void Visualizer::Run() {
     int label = proto.has_left_hand() ? 1 : 0;
     ConvertImageToNetInput(&image);
     if (should_train_) {
-      handnet_->Train(image, label);
+      handnet_->Train(image, proto);
     } else {
-      handnet_->Infer(image, label);
+      handnet_->Infer(image, proto);
     }
 
     SDL_Delay(1);
