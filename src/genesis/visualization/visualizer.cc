@@ -23,12 +23,12 @@ static const std::string kProtoDataOutputDirectory =
 static const std::string kHandnetModel =
     "src/genesis/caffe/handnet_deploy.prototxt";
 static const std::string kHandnetWeights =
-    "data/genesis/caffe/model_snapshots/handnet_iter_10000.caffemodel";
+    "data/genesis/caffe/model_snapshots/handnet_iter_3000.caffemodel";
 
 static const std::string kHandnetSolver =
     "src/genesis/caffe/handnet_solver_deploy.prototxt";
 static const std::string kHandnetRestore =
-    "data/genesis/caffe/model_snapshots/handnet_iter_10000.solverstate";
+    "data/genesis/caffe/model_snapshots/handnet_iter_3000.solverstate";
 
 static const std::string kMnistModel =
     "src/genesis/caffe/mnist_deploy.prototxt";
