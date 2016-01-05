@@ -1,0 +1,4 @@
+# Wraps g++ and specifies the binary path.
+# This is required to make the nvcc's -ccbin option work.
+
+/usr/bin/g++ -B/usr/bin "$@"
