@@ -16,7 +16,7 @@ cc_library(
     "//src/genesis/io:conversion_utils",
     "//src/genesis/io:datatypes",
     "//src/genesis/visualization:image_viewer",
-    "//src/third_party/caffe:caffe_lib",
+    "//src/third_party/caffe:caffe",
   ],
   linkopts = [
     "-lglog",
