@@ -56,7 +56,7 @@ InferenceResult HandNeuralNet::ReadOutputFromNN(
     const proto::LeapFrame& ground_truth) {
   caffe::Net<float>* net = solver_->net().get();
 
-  auto output_layer = net->blob_by_name("ip2");
+  auto output_layer = net->blob_by_name("output");
   const float* begin = output_layer->cpu_data();
   const float* end = begin + output_layer->channels();
   auto result = std::vector<float>(begin, end);
@@ -64,8 +64,8 @@ InferenceResult HandNeuralNet::ReadOutputFromNN(
   float predicted_y = result[1];
   int max_index = MaxIndex(result);
 
-  float actual_x = ground_truth.left_hand().index().left_screen_coords().u();
-  float actual_y = ground_truth.left_hand().index().left_screen_coords().v();
+  float actual_x = ground_truth.left_hand().palm().left_screen_coords().u();
+  float actual_y = ground_truth.left_hand().palm().left_screen_coords().v();
   auto loss_layer = net->blob_by_name("loss");
   float loss = loss_layer->cpu_data()[0];
 #if 0
