@@ -106,6 +106,22 @@ layer {
   }
 }
 
+layer {
+  name: "silence_output"
+  type: "Silence"
+  bottom: "unused"
+  bottom: "palm_xyz"
+  bottom: "palm_uv_l"
+  bottom: "palm_uv_r"
+  bottom: "thumb_xyz"
+  bottom: "thumb_uv_l"
+  bottom: "thumb_uv_r"
+  bottom: "index_xyz"
+  bottom: "index_uv_l"
+  bottom: "index_uv_r"
+  bottom: "label"
+}
+
 
 layer {
   name: "unflatten_image"
@@ -152,7 +168,7 @@ layer {
   top: "pool1"
   pooling_param {
     pool: MAX
-    kernel_size: 2
+    kernel_size: 3 # was 2
     stride: 2
   }
 }
@@ -168,7 +184,7 @@ layer {
     lr_mult: 2
   }
   convolution_param {
-    num_output: 40
+    num_output: 80 # was 40
     kernel_size: 5
     stride: 1
     weight_filler {
@@ -186,7 +202,7 @@ layer {
   top: "pool2"
   pooling_param {
     pool: MAX
-    kernel_size: 2
+    kernel_size: 3 # was 2
     stride: 2
   }
 }
@@ -202,8 +218,8 @@ layer {
     lr_mult: 2
   }
   convolution_param {
-    num_output: 30
-    kernel_size: 5
+    num_output: 40 # was 30
+    kernel_size: 3 # was 5
     stride: 1
     weight_filler {
       type: "xavier"
@@ -220,7 +236,7 @@ layer {
   top: "pool3"
   pooling_param {
     pool: MAX
-    kernel_size: 2
+    kernel_size: 3 # was 2
     stride: 2
   }
 }
@@ -236,7 +252,7 @@ layer {
     lr_mult: 2
   }
   inner_product_param {
-    num_output: 500
+    num_output: 2048 # was 500
     weight_filler {
       type: "xavier"
     }
@@ -256,6 +272,33 @@ layer {
   type: "InnerProduct"
   bottom: "ip1"
   top: "ip2"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 2048 # was 1024, 2
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "ip2"
+  top: "ip2"
+}
+layer {
+  name: "output"
+  type: "InnerProduct"
+  bottom: "ip2"
+  top: "output"
   param {
     lr_mult: 1
   }
@@ -285,26 +328,10 @@ layer {
 #}
 
 layer {
-  name: "silence_output"
-  type: "Silence"
-  bottom: "unused"
-  bottom: "palm_xyz"
-  bottom: "palm_uv_l"
-  bottom: "palm_uv_r"
-  bottom: "thumb_xyz"
-  bottom: "thumb_uv_l"
-  bottom: "thumb_uv_r"
-  bottom: "index_xyz"
-  bottom: "index_uv_l"
-  bottom: "index_uv_r"
-  bottom: "label"
-}
-
-layer {
   name: "loss"
   type: "EuclideanLoss"
-  bottom: "ip2"
-  bottom: "index_uv_l"
+  bottom: "output"
+  bottom: "palm_uv_l"
   top: "loss"
 }
 

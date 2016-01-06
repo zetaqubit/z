@@ -5,7 +5,7 @@ test_interval: 500
 
 base_lr: 0.001 # was 0.01
 momentum: 0.9
-weight_decay: 0.01 # was 0.0005
+weight_decay: 0.01 # was 0.01, 0.0005
 
 lr_policy: "inv"
 gamma: 0.0001
