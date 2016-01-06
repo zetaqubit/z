@@ -34,8 +34,15 @@ cc_library(
   ],
 )
 
+WARNINGS = [
+  "-Wall",
+  "-Wno-sign-compare",
+]
+
 COMMON_FLAGS = [
   "-DUSE_CUDNN",
+  "-DNDEBUG",
+  "-O2",
 ]
 
 CUDA_INCLUDES = [
@@ -57,8 +64,6 @@ CUDA_ARCH = [
 CUDA_OPTS = COMMON_FLAGS + [
   "-Xcompiler",
   "-fPIC",
-  "-DNDEBUG",
-  "-O2",
 ] + CUDA_INCLUDES + CUDA_ARCH
 
 cuda_library(
@@ -101,22 +106,17 @@ cc_library(
     "-fPIC",
     "-MMD",
     "-MP",
-
-  ] + COMMON_FLAGS,
+  ] + COMMON_FLAGS + WARNINGS,
 
   linkopts = [
     # Library dir
     "-Lsrc/third_party/cuda/lib64",
     "-Lsrc/third_party/open_blas/lib",
-    #"-L/opt/OpenBLAS/lib",
-    #"-L/opt/cuda/lib64",
-    "-L.",
 
     # LDFLAGS
     "-lcudart",
     "-lcublas",
     "-lcurand",
-    #"-lcuda",
     "-lcudnn",
 
     "-lglog",
@@ -126,7 +126,7 @@ cc_library(
     "-lsnappy",
     "-llmdb",
     "-lboost_system",
-    #"-lhdf5_h1",
+    "-lhdf5_hl",
     "-lhdf5",
     "-lm",
 
@@ -139,6 +139,14 @@ cc_library(
 
     "-lopenblas",
 
-  ] + COMMON_FLAGS,
+    "-pthread",
+    "-fPIC",
+
+  ] + COMMON_FLAGS + WARNINGS,
+
+  # When static-linking Caffe, force link all the object files, even ones
+  # whose symbols are not referenced from source. This is necessary because the
+  # Caffe layers self-register on init and are invoked through prototxt spec.
+  alwayslink = 1,
 )
 
