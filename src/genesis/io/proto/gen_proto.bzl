@@ -47,5 +47,5 @@ def proto_library(name, srcs, deps=None, cc_api_version=None, visibility=None):
                       name = name,
                       hdrs = hdrs,
                       srcs = [ protogen_name ],
-                      deps = ["//src/third_party/protobuf:protobuf"] + deps,
+                      deps = ["//src/third_party/protobuf:protobuf_lite"] + deps,
                       visibility = visibility)

@@ -290,12 +290,6 @@ int time() {
 }
 RegisterBrewFunction(time);
 
-int CustomExit(int retval) {
-  LOG(INFO) << "Exiting with return value: " << retval;
-  // while(1);
-  return retval;
-}
-
 int main(int argc, char** argv) {
   // Print output to stderr (while still logging).
   FLAGS_alsologtostderr = 1;
@@ -310,10 +304,9 @@ int main(int argc, char** argv) {
   // Run tool or show usage.
   caffe::GlobalInit(&argc, &argv);
   if (argc == 2) {
-    int retval = GetBrewFunction(caffe::string(argv[1]))();
-    return CustomExit(retval);
+    return GetBrewFunction(caffe::string(argv[1]))();
   } else {
     gflags::ShowUsageWithFlagsRestrict(argv[0], "tools/caffe");
   }
-  return CustomExit(0);
+  return 0;
 }
