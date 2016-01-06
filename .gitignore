@@ -14,5 +14,10 @@ bazel-blaze_root
 # LMDB
 **/lock.mdb
 
-# data
-data/
+# Ignore all data except trained_models
+data/*
+!data/genesis
+data/genesis/*
+!data/genesis/caffe
+data/genesis/caffe/*
+!data/genesis/caffe/trained_models
