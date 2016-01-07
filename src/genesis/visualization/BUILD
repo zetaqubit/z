@@ -5,10 +5,8 @@ cc_binary(
   srcs = ["visualizer_main.cc"],
   deps = [
     ":visualizer_lib",
+    "//src/third_party/glog",
     "//src/third_party/leap_motion:api",
-  ],
-  linkopts = [
-    "-lglog",
   ],
 )
 
@@ -28,6 +26,7 @@ cc_library(
     "//src/genesis/caffe:handnet_inference",
     "//src/genesis/io:conversion_utils",
     "//src/genesis/io:frame_recorder",
+    "//src/third_party/glog",
     "//src/third_party/leap_motion:api",
   ],
   data = glob([
@@ -38,7 +37,6 @@ cc_library(
     "-lGLEW",
     "-lGLU",
     "-lGL",
-    "-lglog",
   ],
 )
 
@@ -49,6 +47,9 @@ cc_library(
   ],
   hdrs = [
     "gl_utils.h",
+  ],
+  deps = [
+    "//src/third_party/glog",
   ],
   linkopts = [
     "-lGLEW",
@@ -66,6 +67,7 @@ cc_library(
   ],
   deps = [
     ":gl_utils",
+    "//src/third_party/glog",
   ],
   linkopts = [
     "-lSDL2",
@@ -102,9 +104,11 @@ cc_library(
     "texture_shader.h",
     "undistorted_texture_shader.h",
   ],
+  deps = [
+    "//src/third_party/glog",
+  ],
   linkopts = [
     "-lGLEW",
-    "-lglog",
   ],
 )
 

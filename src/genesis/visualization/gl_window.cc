@@ -1,7 +1,8 @@
 #include "src/genesis/visualization/gl_window.h"
 
 #include <GL/glew.h>
-#include <glog/logging.h>
+
+#include "src/third_party/glog/src/glog/logging.h"
 
 namespace genesis {
 

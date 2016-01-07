@@ -51,8 +51,10 @@ cc_library(
   hdrs = [
     "lmdb_storage.h"
   ],
+  deps = [
+    "//src/third_party/glog",
+  ],
   linkopts = [
-    "-lglog",
     "-llmdb",
   ],
 )
@@ -69,10 +71,8 @@ cc_library(
     ":conversion_utils",
     ":lmdb_storage",
     "//src/genesis/io/proto:genesis_protos",
-    "//src/third_party/caffe:caffe_protos"
-  ],
-  linkopts = [
-    "-lglog",
+    "//src/third_party/caffe:caffe_protos",
+    "//src/third_party/glog",
   ],
 )
 

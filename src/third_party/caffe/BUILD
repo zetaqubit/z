@@ -99,6 +99,8 @@ cc_library(
     ":caffe_protos",
     ":caffe_lib_cuda",
     "//src/third_party/cuda:cublas",
+    "//src/third_party/gflags",
+    "//src/third_party/glog",
     "//src/third_party/open_blas",
   ],
   copts = [
@@ -119,8 +121,6 @@ cc_library(
     "-lcurand",
     "-lcudnn",
 
-    "-lglog",
-    "-lgflags",
     "-lprotobuf",
     "-lleveldb",
     "-lsnappy",

@@ -3,7 +3,7 @@
 #include <fstream>
 #include <cmath>
 
-#include <glog/logging.h>
+#include "src/third_party/glog/src/glog/logging.h"
 
 using std::string;
 

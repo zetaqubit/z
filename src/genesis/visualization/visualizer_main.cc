@@ -1,8 +1,8 @@
 #include "src/genesis/visualization/visualizer.h"
 
-#include <glog/logging.h>
 #include <string>
 
+#include "src/third_party/glog/src/glog/logging.h"
 #include "src/third_party/leap_motion/include/Leap.h"
 
 int main(int /* argc */, char** argv) {
