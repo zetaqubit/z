@@ -98,10 +98,11 @@ cc_library(
   deps = [
     ":caffe_protos",
     ":caffe_lib_cuda",
-    "//src/third_party/cuda:cublas",
+    "//src/third_party/cuda",
     "//src/third_party/gflags",
     "//src/third_party/glog",
     "//src/third_party/open_blas",
+    "//src/third_party/protobuf",
   ],
   copts = [
     "-pthread",
@@ -111,17 +112,6 @@ cc_library(
   ] + COMMON_FLAGS + WARNINGS,
 
   linkopts = [
-    # Library dir
-    "-Lsrc/third_party/cuda/lib64",
-    "-Lsrc/third_party/open_blas/lib",
-
-    # LDFLAGS
-    "-lcudart",
-    "-lcublas",
-    "-lcurand",
-    "-lcudnn",
-
-    "-lprotobuf",
     "-lleveldb",
     "-lsnappy",
     "-llmdb",
@@ -136,8 +126,6 @@ cc_library(
 
     "-lboost_thread",
     "-lstdc++",
-
-    "-lopenblas",
 
     "-pthread",
     "-fPIC",
