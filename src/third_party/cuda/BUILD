@@ -83,6 +83,19 @@ cc_library(
 )
 
 cc_library(
+    name = "curand",
+    srcs = [
+        "lib64/libcurand.so.7.0",
+    ],
+    data = [
+        "lib64/libcurand.so.7.0",
+    ],
+    includes = ["include/"],
+    visibility = ["//visibility:public"],
+    linkstatic = 1,
+)
+
+cc_library(
     name = "cuda",
     deps = [
         ":cuda_headers",
@@ -90,6 +103,7 @@ cc_library(
         ":cublas",
         ":cudnn",
         ":cufft",
+        ":curand",
     ],
     visibility = ["//visibility:public"],
 )
