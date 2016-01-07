@@ -4,10 +4,10 @@ cc_binary(
   deps = [
     # "//src/third_party/caffe:caffe_lib",
     "//src/third_party/caffe:caffe",
+    "//src/third_party/gflags",
+    "//src/third_party/glog",
   ],
   linkopts = [
-    "-lglog",
-    "-lgflags",
     "-lpthread",
   ],
   visibility = ["//visibility:public"],

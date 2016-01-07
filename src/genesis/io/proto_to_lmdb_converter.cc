@@ -1,11 +1,11 @@
 #include "src/genesis/io/proto_to_lmdb_converter.h"
 
 #include <fstream>
-#include <glog/logging.h>
 
 #include "src/genesis/io/conversion_utils.h"
 #include "src/genesis/io/proto/leap_frame.pb.h"
 #include "src/third_party/caffe/src/caffe/proto/caffe.pb.h"
+#include "src/third_party/glog/src/glog/logging.h"
 
 namespace genesis {
 

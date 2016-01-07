@@ -1,9 +1,8 @@
 #include "src/genesis/caffe/hand_neural_net.h"
 
-#include <glog/logging.h>
-
-#include "src/third_party/caffe/include/caffe/solver.hpp"
 #include "src/genesis/io/conversion_utils.h"
+#include "src/third_party/caffe/include/caffe/solver.hpp"
+#include "src/third_party/glog/src/glog/logging.h"
 
 namespace genesis {
 

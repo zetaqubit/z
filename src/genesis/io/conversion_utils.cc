@@ -1,11 +1,11 @@
 #include "src/genesis/io/conversion_utils.h"
 
-#include <glog/logging.h>
 #include <stdint.h>
 #include <fstream>
 #include <iostream>
 
 #include "src/genesis/visualization/image_viewer.h"
+#include "src/third_party/glog/src/glog/logging.h"
 
 using std::ios;
 using std::fstream;

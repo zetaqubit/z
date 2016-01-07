@@ -1,9 +1,9 @@
 #include "src/genesis/visualization/undistorted_texture_shader.h"
 
-#include <glog/logging.h>
 #include <string>
 
 #include "src/genesis/visualization/gl_utils.h"
+#include "src/third_party/glog/src/glog/logging.h"
 
 namespace {
 

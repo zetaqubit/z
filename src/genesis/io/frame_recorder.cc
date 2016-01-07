@@ -1,9 +1,9 @@
 #include "src/genesis/io/frame_recorder.h"
 
-#include <glog/logging.h>
 #include <sys/stat.h>
 
 #include "src/genesis/io/conversion_utils.h"
+#include "src/third_party/glog/src/glog/logging.h"
 
 namespace genesis {
 

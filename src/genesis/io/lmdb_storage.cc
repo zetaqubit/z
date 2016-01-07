@@ -2,7 +2,8 @@
 
 #include <stdint.h>
 #include <sys/stat.h>
-#include <glog/logging.h>
+
+#include "src/third_party/glog/src/glog/logging.h"
 
 namespace genesis {
 

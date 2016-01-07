@@ -3,13 +3,11 @@ cc_library(
   srcs = glob([
     "src/**/*.cc",
   ], exclude = [
-    "src/gflags_completions.cc",
     "src/windows_port.cc",
   ]),
   hdrs = glob([
     "include/**/*.h",
   ], exclude = [
-    "include/gflags/gflags_completions.h",
   ]),
   includes = [
     "include/gflags",
@@ -17,4 +15,5 @@ cc_library(
   visibility = [
     "//visibility:public",
   ],
+  linkopts = ["-pthread"],
 )

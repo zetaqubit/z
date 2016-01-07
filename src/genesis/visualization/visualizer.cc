@@ -1,9 +1,8 @@
 #include "src/genesis/visualization/visualizer.h"
 
-#include <glog/logging.h>
-
 #include "src/genesis/io/conversion_utils.h"
 #include "src/genesis/visualization/gl_utils.h"
+#include "src/third_party/glog/src/glog/logging.h"
 
 namespace genesis {
 
