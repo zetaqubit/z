@@ -1,3 +1,3 @@
 #!/bin/bash
 
-blaze run //src/third_party/caffe/tools:caffe -- test --model=/home/z/hand_tracking/blaze_root/src/genesis/caffe/handnet_train_test.prototxt --weights=/home/z/hand_tracking/blaze_root/data/genesis/caffe/model_snapshots/handnet_iter_10000.caffemodel
+blaze run //src/third_party/caffe/tools:caffe -- test --model=/home/z/hand_tracking/blaze_root/src/genesis/caffe/handnet.model.prototxt --weights=/home/z/hand_tracking/blaze_root/data/genesis/caffe/model_snapshots/handnet_iter_10000.caffemodel
