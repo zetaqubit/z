@@ -2,6 +2,7 @@
 
 #include "src/genesis/io/conversion_utils.h"
 #include "src/genesis/visualization/gl_utils.h"
+#include "src/third_party/gflags/include/gflags/gflags.h"
 #include "src/third_party/glog/src/glog/logging.h"
 
 namespace genesis {
@@ -29,10 +30,12 @@ static const std::string kHandnetSolver =
 static const std::string kHandnetRestore =
     "data/genesis/caffe/model_snapshots/handnet_iter_3000.solverstate";
 
-static const std::string kMnistModel =
-    "src/genesis/caffe/mnist_deploy.prototxt";
-static const std::string kMnistWeights =
-    "data/genesis/caffe/model_snapshots/mnist_iter_10000.caffemodel";
+static const std::string kTrainedModelsDir =
+    "data/genesis/caffe/trained_models";
+
+DEFINE_string(model, "",
+              "Directory in //data/genesis/caffe/trained_models/ to load "
+              "(e.g. '2016_01_05_2330_palm')");
 
 }  // namespace
 
@@ -44,14 +47,18 @@ Visualizer::Visualizer(Leap::Controller* controller)
     controller_(controller),
     recorder_(FrameRecorder(kProtoDataOutputDirectory)),
     image_viewer_(GlWindow("Hand Visualizer", kWindowWidth, kWindowHeight)),
-    debug_image_viewer_("Left distorted", 640, 480)
-{
-  LOG(INFO) << "Initializing neural network from model: [" << kHandnetModel
-      << "]; weights: [" << kHandnetWeights << "]";
-  handnet_.reset(new HandNeuralNet(
-      kHandnetSolver, kHandnetRestore
-      //kMnistModel, kMnistWeights
-  ));
+    debug_image_viewer_("Left distorted", 640, 480) {
+  std::string solver = kHandnetSolver;
+  std::string restore = kHandnetRestore;
+  if (!FLAGS_model.empty()) {
+    solver = kTrainedModelsDir + "/" + FLAGS_model +
+        "/handnet_solver_deploy.prototxt";
+    restore = kTrainedModelsDir + "/" + FLAGS_model + "/handnet.solverstate";
+  }
+  LOG(INFO) << "Initializing neural network with solver: [" << solver
+      << "]; and state: [" << restore << "]";
+
+  handnet_.reset(new HandNeuralNet(solver, restore));
 }
 
 Visualizer::~Visualizer() {

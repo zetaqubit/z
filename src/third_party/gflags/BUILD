@@ -10,6 +10,7 @@ cc_library(
   ], exclude = [
   ]),
   includes = [
+    "include",
     "include/gflags",
   ],
   visibility = [

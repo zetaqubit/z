@@ -27,6 +27,7 @@ cc_library(
     "//src/genesis/io:conversion_utils",
     "//src/genesis/io:frame_recorder",
     "//src/third_party/glog",
+    "//src/third_party/gflags",
     "//src/third_party/leap_motion:api",
   ],
   data = glob([
