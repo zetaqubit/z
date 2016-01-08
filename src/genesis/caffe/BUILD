@@ -10,7 +10,8 @@ cc_library(
   ],
   data = [
     ":model",
-    "//data/genesis/caffe:trained_weights",
+    "//data/genesis/caffe:current_model",
+    "//data/genesis/caffe:trained_models",
   ],
   deps = [
     "//src/genesis/io:conversion_utils",
