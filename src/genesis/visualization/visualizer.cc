@@ -21,12 +21,12 @@ static const std::string kProtoDataOutputDirectory =
     "/home/z/hand_tracking/blaze_root/data/genesis/current/proto";
 
 static const std::string kHandnetModel =
-    "src/genesis/caffe/handnet_deploy.prototxt";
+    "src/genesis/caffe/handnet_deploy.model.prototxt";
 static const std::string kHandnetWeights =
     "data/genesis/caffe/model_snapshots/handnet_iter_3000.caffemodel";
 
 static const std::string kHandnetSolver =
-    "src/genesis/caffe/handnet_solver_deploy.prototxt";
+    "src/genesis/caffe/handnet_deploy.solver.prototxt";
 static const std::string kHandnetRestore =
     "data/genesis/caffe/model_snapshots/handnet_iter_3000.solverstate";
 
@@ -52,7 +52,7 @@ Visualizer::Visualizer(Leap::Controller* controller)
   std::string restore = kHandnetRestore;
   if (!FLAGS_model.empty()) {
     solver = kTrainedModelsDir + "/" + FLAGS_model +
-        "/handnet_solver_deploy.prototxt";
+        "/handnet_deploy.solver.prototxt";
     restore = kTrainedModelsDir + "/" + FLAGS_model + "/handnet.solverstate";
   }
   LOG(INFO) << "Initializing neural network with solver: [" << solver
