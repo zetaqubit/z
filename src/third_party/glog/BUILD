@@ -14,6 +14,9 @@ cc_library(
   includes = [
     "src/",
   ],
+  deps = [
+    "//src/third_party/gflags",
+  ],
   linkopts = [
     "-lunwind",
   ],

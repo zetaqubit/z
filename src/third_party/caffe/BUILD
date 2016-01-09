@@ -49,7 +49,10 @@ CUDA_INCLUDES = [
   "-I$(GENDIR)/src/third_party/caffe/src",  # for caffe.pb.h
   "-Isrc/third_party/caffe/include",
   "-Isrc/third_party/cuda/include",
+  "-Isrc/third_party/gflags/include",
+  "-Isrc/third_party/glog/src",
   "-Isrc/third_party/open_blas/include",
+  "-Isrc/third_party/protobuf/src",
 ]
 
 CUDA_ARCH = [
