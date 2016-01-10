@@ -8,10 +8,18 @@ input_shape {
   dim: 128 # width
 }
 
-input: "hand_model"
+#input: "hand_model"
+#input_shape {
+#  dim: 1 # batch
+#  dim: 42 # channel
+#  dim: 1 # height
+#  dim: 1 # width
+#}
+
+input: "palm_heatmap"
 input_shape {
   dim: 1 # batch
-  dim: 42 # channel
+  dim: 256 # channel
   dim: 1 # height
   dim: 1 # width
 }
@@ -38,33 +46,33 @@ input_shape {
 #  }
 #}
 
-layer {
-  name: "extract_fingers"
-  type: "Slice"
-  bottom: "hand_model"
-  top: "palm_xyz"
-  top: "palm_uv_l"
-  top: "palm_uv_r"
-  top: "thumb_xyz"
-  top: "thumb_uv_l"
-  top: "thumb_uv_r"
-  top: "index_xyz"
-  top: "index_uv_l"
-  top: "index_uv_r"
-  top: "unused"
-  slice_param {
-    axis: 1
-    slice_point: 3 # palm_xyz
-    slice_point: 5
-    slice_point: 7
-    slice_point: 10 # thumb_xyz
-    slice_point: 12
-    slice_point: 14
-    slice_point: 17 # index_xyz
-    slice_point: 19
-    slice_point: 21
-  }
-}
+#layer {
+#  name: "extract_fingers"
+#  type: "Slice"
+#  bottom: "hand_model"
+#  top: "palm_xyz"
+#  top: "palm_uv_l"
+#  top: "palm_uv_r"
+#  top: "thumb_xyz"
+#  top: "thumb_uv_l"
+#  top: "thumb_uv_r"
+#  top: "index_xyz"
+#  top: "index_uv_l"
+#  top: "index_uv_r"
+#  top: "unused"
+#  slice_param {
+#    axis: 1
+#    slice_point: 3 # palm_xyz
+#    slice_point: 5
+#    slice_point: 7
+#    slice_point: 10 # thumb_xyz
+#    slice_point: 12
+#    slice_point: 14
+#    slice_point: 17 # index_xyz
+#    slice_point: 19
+#    slice_point: 21
+#  }
+#}
 
 layer {
   name: "conv1"
@@ -240,7 +248,7 @@ layer {
     lr_mult: 2
   }
   inner_product_param {
-    num_output: 2
+    num_output: 256 # was 2
     weight_filler {
       type: "xavier"
     }
@@ -265,7 +273,7 @@ layer {
   name: "loss"
   type: "EuclideanLoss"
   bottom: "output"
-  bottom: "palm_uv_l"
+  bottom: "palm_heatmap"
   top: "loss"
 }
 

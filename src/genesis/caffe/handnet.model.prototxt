@@ -61,7 +61,7 @@ layer {
   reshape_param {
     shape {
       dim: 0
-      dim: 16426 # 128 * 128 + 6 * 7
+      dim: 16640 # 128^2 + 16^2. Was 16426 = 128 * 128 + 6 * 7
     }
   }
 }
@@ -71,55 +71,62 @@ layer {
   type: "Slice"
   bottom: "data_flat"
   top: "image_flat"
-  top: "hand_model"
+  top: "palm_heatmap"
   slice_param {
     axis: 1
     slice_point: 16384 # 128 * 128
   }
 }
 
-layer {
-  name: "extract_fingers"
-  type: "Slice"
-  bottom: "hand_model"
-  top: "palm_xyz"
-  top: "palm_uv_l"
-  top: "palm_uv_r"
-  top: "thumb_xyz"
-  top: "thumb_uv_l"
-  top: "thumb_uv_r"
-  top: "index_xyz"
-  top: "index_uv_l"
-  top: "index_uv_r"
-  top: "unused"
-  slice_param {
-    axis: 1
-    slice_point: 3 # palm_xyz
-    slice_point: 5
-    slice_point: 7
-    slice_point: 10 # thumb_xyz
-    slice_point: 12
-    slice_point: 14
-    slice_point: 17 # index_xyz
-    slice_point: 19
-    slice_point: 21
-  }
-}
+#layer {
+#  name: "extract_fingers"
+#  type: "Slice"
+#  bottom: "hand_model"
+#  top: "palm_xyz"
+#  top: "palm_uv_l"
+#  top: "palm_uv_r"
+#  top: "thumb_xyz"
+#  top: "thumb_uv_l"
+#  top: "thumb_uv_r"
+#  top: "index_xyz"
+#  top: "index_uv_l"
+#  top: "index_uv_r"
+#  top: "unused"
+#  slice_param {
+#    axis: 1
+#    slice_point: 3 # palm_xyz
+#    slice_point: 5
+#    slice_point: 7
+#    slice_point: 10 # thumb_xyz
+#    slice_point: 12
+#    slice_point: 14
+#    slice_point: 17 # index_xyz
+#    slice_point: 19
+#    slice_point: 21
+#  }
+#}
+#
+#layer {
+#  name: "silence_output"
+#  type: "Silence"
+#  bottom: "unused"
+#  bottom: "palm_xyz"
+#  bottom: "palm_uv_l"
+#  bottom: "palm_uv_r"
+#  bottom: "thumb_xyz"
+#  bottom: "thumb_uv_l"
+#  bottom: "thumb_uv_r"
+#  bottom: "index_xyz"
+#  bottom: "index_uv_l"
+#  bottom: "index_uv_r"
+#  bottom: "label"
+#}
 
 layer {
-  name: "silence_output"
-  type: "Silence"
-  bottom: "unused"
-  bottom: "palm_xyz"
-  bottom: "palm_uv_l"
-  bottom: "palm_uv_r"
-  bottom: "thumb_xyz"
-  bottom: "thumb_uv_l"
-  bottom: "thumb_uv_r"
-  bottom: "index_xyz"
-  bottom: "index_uv_l"
-  bottom: "index_uv_r"
-  bottom: "label"
+   name: "silence_output"
+   type: "Silence"
+   bottom: "palm_heatmap"
+   bottom: "label"
 }
 
 
@@ -306,7 +313,7 @@ layer {
     lr_mult: 2
   }
   inner_product_param {
-    num_output: 2
+    num_output: 256 # 16 x 16
     weight_filler {
       type: "xavier"
     }
@@ -314,6 +321,14 @@ layer {
       type: "constant"
     }
   }
+}
+
+layer {
+  name: "loss"
+  type: "EuclideanLoss"
+  bottom: "output"
+  bottom: "palm_heatmap"
+  top: "loss"
 }
 
 #layer {
@@ -326,14 +341,6 @@ layer {
 #    phase: TEST
 #  }
 #}
-
-layer {
-  name: "loss"
-  type: "EuclideanLoss"
-  bottom: "output"
-  bottom: "palm_uv_l"
-  top: "loss"
-}
 
 #layer {
 #  name: "loss"

@@ -8,6 +8,9 @@ namespace genesis {
 static const int kNNImageWidth = 128;
 static const int kNNImageHeight = 128;
 
+static const int kHeatmapWidth = 16;
+static const int kHeatmapHeight = 16;
+
 enum ImageId {
   LEFT_IMAGE = 0,
   RIGHT_IMAGE,

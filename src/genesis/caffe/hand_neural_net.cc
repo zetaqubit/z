@@ -29,9 +29,6 @@ int MaxIndex(const std::vector<float>& data) {
 
 void HandNeuralNet::LoadInputIntoNN(const Image& image,
                                     const proto::LeapFrame& ground_truth) {
-  // Visualize the image.
-  debug_viewer_.UpdateNormalized(image);
-
   // Load the input data.
   caffe::Net<float>* net = solver_->net().get();
   caffe::Blob<float>* image_blob = net->input_blobs()[0];
@@ -49,6 +46,38 @@ void HandNeuralNet::LoadInputIntoNN(const Image& image,
   caffe::Blob<float>* label_blob = net->input_blobs()[2];
   float* label_cpu_data = label_blob->mutable_cpu_data();
   label_cpu_data[0] = ground_truth.has_left_hand() ? 1 : 0;
+
+  // Visualize the image.
+  debug_viewer_.UpdateNormalized(image);
+
+}
+
+// Returns the mean of the 2D gaussian, or (-1, 1) if none exist.
+std::vector<float> FitGaussian(/* const */ Image& image) {
+  std::vector<float> uv = {0, 0};
+  const float kMinThreshold = 0.1f;
+
+  double sum = 0;
+  for (int y = 0; y < image.height(); y++) {
+    for (int x = 0; x < image.width(); x++) {
+      float w = image(x, y);
+      if (w >= kMinThreshold) {
+        sum += w;
+        uv[0] += w * x;
+        uv[1] += w * y;
+      } else {
+        image(x, y) = 0;
+      }
+    }
+  }
+
+  if (sum > 0) {
+    uv[0] /= sum;
+    uv[1] /= sum;
+    return uv;
+  } else {
+    return std::vector<float> {-1, -1};
+  }
 }
 
 InferenceResult HandNeuralNet::ReadOutputFromNN(
@@ -63,25 +92,26 @@ InferenceResult HandNeuralNet::ReadOutputFromNN(
   float predicted_y = result[1];
   int max_index = MaxIndex(result);
 
+  Image heatmap(result.data(), kHeatmapWidth, kHeatmapHeight);
+  auto mean = FitGaussian(heatmap);
+  predicted_x = mean[0] / kHeatmapWidth;
+  predicted_y = mean[1] / kHeatmapHeight;
+
+  debug_viewer_.DrawPoint(predicted_x, 1 - predicted_y, 4.0f);
+  debug_viewer_.EndFrame();
+
+  static ImageViewer heatmap_viewer("output heatmap",
+                                    kHeatmapWidth, kHeatmapHeight);
+  heatmap_viewer.UpdateNormalized(heatmap).EndFrame();
+
   float actual_x = ground_truth.left_hand().palm().left_screen_coords().u();
   float actual_y = ground_truth.left_hand().palm().left_screen_coords().v();
   auto loss_layer = net->blob_by_name("loss");
   float loss = loss_layer->cpu_data()[0];
-#if 0
-  LOG(INFO) << "Predict: " << max_index
-            << (actual_label_ == -1 ? "" : ". actual: ")
-            << (actual_label_ == -1 ? "" : std::to_string(actual_label_))
-            << ". prob: " << result[max_index]
-            << ". loss: " << loss;
-#else
   LOG(INFO) << Format("Pre [Act]: %7.4f|%7.4f || %7.4f|%7.4f ||" /* %7.4f[%7.4f]" */,
                       predicted_x, actual_x, predicted_y, actual_y
                       /* 0, 0 */)
             << ". loss: " << loss;
-#endif
-
-  debug_viewer_.DrawPoint(predicted_x, 1 - predicted_y, 4.0f);
-  debug_viewer_.EndFrame();
 
   bool has_hand = (max_index == 1);
   return InferenceResult(has_hand, loss);

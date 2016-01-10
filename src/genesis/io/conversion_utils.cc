@@ -202,13 +202,46 @@ static void SerializeKeyPoint(const proto::KeyPoint& key_point,
   output->push_back(key_point.right_screen_coords().v());
 }
 
+static void SerializeKeyPointAsHeatmap(const proto::KeyPoint& key_point,
+                                       std::vector<float>* output,
+                                       ImageViewer* heatmap_viewer = nullptr) {
+  // Serialize palm position as 16x16 heatmap.
+  Image image(kHeatmapWidth, kHeatmapHeight, 1, 1, 0);
+  if (key_point.has_left_screen_coords()) {
+    float u = key_point.left_screen_coords().u(),
+          v = key_point.left_screen_coords().v();
+    float color = 1.0f;
+    image.draw_gaussian(u * kHeatmapWidth, v * kHeatmapHeight, 1.0f /* sigma */,
+                        &color);
+  }
+  output->insert(output->end(), image.data(),
+                 image.data() + kHeatmapWidth * kHeatmapHeight);
+  if (heatmap_viewer) {
+    heatmap_viewer->UpdateNormalized(image);
+  }
+}
+
 void SerializeHand(const proto::Hand& hand, std::vector<float>* output) {
+#if 0
   SerializeKeyPoint(hand.palm(), output);
   SerializeKeyPoint(hand.thumb(), output);
   SerializeKeyPoint(hand.index(), output);
   SerializeKeyPoint(hand.middle(), output);
   SerializeKeyPoint(hand.ring(), output);
   SerializeKeyPoint(hand.pinky(), output);
+#else
+
+  static ImageViewer heatmap("Heatmap", kHeatmapWidth, kHeatmapHeight);
+
+  SerializeKeyPointAsHeatmap(hand.palm(), output, &heatmap);
+  //SerializeKeyPointAsHeatmap(hand.thumb(), output, &heatmap);
+  //SerializeKeyPointAsHeatmap(hand.index(), output, &heatmap);
+  //SerializeKeyPointAsHeatmap(hand.middle(), output, &heatmap);
+  //SerializeKeyPointAsHeatmap(hand.ring(), output, &heatmap);
+  //SerializeKeyPointAsHeatmap(hand.pinky(), output, &heatmap);
+  heatmap.EndFrame();
+#endif
+
 }
 
 std::vector<float> SerializeInputToNN(const proto::LeapFrame& proto) {
