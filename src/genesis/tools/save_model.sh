@@ -26,9 +26,12 @@ fi
 mkdir "$archiveDir"
 cp $caffeModel "$archiveDir"
 cp $solverState "$archiveDir"
-ln -s $caffeModel "$archiveDir/handnet.caffemodel"
-ln -s $solverState "$archiveDir/handnet.solverstate"
 cp $networkDefinition "$archiveDir"
+
+outputCaffeModel=$(echo "$caffeModel" | sed -e "s:$INPUT_SNAPSHOT_DIR:$OUTPUT_SNAPSHOT_DIR:g")
+outputSolverState=$(echo "$solverState" | sed -e "s:$INPUT_SNAPSHOT_DIR:$OUTPUT_SNAPSHOT_DIR:g")
+ln -s $outputCaffeModel "$archiveDir/handnet.caffemodel"
+ln -s $outputSolverState "$archiveDir/handnet.solverstate"
 
 # Fix path references in *.solver.prototxt
 sed -i -e "s:$INPUT_SNAPSHOT_DIR:$OUTPUT_SNAPSHOT_DIR:g" $archiveDir/*.solver.prototxt
