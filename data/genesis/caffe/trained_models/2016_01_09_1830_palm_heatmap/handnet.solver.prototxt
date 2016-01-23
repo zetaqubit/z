@@ -1,0 +1,19 @@
+net: "/home/z/hand_tracking/blaze_root/data/genesis/caffe/trained_models/2016_01_09_1830_palm_heatmap/handnet.model.prototxt"
+
+test_iter: 100
+test_interval: 500
+
+base_lr: 0.001 # was 0.01
+momentum: 0.9
+weight_decay: 0.01 # was 0.01, 0.0005
+
+lr_policy: "inv"
+gamma: 0.0001
+power: 0.75
+
+display: 100
+max_iter: 3000
+snapshot: 1000
+snapshot_prefix: "/home/z/hand_tracking/blaze_root/data/genesis/caffe/trained_models/2016_01_09_1830_palm_heatmap/handnet"
+
+solver_mode: GPU
