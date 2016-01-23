@@ -50,15 +50,20 @@ Visualizer::Visualizer(Leap::Controller* controller)
     debug_image_viewer_("Left distorted", 640, 480) {
   std::string solver = kHandnetSolver;
   std::string restore = kHandnetRestore;
-  if (!FLAGS_model.empty()) {
-    solver = kTrainedModelsDir + "/" + FLAGS_model +
-        "/handnet_deploy.solver.prototxt";
-    restore = kTrainedModelsDir + "/" + FLAGS_model + "/handnet.solverstate";
-  }
-  LOG(INFO) << "Initializing neural network with solver: [" << solver
-      << "]; and state: [" << restore << "]";
 
-  handnet_.reset(new HandNeuralNet(solver, restore));
+  if (FLAGS_model == "none") {
+    // Don't initialize handnet_.
+  } else {
+    if (!FLAGS_model.empty()) {
+      solver = kTrainedModelsDir + "/" + FLAGS_model +
+          "/handnet_deploy.solver.prototxt";
+      restore = kTrainedModelsDir + "/" + FLAGS_model + "/handnet.solverstate";
+    }
+    LOG(INFO) << "Initializing neural network with solver: [" << solver
+        << "]; and state: [" << restore << "]";
+
+    handnet_.reset(new HandNeuralNet(solver, restore));
+  }
 }
 
 Visualizer::~Visualizer() {
@@ -124,12 +129,14 @@ void Visualizer::Run() {
     debug_image_viewer_.EndFrame();
 
     // Feed the frame to convnet for inference/training.
-    int label = proto.has_left_hand() ? 1 : 0;
-    ConvertImageToNetInput(&image);
-    if (should_train_) {
-      handnet_->Train(image, proto);
-    } else {
-      handnet_->Infer(image, proto);
+    if (handnet_) {
+      int label = proto.has_left_hand() ? 1 : 0;
+      ConvertImageToNetInput(&image);
+      if (should_train_) {
+        handnet_->Train(image, proto);
+      } else {
+        handnet_->Infer(image, proto);
+      }
     }
 
     SDL_Delay(1);
