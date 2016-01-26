@@ -11,6 +11,7 @@ namespace genesis {
 class FrameRecorder {
  public:
   FrameRecorder(const std::string& proto_output_dir);
+  virtual ~FrameRecorder();
   void Record(const Leap::Frame& frame);
 
  private:

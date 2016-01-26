@@ -1,15 +1,8 @@
 #include "src/genesis/io/conversion_utils.h"
 
 #include <stdint.h>
-#include <fstream>
-#include <iostream>
 
 #include "src/genesis/visualization/image_viewer.h"
-#include "src/third_party/glog/src/glog/logging.h"
-
-using std::ios;
-using std::fstream;
-using std::string;
 
 namespace {
 
@@ -43,21 +36,8 @@ genesis::proto::Pose LeapVectorToProto(const Leap::Vector& vector) {
 
 namespace genesis {
 
-std::unique_ptr<proto::LeapFrame> ReadProto(const string& filename) {
-  fstream input(filename, ios::in | ios::binary);
-  if (!input) {
-    LOG(INFO) << filename << ": File not found";
-    return nullptr;
-  }
-  std::unique_ptr<proto::LeapFrame> proto(new proto::LeapFrame());
-  if (!proto->ParseFromIstream(&input)) {
-    LOG(ERROR) << "Failed to parse Leap frame proto.";
-    return nullptr;
-  }
-  return proto;
-}
-
-bool WriteProto(const string& filename, const proto::LeapFrame& proto) {
+bool WriteProto(const string& filename,
+                const ::google::protobuf::Message& proto) {
   fstream output(filename, ios::out | ios::trunc | ios::binary);
   if (!output) {
     LOG(ERROR) << "Could not open " << filename << " for writing.";
