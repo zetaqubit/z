@@ -1,0 +1,7 @@
+syntax = "proto2";
+
+package genesis.proto;
+
+message Metadata {
+  optional int64 next_frame_number = 1;
+}

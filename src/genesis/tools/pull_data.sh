@@ -7,8 +7,13 @@ fi
 
 ROOT=~/hand_tracking/blaze_root
 
-srcTrainDir="$ROOT"/data/genesis/saved/lmdb/"$1"_train
-srcTestDir="$ROOT"/data/genesis/saved/lmdb/"$1"_test
+if [ "$1" == "current" ]; then
+  srcTrainDir="$ROOT"/data/genesis/current/lmdb
+  srcTestDir="$ROOT"/data/genesis/current/lmdb
+else
+  srcTrainDir="$ROOT"/data/genesis/saved/lmdb/"$1"_train
+  srcTestDir="$ROOT"/data/genesis/saved/lmdb/"$1"_test
+fi
 
 destTrainDir="$ROOT"/data/genesis/caffe/handnet_train_lmdb
 destTestDir="$ROOT"/data/genesis/caffe/handnet_test_lmdb

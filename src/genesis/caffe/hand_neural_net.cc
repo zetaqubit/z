@@ -108,10 +108,11 @@ InferenceResult HandNeuralNet::ReadOutputFromNN(
   float actual_y = ground_truth.left_hand().palm().left_screen_coords().v();
   auto loss_layer = net->blob_by_name("loss");
   float loss = loss_layer->cpu_data()[0];
-  LOG(INFO) << Format("Pre [Act]: %7.4f|%7.4f || %7.4f|%7.4f ||" /* %7.4f[%7.4f]" */,
-                      predicted_x, actual_x, predicted_y, actual_y
-                      /* 0, 0 */)
-            << ". loss: " << loss;
+
+  //LOG(INFO) << Format("Pre [Act]: %7.4f|%7.4f || %7.4f|%7.4f ||" /* %7.4f[%7.4f]" */,
+  //                    predicted_x, actual_x, predicted_y, actual_y
+  //                    /* 0, 0 */)
+  //          << ". loss: " << loss;
 
   bool has_hand = (max_index == 1);
   return InferenceResult(has_hand, loss);
