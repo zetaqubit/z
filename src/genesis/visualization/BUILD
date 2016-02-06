@@ -106,6 +106,7 @@ cc_library(
     "undistorted_texture_shader.h",
   ],
   deps = [
+    ":gl_utils",
     "//src/third_party/glog",
   ],
   linkopts = [
