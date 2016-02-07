@@ -21,3 +21,6 @@ data/genesis/*
 !data/genesis/caffe
 data/genesis/caffe/*
 !data/genesis/caffe/trained_models
+
+# Android Studio
+.idea/
