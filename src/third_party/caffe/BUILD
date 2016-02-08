@@ -2,10 +2,10 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("/src/genesis/io/proto/gen_proto", "proto_library")
+load("/google/protobuf/protobuf", "cc_proto_library")
 load("/src/third_party/caffe/cuda_library", "cuda_library")
 
-proto_library(
+cc_proto_library(
   name = "caffe_protos",
   srcs = glob([
     "**/*.proto",
@@ -52,7 +52,7 @@ CUDA_INCLUDES = [
   "-Isrc/third_party/gflags/include",
   "-Isrc/third_party/glog/src",
   "-Isrc/third_party/open_blas/include",
-  "-Isrc/third_party/protobuf/src",
+  "-Igoogle/protobuf/src",
 ]
 
 CUDA_ARCH = [
@@ -101,11 +101,11 @@ cc_library(
   deps = [
     ":caffe_protos",
     ":caffe_lib_cuda",
+    "//google/protobuf",
     "//src/third_party/cuda",
     "//src/third_party/gflags",
     "//src/third_party/glog",
     "//src/third_party/open_blas",
-    "//src/third_party/protobuf",
   ],
   copts = [
     "-pthread",
