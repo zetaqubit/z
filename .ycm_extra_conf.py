@@ -59,40 +59,28 @@ flags = [
 # For a C project, you would set this to 'c' instead of 'c++'.
 '-x',
 'c++',
-'-isystem',
-'../BoostParts',
+'-isystem', '../BoostParts',
 '-isystem',
 # This path will only work on OS X, but extra paths that don't exist are not
 # harmful
 '/System/Library/Frameworks/Python.framework/Headers',
-'-isystem',
-'../llvm/include',
-'-isystem',
-'../llvm/tools/clang/include',
-'-I',
-'.',
-'-I',
-'./ClangCompleter',
-'-I',
-'src/third_party/caffe/include',
-'-I',
-'src/third_party/cuda/include',
-'-I',
-'bazel-genfiles/src/third_party/caffe/src', # caffe.pb.h proto
-'-I',
-'bazel-genfiles', # other protos
-'-I',
-'src/third_party/open_blas/include',
-'-isystem',
-'/opt/OpenBLAS/include',
-'-isystem',
-'./tests/gmock/gtest',
-'-isystem',
-'./tests/gmock/gtest/include',
-'-isystem',
-'./tests/gmock',
-'-isystem',
-'./tests/gmock/include',
+'-isystem', '../llvm/include',
+'-isystem', '../llvm/tools/clang/include',
+'-I', '.',
+'-I', './ClangCompleter',
+'-I', 'src/third_party/caffe/include',
+'-I', 'src/third_party/cuda/include',
+'-I', 'bazel-genfiles/src/third_party/caffe/src', # caffe.pb.h proto
+'-I', 'bazel-genfiles', # other protos
+'-I', 'src/third_party/open_blas/include',
+'-I', '-Igoogle/protobuf/src',
+'-isystem', '/opt/OpenBLAS/include',
+'-isystem', './tests/gmock/gtest',
+'-isystem', './tests/gmock/gtest/include',
+'-isystem', './tests/gmock',
+'-isystem', './tests/gmock/include',
+
+'-Dcimg_display=0',  # cimg display conflicts with X11 lib.
 ]
 
 
