@@ -2,7 +2,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("/google/protobuf/protobuf", "cc_proto_library")
+load("@protobuf//:protobuf.bzl", "cc_proto_library")
 load("/src/third_party/caffe/cuda_library", "cuda_library")
 
 cc_proto_library(
@@ -101,7 +101,7 @@ cc_library(
   deps = [
     ":caffe_protos",
     ":caffe_lib_cuda",
-    "//google/protobuf",
+    "@protobuf//:protobuf",
     "//src/third_party/cuda:cuda",
     "//src/third_party/gflags:gflags",
     "//src/third_party/glog:glog",
