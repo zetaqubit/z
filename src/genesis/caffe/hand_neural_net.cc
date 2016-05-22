@@ -1,7 +1,7 @@
 #include "src/genesis/caffe/hand_neural_net.h"
 
 #include "src/genesis/io/conversion_utils.h"
-#include "src/third_party/caffe/include/caffe/solver.hpp"
+#include "src/third_party/caffe/include/caffe/solver_factory.hpp"
 #include "src/third_party/glog/src/glog/logging.h"
 
 namespace genesis {
@@ -14,7 +14,7 @@ HandNeuralNet::HandNeuralNet(const std::string& solver_params,
   // Create the solver with specified params.
   caffe::SolverParameter params;
   caffe::ReadProtoFromTextFileOrDie(solver_params, &params);
-  solver_.reset(caffe::GetSolver<float>(params));
+  solver_.reset(caffe::SolverRegistry<float>::CreateSolver(params));
 
   // Load solver snapshot if specified.
   if (!solver_snapshot.empty()) {
