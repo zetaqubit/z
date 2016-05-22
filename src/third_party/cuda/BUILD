@@ -59,10 +59,10 @@ cc_library(
 cc_library(
     name = "cudnn",
     srcs = [
-        "lib64/libcudnn.so.6.5",
+        "lib64/libcudnn.so.4",
     ],
     data = [
-        "lib64/libcudnn.so.6.5",
+        "lib64/libcudnn.so.4",
     ],
     includes = ["include/"],
     visibility = ["//visibility:public"],
