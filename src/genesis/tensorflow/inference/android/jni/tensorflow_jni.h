@@ -15,7 +15,7 @@ limitations under the License.
 
 // The methods are exposed to Java to allow for interaction with the native
 // Tensorflow code. See
-// tensorflow/examples/android/src/org/tensorflow/TensorflowClassifier.java
+// src/genesis/tensorflow/inference/android/src/org/tensorflow/TensorflowClassifier.java
 // for the Java counterparts.
 
 #ifndef ORG_TENSORFLOW_JNI_TENSORFLOW_JNI_H_  // NOLINT

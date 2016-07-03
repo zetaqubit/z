@@ -42,7 +42,7 @@ Then, after editing your WORKSPACE file, you must build the APK. Run this from
 your workspace root:
 
 ```bash
-$ bazel build //tensorflow/examples/android:tensorflow_demo
+$ bazel build //src/genesis/tensorflow/inference/android:tensorflow_demo
 ```
 
 If you get build errors about protocol buffers, run
@@ -53,7 +53,7 @@ use the following command from your workspace root to install the APK once
 built:
 
 ```bash
-$ adb install -r -g bazel-bin/tensorflow/examples/android/tensorflow_demo.apk
+$ adb install -r -g bazel-bin/src/genesis/tensorflow/inference/android/tensorflow_demo.apk
 ```
 
 Some older versions of adb might complain about the -g option (returning:
@@ -66,7 +66,7 @@ Alternatively, a streamlined means of building, installing and running in one
 command is:
 
 ```bash
-$ bazel mobile-install //tensorflow/examples/android:tensorflow_demo --start_app
+$ bazel mobile-install //src/genesis/tensorflow/inference/android:tensorflow_demo --start_app
 ```
 
 If camera permission errors are encountered (possible on Android Marshmallow or

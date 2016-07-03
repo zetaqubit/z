@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-#include "tensorflow/examples/android/jni/tensorflow_jni.h"
+#include "src/genesis/tensorflow/inference/android/jni/tensorflow_jni.h"
 
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
@@ -37,7 +37,7 @@ limitations under the License.
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/public/session.h"
 #include "tensorflow/core/util/stat_summarizer.h"
-#include "tensorflow/examples/android/jni/jni_utils.h"
+#include "src/genesis/tensorflow/inference/android/jni/jni_utils.h"
 
 using namespace tensorflow;
 
