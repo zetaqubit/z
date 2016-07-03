@@ -23,7 +23,7 @@ from __future__ import division
 from __future__ import print_function
 
 # Import data
-from src.genesis.tensorflow import input_data
+from src.genesis.tensorflow.train import input_data
 
 import tensorflow as tf
 

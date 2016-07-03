@@ -26,7 +26,7 @@ from __future__ import print_function
 
 import tensorflow as tf
 
-from src.genesis.tensorflow import input_data
+from src.genesis.tensorflow.train import input_data
 
 flags = tf.app.flags
 FLAGS = flags.FLAGS
