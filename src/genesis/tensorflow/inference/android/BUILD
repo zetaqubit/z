@@ -5,7 +5,7 @@ package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])  # Apache 2.0
 
-load("@tf//tensorflow:tensorflow.bzl", "tf_copts")
+#load("@tf//tensorflow:tensorflow.bzl", "tf_copts")
 
 exports_files(["LICENSE"])
 
@@ -15,7 +15,7 @@ cc_binary(
         "jni/**/*.cc",
         "jni/**/*.h",
     ]) + [],
-    copts = tf_copts(),
+    #copts = tf_copts(),
     linkopts = [
         "-landroid",
         "-ljnigraphics",
