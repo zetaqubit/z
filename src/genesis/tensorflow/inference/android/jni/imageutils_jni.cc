@@ -20,9 +20,9 @@ limitations under the License.
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "tensorflow/core/platform/types.h"
 #include "src/genesis/tensorflow/inference/android/jni/rgb2yuv.h"
 #include "src/genesis/tensorflow/inference/android/jni/yuv2rgb.h"
+#include "tensorflow/core/platform/types.h"
 
 #define IMAGEUTILS_METHOD(METHOD_NAME) \
   Java_org_tensorflow_demo_env_ImageUtils_##METHOD_NAME  // NOLINT

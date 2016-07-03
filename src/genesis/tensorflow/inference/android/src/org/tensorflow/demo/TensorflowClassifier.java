@@ -37,10 +37,7 @@ public class TensorflowClassifier implements Classifier {
       String labels,
       int numClasses,
       int inputSize,
-      int imageMean,
-      float imageStd,
-      String inputName,
-      String outputName);
+      int imageMean);
 
   private native String classifyImageBmp(Bitmap bitmap);
 
