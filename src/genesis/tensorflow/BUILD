@@ -59,7 +59,7 @@ py_binary(
     srcs_version = "PY2AND3",
     deps = [
         ":input_data",
-        "//tensorflow:tensorflow_py",
+        "@tf//tensorflow:tensorflow_py",
     ],
 )
 
@@ -79,7 +79,7 @@ py_test(
     deps = [
         ":input_data",
         ":mnist",
-        "//tensorflow:tensorflow_py",
+        "@tf//tensorflow:tensorflow_py",
     ],
 )
 
@@ -98,7 +98,7 @@ py_test(
     srcs_version = "PY2AND3",
     deps = [
         ":input_data",
-        "//tensorflow:tensorflow_py",
+        "@tf//tensorflow:tensorflow_py",
     ],
 )
 
