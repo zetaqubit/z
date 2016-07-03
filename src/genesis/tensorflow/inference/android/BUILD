@@ -4,18 +4,26 @@
 package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])  # Apache 2.0
+exports_files(["LICENSE"])
 
 #load("@tf//tensorflow:tensorflow.bzl", "tf_copts")
-
-exports_files(["LICENSE"])
+TF_COPTS = [
+    "-fno-exceptions", "-DEIGEN_AVOID_STL_ARRAY",
+    "-DGOOGLE_CUDA=1",
+    "-mfpu=neon",
+    "-std=c++11",
+    "-DMIN_LOG_LEVEL=0",
+    "-DTF_LEAN_BINARY",
+    "-O2",
+]
 
 cc_binary(
     name = "libtensorflow_demo.so",
     srcs = glob([
         "jni/**/*.cc",
         "jni/**/*.h",
-    ]) + [],
-    #copts = tf_copts(),
+    ]) + [":libpthread.so"],
+    copts = TF_COPTS,
     linkopts = [
         "-landroid",
         "-ljnigraphics",
@@ -35,9 +43,25 @@ cc_binary(
     deps = ["@tf//tensorflow/core:android_tensorflow_lib"],
 )
 
+# This library only exists as a workaround to satisfy dependencies
+# that declare -lpthread in their linkopts. Although Android supports
+# pthreads, it does not provide it as a separate library.
+cc_binary(
+    name = "libpthread.so",
+    srcs = [],
+    linkopts = ["-shared"],
+    tags = [
+        "manual",
+        "notap",
+    ],
+)
+
 cc_library(
     name = "tensorflow_native_libs",
-    srcs = [":libtensorflow_demo.so"],
+    srcs = [
+        ":libpthread.so",
+        ":libtensorflow_demo.so",
+    ],
     tags = [
         "manual",
         "notap",
@@ -75,7 +99,7 @@ filegroup(
             "gen/**",
         ],
     ),
-    visibility = ["@tf//tensorflow:__subpackages__"],
+    visibility = ["//tensorflow:__subpackages__"],
 )
 
 filegroup(
