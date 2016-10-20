@@ -1,4 +1,4 @@
-net: "/home/z/hand_tracking/blaze_root/src/genesis/caffe/handnet_deploy.model.prototxt"
+net: "/home/z/code/blaze_root/src/genesis/caffe/handnet_deploy.model.prototxt"
 
 #test_iter: 10
 #test_interval: 500
@@ -14,6 +14,6 @@ power: 0.75
 display: 500
 max_iter: 10000
 snapshot: 1000
-snapshot_prefix: "/home/z/hand_tracking/blaze_root/data/genesis/caffe/model_snapshots/handnet_deploy"
+snapshot_prefix: "/home/z/code/blaze_root/data/genesis/caffe/model_snapshots/handnet_deploy"
 
 solver_mode: GPU

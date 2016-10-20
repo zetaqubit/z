@@ -5,7 +5,7 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
-ROOT=~/hand_tracking/blaze_root
+ROOT=~/code/blaze_root
 
 # Input
 INPUT_SNAPSHOT_DIR=data/genesis/caffe/model_snapshots
