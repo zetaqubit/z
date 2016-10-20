@@ -5,7 +5,7 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
-ROOT=~/hand_tracking/blaze_root
+ROOT=~/code/blaze_root
 
 if [ "$1" == "current" ]; then
   srcTrainDir="$ROOT"/data/genesis/current/lmdb

@@ -5,10 +5,10 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
-srcProtoDir=~/hand_tracking/blaze_root/data/genesis/current/proto
-srcLmdbDir=~/hand_tracking/blaze_root/data/genesis/current/lmdb
-destProtoDir=~/hand_tracking/blaze_root/data/genesis/saved/proto/"$1"
-destLmdbDir=~/hand_tracking/blaze_root/data/genesis/saved/lmdb/"$1"
+srcProtoDir=~/code/blaze_root/data/genesis/current/proto
+srcLmdbDir=~/code/blaze_root/data/genesis/current/lmdb
+destProtoDir=~/code/blaze_root/data/genesis/saved/proto/"$1"
+destLmdbDir=~/code/blaze_root/data/genesis/saved/lmdb/"$1"
 
 if [ ! -e "$srcProtoDir" ]; then
   echo "$srcProtoDir does not exist"

@@ -1,4 +1,4 @@
-net: "/home/z/hand_tracking/blaze_root/data/genesis/caffe/trained_models/2016_01_05_2330_palm/handnet.model.prototxt"
+net: "/home/z/code/blaze_root/data/genesis/caffe/trained_models/2016_01_05_2330_palm/handnet.model.prototxt"
 
 test_iter: 100
 test_interval: 500
@@ -14,6 +14,6 @@ power: 0.75
 display: 100
 max_iter: 3000
 snapshot: 1000
-snapshot_prefix: "/home/z/hand_tracking/blaze_root/data/genesis/caffe/trained_models/2016_01_05_2330_palm/handnet"
+snapshot_prefix: "/home/z/code/blaze_root/data/genesis/caffe/trained_models/2016_01_05_2330_palm/handnet"
 
 solver_mode: GPU
