@@ -12,6 +12,7 @@
 #include "src/third_party/caffe/src/caffe/proto/caffe.pb.h"
 #include "src/third_party/glog/src/glog/logging.h"
 #include "src/third_party/leap_motion/include/Leap.h"
+#include "tensorflow/core/example/example.pb.h"
 
 // Utility functions for converting from one format to another, and for reading
 // and writing disk.
@@ -53,6 +54,7 @@ bool WriteProto(const string& filename,
                 const ::google::protobuf::Message& proto);
 proto::LeapFrame FrameToProto(const Leap::Frame& frame);
 caffe::Datum ProtoToDatum(const proto::LeapFrame& proto);
+tensorflow::Example ProtoToExample(const proto::LeapFrame& proto);
 std::vector<float> SerializeInputToNN(const proto::LeapFrame& proto);
 void SerializeHand(const proto::Hand& hand, std::vector<float>* output);
 
