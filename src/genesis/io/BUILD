@@ -39,7 +39,21 @@ cc_library(
     "//src/genesis/io/proto:genesis_protos",
     "//src/genesis/visualization:image_viewer",  # for debugging
     "//src/third_party/leap_motion:api",
-    "//src/third_party/caffe:caffe_protos"
+    "//src/third_party/caffe:caffe_protos",
+    "@tf//tensorflow/core:tensorflow",
+  ],
+)
+
+cc_library(
+  name = "proto_iterator",
+  srcs = [
+    "proto_iterator.cc",
+  ],
+  hdrs = [
+    "proto_iterator.h",
+  ],
+  deps = [
+    "//src/genesis/io/proto:genesis_protos",
   ],
 )
 
@@ -76,12 +90,39 @@ cc_library(
   ],
 )
 
+cc_library(
+  name = "proto_to_tf_records_converter",
+  srcs = [
+    "proto_to_tf_records_converter.cc",
+  ],
+  hdrs = [
+    "proto_to_tf_records_converter.h",
+  ],
+  deps = [
+    ":conversion_utils",
+    ":proto_iterator",
+    "//src/genesis/io/proto:genesis_protos",
+    "//src/third_party/glog",
+    "@tf//tensorflow/core:lib",
+  ],
+)
+
 cc_binary(
-  name = "converter",
+  name = "lmdb_converter_main",
   srcs = [
     "proto_to_lmdb_converter_main.cc",
   ],
   deps = [
     ":proto_to_lmdb_converter",
+  ],
+)
+
+cc_binary(
+  name = "tf_records_converter_main",
+  srcs = [
+    "proto_to_tf_records_converter_main.cc",
+  ],
+  deps = [
+    ":proto_to_tf_records_converter",
   ],
 )

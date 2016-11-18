@@ -224,15 +224,20 @@ void SerializeHand(const proto::Hand& hand, std::vector<float>* output) {
 
 }
 
+static Image SerializeImage(const proto::Image& image,
+                            std::vector<float>* output) {
+  // Serialize the image.
+  Image scaled(image.data().data(), image.width(), image.height());
+  ConvertImageToNetInput(&scaled);
+  output->insert(output->end(), scaled.begin(), scaled.end());
+  return scaled;
+}
+
 std::vector<float> SerializeInputToNN(const proto::LeapFrame& proto) {
   std::vector<float> input_vector;
 
   // Serialize the image.
-  Image scaled(proto.left_image().data().data(),
-               proto.left_image().width(), proto.left_image().height());
-  ConvertImageToNetInput(&scaled);
-  input_vector.resize(scaled.width() * scaled.height());
-  std::copy(scaled.begin(), scaled.end(), input_vector.begin());
+  Image scaled = SerializeImage(proto.left_image(), &input_vector);
 
   // Serialize the hand.
   SerializeHand(proto.left_hand(), &input_vector);
@@ -262,6 +267,29 @@ caffe::Datum ProtoToDatum(const proto::LeapFrame& proto) {
   std::copy(input.begin(), input.end(), datum.mutable_float_data()->begin());
 
   return datum;
+}
+
+static tensorflow::Feature VectorToFeature(const std::vector<float>& v) {
+  tensorflow::Feature feature;
+  feature.mutable_float_list()->mutable_value()->Resize(v.size(), 0);
+  std::copy(v.begin(), v.end(),
+            feature.mutable_float_list()->mutable_value()->begin());
+  return feature;
+}
+
+tensorflow::Example ProtoToExample(const proto::LeapFrame& proto) {
+  tensorflow::Example example;
+
+  std::vector<float> left_image;
+  SerializeImage(proto.left_image(), &left_image);
+  (*example.mutable_features()->mutable_feature())["left_image"] =
+      VectorToFeature(left_image);
+
+  std::vector<float> left_palm;
+  SerializeKeyPointAsHeatmap(proto.left_hand().palm(), &left_palm);
+  (*example.mutable_features()->mutable_feature())["left_palm"] =
+      VectorToFeature(left_palm);
+  return example;
 }
 
 }  // namespace genesis

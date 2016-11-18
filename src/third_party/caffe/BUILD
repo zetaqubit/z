@@ -10,6 +10,8 @@ cc_proto_library(
   srcs = glob([
     "**/*.proto",
   ]),
+  default_runtime = "@protobuf//:protobuf",
+  protoc = "@protobuf//:protoc",
   visibility = ["//visibility:public"],
 )
 
