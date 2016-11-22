@@ -13,7 +13,7 @@ FLAGS = flags.FLAGS
 flags.DEFINE_string('data_dir',
                     '/home/z/code/blaze_root/data/genesis/current/tf',
                     'Directory for storing data')
-flags.DEFINE_string('summaries_dir',
+flags.DEFINE_string('summary_dir',
                     '/tmp/genesis_logs',
                     'Summaries directory')
 
@@ -100,6 +100,7 @@ def inference(images):
 def minimize_loss(target, output):
   loss = tf.nn.l2_loss(target - output)
   train_step = tf.train.AdamOptimizer(kLearningRate).minimize(loss)
+  tf.scalar_summary('loss', loss)
   return loss, train_step
 
 
@@ -117,17 +118,28 @@ def main(_):
     coord = tf.train.Coordinator()
     threads = tf.train.start_queue_runners(sess=sess, coord=coord)
 
+    # Summarize
+    tf.image_summary('input', images, max_images=4)
+    tf.image_summary('label', labels, max_images=4)
+    tf.image_summary('output', output, max_images=4)
+    merged_summary = tf.merge_all_summaries()
+    train_writer = tf.train.SummaryWriter(
+        os.path.join(FLAGS.summary_dir, 'train'), sess.graph)
+
     print('Starting training.')
 
     try:
       step = 0
       while not coord.should_stop() and step < kMaxSteps:
-        _, loss_val = sess.run([train_step, loss])
+        _, loss_val, summary_val = sess.run([train_step, loss, merged_summary])
+        train_writer.add_summary(summary_val, step)
         step += 1
         if step % 1 == 0:
           print('Step %d: loss = %.2f' % (step, loss_val))
     finally:
       coord.request_stop()
+
+    train_writer.close()
 
     # Wait for threads to finish
     coord.join(threads)
