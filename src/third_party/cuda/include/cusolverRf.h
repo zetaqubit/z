@@ -50,22 +50,13 @@
 #if !defined(CUSOLVERRF_H_)
 #define CUSOLVERRF_H_
 
-#ifndef CRFWINAPI
-#ifdef _WIN32
-#define CRFWINAPI __stdcall
-#else
-#define CRFWINAPI 
-#endif
-#endif
-
 #include "driver_types.h"
 #include "cuComplex.h"   
+#include "cusolver_common.h"
 
 #if defined(__cplusplus)
 extern "C" {
 #endif /* __cplusplus */
-
-#include "cusolver_common.h"
 
 /* CUSOLVERRF mode */
 typedef enum { 
@@ -113,49 +104,49 @@ struct cusolverRfCommon;
 typedef struct cusolverRfCommon *cusolverRfHandle_t;
 
 /* CUSOLVERRF create (allocate memory) and destroy (free memory) in the handle */
-cusolverStatus_t CRFWINAPI cusolverRfCreate(cusolverRfHandle_t *handle);
-cusolverStatus_t CRFWINAPI cusolverRfDestroy(cusolverRfHandle_t handle);
+cusolverStatus_t CUSOLVERAPI cusolverRfCreate(cusolverRfHandle_t *handle);
+cusolverStatus_t CUSOLVERAPI cusolverRfDestroy(cusolverRfHandle_t handle);
 
 /* CUSOLVERRF set and get input format */
-cusolverStatus_t CRFWINAPI cusolverRfGetMatrixFormat(cusolverRfHandle_t handle, 
+cusolverStatus_t CUSOLVERAPI cusolverRfGetMatrixFormat(cusolverRfHandle_t handle, 
                                                        cusolverRfMatrixFormat_t *format, 
                                                        cusolverRfUnitDiagonal_t *diag);
 
-cusolverStatus_t CRFWINAPI cusolverRfSetMatrixFormat(cusolverRfHandle_t handle, 
+cusolverStatus_t CUSOLVERAPI cusolverRfSetMatrixFormat(cusolverRfHandle_t handle, 
                                                        cusolverRfMatrixFormat_t format, 
                                                        cusolverRfUnitDiagonal_t diag);
     
 /* CUSOLVERRF set and get numeric properties */
-cusolverStatus_t CRFWINAPI cusolverRfSetNumericProperties(cusolverRfHandle_t handle, 
+cusolverStatus_t CUSOLVERAPI cusolverRfSetNumericProperties(cusolverRfHandle_t handle, 
                                                             double zero,
                                                             double boost);
 											 
-cusolverStatus_t CRFWINAPI cusolverRfGetNumericProperties(cusolverRfHandle_t handle, 
+cusolverStatus_t CUSOLVERAPI cusolverRfGetNumericProperties(cusolverRfHandle_t handle, 
                                                             double* zero,
                                                             double* boost);
 											 
-cusolverStatus_t CRFWINAPI cusolverRfGetNumericBoostReport(cusolverRfHandle_t handle, 
+cusolverStatus_t CUSOLVERAPI cusolverRfGetNumericBoostReport(cusolverRfHandle_t handle, 
                                                              cusolverRfNumericBoostReport_t *report);
 
 /* CUSOLVERRF choose the triangular solve algorithm */
-cusolverStatus_t CRFWINAPI cusolverRfSetAlgs(cusolverRfHandle_t handle,
+cusolverStatus_t CUSOLVERAPI cusolverRfSetAlgs(cusolverRfHandle_t handle,
                                                cusolverRfFactorization_t factAlg,
                                                cusolverRfTriangularSolve_t solveAlg);
 
-cusolverStatus_t CRFWINAPI cusolverRfGetAlgs(cusolverRfHandle_t handle, 
+cusolverStatus_t CUSOLVERAPI cusolverRfGetAlgs(cusolverRfHandle_t handle, 
                                                cusolverRfFactorization_t* factAlg,
                                                cusolverRfTriangularSolve_t* solveAlg);
 
 /* CUSOLVERRF set and get fast mode */
-cusolverStatus_t CRFWINAPI cusolverRfGetResetValuesFastMode(cusolverRfHandle_t handle, 
+cusolverStatus_t CUSOLVERAPI cusolverRfGetResetValuesFastMode(cusolverRfHandle_t handle, 
                                                               cusolverRfResetValuesFastMode_t *fastMode);
 
-cusolverStatus_t CRFWINAPI cusolverRfSetResetValuesFastMode(cusolverRfHandle_t handle, 
+cusolverStatus_t CUSOLVERAPI cusolverRfSetResetValuesFastMode(cusolverRfHandle_t handle, 
                                                               cusolverRfResetValuesFastMode_t fastMode);
 
 /*** Non-Batched Routines ***/
 /* CUSOLVERRF setup of internal structures from host or device memory */
-cusolverStatus_t CRFWINAPI cusolverRfSetupHost(/* Input (in the host memory) */
+cusolverStatus_t CUSOLVERAPI cusolverRfSetupHost(/* Input (in the host memory) */
                                                  int n,
                                                  int nnzA,
                                                  int* h_csrRowPtrA,
@@ -174,7 +165,7 @@ cusolverStatus_t CRFWINAPI cusolverRfSetupHost(/* Input (in the host memory) */
                                                  /* Output */
                                                  cusolverRfHandle_t handle);
     
-cusolverStatus_t CRFWINAPI cusolverRfSetupDevice(/* Input (in the device memory) */
+cusolverStatus_t CUSOLVERAPI cusolverRfSetupDevice(/* Input (in the device memory) */
                                                    int n,
                                                    int nnzA,
                                                    int* csrRowPtrA,
@@ -196,7 +187,7 @@ cusolverStatus_t CRFWINAPI cusolverRfSetupDevice(/* Input (in the device memory)
 /* CUSOLVERRF update the matrix values (assuming the reordering, pivoting 
    and consequently the sparsity pattern of L and U did not change),
    and zero out the remaining values. */
-cusolverStatus_t CRFWINAPI cusolverRfResetValues(/* Input (in the device memory) */
+cusolverStatus_t CUSOLVERAPI cusolverRfResetValues(/* Input (in the device memory) */
                                                    int n,
                                                    int nnzA,
                                                    int* csrRowPtrA, 
@@ -208,13 +199,13 @@ cusolverStatus_t CRFWINAPI cusolverRfResetValues(/* Input (in the device memory)
                                                    cusolverRfHandle_t handle);
 
 /* CUSOLVERRF analysis (for parallelism) */
-cusolverStatus_t CRFWINAPI cusolverRfAnalyze(cusolverRfHandle_t handle);
+cusolverStatus_t CUSOLVERAPI cusolverRfAnalyze(cusolverRfHandle_t handle);
 
 /* CUSOLVERRF re-factorization (for parallelism) */
-cusolverStatus_t CRFWINAPI cusolverRfRefactor(cusolverRfHandle_t handle);
+cusolverStatus_t CUSOLVERAPI cusolverRfRefactor(cusolverRfHandle_t handle);
 
 /* CUSOLVERRF extraction: Get L & U packed into a single matrix M */
-cusolverStatus_t CRFWINAPI cusolverRfAccessBundledFactorsDevice(/* Input */
+cusolverStatus_t CUSOLVERAPI cusolverRfAccessBundledFactorsDevice(/* Input */
                                                                   cusolverRfHandle_t handle,
                                                                   /* Output (in the host memory) */
                                                                   int* nnzM, 
@@ -223,7 +214,7 @@ cusolverStatus_t CRFWINAPI cusolverRfAccessBundledFactorsDevice(/* Input */
                                                                   int** Mi, 
                                                                   double** Mx);
 
-cusolverStatus_t CRFWINAPI cusolverRfExtractBundledFactorsHost(/* Input */
+cusolverStatus_t CUSOLVERAPI cusolverRfExtractBundledFactorsHost(/* Input */
                                                                  cusolverRfHandle_t handle, 
                                                                  /* Output (in the host memory) */
                                                                  int* h_nnzM,
@@ -232,7 +223,7 @@ cusolverStatus_t CRFWINAPI cusolverRfExtractBundledFactorsHost(/* Input */
                                                                  double** h_Mx);
 
 /* CUSOLVERRF extraction: Get L & U individually */
-cusolverStatus_t CRFWINAPI cusolverRfExtractSplitFactorsHost(/* Input */
+cusolverStatus_t CUSOLVERAPI cusolverRfExtractSplitFactorsHost(/* Input */
                                                                cusolverRfHandle_t handle, 
                                                                /* Output (in the host memory) */
                                                                int* h_nnzL, 
@@ -245,7 +236,7 @@ cusolverStatus_t CRFWINAPI cusolverRfExtractSplitFactorsHost(/* Input */
                                                                double** h_csrValU);
 
 /* CUSOLVERRF (forward and backward triangular) solves */
-cusolverStatus_t CRFWINAPI cusolverRfSolve(/* Input (in the device memory) */
+cusolverStatus_t CUSOLVERAPI cusolverRfSolve(/* Input (in the device memory) */
                                              cusolverRfHandle_t handle,
                                              int *P,
                                              int *Q,
@@ -259,7 +250,7 @@ cusolverStatus_t CRFWINAPI cusolverRfSolve(/* Input (in the device memory) */
 
 /*** Batched Routines ***/
 /* CUSOLVERRF-batch setup of internal structures from host */
-cusolverStatus_t CRFWINAPI cusolverRfBatchSetupHost(/* Input (in the host memory)*/
+cusolverStatus_t CUSOLVERAPI cusolverRfBatchSetupHost(/* Input (in the host memory)*/
                                                       int batchSize,
                                                       int n,
                                                       int nnzA,
@@ -282,7 +273,7 @@ cusolverStatus_t CRFWINAPI cusolverRfBatchSetupHost(/* Input (in the host memory
 /* CUSOLVERRF-batch update the matrix values (assuming the reordering, pivoting 
    and consequently the sparsity pattern of L and U did not change),
    and zero out the remaining values. */
-cusolverStatus_t CRFWINAPI cusolverRfBatchResetValues(/* Input (in the device memory) */
+cusolverStatus_t CUSOLVERAPI cusolverRfBatchResetValues(/* Input (in the device memory) */
                                                         int batchSize,
                                                         int n,
                                                         int nnzA,
@@ -295,13 +286,13 @@ cusolverStatus_t CRFWINAPI cusolverRfBatchResetValues(/* Input (in the device me
                                                         cusolverRfHandle_t handle);
  
 /* CUSOLVERRF-batch analysis (for parallelism) */
-cusolverStatus_t CRFWINAPI cusolverRfBatchAnalyze(cusolverRfHandle_t handle);
+cusolverStatus_t CUSOLVERAPI cusolverRfBatchAnalyze(cusolverRfHandle_t handle);
 
 /* CUSOLVERRF-batch re-factorization (for parallelism) */
-cusolverStatus_t CRFWINAPI cusolverRfBatchRefactor(cusolverRfHandle_t handle);
+cusolverStatus_t CUSOLVERAPI cusolverRfBatchRefactor(cusolverRfHandle_t handle);
 
 /* CUSOLVERRF-batch (forward and backward triangular) solves */
-cusolverStatus_t CRFWINAPI cusolverRfBatchSolve(/* Input (in the device memory) */
+cusolverStatus_t CUSOLVERAPI cusolverRfBatchSolve(/* Input (in the device memory) */
                                                   cusolverRfHandle_t handle,
                                                   int *P,
                                                   int *Q,
@@ -314,7 +305,7 @@ cusolverStatus_t CRFWINAPI cusolverRfBatchSolve(/* Input (in the device memory) 
                                                   int ldxf);
 
 /* CUSOLVERRF-batch obtain the position of zero pivot */    
-cusolverStatus_t CRFWINAPI cusolverRfBatchZeroPivot(/* Input */
+cusolverStatus_t CUSOLVERAPI cusolverRfBatchZeroPivot(/* Input */
                                                       cusolverRfHandle_t handle,
                                                       /* Output (in the host memory) */
                                                       int *position);

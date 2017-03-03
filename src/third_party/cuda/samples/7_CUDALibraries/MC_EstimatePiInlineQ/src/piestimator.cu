@@ -50,15 +50,19 @@ struct IF<true, L, R>
 // RNG init kernel
 template <typename rngState_t, typename rngDirectionVectors_t>
 __global__ void initRNG(rngState_t *const rngStates,
-                        rngDirectionVectors_t *const rngDirections)
+                        rngDirectionVectors_t *const rngDirections,
+                        unsigned int numDrawsPerDirection)
 {
     // Determine thread ID
     unsigned int tid = blockIdx.x * blockDim.x + threadIdx.x;
     unsigned int step = gridDim.x * blockDim.x;
 
+    // Determine offset to avoid overlapping sub-sequences
+    unsigned int offset = tid * ((numDrawsPerDirection + step - 1) / step);
+
     // Initialise the RNG
-    curand_init(rngDirections[0], tid, &rngStates[tid]);
-    curand_init(rngDirections[1], tid, &rngStates[tid + step]);
+    curand_init(rngDirections[0], offset, &rngStates[tid]);
+    curand_init(rngDirections[1], offset, &rngStates[tid + step]);
 }
 
 __device__ unsigned int reduce_sum(unsigned int in)
@@ -324,7 +328,7 @@ Real PiEstimator<Real>::operator()()
     }
 
     // Initialise RNG
-    initRNG<<<grid, block>>>(d_rngStates, d_rngDirections);
+    initRNG<<<grid, block>>>(d_rngStates, d_rngDirections, m_numSims);
 
     // Count the points inside unit quarter-circle
     computeValue<Real><<<grid, block, block.x *sizeof(unsigned int)>>>(d_results, d_rngStates, m_numSims);

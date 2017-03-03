@@ -1,5 +1,5 @@
 /*
- * Copyright 1993-2014 NVIDIA Corporation.  All rights reserved.
+ * Copyright 1993-2016 NVIDIA Corporation.  All rights reserved.
  *
  * NOTICE TO LICENSEE:
  *
@@ -142,15 +142,31 @@ extern "C"
 /**
  * @}
  */
+#define __DEVICE_FUNCTIONS_DECL__ __host__ __device__
+#if !defined(_MSC_VER)
+#define __CUDA_MATH_CRTIMP
+#else
+#if _MSC_VER < 1900
+#define __CUDA_MATH_CRTIMP _CRTIMP
+#else
+#define __CUDA_MATH_CRTIMP _ACRTIMP
+#endif
+#endif
 
 #if defined(__ANDROID__) && (__ANDROID_API__ <= 20) && !defined(__aarch64__)
-static __host__ __device__ __device_builtin__ __cudart_builtin__ int                    abs(int);
-static __host__ __device__ __device_builtin__ __cudart_builtin__ long int               labs(long int);
-static __host__ __device__ __device_builtin__ __cudart_builtin__ long long int          llabs(long long int);
+static __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __cudart_builtin__ int                    abs(int);
+static __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __cudart_builtin__ long int               labs(long int);
+static __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __cudart_builtin__ long long int          llabs(long long int);
 #else /* __ANDROID__ */
-extern __host__ __device__ __device_builtin__ __cudart_builtin__ int            __cdecl abs(int) __THROW;
-extern __host__ __device__ __device_builtin__ __cudart_builtin__ long int       __cdecl labs(long int) __THROW;
-extern __host__ __device__ __device_builtin__ __cudart_builtin__ long long int          llabs(long long int) __THROW;
+#ifdef __QNX__
+namespace std {
+#endif
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __cudart_builtin__ int            __cdecl abs(int) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __cudart_builtin__ long int       __cdecl labs(long int) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __cudart_builtin__ long long int          llabs(long long int) __THROW;
+#ifdef __QNX__
+}
+#endif
 #endif /* __ANDROID__ */
 
 #ifdef __QNX__
@@ -197,7 +213,7 @@ namespace std {
  * ) returns 0.
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl fabs(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl fabs(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the absolute value of its argument
@@ -238,15 +254,15 @@ extern __host__ __device__ __device_builtin__ double         __cdecl fabs(double
  * ) returns 0.
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  fabsf(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  fabsf(float x) __THROW;
 #ifdef __QNX__
 } /* std */
 #endif
-extern __host__ __device__ __device_builtin__ int                    min(int, int);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    min(int, int);
 
-extern __host__ __device__ __device_builtin__ unsigned int           umin(unsigned int, unsigned int);
-extern __host__ __device__ __device_builtin__ long long int          llmin(long long int, long long int);
-extern __host__ __device__ __device_builtin__ unsigned long long int ullmin(unsigned long long int, unsigned long long int);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ unsigned int           umin(unsigned int, unsigned int);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ long long int          llmin(long long int, long long int);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ unsigned long long int ullmin(unsigned long long int, unsigned long long int);
 
 #ifdef __QNX__
 namespace std {
@@ -266,11 +282,11 @@ namespace std {
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  fminf(float x, float y) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl fminf(float x, float y);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  fminf(float x, float y) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl fminf(float x, float y);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Determine the minimum numeric value of the arguments.
@@ -286,19 +302,19 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl fminf(float
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 fmin(double x, double y) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl fmin(double x, double y);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 fmin(double x, double y) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl fmin(double x, double y);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 #ifdef __QNX__
 } /* std */
 #endif
-extern __host__ __device__ __device_builtin__ int                    max(int, int);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    max(int, int);
 
-extern __host__ __device__ __device_builtin__ unsigned int           umax(unsigned int, unsigned int);
-extern __host__ __device__ __device_builtin__ long long int          llmax(long long int, long long int);
-extern __host__ __device__ __device_builtin__ unsigned long long int ullmax(unsigned long long int, unsigned long long int);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ unsigned int           umax(unsigned int, unsigned int);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ long long int          llmax(long long int, long long int);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ unsigned long long int ullmax(unsigned long long int, unsigned long long int);
 
 #ifdef __QNX__
 namespace std {
@@ -318,11 +334,11 @@ namespace std {
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  fmaxf(float x, float y) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl fmaxf(float x, float y);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  fmaxf(float x, float y) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl fmaxf(float x, float y);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Determine the maximum numeric value of the arguments.
@@ -338,11 +354,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl fmaxf(float
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 fmax(double, double) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl fmax(double, double);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 fmax(double, double) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl fmax(double, double);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the sine of the input argument.
@@ -383,7 +399,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl fmax(double
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl sin(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl sin(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the cosine of the input argument.
@@ -416,7 +432,7 @@ extern __host__ __device__ __device_builtin__ double         __cdecl sin(double 
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl cos(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl cos(double x) __THROW;
 #ifdef __QNX__
 } /* std */
 #endif
@@ -435,7 +451,7 @@ extern __host__ __device__ __device_builtin__ double         __cdecl cos(double 
  * \see ::sin() and ::cos().
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ void                   sincos(double x, double *sptr, double *cptr) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ void                   sincos(double x, double *sptr, double *cptr) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the sine and cosine of the first input argument.
@@ -451,7 +467,7 @@ extern __host__ __device__ __device_builtin__ void                   sincos(doub
  * \note_accuracy_single
  * \note_fastmath
  */
-extern __host__ __device__ __device_builtin__ void                   sincosf(float x, float *sptr, float *cptr) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ void                   sincosf(float x, float *sptr, float *cptr) __THROW;
 
 #ifdef __QNX__
 namespace std {
@@ -496,7 +512,7 @@ namespace std {
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl tan(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl tan(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the square root of the input argument.
@@ -565,7 +581,7 @@ extern __host__ __device__ __device_builtin__ double         __cdecl tan(double 
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl sqrt(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl sqrt(double x) __THROW;
 #ifdef __QNX__
 } /* std */
 #endif
@@ -637,7 +653,7 @@ extern __host__ __device__ __device_builtin__ double         __cdecl sqrt(double
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double                 rsqrt(double x);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 rsqrt(double x);
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -707,7 +723,7 @@ extern __host__ __device__ __device_builtin__ double                 rsqrt(doubl
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  rsqrtf(float x);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  rsqrtf(float x);
 
 #ifdef __QNX__
 namespace std {
@@ -762,11 +778,11 @@ namespace std {
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 log2(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl log2(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 log2(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl log2(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the base 2 exponential of the input argument.
@@ -787,11 +803,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl log2(double
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 exp2(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl exp2(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 exp2(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl exp2(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the base 2 exponential of the input argument.
@@ -812,11 +828,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl exp2(double
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  exp2f(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl exp2f(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  exp2f(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl exp2f(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 #ifdef __QNX__
 } /* std */
 #endif
@@ -840,7 +856,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl exp2f(float
  *
  * \note_accuracy_double
  */         
-extern __host__ __device__ __device_builtin__ double                 exp10(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 exp10(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -863,7 +879,7 @@ extern __host__ __device__ __device_builtin__ double                 exp10(doubl
  * \note_accuracy_single
  * \note_fastmath
  */
-extern __host__ __device__ __device_builtin__ float                  exp10f(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  exp10f(float x) __THROW;
 
 #ifdef __QNX__
 namespace std {
@@ -908,11 +924,11 @@ namespace std {
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 expm1(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl expm1(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 expm1(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl expm1(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the base 
@@ -953,11 +969,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl expm1(doubl
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  expm1f(float x) __THROW;        
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl expm1f(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  expm1f(float x) __THROW;        
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl expm1f(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the base 2 logarithm of the input argument.
@@ -1008,11 +1024,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl expm1f(floa
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  log2f(float x) __THROW;         
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl log2f(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  log2f(float x) __THROW;         
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl log2f(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the base 10 logarithm of the input argument.
@@ -1063,7 +1079,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl log2f(float
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl log10(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl log10(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the base 
@@ -1134,7 +1150,7 @@ extern __host__ __device__ __device_builtin__ double         __cdecl log10(doubl
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl log(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl log(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the value of 
@@ -1227,11 +1243,11 @@ extern __host__ __device__ __device_builtin__ double         __cdecl log(double 
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 log1p(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl log1p(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 log1p(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl log1p(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the value of 
@@ -1324,11 +1340,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl log1p(doubl
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  log1pf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl log1pf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  log1pf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl log1pf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the largest integer less than or equal to \p x.
@@ -1400,7 +1416,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl log1pf(floa
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl floor(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl floor(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the base 
@@ -1439,7 +1455,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl floor(doubl
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl exp(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl exp(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the hyperbolic cosine of the input argument.
@@ -1470,7 +1486,7 @@ extern __host__ __device__ __device_builtin__ double         __cdecl exp(double 
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl cosh(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl cosh(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the hyperbolic sine of the input argument.
@@ -1500,7 +1516,7 @@ extern __host__ __device__ __device_builtin__ double         __cdecl cosh(double
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl sinh(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl sinh(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the hyperbolic tangent of the input argument.
@@ -1530,7 +1546,7 @@ extern __host__ __device__ __device_builtin__ double         __cdecl sinh(double
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl tanh(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl tanh(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the nonnegative arc hyperbolic cosine of the input argument.
@@ -1564,11 +1580,11 @@ extern __host__ __device__ __device_builtin__ double         __cdecl tanh(double
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 acosh(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl acosh(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 acosh(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl acosh(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the nonnegative arc hyperbolic cosine of the input argument.
@@ -1602,11 +1618,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl acosh(doubl
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  acoshf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl acoshf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  acoshf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl acoshf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the arc hyperbolic sine of the input argument.
@@ -1618,11 +1634,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl acoshf(floa
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 asinh(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl asinh(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 asinh(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl asinh(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the arc hyperbolic sine of the input argument.
@@ -1634,11 +1650,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl asinh(doubl
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  asinhf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl asinhf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  asinhf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl asinhf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the arc hyperbolic tangent of the input argument.
@@ -1688,11 +1704,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl asinhf(floa
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 atanh(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl atanh(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 atanh(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl atanh(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the arc hyperbolic tangent of the input argument.
@@ -1742,11 +1758,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl atanh(doubl
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  atanhf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl atanhf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  atanhf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl atanhf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the value of 
@@ -1802,7 +1818,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl atanhf(floa
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl ldexp(double x, int exp) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl ldexp(double x, int exp) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the value of 
@@ -1858,7 +1874,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl ldexp(doubl
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  ldexpf(float x, int exp) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  ldexpf(float x, int exp) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the floating point representation of the exponent of the input argument.
@@ -1909,11 +1925,11 @@ extern __host__ __device__ __device_builtin__ float                  ldexpf(floa
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 logb(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl logb(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 logb(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl logb(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the floating point representation of the exponent of the input argument.
@@ -1964,11 +1980,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl logb(double
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  logbf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl logbf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  logbf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl logbf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Compute the unbiased integer exponent of the argument.
@@ -1994,11 +2010,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl logbf(float
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ int                    ilogb(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP int    __cdecl ilogb(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    ilogb(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP int    __cdecl ilogb(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Compute the unbiased integer exponent of the argument.
@@ -2024,11 +2040,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP int    __cdecl ilogb(doubl
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ int                    ilogbf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP int    __cdecl ilogbf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    ilogbf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP int    __cdecl ilogbf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Scale floating-point input by integer power of two.
@@ -2100,11 +2116,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP int    __cdecl ilogbf(floa
  * </m:math>
  * </d4p_MathML>\endxmlonly.
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 scalbn(double x, int n) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl scalbn(double x, int n);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 scalbn(double x, int n) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl scalbn(double x, int n);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Scale floating-point input by integer power of two.
@@ -2176,11 +2192,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl scalbn(doub
  * </m:math>
  * </d4p_MathML>\endxmlonly.
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  scalbnf(float x, int n) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl scalbnf(float x, int n);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  scalbnf(float x, int n) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl scalbnf(float x, int n);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Scale floating-point input by integer power of two.
@@ -2252,11 +2268,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl scalbnf(flo
  * </m:math>
  * </d4p_MathML>\endxmlonly.
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 scalbln(double x, long int n) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl scalbln(double x, long int n);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 scalbln(double x, long int n) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl scalbln(double x, long int n);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Scale floating-point input by integer power of two.
@@ -2328,11 +2344,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl scalbln(dou
  * </m:math>
  * </d4p_MathML>\endxmlonly.
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  scalblnf(float x, long int n) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl scalblnf(float x, long int n);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  scalblnf(float x, long int n) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl scalblnf(float x, long int n);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Extract mantissa and exponent of a floating-point value
@@ -2407,7 +2423,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl scalblnf(fl
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl frexp(double x, int *nptr) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl frexp(double x, int *nptr) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Extract mantissa and exponent of a floating-point value
@@ -2482,7 +2498,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl frexp(doubl
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  frexpf(float x, int *nptr) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  frexpf(float x, int *nptr) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Round to nearest integer value in floating-point.
@@ -2495,11 +2511,11 @@ extern __host__ __device__ __device_builtin__ float                  frexpf(floa
  *
  * \note_slow_round See ::rint().
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 round(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl round(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 round(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl round(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Round to nearest integer value in floating-point.
@@ -2512,11 +2528,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl round(doubl
  *
  * \note_slow_round See ::rintf().
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  roundf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl roundf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  roundf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl roundf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Round to nearest integer value.
@@ -2530,11 +2546,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl roundf(floa
  *
  * \note_slow_round See ::lrint().
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ long int               lround(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP long int __cdecl lround(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ long int               lround(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP long int __cdecl lround(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Round to nearest integer value.
@@ -2548,11 +2564,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP long int __cdecl lround(do
  *
  * \note_slow_round See ::lrintf().
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ long int               lroundf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP long int __cdecl lroundf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ long int               lroundf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP long int __cdecl lroundf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Round to nearest integer value.
@@ -2566,11 +2582,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP long int __cdecl lroundf(f
  *
  * \note_slow_round See ::llrint().
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ long long int          llround(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP long long int __cdecl llround(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ long long int          llround(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP long long int __cdecl llround(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Round to nearest integer value.
@@ -2584,11 +2600,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP long long int __cdecl llro
  *
  * \note_slow_round See ::llrintf().
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ long long int          llroundf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP long long int __cdecl llroundf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ long long int          llroundf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP long long int __cdecl llroundf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Round to nearest integer value in floating-point.
@@ -2599,11 +2615,33 @@ extern __host__ __device__ __device_builtin__ _CRTIMP long long int __cdecl llro
  * \return 
  * Returns rounded integer value.
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 rint(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl rint(double x);
-#endif /* _MSC_VER < 1800 */
+#if defined(__CUDA_ARCH__) || defined(__DOXYGEN_ONLY__)
+/*
+ * We don't generate the declaration of rint for host compilation.
+ * This is acaully a workaround to compile the boost header file when
+ * Clang 3.8 is used as the host compiler. The boost header file has
+ * the following example code:
+ *   namespace NS { extern "C" { double rint(double); }
+ *   }
+ *
+ * After preprocessing, we get something like below:
+ *
+ * extern "C" { double rint(double x) throw(); }
+ * # 30 "/usr/include/math.h" 3
+ * extern "C" { double rint(double x) throw(); }
+ * namespace NS { extern "C" { double rint(double); } }
+ *
+ * Although GCC accepts this output, Clang 3.8 doesn't.
+ * Furthermore, we cannot change the boost header file by adding "throw()"
+ * to rint's declaration there. So, as a workaround, we just don't generate
+ * our re-declaration for the host compilation.
+ */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 rint(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl rint(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+#endif /* __CUDA_ARCH__ || __DOXYGEN_ONLY__ */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Round input to nearest integer value in floating-point.
@@ -2614,11 +2652,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl rint(double
  * \return 
  * Returns rounded integer value.
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  rintf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl rintf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  rintf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl rintf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Round input to nearest integer value.
@@ -2630,11 +2668,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl rintf(float
  * \return 
  * Returns rounded integer value.
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ long int               lrint(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP long int __cdecl lrint(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ long int               lrint(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP long int __cdecl lrint(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Round input to nearest integer value.
@@ -2646,11 +2684,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP long int __cdecl lrint(dou
  * \return 
  * Returns rounded integer value.
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ long int               lrintf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP long int __cdecl lrintf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ long int               lrintf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP long int __cdecl lrintf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Round input to nearest integer value.
@@ -2662,11 +2700,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP long int __cdecl lrintf(fl
  * \return 
  * Returns rounded integer value.
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ long long int          llrint(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP long long int __cdecl llrint(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ long long int          llrint(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP long long int __cdecl llrint(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Round input to nearest integer value.
@@ -2678,11 +2716,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP long long int __cdecl llri
  * \return 
  * Returns rounded integer value.
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ long long int          llrintf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP long long int __cdecl llrintf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ long long int          llrintf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP long long int __cdecl llrintf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Round the input argument to the nearest integer.
@@ -2731,11 +2769,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP long long int __cdecl llri
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 nearbyint(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl nearbyint(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 nearbyint(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl nearbyint(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Round the input argument to the nearest integer.
@@ -2784,11 +2822,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl nearbyint(d
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  nearbyintf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl nearbyintf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  nearbyintf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl nearbyintf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate ceiling of the input argument.
@@ -2847,7 +2885,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl nearbyintf(
  * </m:math>
  * </d4p_MathML>\endxmlonly.
  */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl ceil(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl ceil(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Truncate input argument to the integral part.
@@ -2858,11 +2896,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl ceil(double
  * \return 
  * Returns truncated integer value.
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 trunc(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl trunc(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 trunc(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl trunc(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Truncate input argument to the integral part.
@@ -2873,11 +2911,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl trunc(doubl
  * \return 
  * Returns truncated integer value.
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  truncf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl truncf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  truncf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl truncf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Compute the positive difference between \p x and \p y.
@@ -2899,11 +2937,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl truncf(floa
  * \endxmlonly \p y.
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 fdim(double x, double y) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl fdim(double x, double y);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 fdim(double x, double y) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl fdim(double x, double y);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Compute the positive difference between \p x and \p y.
@@ -2925,11 +2963,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl fdim(double
  * \endxmlonly \p y.
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  fdimf(float x, float y) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl fdimf(float x, float y);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  fdimf(float x, float y) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl fdimf(float x, float y);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the arc tangent of the ratio of first and second input arguments.
@@ -2962,7 +3000,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl fdimf(float
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl atan2(double y, double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl atan2(double y, double x) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the arc tangent of the input argument.
@@ -2993,7 +3031,7 @@ extern __host__ __device__ __device_builtin__ double         __cdecl atan2(doubl
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl atan(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl atan(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the arc cosine of the input argument.
@@ -3016,7 +3054,7 @@ extern __host__ __device__ __device_builtin__ double         __cdecl atan(double
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl acos(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl acos(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the arc sine of the input argument.
@@ -3048,7 +3086,7 @@ extern __host__ __device__ __device_builtin__ double         __cdecl acos(double
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl asin(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl asin(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the square root of the sum of squares of two arguments.
@@ -3088,9 +3126,13 @@ extern __host__ __device__ __device_builtin__ double         __cdecl asin(double
  * \note_accuracy_double
  */
 #if defined(_WIN32)
-static __host__ __device__ __device_builtin__ double __CRTDECL hypot(double x, double y);
+#if defined(_MSC_VER) && _MSC_VER < 1900
+static __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double __CRTDECL hypot(double x, double y);
+#else
+extern _ACRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double __cdecl hypot(double x, double y);
+#endif
 #else /* _WIN32 */
-extern __host__ __device__ __device_builtin__ double           hypot(double x, double y) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double           hypot(double x, double y) __THROW;
 #endif /* _WIN32 */
 
 #ifdef __QNX__
@@ -3142,7 +3184,7 @@ extern __host__ __device__ __device_builtin__ double           hypot(double x, d
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double                rhypot(double x, double y) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                rhypot(double x, double y) __THROW;
 
 #ifdef __QNX__
 namespace std {
@@ -3186,9 +3228,9 @@ namespace std {
  * \note_accuracy_single
  */
 #if defined(_WIN32)
-static __host__ __device__ __device_builtin__ float __CRTDECL hypotf(float x, float y);
+static __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __CRTDECL hypotf(float x, float y);
 #else /* _WIN32 */
-extern __host__ __device__ __device_builtin__ float           hypotf(float x, float y) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float           hypotf(float x, float y) __THROW;
 #endif /* _WIN32 */
 
 #ifdef __QNX__
@@ -3240,7 +3282,7 @@ extern __host__ __device__ __device_builtin__ float           hypotf(float x, fl
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                 rhypotf(float x, float y) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                 rhypotf(float x, float y) __THROW;
 
 #ifdef __QNX__
 namespace std {
@@ -3287,7 +3329,7 @@ namespace std {
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl norm3d(double a, double b, double c) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl norm3d(double a, double b, double c) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -3338,7 +3380,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl norm3d(doub
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double                rnorm3d(double a, double b, double c) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                rnorm3d(double a, double b, double c) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -3387,7 +3429,255 @@ extern __host__ __device__ __device_builtin__ double                rnorm3d(doub
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl norm4d(double a, double b, double c, double d) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl norm4d(double a, double b, double c, double d) __THROW;
+
+/**
+ * \ingroup CUDA_MATH_DOUBLE
+ * \brief Calculate one over the square root of the sum of squares of four coordinates of the argument.
+ *
+ * Calculate one over the length of four dimensional vector \p p in euclidean space undue overflow or underflow.
+ *
+ * \return Returns one over the length of the 3D vetor 
+ * \latexonly $\frac{1}{\sqrt{p.x^2+p.y^2+p.z^2+p.t^2}}$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mfrac>
+ *     <m:mrow>
+ *       <m:mi>1</m:mi>
+ *     </m:mrow>
+ *     <m:mrow>
+ *       <m:msqrt>
+ *         <m:msup>
+ *           <m:mi>p.x</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.y</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.z</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *	   <m:mo>+</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.t</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *       </m:msqrt>
+ *     </m:mrow>
+ *   </m:mfrac>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly. 
+ * If the square root would overflow, returns 0.
+ * If the square root would underflow, returns
+ * \latexonly $+\infty$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mo>+</m:mo>
+ *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly.
+ *
+ * \note_accuracy_double
+ */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double rnorm4d(double a, double b, double c, double d) __THROW;
+
+/**
+ * \ingroup CUDA_MATH_DOUBLE
+ * \brief Calculate the square root of the sum of squares of any number of coordinates.
+ *
+ * Calculate the length of a vector p, dimension of which is passed as an argument \p without undue overflow or underflow.
+ *
+ * \return Returns the length of the dim-D vector 
+ * \latexonly $\sqrt{\sum_{i=1}^{dim} p_i^2}$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:msqrt>
+ *     <m:msup>
+ *       <m:mi>p.1</m:mi>
+ *       <m:mn>2</m:mn>
+ *     </m:msup>
+ *     <m:mo>+</m:mo>
+ *     <m:msup>
+ *       <m:mi>p.2</m:mi>
+ *       <m:mn>2</m:mn>
+ *     </m:msup>
+ *     <m:mo>+ ... +</m:mo>
+ *     <m:msup>
+ *       <m:mi>p.dim</m:mi>
+ *       <m:mn>2</m:mn>
+ *     </m:msup>
+ *   </m:msqrt>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly. 
+ * If the correct value would overflow, returns 
+ * \latexonly $+\infty$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mo>+</m:mo>
+ *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly.
+ * If the correct value would underflow, returns 0.
+ * If two of the input arguments is 0, returns remaining argument
+ *
+ * \note_accuracy_double
+ */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double norm(int dim, double const * t) __THROW;
+
+/**
+ * \ingroup CUDA_MATH_DOUBLE
+ * \brief Calculate the reciprocal of square root of the sum of squares of any number of coordinates.
+ *
+ * Calculates one over the length of vector \p p, dimension of which is passed as an agument, in euclidean space without undue overflow or underflow.
+ *
+ * \return Returns one over the length of the vector
+ * \latexonly $\frac{1}{\sqrt{\sum_{i=1}^{dim} p_i^2}$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mfrac>
+ *     <m:mrow>
+ *       <m:mi>1</m:mi>
+ *     </m:mrow>
+ *     <m:mrow>
+ *       <m:msqrt>
+ *         <m:msup>
+ *           <m:mi>p.1</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.2</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+ ... +</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.dim</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *       </m:msqrt>
+ *     </m:mrow>
+ *   </m:mfrac>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly. 
+ * If the square root would overflow, returns 0.
+ * If the square root would underflow, returns
+ * \latexonly $+\infty$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mo>+</m:mo>
+ *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly.
+ *
+ * \note_accuracy_double
+ */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double rnorm(int dim, double const * t) __THROW;
+
+/**
+ * \ingroup CUDA_MATH_SINGLE
+ * \brief Calculate the reciprocal of square root of the sum of squares of any number of coordinates.
+ *
+ * Calculates one over the length of vector \p p, dimension of which is passed as an agument, in euclidean space without undue overflow or underflow.
+ *
+ * \return Returns one over the length of the vector
+ * \latexonly $\frac{1}{\sqrt{\sum_{i=1}^{dim} p_i^2}$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mfrac>
+ *     <m:mrow>
+ *       <m:mi>1</m:mi>
+ *     </m:mrow>
+ *     <m:mrow>
+ *       <m:msqrt>
+ *         <m:msup>
+ *           <m:mi>p.1</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.2</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+ ... +</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.dim</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *       </m:msqrt>
+ *     </m:mrow>
+ *   </m:mfrac>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly. 
+ * If the square root would overflow, returns 0.
+ * If the square root would underflow, returns
+ * \latexonly $+\infty$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mo>+</m:mo>
+ *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly.
+ *
+ * \note_accuracy_single
+ */
+
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float rnormf(int dim, float const * a) __THROW;
+
+/**
+ * \ingroup CUDA_MATH_SINGLE
+ * \brief Calculate the square root of the sum of squares of any number of coordinates.
+ *
+ * Calculates the length of a vector \p p, dimension of which is passed as an agument without undue overflow or underflow.
+ *
+ * \return Returns the length of the vector
+ * \latexonly $\sqrt{\sum_{i=1}^{dim} p_i^2}$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:msqrt>
+ *     <m:msup>
+ *       <m:mi>p.1</m:mi>
+ *       <m:mn>2</m:mn>
+ *     </m:msup>
+ *     <m:mo>+</m:mo>
+ *     <m:msup>
+ *       <m:mi>p.2</m:mi>
+ *       <m:mn>2</m:mn>
+ *     </m:msup>
+ *     <m:mo>+ ... +</m:mo>
+ *     <m:msup>
+ *       <m:mi>p.dim</m:mi>
+ *       <m:mn>2</m:mn>
+ *     </m:msup>
+ *   </m:msqrt>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly. 
+ * If the correct value would overflow, returns 
+ * \latexonly $+\infty$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mo>+</m:mo>
+ *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly.
+ * If the correct value would underflow, returns 0.
+ *
+ * \note_accuracy_single
+ */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float normf(int dim, float const * a) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -3431,7 +3721,8 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl norm4d(doub
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  norm3df(float a, float b, float c) __THROW;
+
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float norm3df(float a, float b, float c) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -3482,7 +3773,7 @@ extern __host__ __device__ __device_builtin__ float                  norm3df(flo
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                 rnorm3df(float a, float b, float c) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float rnorm3df(float a, float b, float c) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -3531,7 +3822,63 @@ extern __host__ __device__ __device_builtin__ float                 rnorm3df(flo
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  norm4df(float a, float b, float c, float d) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float norm4df(float a, float b, float c, float d) __THROW;
+
+/**
+ * \ingroup CUDA_MATH_SINGLE
+ * \brief Calculate one over the square root of the sum of squares of four coordinates of the argument.
+ *
+ * Calculates one over the length of four dimension vector \p p in euclidean space without undue overflow or underflow.
+ *
+ * \return Returns one over the length of the 3D vector
+ * \latexonly $\frac{1}{\sqrt{p.x^2+p.y^2+p.z^2+p.t^2}}$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mfrac>
+ *     <m:mrow>
+ *       <m:mi>1</m:mi>
+ *     </m:mrow>
+ *     <m:mrow>
+ *       <m:msqrt>
+ *         <m:msup>
+ *           <m:mi>p.x</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.y</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.z</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.z</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *       </m:msqrt>
+ *     </m:mrow>
+ *   </m:mfrac>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly. 
+ * If the square root would overflow, returns 0.
+ * If the square root would underflow, returns
+ * \latexonly $+\infty$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mo>+</m:mo>
+ *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly.
+ *
+ * \note_accuracy_single
+ */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float rnorm4df(float a, float b, float c, float d) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -3614,11 +3961,11 @@ extern __host__ __device__ __device_builtin__ float                  norm4df(flo
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 cbrt(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl cbrt(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 cbrt(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl cbrt(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the cube root of the input argument.
@@ -3700,11 +4047,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl cbrt(double
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  cbrtf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl cbrtf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  cbrtf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl cbrtf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 #ifdef __QNX__
 } /* std */
 #endif
@@ -3756,7 +4103,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl cbrtf(float
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double                 rcbrt(double x);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 rcbrt(double x);
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -3806,7 +4153,7 @@ extern __host__ __device__ __device_builtin__ double                 rcbrt(doubl
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  rcbrtf(float x);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  rcbrtf(float x);
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the sine of the input argument 
@@ -3866,7 +4213,7 @@ extern __host__ __device__ __device_builtin__ float                  rcbrtf(floa
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double                 sinpi(double x);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 sinpi(double x);
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the sine of the input argument 
@@ -3926,7 +4273,7 @@ extern __host__ __device__ __device_builtin__ double                 sinpi(doubl
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  sinpif(float x);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  sinpif(float x);
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the cosine of the input argument 
@@ -3978,7 +4325,7 @@ extern __host__ __device__ __device_builtin__ float                  sinpif(floa
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double                 cospi(double x);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 cospi(double x);
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the cosine of the input argument 
@@ -4030,7 +4377,7 @@ extern __host__ __device__ __device_builtin__ double                 cospi(doubl
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  cospif(float x);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  cospif(float x);
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief  Calculate the sine and cosine of the first input argument 
@@ -4060,7 +4407,7 @@ extern __host__ __device__ __device_builtin__ float                  cospif(floa
  * \see ::sinpi() and ::cospi().
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ void                   sincospi(double x, double *sptr, double *cptr);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ void                   sincospi(double x, double *sptr, double *cptr);
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief  Calculate the sine and cosine of the first input argument 
@@ -4090,7 +4437,7 @@ extern __host__ __device__ __device_builtin__ void                   sincospi(do
  * \see ::sinpif() and ::cospif().
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ void                   sincospif(float x, float *sptr, float *cptr);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ void                   sincospif(float x, float *sptr, float *cptr);
 
 #ifdef __QNX__
 namespace std {
@@ -4402,7 +4749,7 @@ namespace std {
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl pow(double x, double y) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl pow(double x, double y) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Break down the input argument into fractional and integral parts.
@@ -4458,7 +4805,7 @@ extern __host__ __device__ __device_builtin__ double         __cdecl pow(double 
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl modf(double x, double *iptr) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl modf(double x, double *iptr) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the floating-point remainder of \p x / \p y.
@@ -4517,7 +4864,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl modf(double
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double         __cdecl fmod(double x, double y) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double         __cdecl fmod(double x, double y) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Compute double-precision floating-point remainder.
@@ -4602,11 +4949,11 @@ extern __host__ __device__ __device_builtin__ double         __cdecl fmod(double
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 remainder(double x, double y) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl remainder(double x, double y);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 remainder(double x, double y) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl remainder(double x, double y);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Compute single-precision floating-point remainder.
@@ -4692,11 +5039,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl remainder(d
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  remainderf(float x, float y) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl remainderf(float x, float y);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  remainderf(float x, float y) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl remainderf(float x, float y);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Compute double-precision floating-point remainder and part of quotient.
@@ -4746,11 +5093,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl remainderf(
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 remquo(double x, double y, int *quo) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl remquo(double x, double y, int *quo);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 remquo(double x, double y, int *quo) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl remquo(double x, double y, int *quo);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Compute single-precision floating-point remainder and part of quotient.
@@ -4800,11 +5147,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl remquo(doub
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  remquof(float x, float y, int *quo) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl remquof(float x, float y, int *quo);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  remquof(float x, float y, int *quo) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl remquof(float x, float y, int *quo);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the value of the Bessel function of the first kind of order 0 for the input argument.
@@ -4842,7 +5189,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl remquof(flo
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl j0(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl j0(double x) __THROW;
 #ifdef __QNX__
 } /* std */
 #endif
@@ -4884,7 +5231,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl j0(double x
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  j0f(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  j0f(float x) __THROW;
 
 #ifdef __QNX__
 namespace std {
@@ -4945,7 +5292,7 @@ namespace std {
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl j1(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl j1(double x) __THROW;
 #ifdef __QNX__
 } /* std */
 #endif
@@ -5006,7 +5353,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl j1(double x
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  j1f(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  j1f(float x) __THROW;
 
 #ifdef __QNX__
 namespace std {
@@ -5049,7 +5396,7 @@ namespace std {
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl jn(int n, double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl jn(int n, double x) __THROW;
 #ifdef __QNX__
 } /* std */
 #endif
@@ -5092,7 +5439,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl jn(int n, d
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  jnf(int n, float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  jnf(int n, float x) __THROW;
 
 #ifdef __QNX__
 namespace std {
@@ -5144,7 +5491,7 @@ namespace std {
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl y0(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl y0(double x) __THROW;
 #ifdef __QNX__
 } /* std */
 #endif
@@ -5196,7 +5543,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl y0(double x
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  y0f(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  y0f(float x) __THROW;
 
 #ifdef __QNX__
 namespace std {
@@ -5248,7 +5595,7 @@ namespace std {
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl y1(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl y1(double x) __THROW;
 #ifdef __QNX__
 } /* std */
 #endif
@@ -5300,7 +5647,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl y1(double x
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  y1f(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  y1f(float x) __THROW;
 
 #ifdef __QNX__
 namespace std {
@@ -5353,7 +5700,7 @@ namespace std {
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl yn(int n, double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl yn(int n, double x) __THROW;
 #ifdef __QNX__
 } /* std */
 #endif
@@ -5406,7 +5753,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl yn(int n, d
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  ynf(int n, float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  ynf(int n, float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5433,7 +5780,7 @@ extern __host__ __device__ __device_builtin__ float                  ynf(int n, 
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl cyl_bessel_i0(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl cyl_bessel_i0(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the value of the regular modified cylindrical Bessel function of order 0 for the input argument.
@@ -5459,7 +5806,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl cyl_bessel_
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  cyl_bessel_i0f(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  cyl_bessel_i0f(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5486,7 +5833,7 @@ extern __host__ __device__ __device_builtin__ float                  cyl_bessel_
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl cyl_bessel_i1(double x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl cyl_bessel_i1(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the value of the regular modified cylindrical Bessel function of order 1 for the input argument.
@@ -5512,7 +5859,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl cyl_bessel_
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  cyl_bessel_i1f(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  cyl_bessel_i1f(float x) __THROW;
 
 #ifdef __QNX__
 namespace std {
@@ -5594,11 +5941,11 @@ namespace std {
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 erf(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl erf(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 erf(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl erf(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the error function of the input argument.
@@ -5676,11 +6023,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl erf(double 
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  erff(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl erff(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  erff(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl erff(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 #ifdef __QNX__
 } /* std */
 #endif
@@ -5741,7 +6088,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl erff(float 
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double                 erfinv(double y);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 erfinv(double y);
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the inverse error function of the input argument.
@@ -5798,7 +6145,7 @@ extern __host__ __device__ __device_builtin__ double                 erfinv(doub
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  erfinvf(float y);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  erfinvf(float y);
 
 #ifdef __QNX__
 namespace std {
@@ -5836,11 +6183,11 @@ namespace std {
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 erfc(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl erfc(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 erfc(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl erfc(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the complementary error function of the input argument.
@@ -5874,11 +6221,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl erfc(double
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  erfcf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl erfcf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  erfcf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl erfcf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the natural logarithm of the absolute value of the gamma function of the input argument.
@@ -5960,7 +6307,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl erfcf(float
  *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
  * </m:math>
  * </d4p_MathML>
- * \endxmlonly 0.
+ * \endxmlonly 0 and \p x is an integer.
  * - lgamma(
  * \latexonly $-\infty$ \endlatexonly
  * \xmlonly
@@ -6002,11 +6349,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl erfcf(float
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 lgamma(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl lgamma(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 lgamma(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl lgamma(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 #ifdef __QNX__
 } /* std */
 #endif
@@ -6066,7 +6413,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl lgamma(doub
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double                 erfcinv(double y);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 erfcinv(double y);
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the inverse complementary error function of the input argument.
@@ -6122,7 +6469,7 @@ extern __host__ __device__ __device_builtin__ double                 erfcinv(dou
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  erfcinvf(float y);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  erfcinvf(float y);
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the inverse of the standard normal cumulative distribution function.
@@ -6180,7 +6527,7 @@ extern __host__ __device__ __device_builtin__ float                  erfcinvf(fl
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double                 normcdfinv(double y);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 normcdfinv(double y);
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the inverse of the standard normal cumulative distribution function.
@@ -6238,7 +6585,7 @@ extern __host__ __device__ __device_builtin__ double                 normcdfinv(
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  normcdfinvf(float y);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  normcdfinvf(float y);
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the standard normal cumulative distribution function.
@@ -6281,7 +6628,7 @@ extern __host__ __device__ __device_builtin__ float                  normcdfinvf
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double                 normcdf(double y);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 normcdf(double y);
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the standard normal cumulative distribution function.
@@ -6324,7 +6671,7 @@ extern __host__ __device__ __device_builtin__ double                 normcdf(dou
 
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  normcdff(float y);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  normcdff(float y);
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the scaled complementary error function of the input argument.
@@ -6399,7 +6746,7 @@ extern __host__ __device__ __device_builtin__ float                  normcdff(fl
  *
  * \note_accuracy_double
  */
-extern __host__ __device__ __device_builtin__ double                 erfcx(double x);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 erfcx(double x);
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the scaled complementary error function of the input argument.
@@ -6474,7 +6821,7 @@ extern __host__ __device__ __device_builtin__ double                 erfcx(doubl
 
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  erfcxf(float x);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  erfcxf(float x);
 
 #ifdef __QNX__
 namespace std {
@@ -6565,7 +6912,7 @@ namespace std {
  * </m:math>
  * </d4p_MathML>
  * \endxmlonly
- *  0.
+ *  0 and \p x is an integer.
  * - lgammaf(
  * \latexonly $-\infty$ \endlatexonly
  * \xmlonly
@@ -6607,11 +6954,11 @@ namespace std {
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  lgammaf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl lgammaf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  lgammaf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl lgammaf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the gamma function of the input argument.
@@ -6670,7 +7017,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl lgammaf(flo
  *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
  * </m:math>
  * </d4p_MathML>\endxmlonly.
- * - tgamma(2) returns +0.
+ * - tgamma(2) returns +1.
  * - tgamma(\p x) returns 
  * \latexonly $\pm \infty$ \endlatexonly
  * \xmlonly
@@ -6682,7 +7029,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl lgammaf(flo
  * </d4p_MathML>
  * \endxmlonly
  *  if the correctly calculated value is outside the double floating point range.
- * - tgamma(\p x) returns NaN if \p x < 0.
+ * - tgamma(\p x) returns NaN if \p x < 0 and \p x is an integer.
  * - tgamma(
  * \latexonly $-\infty$ \endlatexonly
  * \xmlonly
@@ -6716,11 +7063,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl lgammaf(flo
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 tgamma(double x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl tgamma(double x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 tgamma(double x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl tgamma(double x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the gamma function of the input argument.
@@ -6779,7 +7126,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl tgamma(doub
  *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
  * </m:math>
  * </d4p_MathML>\endxmlonly.
- * - tgammaf(2) returns +0.
+ * - tgammaf(2) returns +1.
  * - tgammaf(\p x) returns 
  * \latexonly $\pm \infty$ \endlatexonly
  * \xmlonly
@@ -6791,7 +7138,7 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl tgamma(doub
  * </d4p_MathML>
  * \endxmlonly
  *  if the correctly calculated value is outside the single floating point range.
- * - tgammaf(\p x) returns NaN if \p x < 0.
+ * - tgammaf(\p x) returns NaN if \p x < 0  and \p x is an integer.
  * - tgammaf(
  * \latexonly $-\infty$ \endlatexonly
  * \xmlonly
@@ -6825,11 +7172,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl tgamma(doub
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  tgammaf(float x) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl tgammaf(float x);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  tgammaf(float x) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl tgammaf(float x);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /** \ingroup CUDA_MATH_DOUBLE
  * \brief Create value with given magnitude, copying sign of second value.
  *
@@ -6838,11 +7185,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl tgammaf(flo
  * \return
  * Returns a value with the magnitude of \p x and the sign of \p y.
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 copysign(double x, double y) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl copysign(double x, double y);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 copysign(double x, double y) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl copysign(double x, double y);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /** \ingroup CUDA_MATH_SINGLE
  * \brief Create value with given magnitude, copying sign of second value.
  *
@@ -6851,11 +7198,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl copysign(do
  * \return
  * Returns a value with the magnitude of \p x and the sign of \p y.
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  copysignf(float x, float y) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl copysignf(float x, float y);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  copysignf(float x, float y) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl copysignf(float x, float y);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 // FIXME exceptional cases for nextafter
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -6888,11 +7235,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl copysignf(f
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 nextafter(double x, double y) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl nextafter(double x, double y);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 nextafter(double x, double y) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl nextafter(double x, double y);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 // FIXME exceptional cases for nextafterf
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -6925,11 +7272,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl nextafter(d
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  nextafterf(float x, float y) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl nextafterf(float x, float y);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  nextafterf(float x, float y) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl nextafterf(float x, float y);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Returns "Not a Number" value.
@@ -6941,11 +7288,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl nextafterf(
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 nan(const char *tagp) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl nan(const char *tagp);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 nan(const char *tagp) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl nan(const char *tagp);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Returns "Not a Number" value
@@ -6957,33 +7304,33 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl nan(const c
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  nanf(const char *tagp) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl nanf(const char *tagp);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  nanf(const char *tagp) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl nanf(const char *tagp);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 #ifdef __QNX__
 } /* namespace std */
 #endif
-extern __host__ __device__ __device_builtin__ int                    __isinff(float) __THROW;
-extern __host__ __device__ __device_builtin__ int                    __isnanf(float) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __isinff(float) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __isnanf(float) __THROW;
 
 
 #if defined(__APPLE__)
-extern __host__ __device__ __device_builtin__ int                    __isfinited(double) __THROW;
-extern __host__ __device__ __device_builtin__ int                    __isfinitef(float) __THROW;
-extern __host__ __device__ __device_builtin__ int                    __signbitd(double) __THROW;
-extern __host__ __device__ __device_builtin__ int                    __isnand(double) __THROW;
-extern __host__ __device__ __device_builtin__ int                    __isinfd(double) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __isfinited(double) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __isfinitef(float) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __signbitd(double) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __isnand(double) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __isinfd(double) __THROW;
 #else /* __APPLE__ */
-extern __host__ __device__ __device_builtin__ int                    __finite(double) __THROW;
-extern __host__ __device__ __device_builtin__ int                    __finitef(float) __THROW;
-extern __host__ __device__ __device_builtin__ int                    __signbit(double) __THROW;
-extern __host__ __device__ __device_builtin__ int                    __isnan(double) __THROW;
-extern __host__ __device__ __device_builtin__ int                    __isinf(double) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __finite(double) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __finitef(float) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __signbit(double) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __isnan(double) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __isinf(double) __THROW;
 #endif /* __APPLE__ */
 
-extern __host__ __device__ __device_builtin__ int                    __signbitf(float) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __signbitf(float) __THROW;
 
 #ifdef __QNX__
 namespace std {
@@ -7141,11 +7488,11 @@ namespace std {
  *
  * \note_accuracy_double
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ double                 fma(double x, double y, double z) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl fma(double x, double y, double z);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ double                 fma(double x, double y, double z) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP double __cdecl fma(double x, double y, double z);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Compute 
@@ -7299,11 +7646,11 @@ extern __host__ __device__ __device_builtin__ _CRTIMP double __cdecl fma(double 
  *
  * \note_accuracy_single
  */
-#if _MSC_VER < 1800
-extern __host__ __device__ __device_builtin__ float                  fmaf(float x, float y, float z) __THROW;
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl fmaf(float x, float y, float z);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  fmaf(float x, float y, float z) __THROW;
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ __CUDA_MATH_CRTIMP float  __cdecl fmaf(float x, float y, float z);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 #ifdef __QNX__
 } /* std */
 #endif
@@ -7311,37 +7658,37 @@ extern __host__ __device__ __device_builtin__ _CRTIMP float  __cdecl fmaf(float 
 
 /* these are here to avoid warnings on the call graph.
    long double is not supported on the device */
-extern __host__ __device__ __device_builtin__ int                    __signbitl(long double) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __signbitl(long double) __THROW;
 #if defined(__APPLE__)
-extern __host__ __device__ __device_builtin__ int                    __isfinite(long double) __THROW;
-extern __host__ __device__ __device_builtin__ int                    __isinf(long double) __THROW;
-extern __host__ __device__ __device_builtin__ int                    __isnan(long double) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __isfinite(long double) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __isinf(long double) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __isnan(long double) __THROW;
 #else /* __APPLE__ */
-extern __host__ __device__ __device_builtin__ int                    __finitel(long double) __THROW;
-extern __host__ __device__ __device_builtin__ int                    __isinfl(long double) __THROW;
-extern __host__ __device__ __device_builtin__ int                    __isnanl(long double) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __finitel(long double) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __isinfl(long double) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __isnanl(long double) __THROW;
 #endif /* __APPLE__ */
 
 #if defined(_WIN32) && defined(_M_AMD64)
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl acosf(float) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl asinf(float) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl atanf(float) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl atan2f(float, float) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl cosf(float) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl sinf(float) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl tanf(float) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl coshf(float) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl sinhf(float) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl tanhf(float) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl expf(float) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl logf(float) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl log10f(float) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl modff(float, float*) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl powf(float, float) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl sqrtf(float) __THROW;         
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl ceilf(float) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl floorf(float) __THROW;
-extern _CRTIMP __host__ __device__ __device_builtin__ float __cdecl fmodf(float, float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl acosf(float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl asinf(float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl atanf(float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl atan2f(float, float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl cosf(float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl sinf(float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl tanf(float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl coshf(float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl sinhf(float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl tanhf(float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl expf(float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl logf(float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl log10f(float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl modff(float, float*) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl powf(float, float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl sqrtf(float) __THROW;         
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl ceilf(float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl floorf(float) __THROW;
+extern __CUDA_MATH_CRTIMP __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float __cdecl fmodf(float, float) __THROW;
 #else /* _WIN32 && _M_AMD64 */
 
 #ifdef __QNX__
@@ -7369,7 +7716,7 @@ namespace std {
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  acosf(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  acosf(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the arc sine of the input argument.
@@ -7409,7 +7756,7 @@ extern __host__ __device__ __device_builtin__ float                  acosf(float
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  asinf(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  asinf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -7449,7 +7796,7 @@ extern __host__ __device__ __device_builtin__ float                  asinf(float
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  atanf(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  atanf(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the arc tangent of the ratio of first and second input arguments.
@@ -7482,7 +7829,7 @@ extern __host__ __device__ __device_builtin__ float                  atanf(float
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  atan2f(float y, float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  atan2f(float y, float x) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the cosine of the input argument.
@@ -7506,7 +7853,7 @@ extern __host__ __device__ __device_builtin__ float                  atan2f(floa
  * \note_accuracy_single
  * \note_fastmath
  */
-extern __host__ __device__ __device_builtin__ float                  cosf(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  cosf(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the sine of the input argument.
@@ -7548,7 +7895,7 @@ extern __host__ __device__ __device_builtin__ float                  cosf(float 
  * \note_accuracy_single
  * \note_fastmath
  */
-extern __host__ __device__ __device_builtin__ float                  sinf(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  sinf(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the tangent of the input argument.
@@ -7590,7 +7937,7 @@ extern __host__ __device__ __device_builtin__ float                  sinf(float 
  * \note_accuracy_single
  * \note_fastmath
  */
-extern __host__ __device__ __device_builtin__ float                  tanf(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  tanf(float x) __THROW;
 // FIXME return values for large arg values
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -7614,7 +7961,7 @@ extern __host__ __device__ __device_builtin__ float                  tanf(float 
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  coshf(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  coshf(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the hyperbolic sine of the input argument.
@@ -7655,7 +8002,7 @@ extern __host__ __device__ __device_builtin__ float                  coshf(float
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  sinhf(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  sinhf(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the hyperbolic tangent of the input argument.
@@ -7685,7 +8032,7 @@ extern __host__ __device__ __device_builtin__ float                  sinhf(float
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  tanhf(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  tanhf(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the natural logarithm of the input argument.
@@ -7736,7 +8083,7 @@ extern __host__ __device__ __device_builtin__ float                  tanhf(float
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  logf(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  logf(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the base 
@@ -7786,7 +8133,7 @@ extern __host__ __device__ __device_builtin__ float                  logf(float 
  * \note_accuracy_single
  * \note_fastmath
  */
-extern __host__ __device__ __device_builtin__ float                  expf(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  expf(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the base 10 logarithm of the input argument.
@@ -7837,7 +8184,7 @@ extern __host__ __device__ __device_builtin__ float                  expf(float 
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  log10f(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  log10f(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Break down the input argument into fractional and integral parts.
@@ -7892,7 +8239,7 @@ extern __host__ __device__ __device_builtin__ float                  log10f(floa
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  modff(float x, float *iptr) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  modff(float x, float *iptr) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the value of first argument to the power of second argument.
@@ -8200,7 +8547,7 @@ extern __host__ __device__ __device_builtin__ float                  modff(float
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  powf(float x, float y) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  powf(float x, float y) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the square root of the input argument.
@@ -8269,7 +8616,7 @@ extern __host__ __device__ __device_builtin__ float                  powf(float 
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  sqrtf(float x) __THROW;         
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  sqrtf(float x) __THROW;         
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate ceiling of the input argument.
@@ -8328,7 +8675,7 @@ extern __host__ __device__ __device_builtin__ float                  sqrtf(float
  * </m:math>
  * </d4p_MathML>\endxmlonly.
  */
-extern __host__ __device__ __device_builtin__ float                  ceilf(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  ceilf(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the largest integer less than or equal to \p x.
@@ -8400,7 +8747,7 @@ extern __host__ __device__ __device_builtin__ float                  ceilf(float
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  floorf(float x) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  floorf(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_SINGLE
  * \brief Calculate the floating-point remainder of \p x / \p y.
@@ -8459,15 +8806,15 @@ extern __host__ __device__ __device_builtin__ float                  floorf(floa
  *
  * \note_accuracy_single
  */
-extern __host__ __device__ __device_builtin__ float                  fmodf(float x, float y) __THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  fmodf(float x, float y) __THROW;
 #ifdef __QNX__
 /* redeclare some builtins that QNX uses */
-extern __host__ __device__ __device_builtin__ float _FLog(float, int);
-extern __host__ __device__ __device_builtin__ float _FCosh(float, float);
-extern __host__ __device__ __device_builtin__ float _FSinh(float, float);
-extern __host__ __device__ __device_builtin__ float _FSinx(float, unsigned int, int);
-extern __host__ __device__ __device_builtin__ int _FDsign(float);
-extern __host__ __device__ __device_builtin__ int _Dsign(double);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float _FLog(float, int);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float _FCosh(float, float);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float _FSinh(float, float);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float _FSinx(float, unsigned int, int);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int _FDsign(float);
+extern __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int _Dsign(double);
 } /* std */
 #endif
 #endif /* _WIN32 && _M_AMD64 */
@@ -8494,21 +8841,21 @@ extern __host__ __device__ __device_builtin__ int _Dsign(double);
 
 #if defined(__CUDACC_RTC__)
 
-__host__ __device__ __cudart_builtin__ int signbit(float x);
-__host__ __device__ __cudart_builtin__ int signbit(double x);
-__host__ __device__ __cudart_builtin__ int signbit(long double x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int signbit(float x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int signbit(double x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int signbit(long double x);
 
-__host__ __device__ __cudart_builtin__ int isfinite(float x);
-__host__ __device__ __cudart_builtin__ int isfinite(double x);
-__host__ __device__ __cudart_builtin__ int isfinite(long double x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isfinite(float x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isfinite(double x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isfinite(long double x);
 
-__host__ __device__ __cudart_builtin__ int isnan(float x);
-__host__ __device__ __cudart_builtin__ int isnan(double x);
-__host__ __device__ __cudart_builtin__ int isnan(long double x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isnan(float x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isnan(double x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isnan(long double x);
 
-__host__ __device__ __cudart_builtin__ int isinf(float x);
-__host__ __device__ __cudart_builtin__ int isinf(double x);
-__host__ __device__ __cudart_builtin__ int isinf(long double x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isinf(float x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isinf(double x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isinf(long double x);
 
 #elif defined(__GNUC__)
 
@@ -8519,103 +8866,143 @@ __host__ __device__ __cudart_builtin__ int isinf(long double x);
 
 #if defined(__APPLE__)
 
-__forceinline__ __host__ __device__ __cudart_builtin__ int signbit(float x);
-__forceinline__ __host__ __device__ __cudart_builtin__ int signbit(double x);
-__forceinline__ __host__ __device__ __cudart_builtin__ int signbit(long double x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int signbit(float x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int signbit(double x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int signbit(long double x);
 
-__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(float x); 
-__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(double x);
-__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(long double x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isfinite(float x); 
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isfinite(double x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isfinite(long double x);
 
-__forceinline__ __host__ __device__ __cudart_builtin__ int isnan(float x);
-__forceinline__ __host__ __device__ __cudart_builtin__ int isnan(double x) throw();
-__forceinline__ __host__ __device__ __cudart_builtin__ int isnan(long double x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isnan(float x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isnan(double x) throw();
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isnan(long double x);
 
-__forceinline__ __host__ __device__ __cudart_builtin__ int isinf(float x);
-__forceinline__ __host__ __device__ __cudart_builtin__ int isinf(double x) throw();
-__forceinline__ __host__ __device__ __cudart_builtin__ int isinf(long double x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isinf(float x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isinf(double x) throw();
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isinf(long double x);
 
 #else /* __APPLE__ */
 
-#ifdef __QNX__
+#if __GNUC__ > 5 && __cplusplus >= 201103L
+namespace std {
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ constexpr bool signbit(float x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ constexpr bool signbit(double x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ constexpr bool signbit(long double x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ constexpr bool isfinite(float x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ constexpr bool isfinite(double x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ constexpr bool isfinite(long double x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ constexpr bool isnan(float x);
+/* GCC 6.1 uses ::isnan(double x) for isnan(double x) */
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isnan(double x) throw();
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ constexpr bool isnan(long double x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ constexpr bool isinf(float x);
+/* GCC 6.1 uses ::isinf(double x) for isinf(double x) */
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isinf(double x) throw();
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ constexpr bool isinf(long double x);
+}
+
+#else /* !(__GNUC__ > 5 && __cplusplus >= 201103L) */
+
+#if defined(__QNX__)
 /* QNX defines functions in std, need to declare them here,
  * redefine in CUDABE */
 namespace std {
-__host__ __device__ __cudart_builtin__ bool signbit(float x);
-__host__ __device__ __cudart_builtin__ bool signbit(double x);
-__host__ __device__ __cudart_builtin__ bool signbit(long double x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ bool signbit(float x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ bool signbit(double x);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ bool signbit(long double x);
 }
-#else /* !QNX */
-__forceinline__ __host__ __device__ __cudart_builtin__ int signbit(float x);
+static __inline__ __DEVICE_FUNCTIONS_DECL__ bool isfinite(float a);
+static __inline__ __DEVICE_FUNCTIONS_DECL__ bool isfinite(double a);
+static __inline__ __DEVICE_FUNCTIONS_DECL__ bool isfinite(long double a);
+static __inline__ __DEVICE_FUNCTIONS_DECL__ bool isnan(float a);
+static __inline__ __DEVICE_FUNCTIONS_DECL__ bool isnan(double a);
+static __inline__ __DEVICE_FUNCTIONS_DECL__ bool isnan(long double a);
+static __inline__ __DEVICE_FUNCTIONS_DECL__ bool isinf(float a);
+static __inline__ __DEVICE_FUNCTIONS_DECL__ bool isinf(double a);
+static __inline__ __DEVICE_FUNCTIONS_DECL__ bool isinf(long double a);
+#else /* !__QNX__ */
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int signbit(float x);
 #if defined(__ICC)
-__forceinline__ __host__ __device__ __cudart_builtin__ int signbit(double x) throw();
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int signbit(double x) throw();
 #else /* !__ICC */
-__forceinline__ __host__ __device__ __cudart_builtin__ int signbit(double x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int signbit(double x);
 #endif /* __ICC */
-__forceinline__ __host__ __device__ __cudart_builtin__ int signbit(long double x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int signbit(long double x);
 
-__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(float x); 
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isfinite(float x); 
 #if defined(__ICC)
-__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(double x) throw();
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isfinite(double x) throw();
 #else /* !__ICC */
-__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(double x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isfinite(double x);
 #endif /* __ICC */
-__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(long double x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isfinite(long double x);
 
-__forceinline__ __host__ __device__ __cudart_builtin__ int isnan(float x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isnan(float x);
 #if defined(__ANDROID__)
-__forceinline__ __host__ __device__ __cudart_builtin__ int isnan(double x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isnan(double x);
 #else /* !__ANDROID__ */
-__forceinline__ __host__ __device__ __cudart_builtin__ int isnan(double x) throw();
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isnan(double x) throw();
 #endif /* __ANDROID__ */
-__forceinline__ __host__ __device__ __cudart_builtin__ int isnan(long double x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isnan(long double x);
 
-__forceinline__ __host__ __device__ __cudart_builtin__ int isinf(float x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isinf(float x);
 #if defined(__ANDROID__)
-__forceinline__ __host__ __device__ __cudart_builtin__ int isinf(double x);
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isinf(double x);
 #else /* !__ANDROID__ */
-__forceinline__ __host__ __device__ __cudart_builtin__ int isinf(double x) throw();
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isinf(double x) throw();
 #endif /* __ANDROID__ */
-__forceinline__ __host__ __device__ __cudart_builtin__ int isinf(long double x);
-#endif /* QNX */
+__forceinline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ int isinf(long double x);
+#endif /* __QNX__ */
 
+#endif /* __GNUC__ > 5 && __cplusplus >= 201103L */
 #endif /* __APPLE__ */
 
-#if defined(__arm__) && !defined(_STLPORT_VERSION) && !_GLIBCXX_USE_C99
-#if !defined(__ANDROID__) || __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 8)
+#if defined(__clang__) && !defined(_LIBCPP_VERSION)
+#if __has_include(<ext/random>)
+#define __NV_GLIBCXX_VERSION 40800
+#endif /* __has_include(<random>) */
+#endif /* __clang__ && !defined(_LIBCPP_VERSION) */
 
-#ifdef __QNX__
+#if !defined(__NV_GLIBCXX_VERSION)
+#define __NV_GLIBCXX_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__) 
+#endif /* !__NV_GLIBCXX_VERSION */
+
+#if defined(__arm__) && !defined(_STLPORT_VERSION) && !_GLIBCXX_USE_C99
+#if !defined(__ANDROID__) || __NV_GLIBCXX_VERSION < 40800
+
+#if defined(__QNX__)
 /* QNX defines functions in std, need to declare them here,
  * redefine in CUDABE */
 namespace std {
-__host__ __device__ __cudart_builtin__ long long int abs (long long int a);
+__DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ long long int abs (long long int a);
 }
 #else
-static __inline__ __host__ __device__ __cudart_builtin__ long long int abs(long long int a);
-#endif /* QNX */
+static __inline__ __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ long long int abs(long long int a);
+#endif /* __QNX__ */
 
-#endif /* !__ANDROID__ || __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 8) */
+#endif /* !__ANDROID__ || __NV_GLIBCXX_VERSION < 40800 */
 #endif /* __arm__ && !_STLPORT_VERSION && !_GLIBCXX_USE_C99 */
 
-#if (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 8)) && !defined(__ibmxl__)
+#if __NV_GLIBCXX_VERSION < 40800 && !defined(__ibmxl__)
 
 #if !defined(_STLPORT_VERSION)
 namespace __gnu_cxx
 {
 #endif /* !_STLPORT_VERSION */
 
-extern __host__ __device__ __cudart_builtin__ long long int abs(long long int a);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ long long int abs(long long int a);
 
 #if !defined(_STLPORT_VERSION)
 }
 #endif /* !_STLPORT_VERSION */
 
-#endif /* (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 8)) && !__ibmxl__ */
+#endif /* __NV_GLIBCXX_VERSION < 40800 && !__ibmxl__ */
 
 namespace std
 {
-  template<typename T> extern __host__ __device__ __cudart_builtin__ T __pow_helper(T, int);
-  template<typename T> extern __host__ __device__ __cudart_builtin__ T __cmath_power(T, unsigned int);
+  template<typename T> extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ T __pow_helper(T, int);
+  template<typename T> extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ T __cmath_power(T, unsigned int);
 }
 
 using std::abs;
@@ -8644,18 +9031,23 @@ using std::tanh;
 
 #elif defined(_WIN32)
 
-extern __host__ __device__ __cudart_builtin__ _CRTIMP double __cdecl _hypot(double x, double y);
-extern __host__ __device__ __cudart_builtin__ _CRTIMP float  __cdecl _hypotf(float x, float y);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_MATH_CRTIMP double __cdecl _hypot(double x, double y);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_MATH_CRTIMP float  __cdecl _hypotf(float x, float y);
 
-#if _MSC_VER < 1800
-static __inline__ __host__ __device__ int signbit(long double a);
-#else /* _MSC_VER < 1800 */
-extern __host__ __device__ __cudart_builtin__ bool signbit(long double);
-extern __host__ __device__ __cudart_builtin__ __device_builtin__ _CRTIMP int _ldsign(long double);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+static __inline__ __DEVICE_FUNCTIONS_DECL__ int signbit(long double a);
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+#if _MSC_VER >= 1900
+#define __SIGNBIT_THROW throw()
+#else
+#define __SIGNBIT_THROW
+#endif
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ bool signbit(long double) __SIGNBIT_THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __device_builtin__ __CUDA_MATH_CRTIMP int _ldsign(long double);
+#undef __SIGNBIT_THROW
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
-#if _MSC_VER < 1800
-#undef __RETURN_TYPE 
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 #define __RETURN_TYPE int
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8671,10 +9063,15 @@ extern __host__ __device__ __cudart_builtin__ __device_builtin__ _CRTIMP int _ld
  * - With other host compilers: __RETURN_TYPE is 'int'. Returns a 
  * nonzero value if and only if \p a is negative. 
  */
-static __inline__ __host__ __device__ __RETURN_TYPE signbit(double a);
-#else /* _MSC_VER < 1800 */
+static __inline__ __DEVICE_FUNCTIONS_DECL__ __RETURN_TYPE signbit(double a);
 #undef __RETURN_TYPE 
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 #define __RETURN_TYPE bool
+#if _MSC_VER >= 1900
+#define __SIGNBIT_THROW throw()
+#else
+#define __SIGNBIT_THROW
+#endif
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * 
@@ -8689,12 +9086,13 @@ static __inline__ __host__ __device__ __RETURN_TYPE signbit(double a);
  * - With other host compilers: __RETURN_TYPE is 'int'. Returns a 
  * nonzero value if and only if \p a is negative. 
  */
-extern __host__ __device__ __cudart_builtin__ __RETURN_TYPE signbit(double);
-extern __host__ __device__ __cudart_builtin__ __device_builtin__ _CRTIMP int _dsign(double);
-#endif /* _MSC_VER < 1800 */
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __RETURN_TYPE signbit(double) __SIGNBIT_THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __device_builtin__ __CUDA_MATH_CRTIMP int _dsign(double);
+#undef __RETURN_TYPE 
+#undef __SIGNBIT_THROW
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
-#if _MSC_VER < 1800
-#undef __RETURN_TYPE
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 #define __RETURN_TYPE int
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -8710,10 +9108,15 @@ extern __host__ __device__ __cudart_builtin__ __device_builtin__ _CRTIMP int _ds
  * - With other host compilers: __RETURN_TYPE is 'int'.  Returns a nonzero value 
  * if and only if \p a is negative.  
  */
-static __inline__ __host__ __device__ __RETURN_TYPE signbit(float a);
-#else /* _MSC_VER < 1800 */
+static __inline__ __DEVICE_FUNCTIONS_DECL__ __RETURN_TYPE signbit(float a);
 #undef __RETURN_TYPE
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 #define __RETURN_TYPE bool
+#if _MSC_VER >= 1900
+#define __SIGNBIT_THROW throw()
+#else
+#define __SIGNBIT_THROW
+#endif
 /**
  * \ingroup CUDA_MATH_SINGLE
  * 
@@ -8728,18 +9131,19 @@ static __inline__ __host__ __device__ __RETURN_TYPE signbit(float a);
  * - With other host compilers: __RETURN_TYPE is 'int'.  Returns a nonzero value 
  * if and only if \p a is negative.  
  */
-extern __host__ __device__ __cudart_builtin__ __RETURN_TYPE signbit(float);
-extern __host__ __device__ __cudart_builtin__ __device_builtin__ _CRTIMP int _fdsign(float);
-#endif /* _MSC_VER < 1800 */
-
-#if _MSC_VER < 1800
-static __inline__ __host__ __device__ int isinf(long double a);
-#else /* _MSC_VER < 1800 */
-static __inline__ __host__ __device__ bool isinf(long double a);
-#endif /* _MSC_VER < 1800 */
-
-#if _MSC_VER < 1800
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __RETURN_TYPE signbit(float) __SIGNBIT_THROW;
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __device_builtin__ __CUDA_MATH_CRTIMP int _fdsign(float);
 #undef __RETURN_TYPE
+#undef __SIGNBIT_THROW
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+static __inline__ __DEVICE_FUNCTIONS_DECL__ int isinf(long double a);
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+static __inline__ __DEVICE_FUNCTIONS_DECL__ bool isinf(long double a);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 #define __RETURN_TYPE int
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8754,9 +9158,9 @@ static __inline__ __host__ __device__ bool isinf(long double a);
  * - With other host compilers: Returns a nonzero value if and only 
  * if \p a is a infinite value.
  */
-static __inline__ __host__ __device__ __RETURN_TYPE isinf(double a);
-#else /* _MSC_VER < 1800 */
+static __inline__ __DEVICE_FUNCTIONS_DECL__ __RETURN_TYPE isinf(double a);
 #undef __RETURN_TYPE
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 #define __RETURN_TYPE bool
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8771,11 +9175,11 @@ static __inline__ __host__ __device__ __RETURN_TYPE isinf(double a);
  * - With other host compilers: Returns a nonzero value if and only 
  * if \p a is a infinite value.
  */
-static __inline__ __host__ __device__ __RETURN_TYPE isinf(double a);
-#endif /* _MSC_VER < 1800 */
-
-#if _MSC_VER < 1800
+static __inline__ __DEVICE_FUNCTIONS_DECL__ __RETURN_TYPE isinf(double a);
 #undef __RETURN_TYPE
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 #define __RETURN_TYPE int
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -8791,9 +9195,9 @@ static __inline__ __host__ __device__ __RETURN_TYPE isinf(double a);
  * - With other host compilers: __RETURN_TYPE is 'int'. Returns a nonzero 
  * value if and only if \p a is a infinite value.
  */
-static __inline__ __host__ __device__ __RETURN_TYPE isinf(float a);
-#else /* _MSC_VER < 1800 */
+static __inline__ __DEVICE_FUNCTIONS_DECL__ __RETURN_TYPE isinf(float a);
 #undef __RETURN_TYPE
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 #define __RETURN_TYPE bool
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -8809,17 +9213,17 @@ static __inline__ __host__ __device__ __RETURN_TYPE isinf(float a);
  * - With other host compilers: __RETURN_TYPE is 'int'. Returns a nonzero 
  * value if and only if \p a is a infinite value.
  */
-static __inline__ __host__ __device__ __RETURN_TYPE isinf(float a);
-#endif /* _MSC_VER < 1800 */
-
-#if _MSC_VER < 1800
-static __inline__ __host__ __device__ int isnan(long double a);
-#else /* _MSC_VER < 1800 */
-static __inline__ __host__ __device__ bool isnan(long double a);
-#endif /* _MSC_VER < 1800 */
-
-#if _MSC_VER < 1800
+static __inline__ __DEVICE_FUNCTIONS_DECL__ __RETURN_TYPE isinf(float a);
 #undef __RETURN_TYPE
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+static __inline__ __DEVICE_FUNCTIONS_DECL__ int isnan(long double a);
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+static __inline__ __DEVICE_FUNCTIONS_DECL__ bool isnan(long double a);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 #define __RETURN_TYPE int
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8833,9 +9237,9 @@ static __inline__ __host__ __device__ bool isnan(long double a);
  * - With other host compilers: __RETURN_TYPE is 'int'. Returns a 
  * nonzero value if and only if \p a is a NaN value.
  */
-static __inline__ __host__ __device__ __RETURN_TYPE isnan(double a);
-#else /* _MSC_VER < 1800 */
+static __inline__ __DEVICE_FUNCTIONS_DECL__ __RETURN_TYPE isnan(double a);
 #undef __RETURN_TYPE
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 #define __RETURN_TYPE bool
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8849,11 +9253,11 @@ static __inline__ __host__ __device__ __RETURN_TYPE isnan(double a);
  * - With other host compilers: __RETURN_TYPE is 'int'. Returns a 
  * nonzero value if and only if \p a is a NaN value.
  */
-static __inline__ __host__ __device__ __RETURN_TYPE isnan(double a);
-#endif /* _MSC_VER < 1800 */
-
-#if _MSC_VER < 1800
+static __inline__ __DEVICE_FUNCTIONS_DECL__ __RETURN_TYPE isnan(double a);
 #undef __RETURN_TYPE
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 #define __RETURN_TYPE int
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -8868,8 +9272,10 @@ static __inline__ __host__ __device__ __RETURN_TYPE isnan(double a);
  * - With other host compilers: __RETURN_TYPE is 'int'. Returns a 
  * nonzero value if and only if \p a is a NaN value.
  */
-static __inline__ __host__ __device__ __RETURN_TYPE isnan(float a);
-#else /* _MSC_VER < 1800 */
+static __inline__ __DEVICE_FUNCTIONS_DECL__ __RETURN_TYPE isnan(float a);
+#undef __RETURN_TYPE
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+#define __RETURN_TYPE bool
 /**
  * \ingroup CUDA_MATH_SINGLE
  * 
@@ -8883,20 +9289,17 @@ static __inline__ __host__ __device__ __RETURN_TYPE isnan(float a);
  * - With other host compilers: __RETURN_TYPE is 'int'. Returns a 
  * nonzero value if and only if \p a is a NaN value.
  */
+static __inline__ __DEVICE_FUNCTIONS_DECL__ __RETURN_TYPE isnan(float a);
 #undef __RETURN_TYPE
-#define __RETURN_TYPE bool
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
-static __inline__ __host__ __device__ __RETURN_TYPE isnan(float a);
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+static __inline__ __DEVICE_FUNCTIONS_DECL__ int isfinite(long double a);
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+static __inline__ __DEVICE_FUNCTIONS_DECL__ bool isfinite(long double a);
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
-#if _MSC_VER < 1800
-static __inline__ __host__ __device__ int isfinite(long double a);
-#else /* _MSC_VER < 1800 */
-static __inline__ __host__ __device__ bool isfinite(long double a);
-#endif /* _MSC_VER < 1800 */
-
-#if _MSC_VER < 1800
-#undef __RETURN_TYPE
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 #define __RETURN_TYPE int
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8912,9 +9315,9 @@ static __inline__ __host__ __device__ bool isfinite(long double a);
  * - With other host compilers: __RETURN_TYPE is 'int'. Returns 
  * a nonzero value if and only if \p a is a finite value.
  */
-static __inline__ __host__ __device__ __RETURN_TYPE isfinite(double a);
-#else /* _MSC_VER < 1800 */
+static __inline__ __DEVICE_FUNCTIONS_DECL__ __RETURN_TYPE isfinite(double a);
 #undef __RETURN_TYPE
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 #define __RETURN_TYPE bool
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8930,11 +9333,11 @@ static __inline__ __host__ __device__ __RETURN_TYPE isfinite(double a);
  * - With other host compilers: __RETURN_TYPE is 'int'. Returns 
  * a nonzero value if and only if \p a is a finite value.
  */
-static __inline__ __host__ __device__ __RETURN_TYPE isfinite(double a);
-#endif /* _MSC_VER < 1800 */
-
-#if _MSC_VER < 1800
+static __inline__ __DEVICE_FUNCTIONS_DECL__ __RETURN_TYPE isfinite(double a);
 #undef __RETURN_TYPE
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 #define __RETURN_TYPE int
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -8949,9 +9352,9 @@ static __inline__ __host__ __device__ __RETURN_TYPE isfinite(double a);
  * - With other host compilers: __RETURN_TYPE is 'int'. Returns 
  * a nonzero value if and only if \p a is a finite value.
  */
-static __inline__ __host__ __device__ __RETURN_TYPE isfinite(float a);
-#else /* _MSC_VER < 1800 */
+static __inline__ __DEVICE_FUNCTIONS_DECL__ __RETURN_TYPE isfinite(float a);
 #undef __RETURN_TYPE
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 #define __RETURN_TYPE bool
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -8966,16 +9369,17 @@ static __inline__ __host__ __device__ __RETURN_TYPE isfinite(float a);
  * - With other host compilers: __RETURN_TYPE is 'int'. Returns 
  * a nonzero value if and only if \p a is a finite value.
  */
-static __inline__ __host__ __device__ __RETURN_TYPE isfinite(float a);
-#endif /* _MSC_VER < 1800 */
+static __inline__ __DEVICE_FUNCTIONS_DECL__ __RETURN_TYPE isfinite(float a);
+#undef __RETURN_TYPE
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
-#if _MSC_VER < 1800
-template<class T> extern __host__ __device__ __cudart_builtin__ T _Pow_int(T, int);
-extern __host__ __device__ __cudart_builtin__ long long int abs(long long int);
-#else /* _MSC_VER < 1800 */
-template<class T> extern __host__ __device__ __cudart_builtin__ T _Pow_int(T, int) throw();
-extern __host__ __device__ __cudart_builtin__ long long int abs(long long int) throw();
-#endif /* _MSC_VER < 1800 */
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
+template<class T> extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ T _Pow_int(T, int);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ long long int abs(long long int);
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
+template<class T> extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ T _Pow_int(T, int) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ long long int abs(long long int) throw();
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
 #endif /* __CUDACC_RTC__ */
 
@@ -8990,79 +9394,120 @@ namespace std {
 #endif /* defined(_LIBCPP_VERSION) && defined(_LIBCPP_BEGIN_NAMESPACE_STD) && !defined(_STLPORT_VERSION) ||
           __GNUC__ && !_STLPORT_VERSION */
 
+#if defined(__CUDACC_INTEGRATED__) && defined(__GLIBCXX__) && defined(_GLIBCXX_CONSTEXPR)
+#define __CUDA_CONSTEXPR__ _GLIBCXX_CONSTEXPR
+#else
+#define __CUDA_CONSTEXPR__
+#endif /* __CUDACC_INTEGRATED__ && __GLIBCXX__  && _GLIBCXX_CONSTEXPR */
+
 #if defined(__CUDACC_RTC__) || defined(__GNUC__)
 
-#if defined(__CUDACC_RTC__) || __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8) || defined(__ibmxl__)
-extern __host__ __device__ __cudart_builtin__ long long int abs(long long int);
-#endif /* __CUDACC__JIT__ || __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8) || __ibmxl__ */
+#if defined(__CUDACC_RTC__) || __NV_GLIBCXX_VERSION >= 40800 || defined(__ibmxl__)
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ long long int abs(long long int);
+#endif /* __CUDACC__JIT__ || __NV_GLIBCXX_VERSION >= 40800 || __ibmxl__ */
 
 #endif /* __CUDACC_RTC__ || __GNUC__ */
 
-#if defined(__CUDACC_RTC__) || _MSC_VER < 1800 && (!defined(_LIBCPP_VERSION) || (_LIBCPP_VERSION < 1101))
-extern __host__ __device__ __cudart_builtin__ long int __cdecl abs(long int);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl abs(float);
-extern __host__ __device__ __cudart_builtin__ double   __cdecl abs(double);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl fabs(float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl ceil(float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl floor(float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl sqrt(float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl pow(float, float);
-#if !defined(__QNX__) && !(defined(__GNUC__) && __cplusplus >= 201103L)
-/* provide in math_functions.hpp */
-extern __host__ __device__ __cudart_builtin__ float    __cdecl pow(float, int);
-extern __host__ __device__ __cudart_builtin__ double   __cdecl pow(double, int);
-#endif  /* !defined(__QNX__) && !(defined(__GNUC__) && __cplusplus >= 201103L)  */
-extern __host__ __device__ __cudart_builtin__ float    __cdecl log(float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl log10(float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl fmod(float, float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl modf(float, float*);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl exp(float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl frexp(float, int*);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl ldexp(float, int);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl asin(float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl sin(float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl sinh(float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl acos(float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl cos(float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl cosh(float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl atan(float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl atan2(float, float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl tan(float);
-extern __host__ __device__ __cudart_builtin__ float    __cdecl tanh(float);
-#else /* __CUDACC_RTC__ || _MSC_VER < 1800 && (!defined(_LIBCPP_VERSION) || (_LIBCPP_VERSION < 1101)) */
-extern __host__ __device__ __cudart_builtin__ long int __cdecl abs(long int) throw();
+#if defined(__CUDACC_RTC__) || (!defined(_MSC_VER) || _MSC_VER < 1800) && (!defined(_LIBCPP_VERSION) || (_LIBCPP_VERSION < 1101))
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ long int __cdecl abs(long int);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl abs(float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ double   __cdecl abs(double);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl fabs(float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl ceil(float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl floor(float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl sqrt(float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl pow(float, float);
+
+#if !defined(__QNX__)
+     
+#if defined(__GNUC__) && __cplusplus >= 201103L && !defined(_LIBCPP_VERSION)
+template<typename _Tp, typename _Up>
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__
+typename __gnu_cxx::__promote_2<_Tp, _Up>::__type pow(_Tp, _Up);
+#else  /* !(defined(__GNUC__) && __cplusplus >= 201103L && !defined(_LIBCPP_VERSION)) */
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl pow(float, int);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ double   __cdecl pow(double, int);
+#endif  /* defined(__GNUC__) && __cplusplus >= 201103L && !defined(_LIBCPP_VERSION) */
+     
+#endif  /* !defined(__QNX__) */
+
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl log(float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl log10(float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl fmod(float, float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl modf(float, float*);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl exp(float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl frexp(float, int*);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl ldexp(float, int);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl asin(float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl sin(float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl sinh(float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl acos(float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl cos(float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl cosh(float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl atan(float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl atan2(float, float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl tan(float);
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ __CUDA_CONSTEXPR__ float    __cdecl tanh(float);
+#else /* __CUDACC_RTC__ || (!defined(_MSC_VER) || _MSC_VER < 1800) && (!defined(_LIBCPP_VERSION) || (_LIBCPP_VERSION < 1101)) */
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ long int __cdecl abs(long int) throw();
 #if defined(_LIBCPP_VERSION)
-extern __host__ __device__ __cudart_builtin__ long long int __cdecl abs(long long int) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ long long int __cdecl abs(long long int) throw();
 #endif /* defined(_LIBCPP_VERSION) */
-extern __host__ __device__ __cudart_builtin__ float    __cdecl abs(float) throw();
-extern __host__ __device__ __cudart_builtin__ double   __cdecl abs(double) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl fabs(float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl ceil(float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl floor(float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl sqrt(float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl pow(float, float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl abs(float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ double   __cdecl abs(double) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl fabs(float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl ceil(float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl floor(float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl sqrt(float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl pow(float, float) throw();
+#if defined(_LIBCPP_VERSION)
+#if __cplusplus >= 201103L
+#define __NV_NOEXCEPT noexcept
+#else /* !__cplusplus >= 201103L */
+#define __NV_NOEXCEPT throw()
+#endif /* __cplusplus >= 201103L */
+#if defined(__APPLE__) && __clang_major__ >= 7
+template <class _Tp, class _Up>
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__
+typename __lazy_enable_if <
+  std::is_arithmetic<_Tp>::value && std::is_arithmetic<_Up>::value,
+  std::__promote<_Tp, _Up>
+>::type pow(_Tp __x, _Up __y) __NV_NOEXCEPT;
+#else /* !(__APPLE__ && __clang_major__ >= 7) */
+template <class _Tp, class _Up>
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__
+typename enable_if <
+  std::is_arithmetic<_Tp>::value && std::is_arithmetic<_Up>::value,
+  typename std::__promote<_Tp, _Up>::type
+>::type pow(_Tp __x, _Up __y) __NV_NOEXCEPT;
+#endif /* __APPLE__ && __clang_major__ >= 7 */
+#undef __NV_NOEXCEPT
+#else /* !defined(_LIBCPP_VERSION) */
 #if !(defined(__GNUC__) && __cplusplus >= 201103L)
-extern __host__ __device__ __cudart_builtin__ float    __cdecl pow(float, int) throw();
-extern __host__ __device__ __cudart_builtin__ double   __cdecl pow(double, int) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl pow(float, int) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ double   __cdecl pow(double, int) throw();
 #endif /* !(defined(__GNUC__) && __cplusplus >= 201103L) */
-extern __host__ __device__ __cudart_builtin__ float    __cdecl log(float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl log10(float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl fmod(float, float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl modf(float, float*) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl exp(float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl frexp(float, int*) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl ldexp(float, int) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl asin(float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl sin(float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl sinh(float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl acos(float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl cos(float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl cosh(float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl atan(float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl atan2(float, float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl tan(float) throw();
-extern __host__ __device__ __cudart_builtin__ float    __cdecl tanh(float) throw();
-#endif /* __CUDACC_RTC__ || _MSC_VER < 1800 && (!defined(_LIBCPP_VERSION) || (_LIBCPP_VERSION < 1101)) */
+#endif /* defined(_LIBCPP_VERSION) */
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl log(float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl log10(float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl fmod(float, float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl modf(float, float*) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl exp(float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl frexp(float, int*) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl ldexp(float, int) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl asin(float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl sin(float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl sinh(float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl acos(float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl cos(float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl cosh(float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl atan(float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl atan2(float, float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl tan(float) throw();
+extern __DEVICE_FUNCTIONS_DECL__ __cudart_builtin__ float    __cdecl tanh(float) throw();
+#endif /* __CUDACC_RTC__ || (!defined(_MSC_VER) || _MSC_VER < 1800) && (!defined(_LIBCPP_VERSION) || (_LIBCPP_VERSION < 1101)) */
+
+#undef __DEVICE_FUNCTIONS_DECL__
 
 #if defined(_LIBCPP_VERSION) && defined(_LIBCPP_END_NAMESPACE_STD) && !defined(_STLPORT_VERSION)
 _LIBCPP_END_NAMESPACE_STD
@@ -9080,7 +9525,7 @@ _LIBCPP_END_NAMESPACE_STD
 #define __MATH_FUNCTIONS_DECL__ static inline __host__ __device__
 #endif /* __CUDACC_RTC__ */
 
-#if _MSC_VER < 1800
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 #ifdef __QNX__
 namespace std {
 __host__ __device__ __cudart_builtin__ float logb(float a);
@@ -9121,7 +9566,46 @@ __host__ __device__ __cudart_builtin__ float fma(float a, float b, float c);
 __host__ __device__ __cudart_builtin__ float fmax(float a, float b);
 __host__ __device__ __cudart_builtin__ float fmin(float a, float b);
 }
-#else /* !QNX */
+#else /* !(defined(__QNX__ ) || (defined(_LIBCPP_VERSION) && _LIBCPP_VERSION >= 3800)) */
+#if __GNUC__ > 5 && __cplusplus >= 201103L
+namespace std {
+__host__ __device__ __cudart_builtin__ constexpr float logb(float a);
+__host__ __device__ __cudart_builtin__ constexpr int ilogb(float a);
+__host__ __device__ __cudart_builtin__ constexpr float scalbn(float a, int b);
+__host__ __device__ __cudart_builtin__ constexpr float scalbln(float a, long int b);
+__host__ __device__ __cudart_builtin__ constexpr float exp2(float a);
+__host__ __device__ __cudart_builtin__ constexpr float expm1(float a);
+__host__ __device__ __cudart_builtin__ constexpr float log2(float a);
+__host__ __device__ __cudart_builtin__ constexpr float log1p(float a);
+__host__ __device__ __cudart_builtin__ constexpr float acosh(float a);
+__host__ __device__ __cudart_builtin__ constexpr float asinh(float a);
+__host__ __device__ __cudart_builtin__ constexpr float atanh(float a);
+__host__ __device__ __cudart_builtin__ constexpr float hypot(float a, float b);
+__host__ __device__ __cudart_builtin__ constexpr float norm3d(float a, float b, float c);
+__host__ __device__ __cudart_builtin__ constexpr float norm4d(float a, float b, float c, float d);
+__host__ __device__ __cudart_builtin__ constexpr float cbrt(float a);
+__host__ __device__ __cudart_builtin__ constexpr float erf(float a);
+__host__ __device__ __cudart_builtin__ constexpr float erfc(float a);
+__host__ __device__ __cudart_builtin__ constexpr float lgamma(float a);
+__host__ __device__ __cudart_builtin__ constexpr float tgamma(float a);
+__host__ __device__ __cudart_builtin__ constexpr float copysign(float a, float b);
+__host__ __device__ __cudart_builtin__ constexpr float nextafter(float a, float b);
+__host__ __device__ __cudart_builtin__ constexpr float remainder(float a, float b);
+__host__ __device__ __cudart_builtin__ float remquo(float a, float b, int *quo);
+__host__ __device__ __cudart_builtin__ constexpr float round(float a);
+__host__ __device__ __cudart_builtin__ constexpr long int lround(float a);
+__host__ __device__ __cudart_builtin__ constexpr long long int llround(float a);
+__host__ __device__ __cudart_builtin__ constexpr float trunc(float a);
+__host__ __device__ __cudart_builtin__ constexpr float rint(float a);
+__host__ __device__ __cudart_builtin__ constexpr long int lrint(float a);
+__host__ __device__ __cudart_builtin__ constexpr long long int llrint(float a);
+__host__ __device__ __cudart_builtin__ constexpr float nearbyint(float a);
+__host__ __device__ __cudart_builtin__ constexpr float fdim(float a, float b);
+__host__ __device__ __cudart_builtin__ constexpr float fma(float a, float b, float c);
+__host__ __device__ __cudart_builtin__ constexpr float fmax(float a, float b);
+__host__ __device__ __cudart_builtin__ constexpr float fmin(float a, float b);
+}
+#else /* !(__GNUC__ > 5 && __cplusplus >= 201103L) */
 __MATH_FUNCTIONS_DECL__ float logb(float a);
 
 __MATH_FUNCTIONS_DECL__ int ilogb(float a);
@@ -9191,8 +9675,9 @@ __MATH_FUNCTIONS_DECL__ float fma(float a, float b, float c);
 __MATH_FUNCTIONS_DECL__ float fmax(float a, float b);
 
 __MATH_FUNCTIONS_DECL__ float fmin(float a, float b);
-#endif /* QNX */
-#else /* _MSC_VER < 1800 */
+#endif /* __GNUC__ > 5 && __cplusplus >= 201103L */
+#endif /* defined(__QNX__) || (defined(_LIBCPP_VERSION) && _LIBCPP_VERSION >= 3800) */
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 extern __host__ __device__ __cudart_builtin__ float __cdecl logb(float) throw();
 extern __host__ __device__ __cudart_builtin__ int   __cdecl ilogb(float) throw();
 extern __host__ __device__ __cudart_builtin__ float __cdecl scalbn(float, float) throw();
@@ -9228,7 +9713,7 @@ extern __host__ __device__ __cudart_builtin__ float         __cdecl fdim(float, 
 extern __host__ __device__ __cudart_builtin__ float         __cdecl fma(float, float, float) throw();
 extern __host__ __device__ __cudart_builtin__ float         __cdecl fmax(float, float) throw();
 extern __host__ __device__ __cudart_builtin__ float         __cdecl fmin(float, float) throw();
-#endif /* _MSC_VER < 1800 */
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
 __MATH_FUNCTIONS_DECL__ float exp10(float a);
 
@@ -9280,6 +9765,14 @@ __MATH_FUNCTIONS_DECL__ unsigned int min(int a, unsigned int b);
 
 __MATH_FUNCTIONS_DECL__ unsigned int min(unsigned int a, int b);
 
+__MATH_FUNCTIONS_DECL__ long int min(long int a, long int b);
+
+__MATH_FUNCTIONS_DECL__ unsigned long int min(unsigned long int a, unsigned long int b);
+
+__MATH_FUNCTIONS_DECL__ unsigned long int min(long int a, unsigned long int b);
+
+__MATH_FUNCTIONS_DECL__ unsigned long int min(unsigned long int a, long int b);
+
 __MATH_FUNCTIONS_DECL__ long long int min(long long int a, long long int b);
 
 __MATH_FUNCTIONS_DECL__ unsigned long long int min(unsigned long long int a, unsigned long long int b);
@@ -9301,6 +9794,14 @@ __MATH_FUNCTIONS_DECL__ unsigned int max(unsigned int a, unsigned int b);
 __MATH_FUNCTIONS_DECL__ unsigned int max(int a, unsigned int b);
 
 __MATH_FUNCTIONS_DECL__ unsigned int max(unsigned int a, int b);
+
+__MATH_FUNCTIONS_DECL__ long int max(long int a, long int b);
+
+__MATH_FUNCTIONS_DECL__ unsigned long int max(unsigned long int a, unsigned long int b);
+
+__MATH_FUNCTIONS_DECL__ unsigned long int max(long int a, unsigned long int b);
+
+__MATH_FUNCTIONS_DECL__ unsigned long int max(unsigned long int a, long int b);
 
 __MATH_FUNCTIONS_DECL__ long long int max(long long int a, long long int b);
 
@@ -9327,10 +9828,12 @@ __MATH_FUNCTIONS_DECL__ double max(double a, float b);
 *******************************************************************************/
 
 #endif /* __CUDACC_RTC__ || __cplusplus && __CUDACC__ */
-#if defined(__CUDACC_RTC__) || !defined(__CUDACC__)
+#if defined(__CUDACC_RTC__) || !defined(__CUDACC__) || (defined(__CUDABE__) && defined(__CUDACC_INTEGRATED__))
 
+#if defined(__CUDACC_RTC__)
 #include "host_defines.h"
 #include "math_constants.h"
+#endif /* __CUDACC_RTC__ */
 
 #if defined(__CUDACC_RTC__) || defined(__CUDABE__)
 
@@ -9343,7 +9846,9 @@ __MATH_FUNCTIONS_DECL__ double max(double a, float b);
 
 #if defined(__CUDACC_RTC__)
 #define __MATH_FUNCTIONS_DECL__ __host__ __device__
-#else /* __CUDACC_RTC__ */
+#elif defined(__CUDACC_INTEGRATED__)
+#define __MATH_FUNCTIONS_DECL__ __host__ __device__ __cudart_builtin__
+#else
 #define __MATH_FUNCTIONS_DECL__ static __forceinline__
 #endif /* __CUDACC_RTC__ */
 
@@ -9445,13 +9950,13 @@ __MATH_FUNCTIONS_DECL__ float expm1f(float a);
 
 __MATH_FUNCTIONS_DECL__ float hypotf(float a, float b);
 
-__MATH_FUNCTIONS_DECL__ float rhypotf(float a, float b);
+__MATH_FUNCTIONS_DECL__ float rhypotf(float a, float b) __THROW;
 
-__MATH_FUNCTIONS_DECL__ float norm3df(float a, float b, float c);
+__MATH_FUNCTIONS_DECL__ float norm3df(float a, float b, float c) __THROW;
 
-__MATH_FUNCTIONS_DECL__ float rnorm3df(float a, float b, float c);
+__MATH_FUNCTIONS_DECL__ float rnorm3df(float a, float b, float c) __THROW;
 
-__MATH_FUNCTIONS_DECL__ float norm4df(float a, float b, float c, float d);
+__MATH_FUNCTIONS_DECL__ float norm4df(float a, float b, float c, float d) __THROW;
 
 __MATH_FUNCTIONS_DECL__ float cbrtf(float a);
 
@@ -9469,9 +9974,9 @@ __MATH_FUNCTIONS_DECL__ float ynf(int n, float a);
 
 __MATH_FUNCTIONS_DECL__ float jnf(int n, float a);
 
-__MATH_FUNCTIONS_DECL__ float cyl_bessel_i0f(float a);
+__MATH_FUNCTIONS_DECL__ float cyl_bessel_i0f(float a) __THROW;
 
-__MATH_FUNCTIONS_DECL__ float cyl_bessel_i1f(float a);
+__MATH_FUNCTIONS_DECL__ float cyl_bessel_i1f(float a) __THROW;
 
 __MATH_FUNCTIONS_DECL__ float erff(float a);
 
@@ -9635,11 +10140,11 @@ __func__(int __isinf(double a));
 
 #endif /* _WIN32 || __APPLE__ */
 
-#if (defined(_WIN32) && _MSC_VER < 1800) || defined (__ANDROID__)
+#if (defined(_WIN32) && (!defined(_MSC_VER) || _MSC_VER < 1800)) || defined (__ANDROID__)
 
 __func__(double log2(double a));
 
-#endif /* (_WIN32 && _MSC_VER < 1800) || __ANDROID__ */
+#endif /* (_WIN32 && (!defined(_MSC_VER) || _MSC_VER < 1800)) || __ANDROID__ */
 
 #if defined(_WIN32)
 
@@ -9665,7 +10170,7 @@ __func__(int __isnanf(float a));
 
 #endif /* _WIN32 */
 
-#if defined(_WIN32) && _MSC_VER < 1800
+#if defined(_WIN32) && (!defined(_MSC_VER) || _MSC_VER < 1800)
 
 __func__(double copysign(double a, double b));
 
@@ -9805,7 +10310,7 @@ __func__(float nextafterf(float a, float b));
 
 __func__(float nanf(const char *tagp));
 
-#endif /* _WIN32 && _MSC_VER < 1800 */
+#endif /* _WIN32 && (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
 #if defined(_WIN32)
 

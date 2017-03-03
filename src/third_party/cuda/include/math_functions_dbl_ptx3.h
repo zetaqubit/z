@@ -52,7 +52,9 @@
 
 #if defined(__CUDACC_RTC__)
 #define __MATH_FUNCTIONS_DBL_PTX3_DECL__ __host__ __device__
-#else /* !__CUDACC_RTC__ */
+#elif defined(__CUDACC_INTEGRATED__)
+#define __MATH_FUNCTIONS_DBL_PTX3_DECL__ __host__ __device__ __cudart_builtin__
+#else
 #define __MATH_FUNCTIONS_DBL_PTX3_DECL__ static __forceinline__
 #endif /* __CUDACC_RTC__ */
 
@@ -66,13 +68,13 @@
 *                                                                              *
 *******************************************************************************/
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double rint(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double rint(double a) __THROW; 
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ long int lrint(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ long int lrint(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ long long int llrint(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ long long int llrint(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double nearbyint(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double nearbyint(double a) __THROW;
 
 /*******************************************************************************
 *                                                                              *
@@ -100,109 +102,115 @@ __MATH_FUNCTIONS_DBL_PTX3_DECL__ int __isnan(/* we do not support long double ye
 
 #else /* __APPLE__ */
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ int __signbit(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ int __signbit(double a) __THROW;
 
 __MATH_FUNCTIONS_DBL_PTX3_DECL__ int __signbitl(/* we do not support long double yet, hence double */double a);
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ int __finite(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ int __finite(double a) __THROW; 
 
 __MATH_FUNCTIONS_DBL_PTX3_DECL__ int __finitel(/* we do not support long double yet, hence double */double a);
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ int __isinf(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ int __isinf(double a) __THROW;
 
 __MATH_FUNCTIONS_DBL_PTX3_DECL__ int __isinfl(/* we do not support long double yet, hence double */double a);
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ int __isnan(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ int __isnan(double a) __THROW;
 
 __MATH_FUNCTIONS_DBL_PTX3_DECL__ int __isnanl(/* we do not support long double yet, hence double */double a);
 
 #endif /* __APPLE__ */
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double copysign(double a, double b);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double copysign(double a, double b) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ void sincos(double a, double *sptr, double *cptr);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ void sincos(double a, double *sptr, double *cptr) __THROW;
 
 __MATH_FUNCTIONS_DBL_PTX3_DECL__ void sincospi(double a, double *sptr, double *cptr);
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double sin(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double sin(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double cos(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double cos(double a) __THROW;
 
 __MATH_FUNCTIONS_DBL_PTX3_DECL__ double sinpi(double a);
 
 __MATH_FUNCTIONS_DBL_PTX3_DECL__ double cospi(double a);
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double tan(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double tan(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double log(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double log(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double log2(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double log2(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double log10(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double log10(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double log1p(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double log1p(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double exp(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double exp(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double exp2(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double exp2(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double exp10(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double exp10(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double expm1(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double expm1(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double cosh(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double cosh(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double sinh(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double sinh(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double tanh(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double tanh(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double atan2(double a, double b);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double atan2(double a, double b) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double atan(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double atan(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double asin(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double asin(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double acos(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double acos(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double acosh(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double acosh(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double asinh(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double asinh(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double atanh(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double atanh(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double hypot(double a, double b);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double hypot(double a, double b) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double rhypot(double a, double b);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double rhypot(double a, double b) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double norm3d(double a, double b, double c);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double norm3d(double a, double b, double c) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double rnorm3d(double a, double b, double c);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double rnorm3d(double a, double b, double c) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double norm4d(double a, double b, double c, double d);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double norm4d(double a, double b, double c, double d) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double cbrt(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double rnorm4d(double a, double b, double c, double d) __THROW;
+
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double norm(int dim, double const * t) __THROW;
+
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double rnorm(int dim, double const * t) __THROW;
+
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double cbrt(double a) __THROW;
 
 __MATH_FUNCTIONS_DBL_PTX3_DECL__ double rcbrt(double a);
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double pow(double a, double b);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double pow(double a, double b) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double j0(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double j0(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double j1(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double j1(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double y0(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double y0(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double y1(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double y1(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double yn(int n, double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double yn(int n, double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double jn(int n, double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double jn(int n, double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double cyl_bessel_i0(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double cyl_bessel_i0(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double cyl_bessel_i1(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double cyl_bessel_i1(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double erf(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double erf(double a) __THROW;
 
 __MATH_FUNCTIONS_DBL_PTX3_DECL__ double erfinv(double a);
 
@@ -210,49 +218,49 @@ __MATH_FUNCTIONS_DBL_PTX3_DECL__ double erfcinv(double a);
 
 __MATH_FUNCTIONS_DBL_PTX3_DECL__ double normcdfinv(double a);
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double erfc(double a)  ;
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double erfc(double a) __THROW ;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double erfcx(double a)  ;
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double erfcx(double a);
 
 __MATH_FUNCTIONS_DBL_PTX3_DECL__ double normcdf(double a);
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double tgamma(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double tgamma(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double lgamma(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double lgamma(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double ldexp(double a, int b);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double ldexp(double a, int b) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double scalbn(double a, int b);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double scalbn(double a, int b) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double scalbln(double a, long int b);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double scalbln(double a, long int b) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double frexp(double a, int *b);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double frexp(double a, int *b) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double modf(double a, double *b);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double modf(double a, double *b) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double fmod(double a, double b);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double fmod(double a, double b) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double remainder(double a, double b);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double remainder(double a, double b) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double remquo(double a, double b, int *c);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double remquo(double a, double b, int *c) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double nextafter(double a, double b);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double nextafter(double a, double b) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double nan(const char *tagp);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double nan(const char *tagp) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double round(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double round(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ long long int llround(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ long long int llround(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ long int lround(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ long int lround(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double fdim(double a, double b);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double fdim(double a, double b) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ int ilogb(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ int ilogb(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double logb(double a);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double logb(double a) __THROW;
 
-__MATH_FUNCTIONS_DBL_PTX3_DECL__ double fma(double a, double b, double c);
+__MATH_FUNCTIONS_DBL_PTX3_DECL__ double fma(double a, double b, double c) __THROW;
 
 #endif /* __CUDABE__ || __CUDACC_RTC__ */
 

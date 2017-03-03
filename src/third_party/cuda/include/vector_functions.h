@@ -66,6 +66,7 @@
 #define __VECTOR_FUNCTIONS_DECL__ static __inline__ __host__ __device__
 #endif /* __CUDACC_RTC__ */
 
+#if defined(__CUDACC_RTC__)
 /*******************************************************************************
 *                                                                              *
 *                                                                              *
@@ -167,6 +168,7 @@ __VECTOR_FUNCTIONS_DECL__ double2 make_double2(double x, double y);
 __VECTOR_FUNCTIONS_DECL__ double3 make_double3(double x, double y, double z);
 
 __VECTOR_FUNCTIONS_DECL__ double4 make_double4(double x, double y, double z, double w);
+#endif /* __CUDACC_RTC__ */
 
 #undef __VECTOR_FUNCTIONS_DECL__
 

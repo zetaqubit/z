@@ -1,0 +1,1618 @@
+.TH "Data types used by CUDA Runtime" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Data types used by CUDA Runtime \- 
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBcudaChannelFormatDesc\fP"
+.br
+.ti -1c
+.RI "struct \fBcudaDeviceProp\fP"
+.br
+.ti -1c
+.RI "struct \fBcudaEglFrame\fP"
+.br
+.ti -1c
+.RI "struct \fBcudaEglPlaneDesc\fP"
+.br
+.ti -1c
+.RI "struct \fBcudaExtent\fP"
+.br
+.ti -1c
+.RI "struct \fBcudaFuncAttributes\fP"
+.br
+.ti -1c
+.RI "struct \fBcudaIpcEventHandle_t\fP"
+.br
+.ti -1c
+.RI "struct \fBcudaIpcMemHandle_t\fP"
+.br
+.ti -1c
+.RI "struct \fBcudaMemcpy3DParms\fP"
+.br
+.ti -1c
+.RI "struct \fBcudaMemcpy3DPeerParms\fP"
+.br
+.ti -1c
+.RI "struct \fBcudaPitchedPtr\fP"
+.br
+.ti -1c
+.RI "struct \fBcudaPointerAttributes\fP"
+.br
+.ti -1c
+.RI "struct \fBcudaPos\fP"
+.br
+.ti -1c
+.RI "struct \fBcudaResourceDesc\fP"
+.br
+.ti -1c
+.RI "struct \fBcudaResourceViewDesc\fP"
+.br
+.ti -1c
+.RI "struct \fBcudaTextureDesc\fP"
+.br
+.ti -1c
+.RI "struct \fBsurfaceReference\fP"
+.br
+.ti -1c
+.RI "struct \fBtextureReference\fP"
+.br
+.in -1c
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBCUDA_EGL_MAX_PLANES\fP   3"
+.br
+.ti -1c
+.RI "#define \fBCUDA_IPC_HANDLE_SIZE\fP   64"
+.br
+.ti -1c
+.RI "#define \fBcudaArrayCubemap\fP   0x04"
+.br
+.ti -1c
+.RI "#define \fBcudaArrayDefault\fP   0x00"
+.br
+.ti -1c
+.RI "#define \fBcudaArrayLayered\fP   0x01"
+.br
+.ti -1c
+.RI "#define \fBcudaArraySurfaceLoadStore\fP   0x02"
+.br
+.ti -1c
+.RI "#define \fBcudaArrayTextureGather\fP   0x08"
+.br
+.ti -1c
+.RI "#define \fBcudaCpuDeviceId\fP   ((int)-1)"
+.br
+.ti -1c
+.RI "#define \fBcudaDeviceBlockingSync\fP   0x04"
+.br
+.ti -1c
+.RI "#define \fBcudaDeviceLmemResizeToMax\fP   0x10"
+.br
+.ti -1c
+.RI "#define \fBcudaDeviceMapHost\fP   0x08"
+.br
+.ti -1c
+.RI "#define \fBcudaDeviceMask\fP   0x1f"
+.br
+.ti -1c
+.RI "#define \fBcudaDevicePropDontCare\fP"
+.br
+.ti -1c
+.RI "#define \fBcudaDeviceScheduleAuto\fP   0x00"
+.br
+.ti -1c
+.RI "#define \fBcudaDeviceScheduleBlockingSync\fP   0x04"
+.br
+.ti -1c
+.RI "#define \fBcudaDeviceScheduleMask\fP   0x07"
+.br
+.ti -1c
+.RI "#define \fBcudaDeviceScheduleSpin\fP   0x01"
+.br
+.ti -1c
+.RI "#define \fBcudaDeviceScheduleYield\fP   0x02"
+.br
+.ti -1c
+.RI "#define \fBcudaEventBlockingSync\fP   0x01"
+.br
+.ti -1c
+.RI "#define \fBcudaEventDefault\fP   0x00"
+.br
+.ti -1c
+.RI "#define \fBcudaEventDisableTiming\fP   0x02"
+.br
+.ti -1c
+.RI "#define \fBcudaEventInterprocess\fP   0x04"
+.br
+.ti -1c
+.RI "#define \fBcudaHostAllocDefault\fP   0x00"
+.br
+.ti -1c
+.RI "#define \fBcudaHostAllocMapped\fP   0x02"
+.br
+.ti -1c
+.RI "#define \fBcudaHostAllocPortable\fP   0x01"
+.br
+.ti -1c
+.RI "#define \fBcudaHostAllocWriteCombined\fP   0x04"
+.br
+.ti -1c
+.RI "#define \fBcudaHostRegisterDefault\fP   0x00"
+.br
+.ti -1c
+.RI "#define \fBcudaHostRegisterIoMemory\fP   0x04"
+.br
+.ti -1c
+.RI "#define \fBcudaHostRegisterMapped\fP   0x02"
+.br
+.ti -1c
+.RI "#define \fBcudaHostRegisterPortable\fP   0x01"
+.br
+.ti -1c
+.RI "#define \fBcudaInvalidDeviceId\fP   ((int)-2)"
+.br
+.ti -1c
+.RI "#define \fBcudaIpcMemLazyEnablePeerAccess\fP   0x01"
+.br
+.ti -1c
+.RI "#define \fBcudaMemAttachGlobal\fP   0x01"
+.br
+.ti -1c
+.RI "#define \fBcudaMemAttachHost\fP   0x02"
+.br
+.ti -1c
+.RI "#define \fBcudaMemAttachSingle\fP   0x04"
+.br
+.ti -1c
+.RI "#define \fBcudaOccupancyDefault\fP   0x00"
+.br
+.ti -1c
+.RI "#define \fBcudaOccupancyDisableCachingOverride\fP   0x01"
+.br
+.ti -1c
+.RI "#define \fBcudaPeerAccessDefault\fP   0x00"
+.br
+.ti -1c
+.RI "#define \fBcudaStreamDefault\fP   0x00"
+.br
+.ti -1c
+.RI "#define \fBcudaStreamLegacy\fP   ((\fBcudaStream_t\fP)0x1)"
+.br
+.ti -1c
+.RI "#define \fBcudaStreamNonBlocking\fP   0x01"
+.br
+.ti -1c
+.RI "#define \fBcudaStreamPerThread\fP   ((\fBcudaStream_t\fP)0x2)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct cudaArray * \fBcudaArray_const_t\fP"
+.br
+.ti -1c
+.RI "typedef struct cudaArray * \fBcudaArray_t\fP"
+.br
+.ti -1c
+.RI "typedef struct CUeglStreamConnection_st * \fBcudaEglStreamConnection\fP"
+.br
+.ti -1c
+.RI "typedef enum \fBcudaError\fP \fBcudaError_t\fP"
+.br
+.ti -1c
+.RI "typedef struct CUevent_st * \fBcudaEvent_t\fP"
+.br
+.ti -1c
+.RI "typedef struct cudaGraphicsResource * \fBcudaGraphicsResource_t\fP"
+.br
+.ti -1c
+.RI "typedef struct cudaMipmappedArray * \fBcudaMipmappedArray_const_t\fP"
+.br
+.ti -1c
+.RI "typedef struct cudaMipmappedArray * \fBcudaMipmappedArray_t\fP"
+.br
+.ti -1c
+.RI "typedef enum \fBcudaOutputMode\fP \fBcudaOutputMode_t\fP"
+.br
+.ti -1c
+.RI "typedef struct CUstream_st * \fBcudaStream_t\fP"
+.br
+.ti -1c
+.RI "typedef unsigned long long \fBcudaSurfaceObject_t\fP"
+.br
+.ti -1c
+.RI "typedef unsigned long long \fBcudaTextureObject_t\fP"
+.br
+.ti -1c
+.RI "typedef struct CUuuid_st \fBcudaUUID_t\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBcudaChannelFormatKind\fP { \fBcudaChannelFormatKindSigned\fP =  0, \fBcudaChannelFormatKindUnsigned\fP =  1, \fBcudaChannelFormatKindFloat\fP =  2, \fBcudaChannelFormatKindNone\fP =  3 }"
+.br
+.ti -1c
+.RI "enum \fBcudaComputeMode\fP { \fBcudaComputeModeDefault\fP =  0, \fBcudaComputeModeExclusive\fP =  1, \fBcudaComputeModeProhibited\fP =  2, \fBcudaComputeModeExclusiveProcess\fP =  3 }"
+.br
+.ti -1c
+.RI "enum \fBcudaDeviceAttr\fP { \fBcudaDevAttrMaxThreadsPerBlock\fP =  1, \fBcudaDevAttrMaxBlockDimX\fP =  2, \fBcudaDevAttrMaxBlockDimY\fP =  3, \fBcudaDevAttrMaxBlockDimZ\fP =  4, \fBcudaDevAttrMaxGridDimX\fP =  5, \fBcudaDevAttrMaxGridDimY\fP =  6, \fBcudaDevAttrMaxGridDimZ\fP =  7, \fBcudaDevAttrMaxSharedMemoryPerBlock\fP =  8, \fBcudaDevAttrTotalConstantMemory\fP =  9, \fBcudaDevAttrWarpSize\fP =  10, \fBcudaDevAttrMaxPitch\fP =  11, \fBcudaDevAttrMaxRegistersPerBlock\fP =  12, \fBcudaDevAttrClockRate\fP =  13, \fBcudaDevAttrTextureAlignment\fP =  14, \fBcudaDevAttrGpuOverlap\fP =  15, \fBcudaDevAttrMultiProcessorCount\fP =  16, \fBcudaDevAttrKernelExecTimeout\fP =  17, \fBcudaDevAttrIntegrated\fP =  18, \fBcudaDevAttrCanMapHostMemory\fP =  19, \fBcudaDevAttrComputeMode\fP =  20, \fBcudaDevAttrMaxTexture1DWidth\fP =  21, \fBcudaDevAttrMaxTexture2DWidth\fP =  22, \fBcudaDevAttrMaxTexture2DHeight\fP =  23, \fBcudaDevAttrMaxTexture3DWidth\fP =  24, \fBcudaDevAttrMaxTexture3DHeight\fP =  25, \fBcudaDevAttrMaxTexture3DDepth\fP =  26, \fBcudaDevAttrMaxTexture2DLayeredWidth\fP =  27, \fBcudaDevAttrMaxTexture2DLayeredHeight\fP =  28, \fBcudaDevAttrMaxTexture2DLayeredLayers\fP =  29, \fBcudaDevAttrSurfaceAlignment\fP =  30, \fBcudaDevAttrConcurrentKernels\fP =  31, \fBcudaDevAttrEccEnabled\fP =  32, \fBcudaDevAttrPciBusId\fP =  33, \fBcudaDevAttrPciDeviceId\fP =  34, \fBcudaDevAttrTccDriver\fP =  35, \fBcudaDevAttrMemoryClockRate\fP =  36, \fBcudaDevAttrGlobalMemoryBusWidth\fP =  37, \fBcudaDevAttrL2CacheSize\fP =  38, \fBcudaDevAttrMaxThreadsPerMultiProcessor\fP =  39, \fBcudaDevAttrAsyncEngineCount\fP =  40, \fBcudaDevAttrUnifiedAddressing\fP =  41, \fBcudaDevAttrMaxTexture1DLayeredWidth\fP =  42, \fBcudaDevAttrMaxTexture1DLayeredLayers\fP =  43, \fBcudaDevAttrMaxTexture2DGatherWidth\fP =  45, \fBcudaDevAttrMaxTexture2DGatherHeight\fP =  46, \fBcudaDevAttrMaxTexture3DWidthAlt\fP =  47, \fBcudaDevAttrMaxTexture3DHeightAlt\fP =  48, \fBcudaDevAttrMaxTexture3DDepthAlt\fP =  49, \fBcudaDevAttrPciDomainId\fP =  50, \fBcudaDevAttrTexturePitchAlignment\fP =  51, \fBcudaDevAttrMaxTextureCubemapWidth\fP =  52, \fBcudaDevAttrMaxTextureCubemapLayeredWidth\fP =  53, \fBcudaDevAttrMaxTextureCubemapLayeredLayers\fP =  54, \fBcudaDevAttrMaxSurface1DWidth\fP =  55, \fBcudaDevAttrMaxSurface2DWidth\fP =  56, \fBcudaDevAttrMaxSurface2DHeight\fP =  57, \fBcudaDevAttrMaxSurface3DWidth\fP =  58, \fBcudaDevAttrMaxSurface3DHeight\fP =  59, \fBcudaDevAttrMaxSurface3DDepth\fP =  60, \fBcudaDevAttrMaxSurface1DLayeredWidth\fP =  61, \fBcudaDevAttrMaxSurface1DLayeredLayers\fP =  62, \fBcudaDevAttrMaxSurface2DLayeredWidth\fP =  63, \fBcudaDevAttrMaxSurface2DLayeredHeight\fP =  64, \fBcudaDevAttrMaxSurface2DLayeredLayers\fP =  65, \fBcudaDevAttrMaxSurfaceCubemapWidth\fP =  66, \fBcudaDevAttrMaxSurfaceCubemapLayeredWidth\fP =  67, \fBcudaDevAttrMaxSurfaceCubemapLayeredLayers\fP =  68, \fBcudaDevAttrMaxTexture1DLinearWidth\fP =  69, \fBcudaDevAttrMaxTexture2DLinearWidth\fP =  70, \fBcudaDevAttrMaxTexture2DLinearHeight\fP =  71, \fBcudaDevAttrMaxTexture2DLinearPitch\fP =  72, \fBcudaDevAttrMaxTexture2DMipmappedWidth\fP =  73, \fBcudaDevAttrMaxTexture2DMipmappedHeight\fP =  74, \fBcudaDevAttrComputeCapabilityMajor\fP =  75, \fBcudaDevAttrComputeCapabilityMinor\fP =  76, \fBcudaDevAttrMaxTexture1DMipmappedWidth\fP =  77, \fBcudaDevAttrStreamPrioritiesSupported\fP =  78, \fBcudaDevAttrGlobalL1CacheSupported\fP =  79, \fBcudaDevAttrLocalL1CacheSupported\fP =  80, \fBcudaDevAttrMaxSharedMemoryPerMultiprocessor\fP =  81, \fBcudaDevAttrMaxRegistersPerMultiprocessor\fP =  82, \fBcudaDevAttrManagedMemory\fP =  83, \fBcudaDevAttrIsMultiGpuBoard\fP =  84, \fBcudaDevAttrMultiGpuBoardGroupID\fP =  85, \fBcudaDevAttrHostNativeAtomicSupported\fP =  86, \fBcudaDevAttrSingleToDoublePrecisionPerfRatio\fP =  87, \fBcudaDevAttrPageableMemoryAccess\fP =  88, \fBcudaDevAttrConcurrentManagedAccess\fP =  89, \fBcudaDevAttrComputePreemptionSupported\fP =  90, \fBcudaDevAttrCanUseHostPointerForRegisteredMem\fP =  91 }"
+.br
+.ti -1c
+.RI "enum \fBcudaDeviceP2PAttr\fP { \fBcudaDevP2PAttrPerformanceRank\fP =  1, \fBcudaDevP2PAttrAccessSupported\fP =  2, \fBcudaDevP2PAttrNativeAtomicSupported\fP =  3 }"
+.br
+.ti -1c
+.RI "enum \fBcudaEglColorFormat\fP { \fBcudaEglColorFormatYUV420Planar\fP =  0, \fBcudaEglColorFormatYUV420SemiPlanar\fP =  1, \fBcudaEglColorFormatYUV422Planar\fP =  2, \fBcudaEglColorFormatYUV422SemiPlanar\fP =  3, \fBcudaEglColorFormatRGB\fP =  4, \fBcudaEglColorFormatBGR\fP =  5, \fBcudaEglColorFormatARGB\fP =  6, \fBcudaEglColorFormatRGBA\fP =  7, \fBcudaEglColorFormatL\fP =  8, \fBcudaEglColorFormatR\fP =  9 }"
+.br
+.ti -1c
+.RI "enum \fBcudaEglFrameType\fP { \fBcudaEglFrameTypeArray\fP =  0, \fBcudaEglFrameTypePitch\fP =  1 }"
+.br
+.ti -1c
+.RI "enum \fBcudaEglResourceLocationFlags\fP { \fBcudaEglResourceLocationSysmem\fP =  0x00, \fBcudaEglResourceLocationVidmem\fP =  0x01 }"
+.br
+.ti -1c
+.RI "enum \fBcudaError\fP { \fBcudaSuccess\fP =  0, \fBcudaErrorMissingConfiguration\fP =  1, \fBcudaErrorMemoryAllocation\fP =  2, \fBcudaErrorInitializationError\fP =  3, \fBcudaErrorLaunchFailure\fP =  4, \fBcudaErrorPriorLaunchFailure\fP =  5, \fBcudaErrorLaunchTimeout\fP =  6, \fBcudaErrorLaunchOutOfResources\fP =  7, \fBcudaErrorInvalidDeviceFunction\fP =  8, \fBcudaErrorInvalidConfiguration\fP =  9, \fBcudaErrorInvalidDevice\fP =  10, \fBcudaErrorInvalidValue\fP =  11, \fBcudaErrorInvalidPitchValue\fP =  12, \fBcudaErrorInvalidSymbol\fP =  13, \fBcudaErrorMapBufferObjectFailed\fP =  14, \fBcudaErrorUnmapBufferObjectFailed\fP =  15, \fBcudaErrorInvalidHostPointer\fP =  16, \fBcudaErrorInvalidDevicePointer\fP =  17, \fBcudaErrorInvalidTexture\fP =  18, \fBcudaErrorInvalidTextureBinding\fP =  19, \fBcudaErrorInvalidChannelDescriptor\fP =  20, \fBcudaErrorInvalidMemcpyDirection\fP =  21, \fBcudaErrorAddressOfConstant\fP =  22, \fBcudaErrorTextureFetchFailed\fP =  23, \fBcudaErrorTextureNotBound\fP =  24, \fBcudaErrorSynchronizationError\fP =  25, \fBcudaErrorInvalidFilterSetting\fP =  26, \fBcudaErrorInvalidNormSetting\fP =  27, \fBcudaErrorMixedDeviceExecution\fP =  28, \fBcudaErrorCudartUnloading\fP =  29, \fBcudaErrorUnknown\fP =  30, \fBcudaErrorNotYetImplemented\fP =  31, \fBcudaErrorMemoryValueTooLarge\fP =  32, \fBcudaErrorInvalidResourceHandle\fP =  33, \fBcudaErrorNotReady\fP =  34, \fBcudaErrorInsufficientDriver\fP =  35, \fBcudaErrorSetOnActiveProcess\fP =  36, \fBcudaErrorInvalidSurface\fP =  37, \fBcudaErrorNoDevice\fP =  38, \fBcudaErrorECCUncorrectable\fP =  39, \fBcudaErrorSharedObjectSymbolNotFound\fP =  40, \fBcudaErrorSharedObjectInitFailed\fP =  41, \fBcudaErrorUnsupportedLimit\fP =  42, \fBcudaErrorDuplicateVariableName\fP =  43, \fBcudaErrorDuplicateTextureName\fP =  44, \fBcudaErrorDuplicateSurfaceName\fP =  45, \fBcudaErrorDevicesUnavailable\fP =  46, \fBcudaErrorInvalidKernelImage\fP =  47, \fBcudaErrorNoKernelImageForDevice\fP =  48, \fBcudaErrorIncompatibleDriverContext\fP =  49, \fBcudaErrorPeerAccessAlreadyEnabled\fP =  50, \fBcudaErrorPeerAccessNotEnabled\fP =  51, \fBcudaErrorDeviceAlreadyInUse\fP =  54, \fBcudaErrorProfilerDisabled\fP =  55, \fBcudaErrorProfilerNotInitialized\fP =  56, \fBcudaErrorProfilerAlreadyStarted\fP =  57, \fBcudaErrorProfilerAlreadyStopped\fP =  58, \fBcudaErrorAssert\fP =  59, \fBcudaErrorTooManyPeers\fP =  60, \fBcudaErrorHostMemoryAlreadyRegistered\fP =  61, \fBcudaErrorHostMemoryNotRegistered\fP =  62, \fBcudaErrorOperatingSystem\fP =  63, \fBcudaErrorPeerAccessUnsupported\fP =  64, \fBcudaErrorLaunchMaxDepthExceeded\fP =  65, \fBcudaErrorLaunchFileScopedTex\fP =  66, \fBcudaErrorLaunchFileScopedSurf\fP =  67, \fBcudaErrorSyncDepthExceeded\fP =  68, \fBcudaErrorLaunchPendingCountExceeded\fP =  69, \fBcudaErrorNotPermitted\fP =  70, \fBcudaErrorNotSupported\fP =  71, \fBcudaErrorHardwareStackError\fP =  72, \fBcudaErrorIllegalInstruction\fP =  73, \fBcudaErrorMisalignedAddress\fP =  74, \fBcudaErrorInvalidAddressSpace\fP =  75, \fBcudaErrorInvalidPc\fP =  76, \fBcudaErrorIllegalAddress\fP =  77, \fBcudaErrorInvalidPtx\fP =  78, \fBcudaErrorInvalidGraphicsContext\fP =  79, \fBcudaErrorNvlinkUncorrectable\fP =  80, \fBcudaErrorStartupFailure\fP =  0x7f, \fBcudaErrorApiFailureBase\fP =  10000 }"
+.br
+.ti -1c
+.RI "enum \fBcudaFuncCache\fP { \fBcudaFuncCachePreferNone\fP =  0, \fBcudaFuncCachePreferShared\fP =  1, \fBcudaFuncCachePreferL1\fP =  2, \fBcudaFuncCachePreferEqual\fP =  3 }"
+.br
+.ti -1c
+.RI "enum \fBcudaGraphicsCubeFace\fP { \fBcudaGraphicsCubeFacePositiveX\fP =  0x00, \fBcudaGraphicsCubeFaceNegativeX\fP =  0x01, \fBcudaGraphicsCubeFacePositiveY\fP =  0x02, \fBcudaGraphicsCubeFaceNegativeY\fP =  0x03, \fBcudaGraphicsCubeFacePositiveZ\fP =  0x04, \fBcudaGraphicsCubeFaceNegativeZ\fP =  0x05 }"
+.br
+.ti -1c
+.RI "enum \fBcudaGraphicsMapFlags\fP { \fBcudaGraphicsMapFlagsNone\fP =  0, \fBcudaGraphicsMapFlagsReadOnly\fP =  1, \fBcudaGraphicsMapFlagsWriteDiscard\fP =  2 }"
+.br
+.ti -1c
+.RI "enum \fBcudaGraphicsRegisterFlags\fP { \fBcudaGraphicsRegisterFlagsNone\fP =  0, \fBcudaGraphicsRegisterFlagsReadOnly\fP =  1, \fBcudaGraphicsRegisterFlagsWriteDiscard\fP =  2, \fBcudaGraphicsRegisterFlagsSurfaceLoadStore\fP =  4, \fBcudaGraphicsRegisterFlagsTextureGather\fP =  8 }"
+.br
+.ti -1c
+.RI "enum \fBcudaLimit\fP { \fBcudaLimitStackSize\fP =  0x00, \fBcudaLimitPrintfFifoSize\fP =  0x01, \fBcudaLimitMallocHeapSize\fP =  0x02, \fBcudaLimitDevRuntimeSyncDepth\fP =  0x03, \fBcudaLimitDevRuntimePendingLaunchCount\fP =  0x04 }"
+.br
+.ti -1c
+.RI "enum \fBcudaMemcpyKind\fP { \fBcudaMemcpyHostToHost\fP =  0, \fBcudaMemcpyHostToDevice\fP =  1, \fBcudaMemcpyDeviceToHost\fP =  2, \fBcudaMemcpyDeviceToDevice\fP =  3, \fBcudaMemcpyDefault\fP =  4 }"
+.br
+.ti -1c
+.RI "enum \fBcudaMemoryAdvise\fP { \fBcudaMemAdviseSetReadMostly\fP =  1, \fBcudaMemAdviseUnsetReadMostly\fP =  2, \fBcudaMemAdviseSetPreferredLocation\fP =  3, \fBcudaMemAdviseUnsetPreferredLocation\fP =  4, \fBcudaMemAdviseSetAccessedBy\fP =  5, \fBcudaMemAdviseUnsetAccessedBy\fP =  6 }"
+.br
+.ti -1c
+.RI "enum \fBcudaMemoryType\fP { \fBcudaMemoryTypeHost\fP =  1, \fBcudaMemoryTypeDevice\fP =  2 }"
+.br
+.ti -1c
+.RI "enum \fBcudaMemRangeAttribute\fP { \fBcudaMemRangeAttributeReadMostly\fP =  1, \fBcudaMemRangeAttributePreferredLocation\fP =  2, \fBcudaMemRangeAttributeAccessedBy\fP =  3, \fBcudaMemRangeAttributeLastPrefetchLocation\fP =  4 }"
+.br
+.ti -1c
+.RI "enum \fBcudaOutputMode\fP { \fBcudaKeyValuePair\fP =  0x00, \fBcudaCSV\fP =  0x01 }"
+.br
+.ti -1c
+.RI "enum \fBcudaResourceType\fP { \fBcudaResourceTypeArray\fP =  0x00, \fBcudaResourceTypeMipmappedArray\fP =  0x01, \fBcudaResourceTypeLinear\fP =  0x02, \fBcudaResourceTypePitch2D\fP =  0x03 }"
+.br
+.ti -1c
+.RI "enum \fBcudaResourceViewFormat\fP { \fBcudaResViewFormatNone\fP =  0x00, \fBcudaResViewFormatUnsignedChar1\fP =  0x01, \fBcudaResViewFormatUnsignedChar2\fP =  0x02, \fBcudaResViewFormatUnsignedChar4\fP =  0x03, \fBcudaResViewFormatSignedChar1\fP =  0x04, \fBcudaResViewFormatSignedChar2\fP =  0x05, \fBcudaResViewFormatSignedChar4\fP =  0x06, \fBcudaResViewFormatUnsignedShort1\fP =  0x07, \fBcudaResViewFormatUnsignedShort2\fP =  0x08, \fBcudaResViewFormatUnsignedShort4\fP =  0x09, \fBcudaResViewFormatSignedShort1\fP =  0x0a, \fBcudaResViewFormatSignedShort2\fP =  0x0b, \fBcudaResViewFormatSignedShort4\fP =  0x0c, \fBcudaResViewFormatUnsignedInt1\fP =  0x0d, \fBcudaResViewFormatUnsignedInt2\fP =  0x0e, \fBcudaResViewFormatUnsignedInt4\fP =  0x0f, \fBcudaResViewFormatSignedInt1\fP =  0x10, \fBcudaResViewFormatSignedInt2\fP =  0x11, \fBcudaResViewFormatSignedInt4\fP =  0x12, \fBcudaResViewFormatHalf1\fP =  0x13, \fBcudaResViewFormatHalf2\fP =  0x14, \fBcudaResViewFormatHalf4\fP =  0x15, \fBcudaResViewFormatFloat1\fP =  0x16, \fBcudaResViewFormatFloat2\fP =  0x17, \fBcudaResViewFormatFloat4\fP =  0x18, \fBcudaResViewFormatUnsignedBlockCompressed1\fP =  0x19, \fBcudaResViewFormatUnsignedBlockCompressed2\fP =  0x1a, \fBcudaResViewFormatUnsignedBlockCompressed3\fP =  0x1b, \fBcudaResViewFormatUnsignedBlockCompressed4\fP =  0x1c, \fBcudaResViewFormatSignedBlockCompressed4\fP =  0x1d, \fBcudaResViewFormatUnsignedBlockCompressed5\fP =  0x1e, \fBcudaResViewFormatSignedBlockCompressed5\fP =  0x1f, \fBcudaResViewFormatUnsignedBlockCompressed6H\fP =  0x20, \fBcudaResViewFormatSignedBlockCompressed6H\fP =  0x21, \fBcudaResViewFormatUnsignedBlockCompressed7\fP =  0x22 }"
+.br
+.ti -1c
+.RI "enum \fBcudaSharedMemConfig\fP "
+.br
+.ti -1c
+.RI "enum \fBcudaSurfaceBoundaryMode\fP { \fBcudaBoundaryModeZero\fP =  0, \fBcudaBoundaryModeClamp\fP =  1, \fBcudaBoundaryModeTrap\fP =  2 }"
+.br
+.ti -1c
+.RI "enum \fBcudaSurfaceFormatMode\fP { \fBcudaFormatModeForced\fP =  0, \fBcudaFormatModeAuto\fP =  1 }"
+.br
+.ti -1c
+.RI "enum \fBcudaTextureAddressMode\fP { \fBcudaAddressModeWrap\fP =  0, \fBcudaAddressModeClamp\fP =  1, \fBcudaAddressModeMirror\fP =  2, \fBcudaAddressModeBorder\fP =  3 }"
+.br
+.ti -1c
+.RI "enum \fBcudaTextureFilterMode\fP { \fBcudaFilterModePoint\fP =  0, \fBcudaFilterModeLinear\fP =  1 }"
+.br
+.ti -1c
+.RI "enum \fBcudaTextureReadMode\fP { \fBcudaReadModeElementType\fP =  0, \fBcudaReadModeNormalizedFloat\fP =  1 }"
+.br
+.in -1c
+.SH "Define Documentation"
+.PP 
+.SS "#define CUDA_EGL_MAX_PLANES   3"
+.PP
+Maximum number of planes per frame 
+.SS "#define CUDA_IPC_HANDLE_SIZE   64"
+.PP
+CUDA IPC Handle Size 
+.SS "#define cudaArrayCubemap   0x04"
+.PP
+Must be set in cudaMalloc3DArray to create a cubemap CUDA array 
+.SS "#define cudaArrayDefault   0x00"
+.PP
+Default CUDA array allocation flag 
+.SS "#define cudaArrayLayered   0x01"
+.PP
+Must be set in cudaMalloc3DArray to create a layered CUDA array 
+.SS "#define cudaArraySurfaceLoadStore   0x02"
+.PP
+Must be set in cudaMallocArray or cudaMalloc3DArray in order to bind surfaces to the CUDA array 
+.SS "#define cudaArrayTextureGather   0x08"
+.PP
+Must be set in cudaMallocArray or cudaMalloc3DArray in order to perform texture gather operations on the CUDA array 
+.SS "#define cudaCpuDeviceId   ((int)-1)"
+.PP
+Device id that represents the CPU 
+.SS "#define cudaDeviceBlockingSync   0x04"
+.PP
+Device flag - Use blocking synchronization 
+.PP
+\fBDeprecated\fP
+.RS 4
+This flag was deprecated as of CUDA 4.0 and replaced with \fBcudaDeviceScheduleBlockingSync\fP. 
+.RE
+.PP
+
+.SS "#define cudaDeviceLmemResizeToMax   0x10"
+.PP
+Device flag - Keep local memory allocation after launch 
+.SS "#define cudaDeviceMapHost   0x08"
+.PP
+Device flag - Support mapped pinned allocations 
+.SS "#define cudaDeviceMask   0x1f"
+.PP
+Device flags mask 
+.SS "#define cudaDevicePropDontCare"
+.PP
+Empty device properties 
+.SS "#define cudaDeviceScheduleAuto   0x00"
+.PP
+Device flag - Automatic scheduling 
+.SS "#define cudaDeviceScheduleBlockingSync   0x04"
+.PP
+Device flag - Use blocking synchronization 
+.SS "#define cudaDeviceScheduleMask   0x07"
+.PP
+Device schedule flags mask 
+.SS "#define cudaDeviceScheduleSpin   0x01"
+.PP
+Device flag - Spin default scheduling 
+.SS "#define cudaDeviceScheduleYield   0x02"
+.PP
+Device flag - Yield default scheduling 
+.SS "#define cudaEventBlockingSync   0x01"
+.PP
+Event uses blocking synchronization 
+.SS "#define cudaEventDefault   0x00"
+.PP
+Default event flag 
+.SS "#define cudaEventDisableTiming   0x02"
+.PP
+Event will not record timing data 
+.SS "#define cudaEventInterprocess   0x04"
+.PP
+Event is suitable for interprocess use. cudaEventDisableTiming must be set 
+.SS "#define cudaHostAllocDefault   0x00"
+.PP
+Default page-locked allocation flag 
+.SS "#define cudaHostAllocMapped   0x02"
+.PP
+Map allocation into device space 
+.SS "#define cudaHostAllocPortable   0x01"
+.PP
+Pinned memory accessible by all CUDA contexts 
+.SS "#define cudaHostAllocWriteCombined   0x04"
+.PP
+Write-combined memory 
+.SS "#define cudaHostRegisterDefault   0x00"
+.PP
+Default host memory registration flag 
+.SS "#define cudaHostRegisterIoMemory   0x04"
+.PP
+Memory-mapped I/O space 
+.SS "#define cudaHostRegisterMapped   0x02"
+.PP
+Map registered memory into device space 
+.SS "#define cudaHostRegisterPortable   0x01"
+.PP
+Pinned memory accessible by all CUDA contexts 
+.SS "#define cudaInvalidDeviceId   ((int)-2)"
+.PP
+Device id that represents an invalid device 
+.SS "#define cudaIpcMemLazyEnablePeerAccess   0x01"
+.PP
+Automatically enable peer access between remote devices as needed 
+.SS "#define cudaMemAttachGlobal   0x01"
+.PP
+Memory can be accessed by any stream on any device 
+.SS "#define cudaMemAttachHost   0x02"
+.PP
+Memory cannot be accessed by any stream on any device 
+.SS "#define cudaMemAttachSingle   0x04"
+.PP
+Memory can only be accessed by a single stream on the associated device 
+.SS "#define cudaOccupancyDefault   0x00"
+.PP
+Default behavior 
+.SS "#define cudaOccupancyDisableCachingOverride   0x01"
+.PP
+Assume global caching is enabled and cannot be automatically turned off 
+.SS "#define cudaPeerAccessDefault   0x00"
+.PP
+Default peer addressing enable flag 
+.SS "#define cudaStreamDefault   0x00"
+.PP
+Default stream flag 
+.SS "#define cudaStreamLegacy   ((\fBcudaStream_t\fP)0x1)"
+.PP
+Legacy stream handle
+.PP
+Stream handle that can be passed as a cudaStream_t to use an implicit stream with legacy synchronization behavior.
+.PP
+See details of the . 
+.SS "#define cudaStreamNonBlocking   0x01"
+.PP
+Stream does not synchronize with stream 0 (the NULL stream) 
+.SS "#define cudaStreamPerThread   ((\fBcudaStream_t\fP)0x2)"
+.PP
+Per-thread stream handle
+.PP
+Stream handle that can be passed as a cudaStream_t to use an implicit stream with per-thread synchronization behavior.
+.PP
+See details of the . 
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct cudaArray* \fBcudaArray_const_t\fP"
+.PP
+CUDA array (as source copy argument) 
+.SS "typedef struct cudaArray* \fBcudaArray_t\fP"
+.PP
+CUDA array 
+.SS "typedef struct CUeglStreamConnection_st* \fBcudaEglStreamConnection\fP"
+.PP
+CUDA EGLSream Connection 
+.SS "typedef enum \fBcudaError\fP \fBcudaError_t\fP"
+.PP
+CUDA Error types 
+.SS "typedef struct CUevent_st* \fBcudaEvent_t\fP"
+.PP
+CUDA event types 
+.SS "typedef struct cudaGraphicsResource* \fBcudaGraphicsResource_t\fP"
+.PP
+CUDA graphics resource types 
+.SS "typedef struct cudaMipmappedArray* \fBcudaMipmappedArray_const_t\fP"
+.PP
+CUDA mipmapped array (as source argument) 
+.SS "typedef struct cudaMipmappedArray* \fBcudaMipmappedArray_t\fP"
+.PP
+CUDA mipmapped array 
+.SS "typedef enum \fBcudaOutputMode\fP \fBcudaOutputMode_t\fP"
+.PP
+CUDA output file modes 
+.SS "typedef struct CUstream_st* \fBcudaStream_t\fP"
+.PP
+CUDA stream 
+.SS "typedef unsigned long long \fBcudaSurfaceObject_t\fP"
+.PP
+An opaque value that represents a CUDA Surface object 
+.SS "typedef unsigned long long \fBcudaTextureObject_t\fP"
+.PP
+An opaque value that represents a CUDA texture object 
+.SS "typedef struct CUuuid_st \fBcudaUUID_t\fP"
+.PP
+CUDA UUID types 
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBcudaChannelFormatKind\fP"
+.PP
+Channel format kind 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaChannelFormatKindSigned \fP\fP
+Signed channel format 
+.TP
+\fB\fIcudaChannelFormatKindUnsigned \fP\fP
+Unsigned channel format 
+.TP
+\fB\fIcudaChannelFormatKindFloat \fP\fP
+Float channel format 
+.TP
+\fB\fIcudaChannelFormatKindNone \fP\fP
+No channel format 
+.SS "enum \fBcudaComputeMode\fP"
+.PP
+CUDA device compute modes 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaComputeModeDefault \fP\fP
+Default compute mode (Multiple threads can use \fBcudaSetDevice()\fP with this device) 
+.TP
+\fB\fIcudaComputeModeExclusive \fP\fP
+Compute-exclusive-thread mode (Only one thread in one process will be able to use \fBcudaSetDevice()\fP with this device) 
+.TP
+\fB\fIcudaComputeModeProhibited \fP\fP
+Compute-prohibited mode (No threads can use \fBcudaSetDevice()\fP with this device) 
+.TP
+\fB\fIcudaComputeModeExclusiveProcess \fP\fP
+Compute-exclusive-process mode (Many threads in one process will be able to use \fBcudaSetDevice()\fP with this device) 
+.SS "enum \fBcudaDeviceAttr\fP"
+.PP
+CUDA device attributes 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaDevAttrMaxThreadsPerBlock \fP\fP
+Maximum number of threads per block 
+.TP
+\fB\fIcudaDevAttrMaxBlockDimX \fP\fP
+Maximum block dimension X 
+.TP
+\fB\fIcudaDevAttrMaxBlockDimY \fP\fP
+Maximum block dimension Y 
+.TP
+\fB\fIcudaDevAttrMaxBlockDimZ \fP\fP
+Maximum block dimension Z 
+.TP
+\fB\fIcudaDevAttrMaxGridDimX \fP\fP
+Maximum grid dimension X 
+.TP
+\fB\fIcudaDevAttrMaxGridDimY \fP\fP
+Maximum grid dimension Y 
+.TP
+\fB\fIcudaDevAttrMaxGridDimZ \fP\fP
+Maximum grid dimension Z 
+.TP
+\fB\fIcudaDevAttrMaxSharedMemoryPerBlock \fP\fP
+Maximum shared memory available per block in bytes 
+.TP
+\fB\fIcudaDevAttrTotalConstantMemory \fP\fP
+Memory available on device for __constant__ variables in a CUDA C kernel in bytes 
+.TP
+\fB\fIcudaDevAttrWarpSize \fP\fP
+Warp size in threads 
+.TP
+\fB\fIcudaDevAttrMaxPitch \fP\fP
+Maximum pitch in bytes allowed by memory copies 
+.TP
+\fB\fIcudaDevAttrMaxRegistersPerBlock \fP\fP
+Maximum number of 32-bit registers available per block 
+.TP
+\fB\fIcudaDevAttrClockRate \fP\fP
+Peak clock frequency in kilohertz 
+.TP
+\fB\fIcudaDevAttrTextureAlignment \fP\fP
+Alignment requirement for textures 
+.TP
+\fB\fIcudaDevAttrGpuOverlap \fP\fP
+Device can possibly copy memory and execute a kernel concurrently 
+.TP
+\fB\fIcudaDevAttrMultiProcessorCount \fP\fP
+Number of multiprocessors on device 
+.TP
+\fB\fIcudaDevAttrKernelExecTimeout \fP\fP
+Specifies whether there is a run time limit on kernels 
+.TP
+\fB\fIcudaDevAttrIntegrated \fP\fP
+Device is integrated with host memory 
+.TP
+\fB\fIcudaDevAttrCanMapHostMemory \fP\fP
+Device can map host memory into CUDA address space 
+.TP
+\fB\fIcudaDevAttrComputeMode \fP\fP
+Compute mode (See \fBcudaComputeMode\fP for details) 
+.TP
+\fB\fIcudaDevAttrMaxTexture1DWidth \fP\fP
+Maximum 1D texture width 
+.TP
+\fB\fIcudaDevAttrMaxTexture2DWidth \fP\fP
+Maximum 2D texture width 
+.TP
+\fB\fIcudaDevAttrMaxTexture2DHeight \fP\fP
+Maximum 2D texture height 
+.TP
+\fB\fIcudaDevAttrMaxTexture3DWidth \fP\fP
+Maximum 3D texture width 
+.TP
+\fB\fIcudaDevAttrMaxTexture3DHeight \fP\fP
+Maximum 3D texture height 
+.TP
+\fB\fIcudaDevAttrMaxTexture3DDepth \fP\fP
+Maximum 3D texture depth 
+.TP
+\fB\fIcudaDevAttrMaxTexture2DLayeredWidth \fP\fP
+Maximum 2D layered texture width 
+.TP
+\fB\fIcudaDevAttrMaxTexture2DLayeredHeight \fP\fP
+Maximum 2D layered texture height 
+.TP
+\fB\fIcudaDevAttrMaxTexture2DLayeredLayers \fP\fP
+Maximum layers in a 2D layered texture 
+.TP
+\fB\fIcudaDevAttrSurfaceAlignment \fP\fP
+Alignment requirement for surfaces 
+.TP
+\fB\fIcudaDevAttrConcurrentKernels \fP\fP
+Device can possibly execute multiple kernels concurrently 
+.TP
+\fB\fIcudaDevAttrEccEnabled \fP\fP
+Device has ECC support enabled 
+.TP
+\fB\fIcudaDevAttrPciBusId \fP\fP
+PCI bus ID of the device 
+.TP
+\fB\fIcudaDevAttrPciDeviceId \fP\fP
+PCI device ID of the device 
+.TP
+\fB\fIcudaDevAttrTccDriver \fP\fP
+Device is using TCC driver model 
+.TP
+\fB\fIcudaDevAttrMemoryClockRate \fP\fP
+Peak memory clock frequency in kilohertz 
+.TP
+\fB\fIcudaDevAttrGlobalMemoryBusWidth \fP\fP
+Global memory bus width in bits 
+.TP
+\fB\fIcudaDevAttrL2CacheSize \fP\fP
+Size of L2 cache in bytes 
+.TP
+\fB\fIcudaDevAttrMaxThreadsPerMultiProcessor \fP\fP
+Maximum resident threads per multiprocessor 
+.TP
+\fB\fIcudaDevAttrAsyncEngineCount \fP\fP
+Number of asynchronous engines 
+.TP
+\fB\fIcudaDevAttrUnifiedAddressing \fP\fP
+Device shares a unified address space with the host 
+.TP
+\fB\fIcudaDevAttrMaxTexture1DLayeredWidth \fP\fP
+Maximum 1D layered texture width 
+.TP
+\fB\fIcudaDevAttrMaxTexture1DLayeredLayers \fP\fP
+Maximum layers in a 1D layered texture 
+.TP
+\fB\fIcudaDevAttrMaxTexture2DGatherWidth \fP\fP
+Maximum 2D texture width if cudaArrayTextureGather is set 
+.TP
+\fB\fIcudaDevAttrMaxTexture2DGatherHeight \fP\fP
+Maximum 2D texture height if cudaArrayTextureGather is set 
+.TP
+\fB\fIcudaDevAttrMaxTexture3DWidthAlt \fP\fP
+Alternate maximum 3D texture width 
+.TP
+\fB\fIcudaDevAttrMaxTexture3DHeightAlt \fP\fP
+Alternate maximum 3D texture height 
+.TP
+\fB\fIcudaDevAttrMaxTexture3DDepthAlt \fP\fP
+Alternate maximum 3D texture depth 
+.TP
+\fB\fIcudaDevAttrPciDomainId \fP\fP
+PCI domain ID of the device 
+.TP
+\fB\fIcudaDevAttrTexturePitchAlignment \fP\fP
+Pitch alignment requirement for textures 
+.TP
+\fB\fIcudaDevAttrMaxTextureCubemapWidth \fP\fP
+Maximum cubemap texture width/height 
+.TP
+\fB\fIcudaDevAttrMaxTextureCubemapLayeredWidth \fP\fP
+Maximum cubemap layered texture width/height 
+.TP
+\fB\fIcudaDevAttrMaxTextureCubemapLayeredLayers \fP\fP
+Maximum layers in a cubemap layered texture 
+.TP
+\fB\fIcudaDevAttrMaxSurface1DWidth \fP\fP
+Maximum 1D surface width 
+.TP
+\fB\fIcudaDevAttrMaxSurface2DWidth \fP\fP
+Maximum 2D surface width 
+.TP
+\fB\fIcudaDevAttrMaxSurface2DHeight \fP\fP
+Maximum 2D surface height 
+.TP
+\fB\fIcudaDevAttrMaxSurface3DWidth \fP\fP
+Maximum 3D surface width 
+.TP
+\fB\fIcudaDevAttrMaxSurface3DHeight \fP\fP
+Maximum 3D surface height 
+.TP
+\fB\fIcudaDevAttrMaxSurface3DDepth \fP\fP
+Maximum 3D surface depth 
+.TP
+\fB\fIcudaDevAttrMaxSurface1DLayeredWidth \fP\fP
+Maximum 1D layered surface width 
+.TP
+\fB\fIcudaDevAttrMaxSurface1DLayeredLayers \fP\fP
+Maximum layers in a 1D layered surface 
+.TP
+\fB\fIcudaDevAttrMaxSurface2DLayeredWidth \fP\fP
+Maximum 2D layered surface width 
+.TP
+\fB\fIcudaDevAttrMaxSurface2DLayeredHeight \fP\fP
+Maximum 2D layered surface height 
+.TP
+\fB\fIcudaDevAttrMaxSurface2DLayeredLayers \fP\fP
+Maximum layers in a 2D layered surface 
+.TP
+\fB\fIcudaDevAttrMaxSurfaceCubemapWidth \fP\fP
+Maximum cubemap surface width 
+.TP
+\fB\fIcudaDevAttrMaxSurfaceCubemapLayeredWidth \fP\fP
+Maximum cubemap layered surface width 
+.TP
+\fB\fIcudaDevAttrMaxSurfaceCubemapLayeredLayers \fP\fP
+Maximum layers in a cubemap layered surface 
+.TP
+\fB\fIcudaDevAttrMaxTexture1DLinearWidth \fP\fP
+Maximum 1D linear texture width 
+.TP
+\fB\fIcudaDevAttrMaxTexture2DLinearWidth \fP\fP
+Maximum 2D linear texture width 
+.TP
+\fB\fIcudaDevAttrMaxTexture2DLinearHeight \fP\fP
+Maximum 2D linear texture height 
+.TP
+\fB\fIcudaDevAttrMaxTexture2DLinearPitch \fP\fP
+Maximum 2D linear texture pitch in bytes 
+.TP
+\fB\fIcudaDevAttrMaxTexture2DMipmappedWidth \fP\fP
+Maximum mipmapped 2D texture width 
+.TP
+\fB\fIcudaDevAttrMaxTexture2DMipmappedHeight \fP\fP
+Maximum mipmapped 2D texture height 
+.TP
+\fB\fIcudaDevAttrComputeCapabilityMajor \fP\fP
+Major compute capability version number 
+.TP
+\fB\fIcudaDevAttrComputeCapabilityMinor \fP\fP
+Minor compute capability version number 
+.TP
+\fB\fIcudaDevAttrMaxTexture1DMipmappedWidth \fP\fP
+Maximum mipmapped 1D texture width 
+.TP
+\fB\fIcudaDevAttrStreamPrioritiesSupported \fP\fP
+Device supports stream priorities 
+.TP
+\fB\fIcudaDevAttrGlobalL1CacheSupported \fP\fP
+Device supports caching globals in L1 
+.TP
+\fB\fIcudaDevAttrLocalL1CacheSupported \fP\fP
+Device supports caching locals in L1 
+.TP
+\fB\fIcudaDevAttrMaxSharedMemoryPerMultiprocessor \fP\fP
+Maximum shared memory available per multiprocessor in bytes 
+.TP
+\fB\fIcudaDevAttrMaxRegistersPerMultiprocessor \fP\fP
+Maximum number of 32-bit registers available per multiprocessor 
+.TP
+\fB\fIcudaDevAttrManagedMemory \fP\fP
+Device can allocate managed memory on this system 
+.TP
+\fB\fIcudaDevAttrIsMultiGpuBoard \fP\fP
+Device is on a multi-GPU board 
+.TP
+\fB\fIcudaDevAttrMultiGpuBoardGroupID \fP\fP
+Unique identifier for a group of devices on the same multi-GPU board 
+.TP
+\fB\fIcudaDevAttrHostNativeAtomicSupported \fP\fP
+Link between the device and the host supports native atomic operations 
+.TP
+\fB\fIcudaDevAttrSingleToDoublePrecisionPerfRatio \fP\fP
+Ratio of single precision performance (in floating-point operations per second) to double precision performance 
+.TP
+\fB\fIcudaDevAttrPageableMemoryAccess \fP\fP
+Device supports coherently accessing pageable memory without calling cudaHostRegister on it 
+.TP
+\fB\fIcudaDevAttrConcurrentManagedAccess \fP\fP
+Device can coherently access managed memory concurrently with the CPU 
+.TP
+\fB\fIcudaDevAttrComputePreemptionSupported \fP\fP
+Device supports Compute Preemption 
+.TP
+\fB\fIcudaDevAttrCanUseHostPointerForRegisteredMem \fP\fP
+Device can access host registered memory at the same virtual address as the CPU 
+.SS "enum \fBcudaDeviceP2PAttr\fP"
+.PP
+CUDA device P2P attributes 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaDevP2PAttrPerformanceRank \fP\fP
+A relative value indicating the performance of the link between two devices 
+.TP
+\fB\fIcudaDevP2PAttrAccessSupported \fP\fP
+Peer access is enabled 
+.TP
+\fB\fIcudaDevP2PAttrNativeAtomicSupported \fP\fP
+Native atomic operation over the link supported 
+.SS "enum \fBcudaEglColorFormat\fP"
+.PP
+CUDA EGL Color Format - The different planar and multiplanar formats currently supported for CUDA_EGL interops. 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaEglColorFormatYUV420Planar \fP\fP
+Y, U, V in three surfaces, each in a separate surface, U/V width = 1/2 Y width, U/V height = 1/2 Y height. 
+.TP
+\fB\fIcudaEglColorFormatYUV420SemiPlanar \fP\fP
+Y, UV in two surfaces (UV as one surface), width, height ratio same as YUV420Planar. 
+.TP
+\fB\fIcudaEglColorFormatYUV422Planar \fP\fP
+Y, U, V each in a separate surface, U/V width = 1/2 Y width, U/V height = Y height. 
+.TP
+\fB\fIcudaEglColorFormatYUV422SemiPlanar \fP\fP
+Y, UV in two surfaces, width, height ratio same as YUV422Planar. 
+.TP
+\fB\fIcudaEglColorFormatRGB \fP\fP
+R/G/B three channels in one surface with RGB byte ordering. 
+.TP
+\fB\fIcudaEglColorFormatBGR \fP\fP
+R/G/B three channels in one surface with BGR byte ordering. 
+.TP
+\fB\fIcudaEglColorFormatARGB \fP\fP
+R/G/B/A four channels in one surface with ARGB byte ordering. 
+.TP
+\fB\fIcudaEglColorFormatRGBA \fP\fP
+R/G/B/A four channels in one surface with RGBA byte ordering. 
+.TP
+\fB\fIcudaEglColorFormatL \fP\fP
+single luminance channel in one surface. 
+.TP
+\fB\fIcudaEglColorFormatR \fP\fP
+single color channel in one surface. 
+.SS "enum \fBcudaEglFrameType\fP"
+.PP
+CUDA EglFrame type - array or pointer 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaEglFrameTypeArray \fP\fP
+Frame type CUDA array 
+.TP
+\fB\fIcudaEglFrameTypePitch \fP\fP
+Frame type CUDA pointer 
+.SS "enum \fBcudaEglResourceLocationFlags\fP"
+.PP
+Resource location flags- sysmem or vidmem
+.PP
+For CUDA context on iGPU, since video and system memory are equivalent - these flags will not have an effect on the execution.
+.PP
+For CUDA context on dGPU, applications can use the flag \fBcudaEglResourceLocationFlags\fP to give a hint about the desired location.
+.PP
+\fBcudaEglResourceLocationSysmem\fP - the frame data is made resident on the system memory to be accessed by CUDA.
+.PP
+\fBcudaEglResourceLocationVidmem\fP - the frame data is made resident on the dedicated video memory to be accessed by CUDA.
+.PP
+There may be an additional latency due to new allocation and data migration, if the frame is produced on a different memory. 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaEglResourceLocationSysmem \fP\fP
+Resource location sysmem 
+.TP
+\fB\fIcudaEglResourceLocationVidmem \fP\fP
+Resource location vidmem 
+.SS "enum \fBcudaError\fP"
+.PP
+CUDA error types 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaSuccess \fP\fP
+The API call returned with no errors. In the case of query calls, this can also mean that the operation being queried is complete (see \fBcudaEventQuery()\fP and \fBcudaStreamQuery()\fP). 
+.TP
+\fB\fIcudaErrorMissingConfiguration \fP\fP
+The device function being invoked (usually via \fBcudaLaunchKernel()\fP) was not previously configured via the \fBcudaConfigureCall()\fP function. 
+.TP
+\fB\fIcudaErrorMemoryAllocation \fP\fP
+The API call failed because it was unable to allocate enough memory to perform the requested operation. 
+.TP
+\fB\fIcudaErrorInitializationError \fP\fP
+The API call failed because the CUDA driver and runtime could not be initialized. 
+.TP
+\fB\fIcudaErrorLaunchFailure \fP\fP
+An exception occurred on the device while executing a kernel. Common causes include dereferencing an invalid device pointer and accessing out of bounds shared memory. The device cannot be used until \fBcudaThreadExit()\fP is called. All existing device memory allocations are invalid and must be reconstructed if the program is to continue using CUDA. 
+.TP
+\fB\fIcudaErrorPriorLaunchFailure \fP\fP
+This indicated that a previous kernel launch failed. This was previously used for device emulation of kernel launches. 
+.PP
+\fBDeprecated\fP
+.RS 4
+This error return is deprecated as of CUDA 3.1. Device emulation mode was removed with the CUDA 3.1 release. 
+.RE
+.PP
+
+.TP
+\fB\fIcudaErrorLaunchTimeout \fP\fP
+This indicates that the device kernel took too long to execute. This can only occur if timeouts are enabled - see the device property \fBkernelExecTimeoutEnabled\fP for more information. This leaves the process in an inconsistent state and any further CUDA work will return the same error. To continue using CUDA, the process must be terminated and relaunched. 
+.TP
+\fB\fIcudaErrorLaunchOutOfResources \fP\fP
+This indicates that a launch did not occur because it did not have appropriate resources. Although this error is similar to \fBcudaErrorInvalidConfiguration\fP, this error usually indicates that the user has attempted to pass too many arguments to the device kernel, or the kernel launch specifies too many threads for the kernel's register count. 
+.TP
+\fB\fIcudaErrorInvalidDeviceFunction \fP\fP
+The requested device function does not exist or is not compiled for the proper device architecture. 
+.TP
+\fB\fIcudaErrorInvalidConfiguration \fP\fP
+This indicates that a kernel launch is requesting resources that can never be satisfied by the current device. Requesting more shared memory per block than the device supports will trigger this error, as will requesting too many threads or blocks. See \fBcudaDeviceProp\fP for more device limitations. 
+.TP
+\fB\fIcudaErrorInvalidDevice \fP\fP
+This indicates that the device ordinal supplied by the user does not correspond to a valid CUDA device. 
+.TP
+\fB\fIcudaErrorInvalidValue \fP\fP
+This indicates that one or more of the parameters passed to the API call is not within an acceptable range of values. 
+.TP
+\fB\fIcudaErrorInvalidPitchValue \fP\fP
+This indicates that one or more of the pitch-related parameters passed to the API call is not within the acceptable range for pitch. 
+.TP
+\fB\fIcudaErrorInvalidSymbol \fP\fP
+This indicates that the symbol name/identifier passed to the API call is not a valid name or identifier. 
+.TP
+\fB\fIcudaErrorMapBufferObjectFailed \fP\fP
+This indicates that the buffer object could not be mapped. 
+.TP
+\fB\fIcudaErrorUnmapBufferObjectFailed \fP\fP
+This indicates that the buffer object could not be unmapped. 
+.TP
+\fB\fIcudaErrorInvalidHostPointer \fP\fP
+This indicates that at least one host pointer passed to the API call is not a valid host pointer. 
+.TP
+\fB\fIcudaErrorInvalidDevicePointer \fP\fP
+This indicates that at least one device pointer passed to the API call is not a valid device pointer. 
+.TP
+\fB\fIcudaErrorInvalidTexture \fP\fP
+This indicates that the texture passed to the API call is not a valid texture. 
+.TP
+\fB\fIcudaErrorInvalidTextureBinding \fP\fP
+This indicates that the texture binding is not valid. This occurs if you call \fBcudaGetTextureAlignmentOffset()\fP with an unbound texture. 
+.TP
+\fB\fIcudaErrorInvalidChannelDescriptor \fP\fP
+This indicates that the channel descriptor passed to the API call is not valid. This occurs if the format is not one of the formats specified by \fBcudaChannelFormatKind\fP, or if one of the dimensions is invalid. 
+.TP
+\fB\fIcudaErrorInvalidMemcpyDirection \fP\fP
+This indicates that the direction of the memcpy passed to the API call is not one of the types specified by \fBcudaMemcpyKind\fP. 
+.TP
+\fB\fIcudaErrorAddressOfConstant \fP\fP
+This indicated that the user has taken the address of a constant variable, which was forbidden up until the CUDA 3.1 release. 
+.PP
+\fBDeprecated\fP
+.RS 4
+This error return is deprecated as of CUDA 3.1. Variables in constant memory may now have their address taken by the runtime via \fBcudaGetSymbolAddress()\fP. 
+.RE
+.PP
+
+.TP
+\fB\fIcudaErrorTextureFetchFailed \fP\fP
+This indicated that a texture fetch was not able to be performed. This was previously used for device emulation of texture operations. 
+.PP
+\fBDeprecated\fP
+.RS 4
+This error return is deprecated as of CUDA 3.1. Device emulation mode was removed with the CUDA 3.1 release. 
+.RE
+.PP
+
+.TP
+\fB\fIcudaErrorTextureNotBound \fP\fP
+This indicated that a texture was not bound for access. This was previously used for device emulation of texture operations. 
+.PP
+\fBDeprecated\fP
+.RS 4
+This error return is deprecated as of CUDA 3.1. Device emulation mode was removed with the CUDA 3.1 release. 
+.RE
+.PP
+
+.TP
+\fB\fIcudaErrorSynchronizationError \fP\fP
+This indicated that a synchronization operation had failed. This was previously used for some device emulation functions. 
+.PP
+\fBDeprecated\fP
+.RS 4
+This error return is deprecated as of CUDA 3.1. Device emulation mode was removed with the CUDA 3.1 release. 
+.RE
+.PP
+
+.TP
+\fB\fIcudaErrorInvalidFilterSetting \fP\fP
+This indicates that a non-float texture was being accessed with linear filtering. This is not supported by CUDA. 
+.TP
+\fB\fIcudaErrorInvalidNormSetting \fP\fP
+This indicates that an attempt was made to read a non-float texture as a normalized float. This is not supported by CUDA. 
+.TP
+\fB\fIcudaErrorMixedDeviceExecution \fP\fP
+Mixing of device and device emulation code was not allowed. 
+.PP
+\fBDeprecated\fP
+.RS 4
+This error return is deprecated as of CUDA 3.1. Device emulation mode was removed with the CUDA 3.1 release. 
+.RE
+.PP
+
+.TP
+\fB\fIcudaErrorCudartUnloading \fP\fP
+This indicates that a CUDA Runtime API call cannot be executed because it is being called during process shut down, at a point in time after CUDA driver has been unloaded. 
+.TP
+\fB\fIcudaErrorUnknown \fP\fP
+This indicates that an unknown internal error has occurred. 
+.TP
+\fB\fIcudaErrorNotYetImplemented \fP\fP
+This indicates that the API call is not yet implemented. Production releases of CUDA will never return this error. 
+.PP
+\fBDeprecated\fP
+.RS 4
+This error return is deprecated as of CUDA 4.1. 
+.RE
+.PP
+
+.TP
+\fB\fIcudaErrorMemoryValueTooLarge \fP\fP
+This indicated that an emulated device pointer exceeded the 32-bit address range. 
+.PP
+\fBDeprecated\fP
+.RS 4
+This error return is deprecated as of CUDA 3.1. Device emulation mode was removed with the CUDA 3.1 release. 
+.RE
+.PP
+
+.TP
+\fB\fIcudaErrorInvalidResourceHandle \fP\fP
+This indicates that a resource handle passed to the API call was not valid. Resource handles are opaque types like \fBcudaStream_t\fP and \fBcudaEvent_t\fP. 
+.TP
+\fB\fIcudaErrorNotReady \fP\fP
+This indicates that asynchronous operations issued previously have not completed yet. This result is not actually an error, but must be indicated differently than \fBcudaSuccess\fP (which indicates completion). Calls that may return this value include \fBcudaEventQuery()\fP and \fBcudaStreamQuery()\fP. 
+.TP
+\fB\fIcudaErrorInsufficientDriver \fP\fP
+This indicates that the installed NVIDIA CUDA driver is older than the CUDA runtime library. This is not a supported configuration. Users should install an updated NVIDIA display driver to allow the application to run. 
+.TP
+\fB\fIcudaErrorSetOnActiveProcess \fP\fP
+This indicates that the user has called \fBcudaSetValidDevices()\fP, \fBcudaSetDeviceFlags()\fP, \fBcudaD3D9SetDirect3DDevice()\fP, \fBcudaD3D10SetDirect3DDevice\fP, \fBcudaD3D11SetDirect3DDevice()\fP, or \fBcudaVDPAUSetVDPAUDevice()\fP after initializing the CUDA runtime by calling non-device management operations (allocating memory and launching kernels are examples of non-device management operations). This error can also be returned if using runtime/driver interoperability and there is an existing CUcontext active on the host thread. 
+.TP
+\fB\fIcudaErrorInvalidSurface \fP\fP
+This indicates that the surface passed to the API call is not a valid surface. 
+.TP
+\fB\fIcudaErrorNoDevice \fP\fP
+This indicates that no CUDA-capable devices were detected by the installed CUDA driver. 
+.TP
+\fB\fIcudaErrorECCUncorrectable \fP\fP
+This indicates that an uncorrectable ECC error was detected during execution. 
+.TP
+\fB\fIcudaErrorSharedObjectSymbolNotFound \fP\fP
+This indicates that a link to a shared object failed to resolve. 
+.TP
+\fB\fIcudaErrorSharedObjectInitFailed \fP\fP
+This indicates that initialization of a shared object failed. 
+.TP
+\fB\fIcudaErrorUnsupportedLimit \fP\fP
+This indicates that the \fBcudaLimit\fP passed to the API call is not supported by the active device. 
+.TP
+\fB\fIcudaErrorDuplicateVariableName \fP\fP
+This indicates that multiple global or constant variables (across separate CUDA source files in the application) share the same string name. 
+.TP
+\fB\fIcudaErrorDuplicateTextureName \fP\fP
+This indicates that multiple textures (across separate CUDA source files in the application) share the same string name. 
+.TP
+\fB\fIcudaErrorDuplicateSurfaceName \fP\fP
+This indicates that multiple surfaces (across separate CUDA source files in the application) share the same string name. 
+.TP
+\fB\fIcudaErrorDevicesUnavailable \fP\fP
+This indicates that all CUDA devices are busy or unavailable at the current time. Devices are often busy/unavailable due to use of \fBcudaComputeModeExclusive\fP, \fBcudaComputeModeProhibited\fP or when long running CUDA kernels have filled up the GPU and are blocking new work from starting. They can also be unavailable due to memory constraints on a device that already has active CUDA work being performed. 
+.TP
+\fB\fIcudaErrorInvalidKernelImage \fP\fP
+This indicates that the device kernel image is invalid. 
+.TP
+\fB\fIcudaErrorNoKernelImageForDevice \fP\fP
+This indicates that there is no kernel image available that is suitable for the device. This can occur when a user specifies code generation options for a particular CUDA source file that do not include the corresponding device configuration. 
+.TP
+\fB\fIcudaErrorIncompatibleDriverContext \fP\fP
+This indicates that the current context is not compatible with this the CUDA Runtime. This can only occur if you are using CUDA Runtime/Driver interoperability and have created an existing Driver context using the driver API. The Driver context may be incompatible either because the Driver context was created using an older version of the API, because the Runtime API call expects a primary driver context and the Driver context is not primary, or because the Driver context has been destroyed. Please see \fBInteractions \fP with the CUDA Driver API' for more information. 
+.TP
+\fB\fIcudaErrorPeerAccessAlreadyEnabled \fP\fP
+This error indicates that a call to \fBcudaDeviceEnablePeerAccess()\fP is trying to re-enable peer addressing on from a context which has already had peer addressing enabled. 
+.TP
+\fB\fIcudaErrorPeerAccessNotEnabled \fP\fP
+This error indicates that \fBcudaDeviceDisablePeerAccess()\fP is trying to disable peer addressing which has not been enabled yet via \fBcudaDeviceEnablePeerAccess()\fP. 
+.TP
+\fB\fIcudaErrorDeviceAlreadyInUse \fP\fP
+This indicates that a call tried to access an exclusive-thread device that is already in use by a different thread. 
+.TP
+\fB\fIcudaErrorProfilerDisabled \fP\fP
+This indicates profiler is not initialized for this run. This can happen when the application is running with external profiling tools like visual profiler. 
+.TP
+\fB\fIcudaErrorProfilerNotInitialized \fP\fP
+\fBDeprecated\fP
+.RS 4
+This error return is deprecated as of CUDA 5.0. It is no longer an error to attempt to enable/disable the profiling via \fBcudaProfilerStart\fP or \fBcudaProfilerStop\fP without initialization. 
+.RE
+.PP
+
+.TP
+\fB\fIcudaErrorProfilerAlreadyStarted \fP\fP
+\fBDeprecated\fP
+.RS 4
+This error return is deprecated as of CUDA 5.0. It is no longer an error to call \fBcudaProfilerStart()\fP when profiling is already enabled. 
+.RE
+.PP
+
+.TP
+\fB\fIcudaErrorProfilerAlreadyStopped \fP\fP
+\fBDeprecated\fP
+.RS 4
+This error return is deprecated as of CUDA 5.0. It is no longer an error to call \fBcudaProfilerStop()\fP when profiling is already disabled. 
+.RE
+.PP
+
+.TP
+\fB\fIcudaErrorAssert \fP\fP
+An assert triggered in device code during kernel execution. The device cannot be used again until \fBcudaThreadExit()\fP is called. All existing allocations are invalid and must be reconstructed if the program is to continue using CUDA. 
+.TP
+\fB\fIcudaErrorTooManyPeers \fP\fP
+This error indicates that the hardware resources required to enable peer access have been exhausted for one or more of the devices passed to cudaEnablePeerAccess(). 
+.TP
+\fB\fIcudaErrorHostMemoryAlreadyRegistered \fP\fP
+This error indicates that the memory range passed to \fBcudaHostRegister()\fP has already been registered. 
+.TP
+\fB\fIcudaErrorHostMemoryNotRegistered \fP\fP
+This error indicates that the pointer passed to \fBcudaHostUnregister()\fP does not correspond to any currently registered memory region. 
+.TP
+\fB\fIcudaErrorOperatingSystem \fP\fP
+This error indicates that an OS call failed. 
+.TP
+\fB\fIcudaErrorPeerAccessUnsupported \fP\fP
+This error indicates that P2P access is not supported across the given devices. 
+.TP
+\fB\fIcudaErrorLaunchMaxDepthExceeded \fP\fP
+This error indicates that a device runtime grid launch did not occur because the depth of the child grid would exceed the maximum supported number of nested grid launches. 
+.TP
+\fB\fIcudaErrorLaunchFileScopedTex \fP\fP
+This error indicates that a grid launch did not occur because the kernel uses file-scoped textures which are unsupported by the device runtime. Kernels launched via the device runtime only support textures created with the Texture Object API's. 
+.TP
+\fB\fIcudaErrorLaunchFileScopedSurf \fP\fP
+This error indicates that a grid launch did not occur because the kernel uses file-scoped surfaces which are unsupported by the device runtime. Kernels launched via the device runtime only support surfaces created with the Surface Object API's. 
+.TP
+\fB\fIcudaErrorSyncDepthExceeded \fP\fP
+This error indicates that a call to \fBcudaDeviceSynchronize\fP made from the device runtime failed because the call was made at grid depth greater than than either the default (2 levels of grids) or user specified device limit \fBcudaLimitDevRuntimeSyncDepth\fP. To be able to synchronize on launched grids at a greater depth successfully, the maximum nested depth at which \fBcudaDeviceSynchronize\fP will be called must be specified with the \fBcudaLimitDevRuntimeSyncDepth\fP limit to the \fBcudaDeviceSetLimit\fP api before the host-side launch of a kernel using the device runtime. Keep in mind that additional levels of sync depth require the runtime to reserve large amounts of device memory that cannot be used for user allocations. 
+.TP
+\fB\fIcudaErrorLaunchPendingCountExceeded \fP\fP
+This error indicates that a device runtime grid launch failed because the launch would exceed the limit \fBcudaLimitDevRuntimePendingLaunchCount\fP. For this launch to proceed successfully, \fBcudaDeviceSetLimit\fP must be called to set the \fBcudaLimitDevRuntimePendingLaunchCount\fP to be higher than the upper bound of outstanding launches that can be issued to the device runtime. Keep in mind that raising the limit of pending device runtime launches will require the runtime to reserve device memory that cannot be used for user allocations. 
+.TP
+\fB\fIcudaErrorNotPermitted \fP\fP
+This error indicates the attempted operation is not permitted. 
+.TP
+\fB\fIcudaErrorNotSupported \fP\fP
+This error indicates the attempted operation is not supported on the current system or device. 
+.TP
+\fB\fIcudaErrorHardwareStackError \fP\fP
+Device encountered an error in the call stack during kernel execution, possibly due to stack corruption or exceeding the stack size limit. This leaves the process in an inconsistent state and any further CUDA work will return the same error. To continue using CUDA, the process must be terminated and relaunched. 
+.TP
+\fB\fIcudaErrorIllegalInstruction \fP\fP
+The device encountered an illegal instruction during kernel execution This leaves the process in an inconsistent state and any further CUDA work will return the same error. To continue using CUDA, the process must be terminated and relaunched. 
+.TP
+\fB\fIcudaErrorMisalignedAddress \fP\fP
+The device encountered a load or store instruction on a memory address which is not aligned. This leaves the process in an inconsistent state and any further CUDA work will return the same error. To continue using CUDA, the process must be terminated and relaunched. 
+.TP
+\fB\fIcudaErrorInvalidAddressSpace \fP\fP
+While executing a kernel, the device encountered an instruction which can only operate on memory locations in certain address spaces (global, shared, or local), but was supplied a memory address not belonging to an allowed address space. This leaves the process in an inconsistent state and any further CUDA work will return the same error. To continue using CUDA, the process must be terminated and relaunched. 
+.TP
+\fB\fIcudaErrorInvalidPc \fP\fP
+The device encountered an invalid program counter. This leaves the process in an inconsistent state and any further CUDA work will return the same error. To continue using CUDA, the process must be terminated and relaunched. 
+.TP
+\fB\fIcudaErrorIllegalAddress \fP\fP
+The device encountered a load or store instruction on an invalid memory address. This leaves the process in an inconsistent state and any further CUDA work will return the same error. To continue using CUDA, the process must be terminated and relaunched. 
+.TP
+\fB\fIcudaErrorInvalidPtx \fP\fP
+A PTX compilation failed. The runtime may fall back to compiling PTX if an application does not contain a suitable binary for the current device. 
+.TP
+\fB\fIcudaErrorInvalidGraphicsContext \fP\fP
+This indicates an error with the OpenGL or DirectX context. 
+.TP
+\fB\fIcudaErrorNvlinkUncorrectable \fP\fP
+This indicates that an uncorrectable NVLink error was detected during the execution. 
+.TP
+\fB\fIcudaErrorStartupFailure \fP\fP
+This indicates an internal startup failure in the CUDA runtime. 
+.TP
+\fB\fIcudaErrorApiFailureBase \fP\fP
+Any unhandled CUDA driver error is added to this value and returned via the runtime. Production releases of CUDA should not return such errors. 
+.PP
+\fBDeprecated\fP
+.RS 4
+This error return is deprecated as of CUDA 4.1. 
+.RE
+.PP
+
+.SS "enum \fBcudaFuncCache\fP"
+.PP
+CUDA function cache configurations 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaFuncCachePreferNone \fP\fP
+Default function cache configuration, no preference 
+.TP
+\fB\fIcudaFuncCachePreferShared \fP\fP
+Prefer larger shared memory and smaller L1 cache 
+.TP
+\fB\fIcudaFuncCachePreferL1 \fP\fP
+Prefer larger L1 cache and smaller shared memory 
+.TP
+\fB\fIcudaFuncCachePreferEqual \fP\fP
+Prefer equal size L1 cache and shared memory 
+.SS "enum \fBcudaGraphicsCubeFace\fP"
+.PP
+CUDA graphics interop array indices for cube maps 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaGraphicsCubeFacePositiveX \fP\fP
+Positive X face of cubemap 
+.TP
+\fB\fIcudaGraphicsCubeFaceNegativeX \fP\fP
+Negative X face of cubemap 
+.TP
+\fB\fIcudaGraphicsCubeFacePositiveY \fP\fP
+Positive Y face of cubemap 
+.TP
+\fB\fIcudaGraphicsCubeFaceNegativeY \fP\fP
+Negative Y face of cubemap 
+.TP
+\fB\fIcudaGraphicsCubeFacePositiveZ \fP\fP
+Positive Z face of cubemap 
+.TP
+\fB\fIcudaGraphicsCubeFaceNegativeZ \fP\fP
+Negative Z face of cubemap 
+.SS "enum \fBcudaGraphicsMapFlags\fP"
+.PP
+CUDA graphics interop map flags 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaGraphicsMapFlagsNone \fP\fP
+Default; Assume resource can be read/written 
+.TP
+\fB\fIcudaGraphicsMapFlagsReadOnly \fP\fP
+CUDA will not write to this resource 
+.TP
+\fB\fIcudaGraphicsMapFlagsWriteDiscard \fP\fP
+CUDA will only write to and will not read from this resource 
+.SS "enum \fBcudaGraphicsRegisterFlags\fP"
+.PP
+CUDA graphics interop register flags 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaGraphicsRegisterFlagsNone \fP\fP
+Default 
+.TP
+\fB\fIcudaGraphicsRegisterFlagsReadOnly \fP\fP
+CUDA will not write to this resource 
+.TP
+\fB\fIcudaGraphicsRegisterFlagsWriteDiscard \fP\fP
+CUDA will only write to and will not read from this resource 
+.TP
+\fB\fIcudaGraphicsRegisterFlagsSurfaceLoadStore \fP\fP
+CUDA will bind this resource to a surface reference 
+.TP
+\fB\fIcudaGraphicsRegisterFlagsTextureGather \fP\fP
+CUDA will perform texture gather operations on this resource 
+.SS "enum \fBcudaLimit\fP"
+.PP
+CUDA Limits 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaLimitStackSize \fP\fP
+GPU thread stack size 
+.TP
+\fB\fIcudaLimitPrintfFifoSize \fP\fP
+GPU printf/fprintf FIFO size 
+.TP
+\fB\fIcudaLimitMallocHeapSize \fP\fP
+GPU malloc heap size 
+.TP
+\fB\fIcudaLimitDevRuntimeSyncDepth \fP\fP
+GPU device runtime synchronize depth 
+.TP
+\fB\fIcudaLimitDevRuntimePendingLaunchCount \fP\fP
+GPU device runtime pending launch count 
+.SS "enum \fBcudaMemcpyKind\fP"
+.PP
+CUDA memory copy types 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaMemcpyHostToHost \fP\fP
+Host -> Host 
+.TP
+\fB\fIcudaMemcpyHostToDevice \fP\fP
+Host -> Device 
+.TP
+\fB\fIcudaMemcpyDeviceToHost \fP\fP
+Device -> Host 
+.TP
+\fB\fIcudaMemcpyDeviceToDevice \fP\fP
+Device -> Device 
+.TP
+\fB\fIcudaMemcpyDefault \fP\fP
+Direction of the transfer is inferred from the pointer values. Requires unified virtual addressing 
+.SS "enum \fBcudaMemoryAdvise\fP"
+.PP
+CUDA Memory Advise values 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaMemAdviseSetReadMostly \fP\fP
+Data will mostly be read and only occassionally be written to 
+.TP
+\fB\fIcudaMemAdviseUnsetReadMostly \fP\fP
+Undo the effect of \fBcudaMemAdviseSetReadMostly\fP 
+.TP
+\fB\fIcudaMemAdviseSetPreferredLocation \fP\fP
+Set the preferred location for the data as the specified device 
+.TP
+\fB\fIcudaMemAdviseUnsetPreferredLocation \fP\fP
+Clear the preferred location for the data 
+.TP
+\fB\fIcudaMemAdviseSetAccessedBy \fP\fP
+Data will be accessed by the specified device, so prevent page faults as much as possible 
+.TP
+\fB\fIcudaMemAdviseUnsetAccessedBy \fP\fP
+Let the Unified Memory subsystem decide on the page faulting policy for the specified device 
+.SS "enum \fBcudaMemoryType\fP"
+.PP
+CUDA memory types 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaMemoryTypeHost \fP\fP
+Host memory 
+.TP
+\fB\fIcudaMemoryTypeDevice \fP\fP
+Device memory 
+.SS "enum \fBcudaMemRangeAttribute\fP"
+.PP
+CUDA range attributes 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaMemRangeAttributeReadMostly \fP\fP
+Whether the range will mostly be read and only occassionally be written to 
+.TP
+\fB\fIcudaMemRangeAttributePreferredLocation \fP\fP
+The preferred location of the range 
+.TP
+\fB\fIcudaMemRangeAttributeAccessedBy \fP\fP
+Memory range has \fBcudaMemAdviseSetAccessedBy\fP set for specified device 
+.TP
+\fB\fIcudaMemRangeAttributeLastPrefetchLocation \fP\fP
+The last location to which the range was prefetched 
+.SS "enum \fBcudaOutputMode\fP"
+.PP
+CUDA Profiler Output modes 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaKeyValuePair \fP\fP
+Output mode Key-Value pair format. 
+.TP
+\fB\fIcudaCSV \fP\fP
+Output mode Comma separated values format. 
+.SS "enum \fBcudaResourceType\fP"
+.PP
+CUDA resource types 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaResourceTypeArray \fP\fP
+Array resource 
+.TP
+\fB\fIcudaResourceTypeMipmappedArray \fP\fP
+Mipmapped array resource 
+.TP
+\fB\fIcudaResourceTypeLinear \fP\fP
+Linear resource 
+.TP
+\fB\fIcudaResourceTypePitch2D \fP\fP
+Pitch 2D resource 
+.SS "enum \fBcudaResourceViewFormat\fP"
+.PP
+CUDA texture resource view formats 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaResViewFormatNone \fP\fP
+No resource view format (use underlying resource format) 
+.TP
+\fB\fIcudaResViewFormatUnsignedChar1 \fP\fP
+1 channel unsigned 8-bit integers 
+.TP
+\fB\fIcudaResViewFormatUnsignedChar2 \fP\fP
+2 channel unsigned 8-bit integers 
+.TP
+\fB\fIcudaResViewFormatUnsignedChar4 \fP\fP
+4 channel unsigned 8-bit integers 
+.TP
+\fB\fIcudaResViewFormatSignedChar1 \fP\fP
+1 channel signed 8-bit integers 
+.TP
+\fB\fIcudaResViewFormatSignedChar2 \fP\fP
+2 channel signed 8-bit integers 
+.TP
+\fB\fIcudaResViewFormatSignedChar4 \fP\fP
+4 channel signed 8-bit integers 
+.TP
+\fB\fIcudaResViewFormatUnsignedShort1 \fP\fP
+1 channel unsigned 16-bit integers 
+.TP
+\fB\fIcudaResViewFormatUnsignedShort2 \fP\fP
+2 channel unsigned 16-bit integers 
+.TP
+\fB\fIcudaResViewFormatUnsignedShort4 \fP\fP
+4 channel unsigned 16-bit integers 
+.TP
+\fB\fIcudaResViewFormatSignedShort1 \fP\fP
+1 channel signed 16-bit integers 
+.TP
+\fB\fIcudaResViewFormatSignedShort2 \fP\fP
+2 channel signed 16-bit integers 
+.TP
+\fB\fIcudaResViewFormatSignedShort4 \fP\fP
+4 channel signed 16-bit integers 
+.TP
+\fB\fIcudaResViewFormatUnsignedInt1 \fP\fP
+1 channel unsigned 32-bit integers 
+.TP
+\fB\fIcudaResViewFormatUnsignedInt2 \fP\fP
+2 channel unsigned 32-bit integers 
+.TP
+\fB\fIcudaResViewFormatUnsignedInt4 \fP\fP
+4 channel unsigned 32-bit integers 
+.TP
+\fB\fIcudaResViewFormatSignedInt1 \fP\fP
+1 channel signed 32-bit integers 
+.TP
+\fB\fIcudaResViewFormatSignedInt2 \fP\fP
+2 channel signed 32-bit integers 
+.TP
+\fB\fIcudaResViewFormatSignedInt4 \fP\fP
+4 channel signed 32-bit integers 
+.TP
+\fB\fIcudaResViewFormatHalf1 \fP\fP
+1 channel 16-bit floating point 
+.TP
+\fB\fIcudaResViewFormatHalf2 \fP\fP
+2 channel 16-bit floating point 
+.TP
+\fB\fIcudaResViewFormatHalf4 \fP\fP
+4 channel 16-bit floating point 
+.TP
+\fB\fIcudaResViewFormatFloat1 \fP\fP
+1 channel 32-bit floating point 
+.TP
+\fB\fIcudaResViewFormatFloat2 \fP\fP
+2 channel 32-bit floating point 
+.TP
+\fB\fIcudaResViewFormatFloat4 \fP\fP
+4 channel 32-bit floating point 
+.TP
+\fB\fIcudaResViewFormatUnsignedBlockCompressed1 \fP\fP
+Block compressed 1 
+.TP
+\fB\fIcudaResViewFormatUnsignedBlockCompressed2 \fP\fP
+Block compressed 2 
+.TP
+\fB\fIcudaResViewFormatUnsignedBlockCompressed3 \fP\fP
+Block compressed 3 
+.TP
+\fB\fIcudaResViewFormatUnsignedBlockCompressed4 \fP\fP
+Block compressed 4 unsigned 
+.TP
+\fB\fIcudaResViewFormatSignedBlockCompressed4 \fP\fP
+Block compressed 4 signed 
+.TP
+\fB\fIcudaResViewFormatUnsignedBlockCompressed5 \fP\fP
+Block compressed 5 unsigned 
+.TP
+\fB\fIcudaResViewFormatSignedBlockCompressed5 \fP\fP
+Block compressed 5 signed 
+.TP
+\fB\fIcudaResViewFormatUnsignedBlockCompressed6H \fP\fP
+Block compressed 6 unsigned half-float 
+.TP
+\fB\fIcudaResViewFormatSignedBlockCompressed6H \fP\fP
+Block compressed 6 signed half-float 
+.TP
+\fB\fIcudaResViewFormatUnsignedBlockCompressed7 \fP\fP
+Block compressed 7 
+.SS "enum \fBcudaSharedMemConfig\fP"
+.PP
+CUDA shared memory configuration 
+.SS "enum \fBcudaSurfaceBoundaryMode\fP"
+.PP
+CUDA Surface boundary modes 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaBoundaryModeZero \fP\fP
+Zero boundary mode 
+.TP
+\fB\fIcudaBoundaryModeClamp \fP\fP
+Clamp boundary mode 
+.TP
+\fB\fIcudaBoundaryModeTrap \fP\fP
+Trap boundary mode 
+.SS "enum \fBcudaSurfaceFormatMode\fP"
+.PP
+CUDA Surface format modes 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaFormatModeForced \fP\fP
+Forced format mode 
+.TP
+\fB\fIcudaFormatModeAuto \fP\fP
+Auto format mode 
+.SS "enum \fBcudaTextureAddressMode\fP"
+.PP
+CUDA texture address modes 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaAddressModeWrap \fP\fP
+Wrapping address mode 
+.TP
+\fB\fIcudaAddressModeClamp \fP\fP
+Clamp to edge address mode 
+.TP
+\fB\fIcudaAddressModeMirror \fP\fP
+Mirror address mode 
+.TP
+\fB\fIcudaAddressModeBorder \fP\fP
+Border address mode 
+.SS "enum \fBcudaTextureFilterMode\fP"
+.PP
+CUDA texture filter modes 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaFilterModePoint \fP\fP
+Point filter mode 
+.TP
+\fB\fIcudaFilterModeLinear \fP\fP
+Linear filter mode 
+.SS "enum \fBcudaTextureReadMode\fP"
+.PP
+CUDA texture read modes 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaReadModeElementType \fP\fP
+Read texture as specified element type 
+.TP
+\fB\fIcudaReadModeNormalizedFloat \fP\fP
+Read texture as normalized float 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

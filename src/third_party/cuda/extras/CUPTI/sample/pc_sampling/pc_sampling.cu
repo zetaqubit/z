@@ -91,7 +91,7 @@ printActivity(CUpti_Activity *record)
         }
         case CUPTI_ACTIVITY_KIND_PC_SAMPLING:
         {
-            CUpti_ActivityPCSampling *psRecord = (CUpti_ActivityPCSampling *)record;
+            CUpti_ActivityPCSampling2 *psRecord = (CUpti_ActivityPCSampling2 *)record;
 
             printf("source %u, functionId %u, pc 0x%x, corr %u, samples %u, stallreason %s\n",
                   psRecord->sourceLocatorId,
@@ -186,9 +186,10 @@ do_pass(cudaStream_t stream)
 {
     int *h_A, *h_B, *h_C;
     int *d_A, *d_B, *d_C;
-
     size_t size = ARRAY_SIZE * sizeof(int);
     int blocksPerGrid = 0;
+    CUpti_ActivityPCSamplingConfig configPC;
+    CUcontext cuCtx;
 
     // Allocate input vectors h_A and h_B in host memory
     // don't bother to initialize
@@ -200,6 +201,10 @@ do_pass(cudaStream_t stream)
     RUNTIME_API_CALL(cudaMalloc((void**)&d_A, size));
     RUNTIME_API_CALL(cudaMalloc((void**)&d_B, size));
     RUNTIME_API_CALL(cudaMalloc((void**)&d_C, size));
+
+    configPC.samplingPeriod=CUPTI_ACTIVITY_PC_SAMPLING_PERIOD_MIN;
+    cuCtxGetCurrent(&cuCtx);
+    CUPTI_CALL(cuptiActivityConfigurePCSampling(cuCtx, &configPC));
 
     RUNTIME_API_CALL(cudaMemcpyAsync(d_A, h_A, size, cudaMemcpyHostToDevice, stream));
     RUNTIME_API_CALL(cudaMemcpyAsync(d_B, h_B, size, cudaMemcpyHostToDevice, stream));

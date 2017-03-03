@@ -1,4 +1,4 @@
-Sample: CUDA FFT Ocean Simulation
+Sample: oceanFFT
 Minimum spec: SM 2.0
 
 This sample simulates an Ocean height field using CUFFT Library and renders the result using OpenGL.

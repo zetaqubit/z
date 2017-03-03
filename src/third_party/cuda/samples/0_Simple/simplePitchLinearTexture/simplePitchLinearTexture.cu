@@ -11,7 +11,7 @@
 
 /* pitchLinearTexture
 *
-* This example demostrates how to use textures bound to pitch linear memory.
+* This example demonstrates how to use textures bound to pitch linear memory.
 * It performs a shift of matrix elements using wrap addressing mode (aka
 * periodic boundary conditions) on two arrays, a pitch linear and a CUDA array,
 * in order to highlight the differences in using each.
@@ -39,7 +39,7 @@
 // CUDA helper functions
 #include <helper_cuda.h>         // helper functions for CUDA error check
 
-#define NUM_REPS 100  // number of repetitions performed  
+#define NUM_REPS 100  // number of repetitions performed
 #define TILE_DIM 16   // tile/block size
 
 const char *sSDKsample = "simplePitchLinearTexture";
@@ -106,12 +106,6 @@ int main(int argc, char **argv)
 
     runTest(argc, argv);
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits   
-    cudaDeviceReset();
     printf("%s completed, returned %s\n",
            sSDKsample,
            bTestResult ? "OK" : "ERROR!");

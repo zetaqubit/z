@@ -10,7 +10,7 @@
  */
 
 // This example shows how to use the clock function to measure the performance of
-// a kernel accurately.
+// block of threads of a kernel accurately.
 //
 
 // Blocks are executed in parallel and out of order. Since there's no synchronization

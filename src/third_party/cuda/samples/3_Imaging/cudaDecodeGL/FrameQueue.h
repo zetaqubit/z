@@ -9,10 +9,9 @@
  *
  */
 
- 
 #ifndef FRAMEQUEUE_H
 #define FRAMEQUEUE_H
- 
+
 #include <nvcuvid.h>
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
@@ -51,7 +50,7 @@ class FrameQueue
         void
         enqueue(const CUVIDPARSERDISPINFO *pPicParams);
 
-        // Deque the next frame.
+        // Dequeue the next frame.
         // Parameters:
         //      pDisplayInfo - New frame info gets placed into this object.
         //          Note: This pointer must point to a valid struct. The method
@@ -77,24 +76,22 @@ class FrameQueue
         void
         endDecode();
 
-  
-
         // Spins until frame becomes available or decoding
         // gets canceled.
         // If the requested frame is available the method returns true.
-        // If decoding was interupted before the requested frame becomes
+        // If decoding was interrupted before the requested frame becomes
         // available, the method returns false.
         bool
         waitUntilFrameAvailable(int nPictureIndex);
 
     private:
-        
+
         CRITICAL_SECTION    oCriticalSection_;
         volatile int        nReadPosition_;
         volatile int        nFramesInQueue_;
         CUVIDPARSERDISPINFO aDisplayQueue_[cnMaximumSize];
         volatile int        aIsFrameInUse_[cnMaximumSize];
-        volatile int        bEndOfDecode_;		
+        volatile int        bEndOfDecode_;
 };
 
 #endif // FRAMEQUEUE_H

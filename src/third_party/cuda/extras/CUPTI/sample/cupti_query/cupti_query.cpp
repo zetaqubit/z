@@ -10,7 +10,6 @@
 #include <cupti.h>
 
 #if defined(WIN32) || defined(_WIN32)
-#define snprintf _snprintf
 #define stricmp _stricmp
 #else
 #define stricmp strcasecmp
@@ -175,6 +174,9 @@ int enumEventDomains(CUdevice dev) {
                 break;
             case CUPTI_EVENT_COLLECTION_METHOD_INSTRUMENTED:
                 printf("CUPTI_EVENT_COLLECTION_METHOD_INSTRUMENTED\n");
+                break;
+            case CUPTI_EVENT_COLLECTION_METHOD_NVLINK_TC:
+                printf("CUPTI_EVENT_COLLECTION_METHOD_NVLINK_TC\n");
                 break;
             default:
                 printf("\nError: Invalid event collection method!\n");

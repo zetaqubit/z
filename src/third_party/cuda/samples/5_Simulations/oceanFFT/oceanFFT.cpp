@@ -34,7 +34,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include <GL/glew.h>
+#include <helper_gl.h>
 
 #include <cuda_runtime.h>
 #include <cuda_gl_interop.h>
@@ -196,12 +196,6 @@ int main(int argc, char **argv)
         runGraphicsTest(argc, argv);
     }
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(EXIT_SUCCESS);
 }
 
@@ -245,13 +239,6 @@ void runAutoTest(int argc, char **argv)
     checkCudaErrors(cufftDestroy(fftPlan));
     free(h_h0);
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
-
     exit(g_TotalErrors==0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
@@ -275,12 +262,6 @@ void runGraphicsTest(int argc, char **argv)
         printf(" > %s -device=n -qatest\n", argv[0]);
         printf("exiting...\n");
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_SUCCESS);
     }
 
@@ -288,12 +269,6 @@ void runGraphicsTest(int argc, char **argv)
     // This is necessary in order to achieve optimal performance with OpenGL/CUDA interop.
     if (false == initGL(&argc, argv))
     {
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return;
     }
 
@@ -340,13 +315,6 @@ void runGraphicsTest(int argc, char **argv)
 
     // start rendering mainloop
     glutMainLoop();
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 }
 
 float urand()
@@ -455,14 +423,13 @@ void runCuda()
 
     cudaUpdateHeightmapKernel(g_hptr, d_ht, meshSize, meshSize);
 
-    checkCudaErrors(cudaGraphicsUnmapResources(1, &cuda_heightVB_resource, 0));
-
     // calculate slope for shading
     checkCudaErrors(cudaGraphicsMapResources(1, &cuda_slopeVB_resource, 0));
     checkCudaErrors(cudaGraphicsResourceGetMappedPointer((void **)&g_sptr, &num_bytes, cuda_slopeVB_resource));
 
     cudaCalculateSlopeKernel(g_hptr, g_sptr, meshSize, meshSize);
 
+	checkCudaErrors(cudaGraphicsUnmapResources(1, &cuda_heightVB_resource, 0));
     checkCudaErrors(cudaGraphicsUnmapResources(1, &cuda_slopeVB_resource, 0));
 }
 
@@ -662,12 +629,6 @@ void keyboard(unsigned char key, int /*x*/, int /*y*/)
     {
         case (27) :
             cleanup();
-            // cudaDeviceReset causes the driver to clean up all state. While
-            // not mandatory in normal operation, it is good practice.  It is also
-            // needed to ensure correct operation when the application is being
-            // profiled. Calling cudaDeviceReset causes all profile data to be
-            // flushed before the application exits
-            cudaDeviceReset();
             exit(EXIT_SUCCESS);
 
         case 'w':
@@ -761,17 +722,15 @@ bool initGL(int *argc, char **argv)
     }
 
     // initialize necessary OpenGL extensions
-    glewInit();
 
-    if (! glewIsSupported("GL_VERSION_2_0 "
-                         ))
+    if (! isGLVersionSupported(2,0))
     {
         fprintf(stderr, "ERROR: Support for necessary OpenGL extensions missing.");
         fflush(stderr);
         return false;
     }
 
-    if (!glewIsSupported("GL_VERSION_1_5 GL_ARB_vertex_buffer_object GL_ARB_pixel_buffer_object"))
+    if (!areGLExtensionsSupported("GL_ARB_vertex_buffer_object GL_ARB_pixel_buffer_object"))
     {
         fprintf(stderr, "Error: failed to get minimal extensions for demo\n");
         fprintf(stderr, "This sample requires:\n");
@@ -822,9 +781,9 @@ void createMeshIndexBuffer(GLuint *id, int w, int h)
     int size = ((w*2)+2)*(h-1)*sizeof(GLuint);
 
     // create index buffer
-    glGenBuffersARB(1, id);
+    glGenBuffers(1, id);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *id);
-    glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER, size, 0, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, 0, GL_STATIC_DRAW);
 
     // fill with indices for rendering mesh as triangle strips
     GLuint *indices = (GLuint *) glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);

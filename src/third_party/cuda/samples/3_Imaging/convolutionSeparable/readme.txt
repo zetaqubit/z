@@ -1,4 +1,4 @@
-Sample: CUDA Separable Convolution
+Sample: convolutionSeparable
 Minimum spec: SM 2.0
 
 This sample implements a separable convolution filter of a 2D signal with a gaussian kernel.

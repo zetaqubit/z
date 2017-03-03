@@ -1,0 +1,73 @@
+.TH "Surface Reference Management" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Surface Reference Management \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCUresult\fP \fBcuSurfRefGetArray\fP (\fBCUarray\fP *phArray, \fBCUsurfref\fP hSurfRef)"
+.br
+.RI "\fIPasses back the CUDA array bound to a surface reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuSurfRefSetArray\fP (\fBCUsurfref\fP hSurfRef, \fBCUarray\fP hArray, unsigned int Flags)"
+.br
+.RI "\fISets the CUDA array for a surface reference. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief surface reference management functions of the low-level CUDA driver API (\fBcuda.h\fP)
+.PP
+This section describes the surface reference management functions of the low-level CUDA driver application programming interface. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBCUresult\fP cuSurfRefGetArray (\fBCUarray\fP * phArray, \fBCUsurfref\fP hSurfRef)"
+.PP
+Returns in \fC*phArray\fP the CUDA array bound to the surface reference \fChSurfRef\fP, or returns \fBCUDA_ERROR_INVALID_VALUE\fP if the surface reference is not bound to any CUDA array.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIphArray\fP - Surface reference handle 
+.br
+\fIhSurfRef\fP - Surface reference handle
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuModuleGetSurfRef\fP, \fBcuSurfRefSetArray\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuSurfRefSetArray (\fBCUsurfref\fP hSurfRef, \fBCUarray\fP hArray, unsigned int Flags)"
+.PP
+Sets the CUDA array \fChArray\fP to be read and written by the surface reference \fChSurfRef\fP. Any previous CUDA array state associated with the surface reference is superseded by this function. \fCFlags\fP must be set to 0. The \fBCUDA_ARRAY3D_SURFACE_LDST\fP flag must have been set for the CUDA array. Any CUDA array previously bound to \fChSurfRef\fP is unbound.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhSurfRef\fP - Surface reference handle 
+.br
+\fIhArray\fP - CUDA array handle 
+.br
+\fIFlags\fP - set to 0
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuModuleGetSurfRef\fP, \fBcuSurfRefGetArray\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

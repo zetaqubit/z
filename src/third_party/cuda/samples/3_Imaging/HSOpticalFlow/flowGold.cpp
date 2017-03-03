@@ -116,7 +116,7 @@ void Downscale(const float *src, int width, int height, int stride,
         {
             const int srcX = j * 2;
             const int srcY = i * 2;
-            // average 4 neigbouring pixels
+            // average 4 neighbouring pixels
             float sum;
             sum  = Tex2Di(src, width, height, stride, srcX + 0, srcY + 0);
             sum += Tex2Di(src, width, height, stride, srcX + 0, srcY + 1);
@@ -387,7 +387,7 @@ void ComputeFlowGold(const float *I0, const float *I1,
         pS[currentLevel - 1] = ns;
     }
 
-    // initial appoximation
+    // initial approximation
     memset(u, 0, stride * height * sizeof(float));
     memset(v, 0, stride * height * sizeof(float));
 

@@ -98,9 +98,9 @@ typedef unsigned char bool;
 
 /*--------------------------------- API Version ------------------------------*/
 
-#define CUDBG_API_VERSION_MAJOR       7 /* Major release version number */
+#define CUDBG_API_VERSION_MAJOR       8 /* Major release version number */
 #define CUDBG_API_VERSION_MINOR       0 /* Minor release version number */
-#define CUDBG_API_VERSION_REVISION  122 /* Revision (build) number */
+#define CUDBG_API_VERSION_REVISION  127 /* Revision (build) number */
 
 /*---------------------------------- Constants -------------------------------*/
 
@@ -748,7 +748,48 @@ typedef enum {
     CUDBG_EXCEPTION_WARP_ASSERT = 12,
     CUDBG_EXCEPTION_LANE_SYSCALL_ERROR = 13,
     CUDBG_EXCEPTION_WARP_ILLEGAL_ADDRESS = 14,
+    CUDBG_EXCEPTION_LANE_NONMIGRATABLE_ATOMSYS = 15,
 } CUDBGException_t;
+
+typedef enum {
+    CUDBG_UVM_MEMORY_ACCESS_TYPE_UNKNOWN  = 0xFFFFFFFFU,
+    CUDBG_UVM_MEMORY_ACCESS_TYPE_INVALID  = 0,
+    CUDBG_UVM_MEMORY_ACCESS_TYPE_READ     = 1,
+    CUDBG_UVM_MEMORY_ACCESS_TYPE_WRITE    = 2,
+    CUDBG_UVM_MEMORY_ACCESS_TYPE_ATOMIC   = 3,
+    CUDBG_UVM_MEMORY_ACCESS_TYPE_PREFETCH = 4,
+} CUDBGUvmMemoryAccessType_t;
+
+typedef enum {
+    CUDBG_UVM_FAULT_TYPE_UNKNOWN               =  0xFFFFFFFFU,
+    CUDBG_UVM_FAULT_TYPE_INVALID               =  0,
+    CUDBG_UVM_FAULT_TYPE_INVALID_PDE           =  1,
+    CUDBG_UVM_FAULT_TYPE_INVALID_PTE           =  2,
+    CUDBG_UVM_FAULT_TYPE_WRITE                 =  3,
+    CUDBG_UVM_FAULT_TYPE_ATOMIC                =  4,
+    CUDBG_UVM_FAULT_TYPE_INVALID_PDE_SIZE      =  5,
+    CUDBG_UVM_FAULT_TYPE_LIMIT_VIOLATION       =  6,
+    CUDBG_UVM_FAULT_TYPE_UNBOUND_INST_BLOCK    =  7,
+    CUDBG_UVM_FAULT_TYPE_PRIV_VIOLATION        =  8,
+    CUDBG_UVM_FAULT_TYPE_PITCH_MASK_VIOLATION  =  9,
+    CUDBG_UVM_FAULT_TYPE_WORK_CREATION         = 10,
+    CUDBG_UVM_FAULT_TYPE_UNSUPPORTED_APERTURE  = 11,
+    CUDBG_UVM_FAULT_TYPE_COMPRESSION_FAILURE   = 12,
+    CUDBG_UVM_FAULT_TYPE_UNSUPPORTED_KIND      = 13,
+    CUDBG_UVM_FAULT_TYPE_REGION_VIOLATION      = 14,
+    CUDBG_UVM_FAULT_TYPE_POISON                = 15,
+} CUDBGUvmFaultType_t;
+
+typedef enum {
+    CUDBG_UVM_FATAL_REASON_UNKNOWN             = 0xFFFFFFFFU,
+    CUDBG_UVM_FATAL_REASON_INVALID             = 0,
+    CUDBG_UVM_FATAL_REASON_INVALID_ADDRESS     = 1,
+    CUDBG_UVM_FATAL_REASON_INVALID_PERMISSIONS = 2,
+    CUDBG_UVM_FATAL_REASON_INVALID_FAULT_TYPE  = 3,
+    CUDBG_UVM_FATAL_REASON_OUT_OF_MEMORY       = 4,
+    CUDBG_UVM_FATAL_REASON_INTERNAL_ERROR      = 5,
+    CUDBG_UVM_FATAL_REASON_INVALID_OPERATION   = 6,
+} CUDBGUvmFatalReason_t;
 
 /*------------------------------ Warp State --------------------------------*/
 #pragma pack(push,1)
@@ -911,7 +952,7 @@ struct CUDBGAPI_st {
 
     /* 4.1 Extensions */
     CUDBGResult (*getHostAddrFromDeviceAddr)(uint32_t dev, uint64_t device_addr, uint64_t *host_addr);
-    CUDBGResult (*singleStepWarp)(uint32_t dev, uint32_t sm, uint32_t wp, uint64_t *warpMask);
+    CUDBGResult (*singleStepWarp41)(uint32_t dev, uint32_t sm, uint32_t wp, uint64_t *warpMask);
     CUDBGResult (*setNotifyNewEventCallback)(CUDBGNotifyNewEventCallback callback);
     CUDBGResult (*readSyscallCallDepth)(uint32_t dev, uint32_t sm, uint32_t wp, uint32_t ln, uint32_t *depth);
 
@@ -962,6 +1003,7 @@ struct CUDBGAPI_st {
     CUDBGResult (*writeCCRegister)(uint32_t dev, uint32_t sm, uint32_t wp, uint32_t ln, uint32_t val);
 
     CUDBGResult (*getDeviceName)(uint32_t dev, char *buf, uint32_t sz);
+    CUDBGResult (*singleStepWarp)(uint32_t dev, uint32_t sm, uint32_t wp, uint32_t nsteps, uint64_t *warpMask);
 };
 
 #ifdef __cplusplus

@@ -239,7 +239,7 @@ __global__ void shfl_intimage_rows(uint4 *img, uint4 *integral_image)
 
     integral_image[ blockIdx.x*480 + (threadIdx.x+2)%4 + (threadIdx.x/4)*16 + 8]
         = output;
-    // continuning from the above example,
+    // continuing from the above example,
     // this use of __shfl_xor() places the y0..y3 and w0..w3 data
     // in order.
 #pragma unroll
@@ -304,7 +304,7 @@ __global__ void shfl_intimage_rows(uint4 *img, uint4 *integral_image)
 // then instead of performing a sum in shared memory using __syncthreads
 // between stages, the data is reformatted so that the necessary sums
 // occur inside warps and the shuffle scan operation is used.
-// The final set of sums from the block is then propgated, with the block
+// The final set of sums from the block is then propagated, with the block
 // computing "down" the image and adding the running sum to the local
 // block sums.
 __global__ void shfl_vertical_shfl(unsigned int *img, int width, int height)

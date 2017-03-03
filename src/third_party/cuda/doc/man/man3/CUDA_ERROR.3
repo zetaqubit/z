@@ -1,0 +1,71 @@
+.TH "Error Handling" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Error Handling \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCUresult\fP \fBcuGetErrorName\fP (\fBCUresult\fP error, const char **pStr)"
+.br
+.RI "\fIGets the string representation of an error code enum name. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuGetErrorString\fP (\fBCUresult\fP error, const char **pStr)"
+.br
+.RI "\fIGets the string description of an error code. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief error handling functions of the low-level CUDA driver API (\fBcuda.h\fP)
+.PP
+This section describes the error handling functions of the low-level CUDA driver application programming interface. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBCUresult\fP cuGetErrorName (\fBCUresult\fP error, const char ** pStr)"
+.PP
+Sets \fC*pStr\fP to the address of a NULL-terminated string representation of the name of the enum error code \fCerror\fP. If the error code is not recognized, \fBCUDA_ERROR_INVALID_VALUE\fP will be returned and \fC*pStr\fP will be set to the NULL address.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIerror\fP - Error code to convert to string 
+.br
+\fIpStr\fP - Address of the string pointer.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBCUresult\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuGetErrorString (\fBCUresult\fP error, const char ** pStr)"
+.PP
+Sets \fC*pStr\fP to the address of a NULL-terminated string description of the error code \fCerror\fP. If the error code is not recognized, \fBCUDA_ERROR_INVALID_VALUE\fP will be returned and \fC*pStr\fP will be set to the NULL address.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIerror\fP - Error code to convert to string 
+.br
+\fIpStr\fP - Address of the string pointer.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBCUresult\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

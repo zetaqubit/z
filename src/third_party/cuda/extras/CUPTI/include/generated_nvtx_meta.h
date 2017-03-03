@@ -48,6 +48,7 @@
  */
 
 #include <nvToolsExt.h>
+#include <nvToolsExtSync.h>
 #include <nvToolsExtCuda.h>
 
 // *************************************************************************
@@ -189,3 +190,44 @@ typedef struct nvtxNameCudaEventW_params_st {
   cudaEvent_t event;
   const wchar_t* name;
 } nvtxNameCudaEventW_params;
+
+typedef struct nvtxDomainCreateA_params_st {
+  const char* name;
+} nvtxDomainCreateA_params;
+
+typedef struct nvtxDomainDestroy_params_st {
+  nvtxDomainHandle_t domain;
+} nvtxDomainDestroy_params;
+
+typedef struct nvtxDomainMarkEx_params_st {
+  nvtxDomainHandle_t domain;
+  nvtxMarkEx_params core;
+} nvtxDomainMarkEx_params;
+
+typedef struct nvtxDomainRangeStartEx_params_st {
+  nvtxDomainHandle_t domain;
+  nvtxRangeStartEx_params core;
+} nvtxDomainRangeStartEx_params;
+
+typedef struct nvtxDomainRangeEnd_params_st {
+  nvtxDomainHandle_t domain;
+  nvtxRangeEnd_params core;
+} nvtxDomainRangeEnd_params;
+
+typedef struct nvtxDomainRangePushEx_params_st {
+  nvtxDomainHandle_t domain;
+  nvtxRangePushEx_params core;
+} nvtxDomainRangePushEx_params;
+
+typedef struct nvtxDomainRangePop_params_st {
+  nvtxDomainHandle_t domain;
+} nvtxDomainRangePop_params;
+
+typedef struct nvtxSyncUserCreate_params_st {
+  nvtxDomainHandle_t domain;
+  const nvtxSyncUserAttributes_t* attribs;
+} nvtxSyncUserCreate_params;
+
+typedef struct nvtxSyncUserCommon_params_st {
+  nvtxSyncUser_t handle;
+} nvtxSyncUserCommon_params;

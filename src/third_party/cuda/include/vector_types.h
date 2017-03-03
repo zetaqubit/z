@@ -212,10 +212,10 @@ struct __device_builtin__ ulong1
     unsigned long x;
 };
 
-#if defined(__CUDACC_RTC__) || defined(_WIN32)
+#if defined(_WIN32)
 __cuda_builtin_vector_align8(long2, long int x; long int y;);
 __cuda_builtin_vector_align8(ulong2, unsigned long int x; unsigned long int y;);
-#else /* __CUDACC_RTC__ || _WIN32 */
+#else /* !_WIN32 */
 
 struct __device_builtin__ __align__(2*sizeof(long int)) long2
 {
@@ -227,7 +227,7 @@ struct __device_builtin__ __align__(2*sizeof(unsigned long int)) ulong2
     unsigned long int x, y;
 };
 
-#endif /* __CUDACC_RTC__ || _WIN32 */
+#endif /* _WIN32 */
 
 struct __device_builtin__ long3
 {

@@ -18,7 +18,6 @@
 #include <cstdlib>
 #include <vector>
 #include <algorithm>
-#include <GL/glew.h>
 
 #include <cuda_gl_interop.h>
 
@@ -100,9 +99,13 @@ void BodySystemCUDA<T>::_initialize(int numBodies)
     for (unsigned int i = 0; i < m_numDevices; i++)
     {
         unsigned int count = (int)((weights[i] / total) * m_numBodies);
-        unsigned int round = numSms[i] * 256;
-        count = round * ((count + round - 1) / round);
+        // Rounding up to numSms[i]*256 leads to better GPU utilization _per_ GPU
+        // but when using multiple devices, it will lead to the last GPUs not having any work at all
+        // which means worse overall performance
+        // unsigned int round = numSms[i] * 256;
+        unsigned int round = 256;
 
+        count = round * ((count + round - 1) / round);
         if (count > remaining)
         {
             count = remaining;

@@ -13,10 +13,10 @@
 //
 //  simpleCUFFT_2d_MGPU.cu
 //
-//  This sample code demonstrate the use of CUFFT library for 2D data on multiple GPU. 
+//  This sample code demonstrate the use of CUFFT library for 2D data on multiple GPU.
 //  Example showing the use of CUFFT for solving 2D-POISSON equation using FFT on multiple GPU.
 //  For reference we have used the equation given in http://www.bu.edu/pasi/files/2011/07/
-//  Lecture83.pdf 
+//  Lecture83.pdf
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -56,8 +56,8 @@ __global__ void solvePoisson(cufftComplex *, cufftComplex *, float *, int, int, 
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char **argv)
 {
-    printf("\nPoisson equation using CUFFT library on Multiple GPU is starting...\n\n");
-   
+    printf("\nPoisson equation using CUFFT library on Multiple GPUs is starting...\n\n");
+
     int GPU_N ;
     checkCudaErrors(cudaGetDeviceCount(&GPU_N));
 
@@ -67,7 +67,7 @@ int main(int argc, char **argv)
         printf("Two GPUs are required to run simpleCUFFT_2d_MGPU sample code\n");
         exit(EXIT_WAIVED);
     }
-    
+
     int N = 64;
     float xMAX = 1.0f, xMIN = 0.0f, yMIN = 0.0f,h = (xMAX - xMIN)/((float)N), s = 0.1, s2 = s*s;
     float *x, *y, *f, *u_a, r2;
@@ -76,37 +76,37 @@ int main(int argc, char **argv)
     y = (float*)malloc(sizeof(float) *N*N);
     f = (float*)malloc(sizeof(float) *N*N);
     u_a = (float*)malloc(sizeof(float) *N*N);
-    
+
     for (int j=0; j<N; j++)
     for (int i=0; i<N; i++)
-    { 
+    {
         x[N*j+i] = xMIN + i*h;
         y[N*j+i] = yMIN + j*h;
         r2 = (x[N*j+i] - 0.5)*(x[N*j+i] - 0.5) + (y[N*j+i] - 0.5)*(y[N*j+i] - 0.5);
         f[N*j+i] = (r2-2*s2)/(s2*s2)*exp(-r2/(2*s2));
         u_a[N*j+i] = exp(-r2/(2*s2)); // analytical solution
-    
+
     }
-    
+
     float *k, *d_k[GPU_COUNT];
     k = (float*)malloc(sizeof(float) *N);
     for (int i=0; i<=N/2; i++)
-    { 
+    {
         k[i] = i * 2*M_PI;
     }
     for (int i=N/2+1; i<N; i++)
-    { 
+    {
         k[i] = (i - N) * 2*M_PI;
     }
 
-    //Create a complex variable on host 
+    //Create a complex variable on host
     Complex *h_f = (Complex *)malloc(sizeof(Complex) * N * N);
-      
-    // Initalize the memory for the signal
+
+    // Initialize the memory for the signal
     for ( int i = 0; i < (N * N); i++)
     {
         h_f[i].x = f[i];
-	h_f[i].y = 0.0f;
+        h_f[i].y = 0.0f;
     }
 
     // cufftCreate() - Create an empty plan
@@ -128,7 +128,7 @@ int main(int argc, char **argv)
             whichGPUs[0] = i;
             whichGPUs[1] = j;
             result = cufftXtSetGPUs (planComplex, nGPUs, whichGPUs);
-        
+
             if (result == CUFFT_INVALID_DEVICE) { continue; }
             else if (result == CUFFT_SUCCESS) { break; }
             else { printf ("cufftXtSetGPUs failed\n"); exit (EXIT_FAILURE); }
@@ -144,7 +144,7 @@ int main(int argc, char **argv)
         exit (EXIT_WAIVED);
     }
 
-    //Print the device information to run the code 
+    //Print the device information to run the code
     for (int i = 0 ; i < 2 ; i++)
     {
         cudaDeviceProp deviceProp;
@@ -174,12 +174,12 @@ int main(int argc, char **argv)
     // d_d_f - variable that store the natural order of d_f data
     // d_out - device output
     cudaLibXtDesc *d_f,*d_d_f, *d_out ;
-   
+
     // cufftXtMalloc() - Malloc data on multiple GPUs
-    
+
     result = cufftXtMalloc (planComplex, (cudaLibXtDesc **)&d_f, CUFFT_XT_FORMAT_INPLACE);
     if (result != CUFFT_SUCCESS) { printf ("*XtMalloc failed\n"); exit (EXIT_FAILURE) ; }
-	
+
     result = cufftXtMalloc (planComplex, (cudaLibXtDesc **)&d_d_f, CUFFT_XT_FORMAT_INPLACE);
     if (result != CUFFT_SUCCESS) { printf ("*XtMalloc failed\n"); exit (EXIT_FAILURE) ; }
 
@@ -189,9 +189,9 @@ int main(int argc, char **argv)
     // cufftXtMemcpy() - Copy the data from host to device
     result = cufftXtMemcpy (planComplex, d_f, h_f, CUFFT_COPY_HOST_TO_DEVICE);
     if (result != CUFFT_SUCCESS) { printf ("*XtMemcpy failed\n"); exit (EXIT_FAILURE); }
-	
+
     // cufftXtExecDescriptorC2C() - Execute FFT on data on multiple GPUs
-    printf("Forward 2d FFT on multiple GPU\n");
+    printf("Forward 2d FFT on multiple GPUs\n");
     result = cufftXtExecDescriptorC2C(planComplex, d_f, d_f, CUFFT_FORWARD);
     if (result != CUFFT_SUCCESS) { printf ("*XtExecC2C  failed\n"); exit (EXIT_FAILURE); }
 
@@ -202,7 +202,7 @@ int main(int argc, char **argv)
     printf("Solve Poisson Equation\n" );
     solvePoissonEquation(d_d_f, d_out, d_k, N, nGPUs);
 
-    printf("Inverse 2d FFT on multiple GPU\n");
+    printf("Inverse 2d FFT on multiple GPUs\n");
     // cufftXtExecDescriptorC2C() - Execute inverse  FFT on data on multiple GPUs
     result = cufftXtExecDescriptorC2C(planComplex, d_out,  d_out, CUFFT_INVERSE);
     if (result != CUFFT_SUCCESS) { printf ("*XtExecC2C  failed\n"); exit (EXIT_FAILURE); }
@@ -218,11 +218,11 @@ int main(int argc, char **argv)
     float *out = (float *)malloc(sizeof(float) * N * N);
     float constant = h_d_out[0].x / N* N ;
     for (int i=0; i<N*N; i++)
-    { 
-        //substract u[0] to force the arbitrary constant to be 0
+    {
+        //subtract u[0] to force the arbitrary constant to be 0
         out[i] = (h_d_out[i].x / (N*N)) - constant;
     }
-	
+
     // cleanup memory
 
     free(h_f);
@@ -251,7 +251,6 @@ int main(int argc, char **argv)
     result = cufftDestroy(planComplex);
     if (result != CUFFT_SUCCESS) { printf ("cufftDestroy failed: code %d\n",(int)result); exit (EXIT_FAILURE); }
 
-    cudaDeviceReset();
     exit(EXIT_SUCCESS);
 }
 
@@ -269,19 +268,19 @@ void  solvePoissonEquation(cudaLibXtDesc *d_ft,cudaLibXtDesc *d_ft_k, float **k,
         device = d_ft_k->descriptor->GPUs[i];
         cudaSetDevice(device) ;
         solvePoisson<<<dimGrid,dimBlock>>>((cufftComplex*) d_ft->descriptor->data[i],
-                                           (cufftComplex*) d_ft_k->descriptor->data[i], 
+                                           (cufftComplex*) d_ft_k->descriptor->data[i],
                                            k[i], N, i, nGPUs);
     }
-    
+
     // Wait for device to finish all operation
-    for(int i=0; i< nGPUs ; i++) 
-    { 
+    for(int i=0; i< nGPUs ; i++)
+    {
         device = d_ft_k->descriptor->GPUs[i];
         cudaSetDevice( device );
-        cudaDeviceSynchronize(); 
+        cudaDeviceSynchronize();
 
         // Check if kernel execution generated and error
-        getLastCudaError("Kernel execution failed [ so`lvePoisson ]");
+        getLastCudaError("Kernel execution failed [ solvePoisson ]");
     }
 
 }
@@ -302,7 +301,7 @@ __global__ void solvePoisson(cufftComplex *ft, cufftComplex *ft_k, float *k, int
          {
              k2 = 1.0f;
          }
-       
+
          ft_k[index].x = -ft[index].x*1/k2;
          ft_k[index].y = -ft[index].y*1/k2;
     }

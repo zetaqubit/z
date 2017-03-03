@@ -104,6 +104,30 @@ float avgFPS = 0.0f;
 unsigned int frameCount = 0;
 unsigned int g_TotalErrors = 0;
 
+// The default number of seconds after which the test will end.
+#define TIME_LIMIT 10.0 // 10 secs
+
+
+// Flag indicating it is time to shut down
+static GLboolean shutdown = GL_FALSE;
+
+// Callback to close window
+static void
+closeCB_app(void)
+{
+    shutdown = GL_TRUE;
+}
+
+// Callback to handle key presses
+static void
+keyCB_app(char key, int state)
+{
+    // Ignoring releases
+    if (!state) return;
+
+    if ((key == 'q') || (key == 'Q') || (key == NvGlDemoKeyCode_Escape)) shutdown = GL_TRUE;
+}
+
 // Auto-Verification Code
 bool g_bQAReadback = false;
 
@@ -438,9 +462,6 @@ static void InitGraphicsState(void)
 ////////////////////////////////////////////////////////////////////////////////
 bool runTest(int argc, char **argv, char *ref_file)
 {
-    // Create the CUTIL timer
-    sdkCreateTimer(&timer);
-
     // command line mode only
     if (ref_file != NULL)
     {
@@ -461,6 +482,8 @@ bool runTest(int argc, char **argv, char *ref_file)
     }
     else
     {
+        double endTime = TIME_LIMIT;
+
         // this would use command-line specified CUDA device, note that CUDA defaults to highest Gflops/s device
         if (checkCmdLineFlag(argc, (const char **)argv, "device"))
         {
@@ -485,6 +508,15 @@ bool runTest(int argc, char **argv, char *ref_file)
             window_height = getCmdLineArgumentInt(argc, (const char **)argv, "height");
         }
 
+        // Determine how long to run for in secs: default is 10s
+        if (checkCmdLineFlag(argc, (const char **)argv, "runtime"))
+        {
+            endTime = getCmdLineArgumentInt(argc, (const char **)argv, "runtime");
+        }
+
+        SetCloseCB(closeCB_app);
+        SetKeyCB(keyCB_app);
+
         // create QNX screen window and set up associated OpenGL ES context
         graphics_setup_window(0,0, window_width, window_height, sSDKsample, dispno);
 
@@ -495,22 +527,38 @@ bool runTest(int argc, char **argv, char *ref_file)
 
         graphics_swap_buffers();
 
-        int frame = 0; 
+        int frame = 0;
 
-        while (frame < 100000)
+        struct timeval begin, end;
+        gettimeofday(&begin, NULL);
+
+        // Print runtime
+        if (endTime < 0.0) {
+            endTime = TIME_LIMIT;
+            printf(" running forever...\n");
+        } else {
+            printf(" running for %f seconds...\n", endTime);
+        }
+
+        while (!shutdown)
         {
-            display_thisframe(0.010); 
+            frame++;
+            display_thisframe(0.010);
             usleep(1000);
-
             graphics_swap_buffers();
+            CheckEvents();
+
+            gettimeofday(&end, 0);
+            double elapsed = (end.tv_sec - begin.tv_sec) + ((end.tv_usec - begin.tv_usec)/1000000.0);
+
+            // Check whether time limit has been exceeded
+            if (!shutdown) shutdown = (endTime <= elapsed);
         }
 
         // NOTE: Before destroying OpenGL ES context, must unregister all shared resources from CUDA !
-        cudaGraphicsUnregisterResource(cuda_vbo_resource);      
+        checkCudaErrors(cudaGraphicsUnregisterResource(cuda_vbo_resource));
 
         graphics_close_window(); // close window and destroy OpenGL ES context
-
-        sdkDeleteTimer(&timer);
     }
 
     return true;
@@ -545,12 +593,6 @@ int main(int argc, char **argv)
 
     runTest(argc, argv, ref_file);
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     printf("%s completed, returned %s\n", sSDKsample, (g_TotalErrors == 0) ? "OK" : "ERROR!");
 
     exit(g_TotalErrors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);

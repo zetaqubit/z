@@ -75,7 +75,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include <GL/glew.h>
+#include <helper_gl.h>
 
 #include <cuda_runtime.h>
 #include <cuda_gl_interop.h>
@@ -398,12 +398,6 @@ main(int argc, char **argv)
         runGraphicsTest(argc, argv);
     }
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(EXIT_SUCCESS);
 }
 
@@ -466,12 +460,6 @@ initMC(int argc, char **argv)
     {
         fprintf(stderr, "Error finding file '%s'\n", volumeFilename);
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 
@@ -601,13 +589,6 @@ runGraphicsTest(int argc, char **argv)
 
     // start rendering mainloop
     glutMainLoop();
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 }
 
 #define DEBUG_BUFFERS 0
@@ -783,11 +764,7 @@ initGL(int *argc, char **argv)
     glutInitWindowSize(window_width, window_height);
     glutCreateWindow("CUDA Marching Cubes");
 
-    // initialize necessary OpenGL extensions
-    glewInit();
-
-    if (! glewIsSupported("GL_VERSION_2_0 "
-                         ))
+    if (! isGLVersionSupported (2, 0))
     {
         fprintf(stderr, "ERROR: Support for necessary OpenGL extensions missing.");
         fflush(stderr);
@@ -867,7 +844,7 @@ void renderIsosurface()
     glVertexPointer(4, GL_FLOAT, 0, 0);
     glEnableClientState(GL_VERTEX_ARRAY);
 
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB, normalVbo);
+    glBindBuffer(GL_ARRAY_BUFFER, normalVbo);
     glNormalPointer(GL_FLOAT, sizeof(float)*4, 0);
     glEnableClientState(GL_NORMAL_ARRAY);
 
@@ -942,12 +919,6 @@ keyboard(unsigned char key, int /*x*/, int /*y*/)
     {
         case (27) :
             cleanup();
-            // cudaDeviceReset causes the driver to clean up all state. While
-            // not mandatory in normal operation, it is good practice.  It is also
-            // needed to ensure correct operation when the application is being
-            // profiled. Calling cudaDeviceReset causes all profile data to be
-            // flushed before the application exits
-            cudaDeviceReset();
             exit(EXIT_SUCCESS);
 
         case '=':

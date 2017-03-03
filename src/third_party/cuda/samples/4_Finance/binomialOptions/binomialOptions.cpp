@@ -81,7 +81,6 @@ int main(int argc, char **argv)
     if (((deviceProp.major << 4) + deviceProp.minor) < 0x20)
     {
         fprintf(stderr, "binomialOptions requires Compute Capability of SM 2.0 or higher to run.\n");
-        cudaDeviceReset();
         exit(EXIT_WAIVED);
     }
 
@@ -198,13 +197,6 @@ int main(int argc, char **argv)
     printf("Shutting down...\n");
 
     sdkDeleteTimer(&hTimer);
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 
     printf("\nNOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.\n\n");
 

@@ -38,7 +38,7 @@
 #endif
 
 // OpenGL Graphics includes
-#include <GL/glew.h>
+#include <helper_gl.h>
 #if defined (__APPLE__) || defined(MACOSX)
   #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   #include <GLUT/glut.h>
@@ -300,9 +300,7 @@ bool initGL(int *argc, char **argv)
     glutTimerFunc(REFRESH_DELAY, timerEvent,0);
 
     // initialize necessary OpenGL extensions
-    glewInit();
-
-    if (! glewIsSupported("GL_VERSION_2_0 "))
+    if (! isGLVersionSupported(2,0))
     {
         fprintf(stderr, "ERROR: Support for necessary OpenGL extensions missing.");
         fflush(stderr);
@@ -352,13 +350,6 @@ bool runTest(int argc, char **argv, char *ref_file)
 
         cudaFree(d_vbo_buffer);
         d_vbo_buffer = NULL;
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
     }
     else
     {
@@ -570,13 +561,6 @@ void cleanup()
     {
         deleteVBO(&vbo, cuda_vbo_resource);
     }
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 }
 
 
@@ -646,7 +630,7 @@ void checkResultCuda(int argc, char **argv, const GLuint &vbo)
         checkCudaErrors(cudaGraphicsUnregisterResource(cuda_vbo_resource));
 
         // map buffer object
-        glBindBuffer(GL_ARRAY_BUFFER_ARB, vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
         float *data = (float *) glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
 
         // check result

@@ -70,6 +70,13 @@
 #include "device_types.h"
 #include "host_defines.h"
 
+#ifndef __CUDA_ARCH__
+#define __DEF_IF_HOST { }
+#else  /* !__CUDA_ARCH__ */
+#define __DEF_IF_HOST ;
+#endif /* __CUDA_ARCH__ */
+
+
 /*******************************************************************************
 *                                                                              *
 *  Below are declarations of SM-3.0 intrinsics which are included as           *
@@ -88,71 +95,71 @@
 //    the "warpSize" constant at this time
 // b) we cannot map the float __shfl to the int __shfl because it'll mess with
 //    the register number (especially if you're doing two shfls to move a double).
-__SM_30_INTRINSICS_DECL__ int __shfl(int var, int srcLane, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ int __shfl(int var, int srcLane, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ unsigned int __shfl(unsigned int var, int srcLane, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ unsigned int __shfl(unsigned int var, int srcLane, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ int __shfl_up(int var, unsigned int delta, int width=warpSize); 
-__SM_30_INTRINSICS_DECL__ unsigned int __shfl_up(unsigned int var, unsigned int delta, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ int __shfl_up(int var, unsigned int delta, int width=warpSize) __DEF_IF_HOST
+__SM_30_INTRINSICS_DECL__ unsigned int __shfl_up(unsigned int var, unsigned int delta, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ int __shfl_down(int var, unsigned int delta, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ int __shfl_down(int var, unsigned int delta, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ unsigned int __shfl_down(unsigned int var, unsigned int delta, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ unsigned int __shfl_down(unsigned int var, unsigned int delta, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ int __shfl_xor(int var, int laneMask, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ int __shfl_xor(int var, int laneMask, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ unsigned int __shfl_xor(unsigned int var, int laneMask, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ unsigned int __shfl_xor(unsigned int var, int laneMask, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ float __shfl(float var, int srcLane, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ float __shfl(float var, int srcLane, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ float __shfl_up(float var, unsigned int delta, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ float __shfl_up(float var, unsigned int delta, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ float __shfl_down(float var, unsigned int delta, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ float __shfl_down(float var, unsigned int delta, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ float __shfl_xor(float var, int laneMask, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ float __shfl_xor(float var, int laneMask, int width=warpSize) __DEF_IF_HOST
 
 // 64-bits SHFL
-__SM_30_INTRINSICS_DECL__ long long __shfl(long long var, int srcLane, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ long long __shfl(long long var, int srcLane, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ unsigned long long __shfl(unsigned long long var, int srcLane, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ unsigned long long __shfl(unsigned long long var, int srcLane, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ long long __shfl_up(long long var, unsigned int delta, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ long long __shfl_up(long long var, unsigned int delta, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ unsigned long long __shfl_up(unsigned long long var, unsigned int delta, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ unsigned long long __shfl_up(unsigned long long var, unsigned int delta, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ long long __shfl_down(long long var, unsigned int delta, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ long long __shfl_down(long long var, unsigned int delta, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ unsigned long long __shfl_down(unsigned long long var, unsigned int delta, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ unsigned long long __shfl_down(unsigned long long var, unsigned int delta, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ long long __shfl_xor(long long var, int laneMask, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ long long __shfl_xor(long long var, int laneMask, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ unsigned long long __shfl_xor(unsigned long long var, int laneMask, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ unsigned long long __shfl_xor(unsigned long long var, int laneMask, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ double __shfl(double var, int srcLane, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ double __shfl(double var, int srcLane, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ double __shfl_up(double var, unsigned int delta, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ double __shfl_up(double var, unsigned int delta, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ double __shfl_down(double var, unsigned int delta, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ double __shfl_down(double var, unsigned int delta, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ double __shfl_xor(double var, int laneMask, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ double __shfl_xor(double var, int laneMask, int width=warpSize) __DEF_IF_HOST
 
 // long needs some help to choose between 32-bits and 64-bits
 
-__SM_30_INTRINSICS_DECL__ long __shfl(long var, int srcLane, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ long __shfl(long var, int srcLane, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ unsigned long __shfl(unsigned long var, int srcLane, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ unsigned long __shfl(unsigned long var, int srcLane, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ long __shfl_up(long var, unsigned int delta, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ long __shfl_up(long var, unsigned int delta, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ unsigned long __shfl_up(unsigned long var, unsigned int delta, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ unsigned long __shfl_up(unsigned long var, unsigned int delta, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ long __shfl_down(long var, unsigned int delta, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ long __shfl_down(long var, unsigned int delta, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ unsigned long __shfl_down(unsigned long var, unsigned int delta, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ unsigned long __shfl_down(unsigned long var, unsigned int delta, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ long __shfl_xor(long var, int laneMask, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ long __shfl_xor(long var, int laneMask, int width=warpSize) __DEF_IF_HOST
 
-__SM_30_INTRINSICS_DECL__ unsigned long __shfl_xor(unsigned long var, int laneMask, int width=warpSize); 
+__SM_30_INTRINSICS_DECL__ unsigned long __shfl_xor(unsigned long var, int laneMask, int width=warpSize) __DEF_IF_HOST
 
 #if defined(__local_warpSize)
 #undef warpSize
@@ -163,10 +170,11 @@ __SM_30_INTRINSICS_DECL__ unsigned long __shfl_xor(unsigned long var, int laneMa
 
 #endif /* __cplusplus && __CUDACC__ */
 
+#undef __DEF_IF_HOST
 #undef __SM_30_INTRINSICS_DECL__
 
-#if !defined(__CUDACC_RTC__)
+#if !defined(__CUDACC_RTC__) && defined(__CUDA_ARCH__)
 #include "sm_30_intrinsics.hpp"
-#endif /* !__CUDACC_RTC__ */
+#endif /* !__CUDACC_RTC__ && defined(__CUDA_ARCH__) */
 
 #endif /* !__SM_30_INTRINSICS_H__ */

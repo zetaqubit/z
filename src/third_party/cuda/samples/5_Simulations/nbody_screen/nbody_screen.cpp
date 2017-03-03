@@ -12,8 +12,6 @@
 
 #include <screen/screen.h>
 
-#define belch printf ("\n\nmade it here: %s:%d\n\n", __FILE__, __LINE__);
-
 #include <cstdlib>
 #include <cstdio>
 #include <algorithm>
@@ -607,7 +605,7 @@ void initGL(int *argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
-    // query the total no of display avaibale from QNX CAR2 screen
+    // query the total no of display available from QNX CAR2 screen
     int displayCount = 0;
     if (screen_get_context_property_iv(screen_context, SCREEN_PROPERTY_DISPLAY_COUNT, &displayCount))
     {
@@ -901,12 +899,6 @@ void key(unsigned char key, int /*x*/, int /*y*/)
         case 'Q':
             finalize();
 
-            // cudaDeviceReset causes the driver to clean up all state. While
-            // not mandatory in normal operation, it is good practice.  It is also
-            // needed to ensure correct operation when the application is being
-            // profiled. Calling cudaDeviceReset causes all profile data to be
-            // flushed before the application exits
-            cudaDeviceReset();
             exit(EXIT_SUCCESS);
             break;
 
@@ -1037,7 +1029,7 @@ main(int argc, char **argv)
         return 0;
     }
 
-    printf("Run \"nbody_screen -benchmark [-numbodies=<numBodies>]\" to measure perfomance.\n");
+    printf("Run \"nbody_screen -benchmark [-numbodies=<numBodies>]\" to measure performance.\n");
     showHelp();
 
     bFullscreen  = (checkCmdLineFlag(argc, (const char **) argv, "fullscreen") != 0);
@@ -1175,13 +1167,6 @@ main(int argc, char **argv)
                     if (!props.canMapHostMemory)
                     {
                         fprintf(stderr, "Device %d cannot map host memory!\n", devID);
-
-                        // cudaDeviceReset causes the driver to clean up all state. While
-                        // not mandatory in normal operation, it is good practice.  It is also
-                        // needed to ensure correct operation when the application is being
-                        // profiled. Calling cudaDeviceReset causes all profile data to be
-                        // flushed before the application exits
-                        cudaDeviceReset();
                         exit(EXIT_SUCCESS);
                     }
 
@@ -1207,13 +1192,6 @@ main(int argc, char **argv)
         if (fp64 && !bSupportDouble)
         {
             fprintf(stderr, "One or more of the requested devices does not support double precision floating-point\n");
-
-            // cudaDeviceReset causes the driver to clean up all state. While
-            // not mandatory in normal operation, it is good practice.  It is also
-            // needed to ensure correct operation when the application is being
-            // profiled. Calling cudaDeviceReset causes all profile data to be
-            // flushed before the application exits
-            cudaDeviceReset();
             exit(EXIT_SUCCESS);
         }
     }
@@ -1366,12 +1344,5 @@ main(int argc, char **argv)
     }
 
     finalize();
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(bTestResults ? EXIT_SUCCESS : EXIT_FAILURE);
 }

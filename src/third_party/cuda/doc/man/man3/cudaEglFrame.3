@@ -1,0 +1,74 @@
+.TH "cudaEglFrame" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+cudaEglFrame \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "\fBcudaEglColorFormat\fP \fBeglColorFormat\fP"
+.br
+.ti -1c
+.RI "\fBcudaEglFrameType\fP \fBframeType\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBplaneCount\fP"
+.br
+.ti -1c
+.RI "\fBcudaEglPlaneDesc\fP \fBplaneDesc\fP [CUDA_EGL_MAX_PLANES]"
+.br
+.ti -1c
+.RI "\fBcudaArray_t\fP \fBpArray\fP [CUDA_EGL_MAX_PLANES]"
+.br
+.ti -1c
+.RI "struct \fBcudaPitchedPtr\fP \fBpPitch\fP [CUDA_EGL_MAX_PLANES]"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+CUDA EGLFrame Descriptor - structure defining one frame of EGL.
+.PP
+Each frame may contain one or more planes depending on whether the surface is Multiplanar or not. Each plane of EGLFrame is represented by \fBcudaEglPlaneDesc\fP which is defined as: 
+.PP
+.nf
+ typedef struct cudaEglPlaneDesc_st {
+     unsigned int width;
+     unsigned int height;
+     unsigned int depth;
+     unsigned int pitch;
+     unsigned int numChannels;
+     struct cudaChannelFormatDesc channelDesc;
+     unsigned int reserved[4];
+ } cudaEglPlaneDesc;
+
+.fi
+.PP
+ 
+.SH "Field Documentation"
+.PP 
+.SS "\fBcudaEglColorFormat\fP \fBcudaEglFrame::eglColorFormat\fP"
+.PP
+CUDA EGL Color Format 
+.SS "\fBcudaEglFrameType\fP \fBcudaEglFrame::frameType\fP"
+.PP
+Array or Pitch 
+.SS "\fBcudaArray_t\fP \fBcudaEglFrame::pArray\fP[CUDA_EGL_MAX_PLANES]"
+.PP
+Array of CUDA arrays corresponding to each plane 
+.SS "unsigned int \fBcudaEglFrame::planeCount\fP"
+.PP
+Number of planes 
+.SS "\fBcudaEglPlaneDesc\fP \fBcudaEglFrame::planeDesc\fP[CUDA_EGL_MAX_PLANES]"
+.PP
+CUDA EGL Plane Descriptor \fBcudaEglPlaneDesc\fP 
+.SS "struct \fBcudaPitchedPtr\fP \fBcudaEglFrame::pPitch\fP[CUDA_EGL_MAX_PLANES]\fC [read]\fP"
+.PP
+Array of Pointers corresponding to each plane 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

@@ -377,7 +377,7 @@ bool shuffle_integral_image_test()
 
 int main(int argc, char *argv[])
 {
-    // Initialization.  The shuffle instrinsic is not available on SM < 3.0
+    // Initialization.  The shuffle intrinsic is not available on SM < 3.0
     // so waive the test if the hardware is not present.
     int cuda_device = 0;
 
@@ -409,11 +409,5 @@ int main(int argc, char *argv[])
 
     bTestResult = simpleTest & intTest;
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit((bTestResult) ? EXIT_SUCCESS : EXIT_FAILURE);
 }

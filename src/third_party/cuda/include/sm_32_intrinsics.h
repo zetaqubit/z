@@ -70,58 +70,175 @@
 #include "device_types.h"
 #include "host_defines.h"
 
+#ifndef __CUDA_ARCH__
+#define __DEF_IF_HOST { }
+#else  /* !__CUDA_ARCH__ */
+#define __DEF_IF_HOST ;
+#endif /* __CUDA_ARCH__ */
+
+
 /*******************************************************************************
 *                                                                              *
 *  Below are declarations of SM-3.5 intrinsics which are included as           *
 *  source (instead of being built in to the compiler)                          *
 *                                                                              *
 *******************************************************************************/
+/******************************************************************************
+ *                                   __ldg                                    *
+ ******************************************************************************/
+__SM_32_INTRINSICS_DECL__ long __ldg(const long *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned long __ldg(const unsigned long *ptr) __DEF_IF_HOST
 
-__SM_32_INTRINSICS_DECL__ long __ldg(const long *ptr); 
-__SM_32_INTRINSICS_DECL__ unsigned long __ldg(const unsigned long *ptr); 
+__SM_32_INTRINSICS_DECL__ char __ldg(const char *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ signed char __ldg(const signed char *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ short __ldg(const short *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ int __ldg(const int *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ long long __ldg(const long long *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ char2 __ldg(const char2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ char4 __ldg(const char4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ short2 __ldg(const short2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ short4 __ldg(const short4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ int2 __ldg(const int2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ int4 __ldg(const int4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ longlong2 __ldg(const longlong2 *ptr) __DEF_IF_HOST
 
+__SM_32_INTRINSICS_DECL__ unsigned char __ldg(const unsigned char *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned short __ldg(const unsigned short *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned int __ldg(const unsigned int *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned long long __ldg(const unsigned long long *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ uchar2 __ldg(const uchar2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ uchar4 __ldg(const uchar4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ ushort2 __ldg(const ushort2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ ushort4 __ldg(const ushort4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ uint2 __ldg(const uint2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ uint4 __ldg(const uint4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ ulonglong2 __ldg(const ulonglong2 *ptr) __DEF_IF_HOST
 
-__SM_32_INTRINSICS_DECL__ char __ldg(const char *ptr); 
-__SM_32_INTRINSICS_DECL__ short __ldg(const short *ptr); 
-__SM_32_INTRINSICS_DECL__ int __ldg(const int *ptr); 
-__SM_32_INTRINSICS_DECL__ long long __ldg(const long long *ptr); 
-__SM_32_INTRINSICS_DECL__ char2 __ldg(const char2 *ptr); 
-__SM_32_INTRINSICS_DECL__ char4 __ldg(const char4 *ptr); 
-__SM_32_INTRINSICS_DECL__ short2 __ldg(const short2 *ptr); 
-__SM_32_INTRINSICS_DECL__ short4 __ldg(const short4 *ptr); 
-__SM_32_INTRINSICS_DECL__ int2 __ldg(const int2 *ptr); 
-__SM_32_INTRINSICS_DECL__ int4 __ldg(const int4 *ptr); 
-__SM_32_INTRINSICS_DECL__ longlong2 __ldg(const longlong2 *ptr); 
+__SM_32_INTRINSICS_DECL__ float __ldg(const float *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ double __ldg(const double *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ float2 __ldg(const float2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ float4 __ldg(const float4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ double2 __ldg(const double2 *ptr) __DEF_IF_HOST
+/******************************************************************************
+ *                                   __ldcg                                   *
+ ******************************************************************************/
+__SM_32_INTRINSICS_DECL__ long __ldcg(const long *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned long __ldcg(const unsigned long *ptr) __DEF_IF_HOST
 
-__SM_32_INTRINSICS_DECL__ unsigned char __ldg(const unsigned char *ptr); 
-__SM_32_INTRINSICS_DECL__ unsigned short __ldg(const unsigned short *ptr); 
-__SM_32_INTRINSICS_DECL__ unsigned int __ldg(const unsigned int *ptr); 
-__SM_32_INTRINSICS_DECL__ unsigned long long __ldg(const unsigned long long *ptr); 
-__SM_32_INTRINSICS_DECL__ uchar2 __ldg(const uchar2 *ptr); 
-__SM_32_INTRINSICS_DECL__ uchar4 __ldg(const uchar4 *ptr); 
-__SM_32_INTRINSICS_DECL__ ushort2 __ldg(const ushort2 *ptr); 
-__SM_32_INTRINSICS_DECL__ ushort4 __ldg(const ushort4 *ptr); 
-__SM_32_INTRINSICS_DECL__ uint2 __ldg(const uint2 *ptr); 
-__SM_32_INTRINSICS_DECL__ uint4 __ldg(const uint4 *ptr); 
-__SM_32_INTRINSICS_DECL__ ulonglong2 __ldg(const ulonglong2 *ptr); 
+__SM_32_INTRINSICS_DECL__ char __ldcg(const char *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ signed char __ldcg(const signed char *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ short __ldcg(const short *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ int __ldcg(const int *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ long long __ldcg(const long long *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ char2 __ldcg(const char2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ char4 __ldcg(const char4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ short2 __ldcg(const short2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ short4 __ldcg(const short4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ int2 __ldcg(const int2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ int4 __ldcg(const int4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ longlong2 __ldcg(const longlong2 *ptr) __DEF_IF_HOST
 
-__SM_32_INTRINSICS_DECL__ float __ldg(const float *ptr); 
-__SM_32_INTRINSICS_DECL__ double __ldg(const double *ptr); 
-__SM_32_INTRINSICS_DECL__ float2 __ldg(const float2 *ptr); 
-__SM_32_INTRINSICS_DECL__ float4 __ldg(const float4 *ptr); 
-__SM_32_INTRINSICS_DECL__ double2 __ldg(const double2 *ptr); 
+__SM_32_INTRINSICS_DECL__ unsigned char __ldcg(const unsigned char *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned short __ldcg(const unsigned short *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned int __ldcg(const unsigned int *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned long long __ldcg(const unsigned long long *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ uchar2 __ldcg(const uchar2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ uchar4 __ldcg(const uchar4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ ushort2 __ldcg(const ushort2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ ushort4 __ldcg(const ushort4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ uint2 __ldcg(const uint2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ uint4 __ldcg(const uint4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ ulonglong2 __ldcg(const ulonglong2 *ptr) __DEF_IF_HOST
+
+__SM_32_INTRINSICS_DECL__ float __ldcg(const float *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ double __ldcg(const double *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ float2 __ldcg(const float2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ float4 __ldcg(const float4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ double2 __ldcg(const double2 *ptr) __DEF_IF_HOST
+/******************************************************************************
+ *                                   __ldca                                    *
+ ******************************************************************************/
+__SM_32_INTRINSICS_DECL__ long __ldca(const long *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned long __ldca(const unsigned long *ptr) __DEF_IF_HOST
+
+__SM_32_INTRINSICS_DECL__ char __ldca(const char *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ signed char __ldca(const signed char *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ short __ldca(const short *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ int __ldca(const int *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ long long __ldca(const long long *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ char2 __ldca(const char2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ char4 __ldca(const char4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ short2 __ldca(const short2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ short4 __ldca(const short4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ int2 __ldca(const int2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ int4 __ldca(const int4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ longlong2 __ldca(const longlong2 *ptr) __DEF_IF_HOST
+
+__SM_32_INTRINSICS_DECL__ unsigned char __ldca(const unsigned char *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned short __ldca(const unsigned short *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned int __ldca(const unsigned int *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned long long __ldca(const unsigned long long *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ uchar2 __ldca(const uchar2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ uchar4 __ldca(const uchar4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ ushort2 __ldca(const ushort2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ ushort4 __ldca(const ushort4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ uint2 __ldca(const uint2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ uint4 __ldca(const uint4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ ulonglong2 __ldca(const ulonglong2 *ptr) __DEF_IF_HOST
+
+__SM_32_INTRINSICS_DECL__ float __ldca(const float *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ double __ldca(const double *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ float2 __ldca(const float2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ float4 __ldca(const float4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ double2 __ldca(const double2 *ptr) __DEF_IF_HOST
+/******************************************************************************
+ *                                   __ldcs                                    *
+ ******************************************************************************/
+__SM_32_INTRINSICS_DECL__ long __ldcs(const long *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned long __ldcs(const unsigned long *ptr) __DEF_IF_HOST
+
+__SM_32_INTRINSICS_DECL__ char __ldcs(const char *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ signed char __ldcs(const signed char *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ short __ldcs(const short *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ int __ldcs(const int *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ long long __ldcs(const long long *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ char2 __ldcs(const char2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ char4 __ldcs(const char4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ short2 __ldcs(const short2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ short4 __ldcs(const short4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ int2 __ldcs(const int2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ int4 __ldcs(const int4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ longlong2 __ldcs(const longlong2 *ptr) __DEF_IF_HOST
+
+__SM_32_INTRINSICS_DECL__ unsigned char __ldcs(const unsigned char *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned short __ldcs(const unsigned short *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned int __ldcs(const unsigned int *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned long long __ldcs(const unsigned long long *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ uchar2 __ldcs(const uchar2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ uchar4 __ldcs(const uchar4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ ushort2 __ldcs(const ushort2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ ushort4 __ldcs(const ushort4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ uint2 __ldcs(const uint2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ uint4 __ldcs(const uint4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ ulonglong2 __ldcs(const ulonglong2 *ptr) __DEF_IF_HOST
+
+__SM_32_INTRINSICS_DECL__ float __ldcs(const float *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ double __ldcs(const double *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ float2 __ldcs(const float2 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ float4 __ldcs(const float4 *ptr) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ double2 __ldcs(const double2 *ptr) __DEF_IF_HOST
 
 
 // SHF is the "funnel shift" operation - an accelerated left/right shift with carry
 // operating on 64-bit quantities, which are concatenations of two 32-bit registers.
 
 // This shifts [b:a] left by "shift" bits, returning the most significant bits of the result.
-__SM_32_INTRINSICS_DECL__ unsigned int __funnelshift_l(unsigned int lo, unsigned int hi, unsigned int shift);
-__SM_32_INTRINSICS_DECL__ unsigned int __funnelshift_lc(unsigned int lo, unsigned int hi, unsigned int shift);
+__SM_32_INTRINSICS_DECL__ unsigned int __funnelshift_l(unsigned int lo, unsigned int hi, unsigned int shift) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned int __funnelshift_lc(unsigned int lo, unsigned int hi, unsigned int shift) __DEF_IF_HOST
 
 // This shifts [b:a] right by "shift" bits, returning the least significant bits of the result.
-__SM_32_INTRINSICS_DECL__ unsigned int __funnelshift_r(unsigned int lo, unsigned int hi, unsigned int shift);
-__SM_32_INTRINSICS_DECL__ unsigned int __funnelshift_rc(unsigned int lo, unsigned int hi, unsigned int shift);
+__SM_32_INTRINSICS_DECL__ unsigned int __funnelshift_r(unsigned int lo, unsigned int hi, unsigned int shift) __DEF_IF_HOST
+__SM_32_INTRINSICS_DECL__ unsigned int __funnelshift_rc(unsigned int lo, unsigned int hi, unsigned int shift) __DEF_IF_HOST
 
 
 #endif /* !__CUDA_ARCH__ || __CUDA_ARCH__ >= 320 */
@@ -130,8 +247,8 @@ __SM_32_INTRINSICS_DECL__ unsigned int __funnelshift_rc(unsigned int lo, unsigne
 
 #undef __SM_32_INTRINSICS_DECL__
 
-#if !defined(__CUDACC_RTC__)
+#if !defined(__CUDACC_RTC__) && defined(__CUDA_ARCH__)
 #include "sm_32_intrinsics.hpp"
-#endif /* !__CUDACC_RTC__ */
+#endif /* !__CUDACC_RTC__  && defined(__CUDA_ARCH__)  */
 
 #endif /* !__SM_32_INTRINSICS_H__ */

@@ -45,7 +45,7 @@
       <div id="site-content">
          <nav id="site-nav">
             <div class="category closed"><a href="../index.html" title="The root of the site.">CUDA Toolkit
-                  v7.0</a></div>
+                  v8.0</a></div>
             <div class="category"><a href="index.html" title="cuRAND">cuRAND</a></div>
             <ul>
                <li>
@@ -173,10 +173,10 @@
                   (<a href="../../pdf/CURAND_Library.pdf">PDF</a>)
                   -
                   
-                  v7.0
+                  v8.0
                   (<a href="https://developer.nvidia.com/cuda-toolkit-archive">older</a>)
                   -
-                  Last updated March 5, 2015
+                  Last updated January 12, 2017
                   -
                   <a href="mailto:cudatools@nvidia.com?subject=CUDA Toolkit Documentation Feedback: cuRAND">Send Feedback</a>
                   -
@@ -224,6 +224,8 @@
                      <dd class="shortdesc"><span></span><span class="desc">Get direction vectors for 32-bit quasirandom number generation. </span></dd>
                      <dt><span class="member_type">curandStatus_t CURANDAPI&nbsp;</span><span class="member_name"><a href="#group__HOST_1gf13191d9e79c73f77d87bb3462011cf1" shape="rect">curandGetDirectionVectors64</a> (  curandDirectionVectors64_t*<span>&nbsp;</span><span class="keyword keyword apiItemName">vectors</span>, curandDirectionVectorSet_t<span>&nbsp;</span><span class="keyword keyword apiItemName">set</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Get direction vectors for 64-bit quasirandom number generation. </span></dd>
+                     <dt><span class="member_type">curandStatus_t CURANDAPI&nbsp;</span><span class="member_name"><a href="#group__HOST_1g5cd01184c25d7982f27b57b5c4cfc7a5" shape="rect">curandGetProperty</a> (  libraryPropertyType<span>&nbsp;</span><span class="keyword keyword apiItemName">type</span>, int*<span>&nbsp;</span><span class="keyword keyword apiItemName">value</span> ) </span></dt>
+                     <dd class="shortdesc"><span></span><span class="desc">Return the value of the curand property. </span></dd>
                      <dt><span class="member_type">curandStatus_t CURANDAPI&nbsp;</span><span class="member_name"><a href="#group__HOST_1gc461ed26556febb8e6a401b608089b77" shape="rect">curandGetScrambleConstants32</a> (  unsigned int**<span>&nbsp;</span><span class="keyword keyword apiItemName">constants</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Get scramble constants for 32-bit scrambled Sobol' . </span></dd>
                      <dt><span class="member_type">curandStatus_t CURANDAPI&nbsp;</span><span class="member_name"><a href="#group__HOST_1gcb9e8febfe871bb5c9212d35f93fc9f7" shape="rect">curandGetScrambleConstants64</a> (  unsigned long long**<span>&nbsp;</span><span class="keyword keyword apiItemName">constants</span> ) </span></dt>
@@ -1618,6 +1620,43 @@
                                        <p class="p">CURAND_SCRAMBLED_DIRECTION_VECTORS_64_JOEKUO6 (20,000 dimensions)</p>
                                     </li>
                                  </ul>
+                              </p>
+                              <p class="p"></p>
+                              <p class="p"></p>
+                           </div>
+                        </dd>
+                        <dt class="description"><a name="group__HOST_1g5cd01184c25d7982f27b57b5c4cfc7a5" id="group__HOST_1g5cd01184c25d7982f27b57b5c4cfc7a5" shape="rect">
+                              <!-- --></a><span>curandStatus_t CURANDAPI curandGetProperty (  libraryPropertyType<span>&nbsp;</span><span class="keyword keyword apiItemName">type</span>, int*<span>&nbsp;</span><span class="keyword keyword apiItemName">value</span> ) </span></dt>
+                        <dd class="description">
+                           <div class="section">Return the value of the curand property. </div>
+                           <div class="section">
+                              <h6 class="parameter_header">
+                                 Parameters
+                                 
+                              </h6>
+                              <dl class="table-display-params">
+                                 <dt><tt class="code"><span class="keyword keyword apiItemName">type</span></tt></dt>
+                                 <dd>- CUDA library property </dd>
+                                 <dt><tt class="code"><span class="keyword keyword apiItemName">value</span></tt></dt>
+                                 <dd>- integer value for the requested property</dd>
+                              </dl>
+                           </div>
+                           <div class="section">
+                              <h6 class="return_header">Returns</h6>
+                              <p class="return">
+                                 <ul>
+                                    <li>CURAND_STATUS_SUCCESS if the property value was successfully returned 
+                                       
+                                    </li>
+                                    <li>CURAND_STATUS_OUT_OF_RANGE if the property type is not recognized 
+                                       
+                                    </li>
+                                 </ul>
+                              </p>
+                           </div>
+                           <div class="section">
+                              <h6 class="description_header">Description</h6>
+                              <p>Return in <tt class="ph tt code">*value</tt> the number for the property described by <tt class="ph tt code">type</tt> of the dynamically linked CURAND library.
                               </p>
                               <p class="p"></p>
                               <p class="p"></p>

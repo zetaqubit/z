@@ -1,5 +1,5 @@
 /*
- * Copyright 1993-2014 NVIDIA Corporation.  All rights reserved.
+ * Copyright 1993-2016 NVIDIA Corporation.  All rights reserved.
  *
  * NOTICE TO LICENSEE:
  *
@@ -82,6 +82,10 @@ inline __host__ __device__ void* operator new(size_t, void *p) { return p; }
 inline __host__ __device__ void* operator new[](size_t, void *p) { return p; }
 inline __host__ __device__ void operator delete(void*, void*) { }
 inline __host__ __device__ void operator delete[](void*, void*) { }
+# if __cplusplus >= 201402L || (defined(_MSC_VER) && _MSC_VER >= 1900)
+inline __host__ __device__ void operator delete(void*, size_t) { }
+inline __host__ __device__ void operator delete[](void*, size_t) { }
+#endif /* __cplusplus >= 201402L || (defined(_MSC_VER) && _MSC_VER >= 1900) */
 #else /* !__CUDACC_RTC__ */
 #ifndef __CUDA_INTERNAL_SKIP_CPP_HEADERS__
 #include <new>
@@ -102,9 +106,11 @@ extern         __host__ __device__ __cudart_builtin__ void*   __cdecl operator n
 extern         __host__ __device__ __cudart_builtin__ void*   __cdecl operator new[](STD size_t, void*) throw();
 extern         __host__ __device__ __cudart_builtin__ void    __cdecl operator delete(void*, void*) throw();
 extern         __host__ __device__ __cudart_builtin__ void    __cdecl operator delete[](void*, void*) throw();
+# if __cplusplus >= 201402L || (defined(_MSC_VER) && _MSC_VER >= 1900)
+extern         __host__ __device__ __cudart_builtin__ void    __cdecl operator delete(void*, STD size_t) throw();
+extern         __host__ __device__ __cudart_builtin__ void    __cdecl operator delete[](void*, STD size_t) throw();
+#endif /* __cplusplus >= 201402L || (defined(_MSC_VER) && _MSC_VER >= 1900) */
 #endif /* __CUDACC_RTC__ */
-
-#if __CUDA_ARCH__ >= 200
 
 #if !defined(__CUDACC_RTC__)
 #include <stdio.h>
@@ -116,9 +122,17 @@ namespace std {
 #endif
 extern "C"
 {
-extern _CRTIMP __host__ __device__ __device_builtin__ __cudart_builtin__ int     __cdecl printf(const char*, ...);
+extern
+#if !defined(_MSC_VER) || _MSC_VER < 1900
+_CRTIMP
+#endif
+__host__ __device__ __device_builtin__ __cudart_builtin__ int     __cdecl printf(const char*, ...);
 #if !defined(__CUDACC_RTC__)
-extern _CRTIMP __host__ __device__ __device_builtin__ __cudart_builtin__ int     __cdecl fprintf(FILE*, const char*, ...);
+extern
+#if !defined(_MSC_VER) || _MSC_VER < 1900
+_CRTIMP
+#endif
+__host__ __device__ __device_builtin__ __cudart_builtin__ int     __cdecl fprintf(FILE*, const char*, ...);
 #endif /* !__CUDACC_RTC__ */
 
 extern _CRTIMP __host__ __device__ __cudart_builtin__ void*   __cdecl malloc(size_t) __THROW;
@@ -177,14 +191,27 @@ inline  __host__ __device__  void* operator new(size_t in) {  return malloc(in);
 inline  __host__ __device__  void* operator new[](size_t in) { return malloc(in); }
 inline __host__ __device__  void operator delete(void* in) { return free(in); }
 inline __host__ __device__  void operator delete[](void* in) {  return free(in); }
+# if __cplusplus >= 201402L || (defined(_MSC_VER) && _MSC_VER >= 1900)
+inline __host__ __device__  void operator delete(void* in, size_t) { return free(in); }
+inline __host__ __device__  void operator delete[](void* in, size_t) {  return free(in); }
+#endif /* __cplusplus >= 201402L || (defined(_MSC_VER) && _MSC_VER >= 1900) */
 #else /* !__CUDACC_RTC__ */
 #if defined (__GNUC__)
+
+#define __NV_GLIBCXX_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__) 
 
 # if __cplusplus >= 201103L
 #define THROWBADALLOC 
 #else
+#if defined(__ANDROID__) && (defined(__BIONIC__) || __NV_GLIBCXX_VERSION < 40900)
+#define THROWBADALLOC
+#else
 #define THROWBADALLOC  throw(STD bad_alloc)
 #endif
+#endif
+#define __DELETE_THROW throw()
+
+#undef __NV_GLIBCXX_VERSION
 
 #else /* __GNUC__ */
 
@@ -196,12 +223,14 @@ extern         __host__ __device__ __cudart_builtin__ void*   __cdecl operator n
 extern         __host__ __device__ __cudart_builtin__ void*   __cdecl operator new[](STD size_t) THROWBADALLOC;
 extern         __host__ __device__ __cudart_builtin__ void    __cdecl operator delete(void*) throw();
 extern         __host__ __device__ __cudart_builtin__ void    __cdecl operator delete[](void*) throw();
+# if __cplusplus >= 201402L || (defined(_MSC_VER) && _MSC_VER >= 1900)
+extern         __host__ __device__ __cudart_builtin__ void    __cdecl operator delete(void*, STD size_t) throw();
+extern         __host__ __device__ __cudart_builtin__ void    __cdecl operator delete[](void*, STD size_t) throw();
+#endif /* __cplusplus >= 201402L || (defined(_MSC_VER) && _MSC_VER >= 1900) */
 
 #undef THROWBADALLOC
 #undef STD
 #endif /* __CUDACC_RTC__ */
-
-#endif /* __CUDA_ARCH__ >= 200 */
 
 #endif /* __CUDA_ARCH__ */
 
@@ -212,7 +241,8 @@ extern         __host__ __device__ __cudart_builtin__ void    __cdecl operator d
 *                                                                              *
 *                                                                              *
 *******************************************************************************/
-#if defined(__CUDABE__) && (__CUDA_ARCH__ >= 350)
+
+#if !defined(__CUDACC_INTEGRATED__) && (defined(__CUDABE__) || defined(__CUDACC_RTC__)) && (__CUDA_ARCH__ >= 350)
 #include "cuda_device_runtime_api.h"
 #endif
 

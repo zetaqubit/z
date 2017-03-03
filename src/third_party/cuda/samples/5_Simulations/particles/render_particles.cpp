@@ -9,11 +9,15 @@
  *
  */
 
-#include <GL/glew.h>
 
 #include <math.h>
 #include <assert.h>
 #include <stdio.h>
+
+// OpenGL Graphics includes
+#define HELPERGL_EXTERN_GL_FUNC_IMPLEMENTATION
+#include <helper_gl.h>
+
 
 #include "render_particles.h"
 #include "shaders.h"
@@ -69,20 +73,20 @@ void ParticleRenderer::_drawPoints()
     }
     else
     {
-        glBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
         glVertexPointer(4, GL_FLOAT, 0, 0);
         glEnableClientState(GL_VERTEX_ARRAY);
 
         if (m_colorVBO)
         {
-            glBindBufferARB(GL_ARRAY_BUFFER_ARB, m_colorVBO);
+            glBindBuffer(GL_ARRAY_BUFFER, m_colorVBO);
             glColorPointer(4, GL_FLOAT, 0, 0);
             glEnableClientState(GL_COLOR_ARRAY);
         }
 
         glDrawArrays(GL_POINTS, 0, m_numParticles);
 
-        glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_COLOR_ARRAY);
     }
@@ -102,7 +106,7 @@ void ParticleRenderer::display(DisplayMode mode /* = PARTICLE_POINTS */)
         case PARTICLE_SPHERES:
             glEnable(GL_POINT_SPRITE_ARB);
             glTexEnvi(GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE);
-            glEnable(GL_VERTEX_PROGRAM_POINT_SIZE_NV);
+            glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
             glDepthMask(GL_TRUE);
             glEnable(GL_DEPTH_TEST);
 

@@ -207,7 +207,7 @@ void ParticleRenderer::display()
 
     glUseProgram(m_programSprites);
 
-    // Set modelview and projection matricies
+    // Set modelview and projection matrices
     GLint h_ModelViewMatrix = glGetUniformLocation(m_programSprites, "modelview");
     GLint h_ProjectionMatrix = glGetUniformLocation(m_programSprites, "projection");
     matrix4 modelview;

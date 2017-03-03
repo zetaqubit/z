@@ -45,7 +45,7 @@
       <div id="site-content">
          <nav id="site-nav">
             <div class="category closed"><a href="../index.html" title="The root of the site.">CUDA Toolkit
-                  v7.0</a></div>
+                  v8.0</a></div>
             <div class="category"><a href="index.html" title="CUDA Math API">CUDA Math API</a></div>
             <ul>
                <li>
@@ -75,6 +75,32 @@
                      <li>
                         <div class="section-link"><a href="group__CUDA__MATH__INTRINSIC__SIMD.html#group__CUDA__MATH__INTRINSIC__SIMD">1.8.&nbsp;SIMD Intrinsics</a></div>
                      </li>
+                     <li>
+                        <div class="section-link"><a href="group__CUDA__MATH__INTRINSIC__HALF.html#group__CUDA__MATH__INTRINSIC__HALF">1.9.&nbsp;Half Precision Intrinsics</a></div>
+                        <ul>
+                           <li>
+                              <div class="section-link"><a href="group__CUDA__MATH____HALF__ARITHMETIC.html#group__CUDA__MATH____HALF__ARITHMETIC">1.9.1.&nbsp;Half Arithmetic Functions</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="group__CUDA__MATH____HALF2__ARITHMETIC.html#group__CUDA__MATH____HALF2__ARITHMETIC">1.9.2.&nbsp;Half2 Arithmetic Functions</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="group__CUDA__MATH____HALF__COMPARISON.html#group__CUDA__MATH____HALF__COMPARISON">1.9.3.&nbsp;Half Comparison Functions</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="group__CUDA__MATH____HALF2__COMPARISON.html#group__CUDA__MATH____HALF2__COMPARISON">1.9.4.&nbsp;Half2 Comparison Functions</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="group__CUDA__MATH____HALF__MISC.html#group__CUDA__MATH____HALF__MISC">1.9.5.&nbsp;Half Precision Conversion And Data Movement</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="group__CUDA__MATH____HALF__FUNCTIONS.html#group__CUDA__MATH____HALF__FUNCTIONS">1.9.6.&nbsp;Half Math Functions</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="group__CUDA__MATH____HALF2__FUNCTIONS.html#group__CUDA__MATH____HALF2__FUNCTIONS">1.9.7.&nbsp;Half2 Math Functions</a></div>
+                           </li>
+                        </ul>
+                     </li>
                   </ul>
                </li>
                <li>
@@ -102,10 +128,10 @@
                   (<a href="../../pdf/CUDA_Math_API.pdf">PDF</a>)
                   -
                   
-                  v7.0
+                  v8.0
                   (<a href="https://developer.nvidia.com/cuda-toolkit-archive">older</a>)
                   -
-                  Last updated March 5, 2015
+                  Last updated January 12, 2017
                   -
                   <a href="mailto:cudatools@nvidia.com?subject=CUDA Toolkit Documentation Feedback: CUDA Math API">Send Feedback</a>
                   -
@@ -119,35 +145,50 @@
                   </div>
                   <h3 class="fake_sectiontitle member_header">Functions</h3>
                   <dl class="members">
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ unsigned int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g5e61374d39b255997b715fa1d3daa364" shape="rect">__brev</a> (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_long_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ unsigned int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1gc84ef1115946870edbcebddc0d539c5a" shape="rect">__brev</a> (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Reverse the bit order of a 32 bit unsigned integer. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ unsigned long long int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1gbfba3945c579b6a7699fbf6ac65026c8" shape="rect">__brevll</a> (  unsigned long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_long_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ unsigned long long int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g554354459699a11acfb072cf536974cd" shape="rect">__brevll</a> (  unsigned long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Reverse the bit order of a 64 bit unsigned integer. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ unsigned int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1gfb068af572d0cdcede88153fbebf9667" shape="rect">__byte_perm</a> (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">s</span> ) </span></dt>
+                     <dt><span class="member_long_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ unsigned int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g0b8b8156fe619205bf8d65acd8f29131" shape="rect">__byte_perm</a> (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">s</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Return selected bytes from two 32 bit unsigned integers. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1gfa1e5928e5c2c36853947b39d5e485f9" shape="rect">__clz</a> (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ int&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__INT_1gd45548f57952ed410fa5d824984f16d0" shape="rect">__clz</a> (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Return the number of consecutive high-order zero bits in a 32 bit integer. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1ge9667943ae6073b411e1054164a940d1" shape="rect">__clzll</a> (  long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ int&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g88ff76484edc65cafbef80e71a1daa53" shape="rect">__clzll</a> (  long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Count the number of consecutive high-order zero bits in a 64 bit integer. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g93ce6e78386553cd2dd6200c485b58c1" shape="rect">__ffs</a> (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ int&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__INT_1gaf1eb22243e29e0b7222adee8ae7d4e4" shape="rect">__ffs</a> (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Find the position of the least significant bit set to 1 in a 32 bit integer. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1ga15360a3bbb2f7d5e79caa0b8007467a" shape="rect">__ffsll</a> (  long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ int&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__INT_1gc42b0f1b68e9db038015d40a18d305df" shape="rect">__ffsll</a> (  long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Find the position of the least significant bit set to 1 in a 64 bit integer. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g9391e00382d0394a27217246b542bfdc" shape="rect">__hadd</a> (  int , int  ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ int&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g6acbd5fd1fef78022471b58852e495da" shape="rect">__hadd</a> (  int , int  ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute average of signed input arguments, avoiding overflow in the intermediate sum. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1gf003d51b33ca7075bb54bd459ee8a071" shape="rect">__mul24</a> (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ int&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__INT_1gffff4cfc8958ec96329c11a797146573" shape="rect">__mul24</a> (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the least significant 32 bits of the product of the least significant 24 bits of two integers. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ long long int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1gb1cc789be8b4b4a4cc8b6262c3587031" shape="rect">__mul64hi</a> (  long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_long_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ long long int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g29b1d773d9393278aae147362827403b" shape="rect">__mul64hi</a> (  long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the most significant 64 bits of the product of the two 64 bit integers. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g2d7486f94fc266ec1dd403b265e118a5" shape="rect">__mulhi</a> (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ int&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__INT_1gc3afa952add7894d6dda0931476d4882" shape="rect">__mulhi</a> (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the most significant 32 bits of the product of the two 32 bit integers. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g01a673dffc6cbdbd73759d498b67e684" shape="rect">__popc</a> (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ int&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g43c9c7d2b9ebf202ff1ef5769989be46" shape="rect">__popc</a> (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Count the number of bits that are set to 1 in a 32 bit integer. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g50693a7ed7644d864517d5b1b15e5ffd" shape="rect">__popcll</a> (  unsigned long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ int&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g6bb2f1cc3495f3f2ebe1df6ec52b3aec" shape="rect">__popcll</a> (  unsigned long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Count the number of bits that are set to 1 in a 64 bit integer. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g5b30d589dbcd2b39fdc2a21f2ab3af04" shape="rect">__rhadd</a> (  int , int  ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ int&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__INT_1gff2e17eb6a182d3f7547da33fc80042d" shape="rect">__rhadd</a> (  int , int  ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute rounded average of signed input arguments, avoiding overflow in the intermediate sum. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ unsigned int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g49d8c18bf097ec74bdfed66978256a3b" shape="rect">__sad</a> (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
+                     <dt><span class="member_long_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ unsigned int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1ge955ffc59084b5600dd5d223fb26beb0" shape="rect">__sad</a> (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate   
                            
                            
@@ -166,17 +207,23 @@
                            </math>
                            
                            , the sum of absolute difference. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ unsigned int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g0ec82e85a84bd8023704c6338a82c4e7" shape="rect">__uhadd</a> (  unsigned<span>&nbsp;</span><span class="keyword keyword apiItemName">int</span>, unsigned<span>&nbsp;</span><span class="keyword keyword apiItemName">int</span> ) </span></dt>
+                     <dt><span class="member_long_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ unsigned int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g3c4c147e4533393e5a9822364ada9986" shape="rect">__uhadd</a> (  unsigned<span>&nbsp;</span><span class="keyword keyword apiItemName">int</span>, unsigned<span>&nbsp;</span><span class="keyword keyword apiItemName">int</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute average of unsigned input arguments, avoiding overflow in the intermediate sum. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ unsigned int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g8f68c007c4186ddfc168d24f4c9eaee6" shape="rect">__umul24</a> (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_long_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ unsigned int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g2b1446551e854d164e3d4aae25f94a3f" shape="rect">__umul24</a> (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the least significant 32 bits of the product of the least significant 24 bits of two unsigned integers. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ unsigned long long int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1ge5cda6b32914927300eb0036eec8f4af" shape="rect">__umul64hi</a> (  unsigned long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_long_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ unsigned long long int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1gefaf2a1bb2ad8986b2c248b74461e12e" shape="rect">__umul64hi</a> (  unsigned long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the most significant 64 bits of the product of the two 64 unsigned bit integers. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ unsigned int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g9fdaf10ee3c3082cf8ea462466f5bb86" shape="rect">__umulhi</a> (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_long_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ unsigned int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g2ea43def3122a1bfb3eb8271a59f4470" shape="rect">__umulhi</a> (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the most significant 32 bits of the product of the two 32 bit unsigned integers. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ unsigned int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1gc02d79a3a5650cc0f5a569333f5f5476" shape="rect">__urhadd</a> (  unsigned<span>&nbsp;</span><span class="keyword keyword apiItemName">int</span>, unsigned<span>&nbsp;</span><span class="keyword keyword apiItemName">int</span> ) </span></dt>
+                     <dt><span class="member_long_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ unsigned int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g8de7a191b520ac2ff5d3836d68aa3481" shape="rect">__urhadd</a> (  unsigned<span>&nbsp;</span><span class="keyword keyword apiItemName">int</span>, unsigned<span>&nbsp;</span><span class="keyword keyword apiItemName">int</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute rounded average of unsigned input arguments, avoiding overflow in the intermediate sum. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ unsigned int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g049f8c947ff1ae8f87e486b6b0d5cec7" shape="rect">__usad</a> (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
+                     <dt><span class="member_long_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ unsigned int&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__INT_1g58e819af40fc4a3e9e9c3a4c13cbd0e2" shape="rect">__usad</a> (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate   
                            
                            
@@ -199,8 +246,9 @@
                   <div class="description">
                      <h3 class="sectiontitle">Functions</h3>
                      <dl class="description">
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g5e61374d39b255997b715fa1d3daa364" id="group__CUDA__MATH__INTRINSIC__INT_1g5e61374d39b255997b715fa1d3daa364" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ unsigned int __brev (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1gc84ef1115946870edbcebddc0d539c5a" id="group__CUDA__MATH__INTRINSIC__INT_1gc84ef1115946870edbcebddc0d539c5a" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ unsigned int __brev (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Reverse the bit order of a 32 bit unsigned integer. </div>
                            <div class="section">
@@ -215,8 +263,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1gbfba3945c579b6a7699fbf6ac65026c8" id="group__CUDA__MATH__INTRINSIC__INT_1gbfba3945c579b6a7699fbf6ac65026c8" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ unsigned long long int __brevll (  unsigned long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g554354459699a11acfb072cf536974cd" id="group__CUDA__MATH__INTRINSIC__INT_1g554354459699a11acfb072cf536974cd" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ unsigned long long int __brevll (  unsigned long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Reverse the bit order of a 64 bit unsigned integer. </div>
                            <div class="section">
@@ -231,8 +280,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1gfb068af572d0cdcede88153fbebf9667" id="group__CUDA__MATH__INTRINSIC__INT_1gfb068af572d0cdcede88153fbebf9667" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ unsigned int __byte_perm (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">s</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g0b8b8156fe619205bf8d65acd8f29131" id="group__CUDA__MATH__INTRINSIC__INT_1g0b8b8156fe619205bf8d65acd8f29131" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ unsigned int __byte_perm (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">s</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Return selected bytes from two 32 bit unsigned integers. </div>
                            <div class="section">
@@ -258,8 +308,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1gfa1e5928e5c2c36853947b39d5e485f9" id="group__CUDA__MATH__INTRINSIC__INT_1gfa1e5928e5c2c36853947b39d5e485f9" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ int __clz (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1gd45548f57952ed410fa5d824984f16d0" id="group__CUDA__MATH__INTRINSIC__INT_1gd45548f57952ed410fa5d824984f16d0" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ int __clz (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Return the number of consecutive high-order zero bits in a 32 bit integer. </div>
                            <div class="section">
@@ -273,8 +324,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1ge9667943ae6073b411e1054164a940d1" id="group__CUDA__MATH__INTRINSIC__INT_1ge9667943ae6073b411e1054164a940d1" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ int __clzll (  long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g88ff76484edc65cafbef80e71a1daa53" id="group__CUDA__MATH__INTRINSIC__INT_1g88ff76484edc65cafbef80e71a1daa53" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ int __clzll (  long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Count the number of consecutive high-order zero bits in a 64 bit integer. </div>
                            <div class="section">
@@ -288,8 +340,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g93ce6e78386553cd2dd6200c485b58c1" id="group__CUDA__MATH__INTRINSIC__INT_1g93ce6e78386553cd2dd6200c485b58c1" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ int __ffs (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1gaf1eb22243e29e0b7222adee8ae7d4e4" id="group__CUDA__MATH__INTRINSIC__INT_1gaf1eb22243e29e0b7222adee8ae7d4e4" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ int __ffs (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Find the position of the least significant bit set to 1 in a 32 bit integer. </div>
                            <div class="section">
@@ -308,8 +361,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1ga15360a3bbb2f7d5e79caa0b8007467a" id="group__CUDA__MATH__INTRINSIC__INT_1ga15360a3bbb2f7d5e79caa0b8007467a" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ int __ffsll (  long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1gc42b0f1b68e9db038015d40a18d305df" id="group__CUDA__MATH__INTRINSIC__INT_1gc42b0f1b68e9db038015d40a18d305df" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ int __ffsll (  long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Find the position of the least significant bit set to 1 in a 64 bit integer. </div>
                            <div class="section">
@@ -328,8 +382,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g9391e00382d0394a27217246b542bfdc" id="group__CUDA__MATH__INTRINSIC__INT_1g9391e00382d0394a27217246b542bfdc" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ int __hadd (  int , int  ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g6acbd5fd1fef78022471b58852e495da" id="group__CUDA__MATH__INTRINSIC__INT_1g6acbd5fd1fef78022471b58852e495da" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ int __hadd (  int , int  ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute average of signed input arguments, avoiding overflow in the intermediate sum. </div>
                            <div class="section">
@@ -343,8 +398,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1gf003d51b33ca7075bb54bd459ee8a071" id="group__CUDA__MATH__INTRINSIC__INT_1gf003d51b33ca7075bb54bd459ee8a071" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ int __mul24 (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1gffff4cfc8958ec96329c11a797146573" id="group__CUDA__MATH__INTRINSIC__INT_1gffff4cfc8958ec96329c11a797146573" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ int __mul24 (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the least significant 32 bits of the product of the least significant 24 bits of two integers. </div>
                            <div class="section">
@@ -359,8 +415,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1gb1cc789be8b4b4a4cc8b6262c3587031" id="group__CUDA__MATH__INTRINSIC__INT_1gb1cc789be8b4b4a4cc8b6262c3587031" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ long long int __mul64hi (  long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g29b1d773d9393278aae147362827403b" id="group__CUDA__MATH__INTRINSIC__INT_1g29b1d773d9393278aae147362827403b" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ long long int __mul64hi (  long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the most significant 64 bits of the product of the two 64 bit integers. </div>
                            <div class="section">
@@ -375,8 +432,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g2d7486f94fc266ec1dd403b265e118a5" id="group__CUDA__MATH__INTRINSIC__INT_1g2d7486f94fc266ec1dd403b265e118a5" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ int __mulhi (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1gc3afa952add7894d6dda0931476d4882" id="group__CUDA__MATH__INTRINSIC__INT_1gc3afa952add7894d6dda0931476d4882" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ int __mulhi (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the most significant 32 bits of the product of the two 32 bit integers. </div>
                            <div class="section">
@@ -391,8 +449,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g01a673dffc6cbdbd73759d498b67e684" id="group__CUDA__MATH__INTRINSIC__INT_1g01a673dffc6cbdbd73759d498b67e684" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ int __popc (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g43c9c7d2b9ebf202ff1ef5769989be46" id="group__CUDA__MATH__INTRINSIC__INT_1g43c9c7d2b9ebf202ff1ef5769989be46" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ int __popc (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Count the number of bits that are set to 1 in a 32 bit integer. </div>
                            <div class="section">
@@ -406,8 +465,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g50693a7ed7644d864517d5b1b15e5ffd" id="group__CUDA__MATH__INTRINSIC__INT_1g50693a7ed7644d864517d5b1b15e5ffd" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ int __popcll (  unsigned long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g6bb2f1cc3495f3f2ebe1df6ec52b3aec" id="group__CUDA__MATH__INTRINSIC__INT_1g6bb2f1cc3495f3f2ebe1df6ec52b3aec" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ int __popcll (  unsigned long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Count the number of bits that are set to 1 in a 64 bit integer. </div>
                            <div class="section">
@@ -421,8 +481,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g5b30d589dbcd2b39fdc2a21f2ab3af04" id="group__CUDA__MATH__INTRINSIC__INT_1g5b30d589dbcd2b39fdc2a21f2ab3af04" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ int __rhadd (  int , int  ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1gff2e17eb6a182d3f7547da33fc80042d" id="group__CUDA__MATH__INTRINSIC__INT_1gff2e17eb6a182d3f7547da33fc80042d" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ int __rhadd (  int , int  ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute rounded average of signed input arguments, avoiding overflow in the intermediate sum. </div>
                            <div class="section">
@@ -436,8 +497,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g49d8c18bf097ec74bdfed66978256a3b" id="group__CUDA__MATH__INTRINSIC__INT_1g49d8c18bf097ec74bdfed66978256a3b" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ unsigned int __sad (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1ge955ffc59084b5600dd5d223fb26beb0" id="group__CUDA__MATH__INTRINSIC__INT_1ge955ffc59084b5600dd5d223fb26beb0" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ unsigned int __sad (  int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate   
                               
@@ -505,8 +567,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g0ec82e85a84bd8023704c6338a82c4e7" id="group__CUDA__MATH__INTRINSIC__INT_1g0ec82e85a84bd8023704c6338a82c4e7" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ unsigned int __uhadd (  unsigned<span>&nbsp;</span><span class="keyword keyword apiItemName">int</span>, unsigned<span>&nbsp;</span><span class="keyword keyword apiItemName">int</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g3c4c147e4533393e5a9822364ada9986" id="group__CUDA__MATH__INTRINSIC__INT_1g3c4c147e4533393e5a9822364ada9986" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ unsigned int __uhadd (  unsigned<span>&nbsp;</span><span class="keyword keyword apiItemName">int</span>, unsigned<span>&nbsp;</span><span class="keyword keyword apiItemName">int</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute average of unsigned input arguments, avoiding overflow in the intermediate sum. </div>
                            <div class="section">
@@ -520,8 +583,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g8f68c007c4186ddfc168d24f4c9eaee6" id="group__CUDA__MATH__INTRINSIC__INT_1g8f68c007c4186ddfc168d24f4c9eaee6" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ unsigned int __umul24 (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g2b1446551e854d164e3d4aae25f94a3f" id="group__CUDA__MATH__INTRINSIC__INT_1g2b1446551e854d164e3d4aae25f94a3f" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ unsigned int __umul24 (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the least significant 32 bits of the product of the least significant 24 bits of two unsigned integers. </div>
                            <div class="section">
@@ -536,8 +600,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1ge5cda6b32914927300eb0036eec8f4af" id="group__CUDA__MATH__INTRINSIC__INT_1ge5cda6b32914927300eb0036eec8f4af" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ unsigned long long int __umul64hi (  unsigned long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1gefaf2a1bb2ad8986b2c248b74461e12e" id="group__CUDA__MATH__INTRINSIC__INT_1gefaf2a1bb2ad8986b2c248b74461e12e" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ unsigned long long int __umul64hi (  unsigned long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned long long int<span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the most significant 64 bits of the product of the two 64 unsigned bit integers. </div>
                            <div class="section">
@@ -552,8 +617,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g9fdaf10ee3c3082cf8ea462466f5bb86" id="group__CUDA__MATH__INTRINSIC__INT_1g9fdaf10ee3c3082cf8ea462466f5bb86" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ unsigned int __umulhi (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g2ea43def3122a1bfb3eb8271a59f4470" id="group__CUDA__MATH__INTRINSIC__INT_1g2ea43def3122a1bfb3eb8271a59f4470" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ unsigned int __umulhi (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the most significant 32 bits of the product of the two 32 bit unsigned integers. </div>
                            <div class="section">
@@ -568,8 +634,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1gc02d79a3a5650cc0f5a569333f5f5476" id="group__CUDA__MATH__INTRINSIC__INT_1gc02d79a3a5650cc0f5a569333f5f5476" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ unsigned int __urhadd (  unsigned<span>&nbsp;</span><span class="keyword keyword apiItemName">int</span>, unsigned<span>&nbsp;</span><span class="keyword keyword apiItemName">int</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g8de7a191b520ac2ff5d3836d68aa3481" id="group__CUDA__MATH__INTRINSIC__INT_1g8de7a191b520ac2ff5d3836d68aa3481" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ unsigned int __urhadd (  unsigned<span>&nbsp;</span><span class="keyword keyword apiItemName">int</span>, unsigned<span>&nbsp;</span><span class="keyword keyword apiItemName">int</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute rounded average of unsigned input arguments, avoiding overflow in the intermediate sum. </div>
                            <div class="section">
@@ -583,8 +650,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g049f8c947ff1ae8f87e486b6b0d5cec7" id="group__CUDA__MATH__INTRINSIC__INT_1g049f8c947ff1ae8f87e486b6b0d5cec7" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ unsigned int __usad (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__INT_1g58e819af40fc4a3e9e9c3a4c13cbd0e2" id="group__CUDA__MATH__INTRINSIC__INT_1g58e819af40fc4a3e9e9c3a4c13cbd0e2" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ unsigned int __usad (  unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, unsigned int <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate   
                               

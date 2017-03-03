@@ -58,7 +58,7 @@ class VideoParser
         // Copy constructor. Don't implement.
         VideoParser(const VideoParser &);
 
-        // Assignement operator. Don't implement.
+        // Assignment operator. Don't implement.
         void
         operator= (const VideoParser &);
 

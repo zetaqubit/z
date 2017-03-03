@@ -1,4 +1,4 @@
-Sample: Simple Texture
+Sample: simpleTexture
 Minimum spec: SM 2.0
 
 Simple example that demonstrates use of Textures in CUDA.

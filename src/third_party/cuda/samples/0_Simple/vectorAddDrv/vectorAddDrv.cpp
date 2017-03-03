@@ -590,6 +590,7 @@ int main(int argc, char **argv)
     }
 
     printf("%s\n", (i==N) ? "Result = PASS" : "Result = FAIL");
+
     exit((i==N) ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 

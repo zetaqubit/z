@@ -70,7 +70,6 @@ int main(int argc, char **argv)
     if (((deviceProp.major << 4) + deviceProp.minor) < 0x20)
     {
         fprintf(stderr, "quasirandomGenerator requires Compute Capability of SM 2.0 or higher to run.\n");
-        cudaDeviceReset();
         exit(EXIT_WAIVED);
     }
 
@@ -172,11 +171,5 @@ int main(int argc, char **argv)
     free(h_OutputGPU);
     checkCudaErrors(cudaFree(d_Output));
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(L1norm < 1e-6 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

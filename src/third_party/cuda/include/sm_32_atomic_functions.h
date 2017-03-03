@@ -69,6 +69,14 @@
 #include "builtin_types.h"
 #include "host_defines.h"
 
+#ifndef __CUDA_ARCH__
+#define __DEF_IF_HOST { }
+#else  /* !__CUDA_ARCH__ */
+#define __DEF_IF_HOST ;
+#endif /* __CUDA_ARCH__ */
+
+
+#ifdef __CUDA_ARCH__
 #if !defined(__CUDACC_RTC__)
 extern "C"
 {
@@ -83,6 +91,7 @@ extern __device__ __device_builtin__ unsigned long long __ullAtomicXor(unsigned 
 #if !defined(__CUDACC_RTC__)
 }
 #endif /* !__CUDACC_RTC__ */
+#endif /* __CUDA_ARCH__ */
 
 /*******************************************************************************
 *                                                                              *
@@ -90,28 +99,29 @@ extern __device__ __device_builtin__ unsigned long long __ullAtomicXor(unsigned 
 *                                                                              *
 *******************************************************************************/
 
-__SM_32_ATOMIC_FUNCTIONS_DECL__ long long atomicMin(long long *address, long long val);
+__SM_32_ATOMIC_FUNCTIONS_DECL__ long long atomicMin(long long *address, long long val) __DEF_IF_HOST
 
-__SM_32_ATOMIC_FUNCTIONS_DECL__ long long atomicMax(long long *address, long long val);
+__SM_32_ATOMIC_FUNCTIONS_DECL__ long long atomicMax(long long *address, long long val) __DEF_IF_HOST
 
-__SM_32_ATOMIC_FUNCTIONS_DECL__ unsigned long long atomicMin(unsigned long long *address, unsigned long long val);
+__SM_32_ATOMIC_FUNCTIONS_DECL__ unsigned long long atomicMin(unsigned long long *address, unsigned long long val) __DEF_IF_HOST
 
-__SM_32_ATOMIC_FUNCTIONS_DECL__ unsigned long long atomicMax(unsigned long long *address, unsigned long long val);
+__SM_32_ATOMIC_FUNCTIONS_DECL__ unsigned long long atomicMax(unsigned long long *address, unsigned long long val) __DEF_IF_HOST
 
-__SM_32_ATOMIC_FUNCTIONS_DECL__ unsigned long long atomicAnd(unsigned long long *address, unsigned long long val);
+__SM_32_ATOMIC_FUNCTIONS_DECL__ unsigned long long atomicAnd(unsigned long long *address, unsigned long long val) __DEF_IF_HOST
 
-__SM_32_ATOMIC_FUNCTIONS_DECL__ unsigned long long atomicOr(unsigned long long *address, unsigned long long val);
+__SM_32_ATOMIC_FUNCTIONS_DECL__ unsigned long long atomicOr(unsigned long long *address, unsigned long long val) __DEF_IF_HOST
 
-__SM_32_ATOMIC_FUNCTIONS_DECL__ unsigned long long atomicXor(unsigned long long *address, unsigned long long val);
+__SM_32_ATOMIC_FUNCTIONS_DECL__ unsigned long long atomicXor(unsigned long long *address, unsigned long long val) __DEF_IF_HOST
 
 #endif /* !__CUDA_ARCH__ || __CUDA_ARCH__ >= 320 */
 
 #endif /* __cplusplus && __CUDACC__ */
 
+#undef __DEF_IF_HOST
 #undef __SM_32_ATOMIC_FUNCTIONS_DECL__
 
-#if !defined(__CUDACC_RTC__)
+#if !defined(__CUDACC_RTC__) && defined(__CUDA_ARCH__)
 #include "sm_32_atomic_functions.hpp"
-#endif /* !__CUDACC_RTC__ */
+#endif /* !__CUDACC_RTC__  && defined(__CUDA_ARCH__) */
 
 #endif /* !__SM_32_ATOMIC_FUNCTIONS_H__ */

@@ -1,5 +1,5 @@
 /*
-* Copyright 2009-2012  NVIDIA Corporation.  All rights reserved.
+* Copyright 2009-2016  NVIDIA Corporation.  All rights reserved.
 *
 * NOTICE TO USER:
 *
@@ -50,19 +50,55 @@
 #ifndef NVTOOLSEXT_META_H_
 #define NVTOOLSEXT_META_H_
 
+
+
+#ifdef _MSC_VER
+#  define NVTX_PACK( __Declaration__ ) __pragma( pack(push, 1) ) __Declaration__ __pragma( pack(pop) )
+#elif (defined(__GNUC__) || defined(__clang__))
+#  define NVTX_PACK( __Declaration__ ) __Declaration__ __attribute__((__packed__))
+#endif
+
+
 /* Structs defining parameters for NVTX API functions */
 
-struct NvtxMarkEx       { const nvtxEventAttributes_t* eventAttrib; };
-struct NvtxMarkA        { const char* message;                      };
-struct NvtxMarkW        { const wchar_t* message;                   };
-struct NvtxRangeStartEx { const nvtxEventAttributes_t* eventAttrib; };
-struct NvtxRangeStartA  { const char* message;                      };
-struct NvtxRangeStartW  { const wchar_t* message;                   };
-struct NvtxRangeEnd     { nvtxRangeId_t id;                         };
-struct NvtxRangePushEx  { const nvtxEventAttributes_t* eventAttrib; };
-struct NvtxRangePushA   { const char* message;                      };
-struct NvtxRangePushW   { const wchar_t* message;                   };
+typedef struct NvtxMarkEx{ const nvtxEventAttributes_t* eventAttrib; } NvtxMarkEx;
+NVTX_PACK(struct NvtxDomainMarkEx { nvtxDomainHandle_t domain; NvtxMarkEx core; });
+typedef struct NvtxDomainMarkEx NvtxDomainMarkEx;
+
+typedef struct NvtxMarkA        { const char* message; } NvtxMarkA;
+typedef struct NvtxMarkW        { const wchar_t* message; } NvtxMarkW;
+typedef struct NvtxRangeStartEx { const nvtxEventAttributes_t* eventAttrib; } NvtxRangeStartEx;
+
+NVTX_PACK(struct NvtxDomainRangeStartEx { nvtxDomainHandle_t domain; NvtxRangeStartEx core; });
+typedef struct NvtxDomainRangeStartEx NvtxDomainRangeStartEx;
+
+typedef struct NvtxRangeStartA  { const char* message; } NvtxRangeStartA;
+typedef struct NvtxRangeStartW  { const wchar_t* message; } NvtxRangeStartW;
+typedef struct NvtxRangeEnd     { nvtxRangeId_t id; } NvtxRangeEnd;
+
+NVTX_PACK(struct NvtxDomainRangeEnd { nvtxDomainHandle_t domain; NvtxRangeEnd core; });
+typedef struct NvtxDomainRangeEnd NvtxDomainRangeEnd;
+
+typedef struct NvtxRangePushEx  { const nvtxEventAttributes_t* eventAttrib; } NvtxRangePushEx;
+
+NVTX_PACK(struct NvtxDomainRangePushEx { nvtxDomainHandle_t domain; NvtxRangePushEx core; });
+typedef struct NvtxDomainRangePushEx NvtxDomainRangePushEx;
+
+typedef struct NvtxRangePushA   { const char* message; } NvtxRangePushA;
+typedef struct NvtxRangePushW   { const wchar_t* message; } NvtxRangePushW;
+typedef struct NvtxDomainRangePop   { nvtxDomainHandle_t domain; } NvtxDomainRangePop;
 /*     NvtxRangePop     - no parameters, params will be NULL. */
+typedef struct NvtxDomainResourceCreate  { nvtxDomainHandle_t domain; const nvtxResourceAttributes_t* attribs; } NvtxDomainResourceCreate;
+typedef struct NvtxDomainResourceDestroy  { nvtxResourceHandle_t handle; } NvtxDomainResourceDestroy;
+typedef struct NvtxDomainRegisterString  { nvtxDomainHandle_t domain; const void* str; } NvtxDomainRegisterString;
+typedef struct NvtxDomainCreate  { const void* name; } NvtxDomainCreate;
+typedef struct NvtxDomainDestroy  { nvtxDomainHandle_t domain; } NvtxDomainDestroy;
+
+
+#ifdef NVTOOLSEXT_SYNC_H_
+typedef struct NvtxSyncUserCommon  { nvtxSyncUser_t handle; } NvtxSyncUserCommon;
+typedef struct NvtxSyncUserCreate  { nvtxDomainHandle_t domain; const nvtxSyncUserAttributes_t* attribs; } NvtxSyncUserCreate;
+#endif
 
 /* All other NVTX API functions are for naming resources. 
  * A generic params struct is used for all such functions,
@@ -79,5 +115,11 @@ typedef struct NvtxNameResourceW
     uint64_t resourceHandle;
     const wchar_t* name;
 } NvtxNameResourceW;
+
+NVTX_PACK(struct NvtxDomainNameResourceA { nvtxDomainHandle_t domain; NvtxNameResourceA core; });
+typedef struct NvtxDomainNameResourceA NvtxDomainNameResourceA;
+NVTX_PACK(struct NvtxDomainNameResourceW { nvtxDomainHandle_t domain; NvtxNameResourceW core; });
+typedef struct NvtxDomainNameResourceW NvtxDomainNameResourceW;
+
 
 #endif /* NVTOOLSEXT_META_H_ */

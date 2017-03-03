@@ -58,10 +58,13 @@
 
 #include "cuComplex.h"
 #include "driver_types.h"
+#include "library_types.h"
 
 #ifndef CUFFTAPI
 #ifdef _WIN32
 #define CUFFTAPI __stdcall
+#elif __GNUC__ >= 4
+#define CUFFTAPI __attribute__ ((visibility ("default")))
 #else
 #define CUFFTAPI 
 #endif
@@ -88,10 +91,12 @@ typedef enum cufftResult_t {
   CUFFT_PARSE_ERROR = 0xC,
   CUFFT_NO_WORKSPACE = 0xD,
   CUFFT_NOT_IMPLEMENTED = 0xE,
-  CUFFT_LICENSE_ERROR = 0x0F
+  CUFFT_LICENSE_ERROR = 0x0F,
+  CUFFT_NOT_SUPPORTED = 0x10
+
 } cufftResult;
 
-#define MAX_CUFFT_ERROR 0x10
+#define MAX_CUFFT_ERROR 0x11
 
     
 // CUFFT defines and supports the following data types
@@ -124,11 +129,7 @@ typedef enum cufftType_t {
 
 // CUFFT supports the following data layouts
 typedef enum cufftCompatibility_t {
-    CUFFT_COMPATIBILITY_NATIVE          = 0x00,    // deprecated
-    CUFFT_COMPATIBILITY_FFTW_PADDING    = 0x01,    // The default value
-    CUFFT_COMPATIBILITY_FFTW_ASYMMETRIC = 0x02,    // Deprecated. Asymmetric input is 
-                                                   // always treated as in FFTW.
-    CUFFT_COMPATIBILITY_FFTW_ALL        = 0x03
+    CUFFT_COMPATIBILITY_FFTW_PADDING    = 0x01    // The default value
 } cufftCompatibility;
 
 #define CUFFT_COMPATIBILITY_DEFAULT   CUFFT_COMPATIBILITY_FFTW_PADDING
@@ -145,7 +146,7 @@ typedef int cufftHandle;
 cufftResult CUFFTAPI cufftPlan1d(cufftHandle *plan, 
                                  int nx, 
                                  cufftType type, 
-                                 int batch /* deprecated - use cufftPlanMany */);
+                                 int batch);
 
 cufftResult CUFFTAPI cufftPlan2d(cufftHandle *plan, 
                                  int nx, int ny,
@@ -166,7 +167,7 @@ cufftResult CUFFTAPI cufftPlanMany(cufftHandle *plan,
 cufftResult CUFFTAPI cufftMakePlan1d(cufftHandle plan, 
                                      int nx, 
                                      cufftType type, 
-                                     int batch, /* deprecated - use cufftPlanMany */
+                                     int batch,
                                      size_t *workSize);
 
 cufftResult CUFFTAPI cufftMakePlan2d(cufftHandle plan, 
@@ -187,10 +188,36 @@ cufftResult CUFFTAPI cufftMakePlanMany(cufftHandle plan,
                                        cufftType type,
                                        int batch,
                                        size_t *workSize);
+                                      
+cufftResult CUFFTAPI cufftMakePlanMany64(cufftHandle plan, 
+                                         int rank, 
+                                         long long int *n,
+                                         long long int *inembed, 
+                                         long long int istride, 
+                                         long long int idist,
+                                         long long int *onembed, 
+                                         long long int ostride, long long int odist,
+                                         cufftType type, 
+                                         long long int batch,
+                                         size_t * workSize);
+
+cufftResult CUFFTAPI cufftGetSizeMany64(cufftHandle plan,
+                                        int rank,
+                                        long long int *n,
+                                        long long int *inembed, 
+                                        long long int istride, long long int idist,
+                                        long long int *onembed, 
+                                        long long int ostride, long long int odist,
+                                        cufftType type,
+                                        long long int batch,
+                                        size_t *workSize);
+
+                                         
+                                      
                                    
 cufftResult CUFFTAPI cufftEstimate1d(int nx, 
                                      cufftType type, 
-                                     int batch, /* deprecated - use cufftPlanMany */
+                                     int batch,
                                      size_t *workSize);
 
 cufftResult CUFFTAPI cufftEstimate2d(int nx, int ny,
@@ -209,12 +236,12 @@ cufftResult CUFFTAPI cufftEstimateMany(int rank,
                                        int batch,
                                        size_t *workSize);
                                      
-cufftResult CUFFTAPI cufftCreate(cufftHandle * cufftHandle);                                     
+cufftResult CUFFTAPI cufftCreate(cufftHandle * handle);                                     
 
 cufftResult CUFFTAPI cufftGetSize1d(cufftHandle handle, 
                                     int nx, 
                                     cufftType type, 
-                                    int batch, /* deprecated - use cufftGetSizeMany */
+                                    int batch,
                                     size_t *workSize );
                                                                          
 cufftResult CUFFTAPI cufftGetSize2d(cufftHandle handle, 
@@ -276,6 +303,9 @@ cufftResult CUFFTAPI cufftSetCompatibilityMode(cufftHandle plan,
 cufftResult CUFFTAPI cufftDestroy(cufftHandle plan);
 
 cufftResult CUFFTAPI cufftGetVersion(int *version);
+
+cufftResult CUFFTAPI cufftGetProperty(libraryPropertyType type,
+                                      int *value);
 
 #ifdef __cplusplus
 }

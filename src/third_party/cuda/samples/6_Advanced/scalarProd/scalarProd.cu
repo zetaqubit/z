@@ -167,12 +167,6 @@ int main(int argc, char **argv)
     free(h_A);
     sdkDeleteTimer(&hTimer);
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     printf("L1 error: %E\n", L1norm);
     printf((L1norm < 1e-6) ? "Test passed\n" : "Test failed!\n");
     exit(L1norm < 1e-6 ? EXIT_SUCCESS : EXIT_FAILURE);

@@ -62,7 +62,7 @@ void JacobiIteration(const float *du0,
     du[shMemPos] = du0[pos];
     dv[shMemPos] = dv0[pos];
 
-    // load necessary neigbouring elements
+    // load necessary neighbouring elements
     // We clamp out-of-range coordinates.
     // It is equivalent to mirroring
     // because we access data only one step away from borders.

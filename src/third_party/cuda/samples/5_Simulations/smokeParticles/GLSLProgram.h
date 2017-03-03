@@ -14,7 +14,6 @@
 #ifndef GLSL_PROGRAM_H
 #define GLSL_PROGRAM_H
 
-#include <GL/glew.h>
 #include <stdio.h>
 
 class GLSLProgram

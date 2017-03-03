@@ -20,7 +20,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Compute the next lower power of two of n
-//! @param  n  number for which next higher power of two is seeked
+//! @param  n  number for which next higher power of two is sought
 ////////////////////////////////////////////////////////////////////////////////
 __device__
 inline int
@@ -40,7 +40,7 @@ floorPow2(int n)
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Compute the next higher power of two of n
-//! @param  n  number for which next higher power of two is seeked
+//! @param  n  number for which next higher power of two is sought
 ////////////////////////////////////////////////////////////////////////////////
 __device__
 inline int
@@ -349,7 +349,7 @@ storeNonEmptyIntervals(unsigned int addr,
 //! interval belongs to in a compact representation of all generated second
 //! childs
 //! @param   s_compaction_list_exc  list containing the flags which threads
-//!                                 generated two childs
+//!                                 generated two children
 //! @param   num_threads_compaction number of threads to employ for compaction
 ////////////////////////////////////////////////////////////////////////////////
 template<class T>

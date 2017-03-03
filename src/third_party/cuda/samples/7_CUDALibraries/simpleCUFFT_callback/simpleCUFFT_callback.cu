@@ -64,7 +64,7 @@ int PadData(const Complex *, Complex **, int,
 
 ////////////////////////////////////////////////////////////////////////////////
 // declaration, forward
-void runTest(int argc, char **argv);
+int runTest(int argc, char **argv);
 
 // The filter size is assumed to be a number smaller than the signal size
 #define SIGNAL_SIZE        50
@@ -81,16 +81,16 @@ int main(int argc, char **argv)
     checkCudaErrors(cudaGetDeviceProperties(&properties, device));
     if( !(properties.major >= 2) ) {
         printf("simpleCUFFT_callback requires CUDA architecture SM2.0 or higher\n");
-        exit(EXIT_WAIVED);
+        return EXIT_WAIVED;
     }
 
-    runTest(argc, argv);
+    return runTest(argc, argv);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //! Run a simple test for CUFFT callbacks
 ////////////////////////////////////////////////////////////////////////////////
-void runTest(int argc, char **argv)
+int runTest(int argc, char **argv)
 {
     printf("[simpleCUFFT_callback] is starting...\n");
 
@@ -99,7 +99,7 @@ void runTest(int argc, char **argv)
     // Allocate host memory for the signal
     Complex *h_signal = (Complex *)malloc(sizeof(Complex) * SIGNAL_SIZE);
 
-    // Initalize the memory for the signal
+    // Initialize the memory for the signal
     for (unsigned int i = 0; i < SIGNAL_SIZE; ++i)
     {
         h_signal[i].x = rand() / (float)RAND_MAX;
@@ -109,7 +109,7 @@ void runTest(int argc, char **argv)
     // Allocate host memory for the filter
     Complex *h_filter_kernel = (Complex *)malloc(sizeof(Complex) * FILTER_KERNEL_SIZE);
 
-    // Initalize the memory for the filter
+    // Initialize the memory for the filter
     for (unsigned int i = 0; i < FILTER_KERNEL_SIZE; ++i)
     {
         h_filter_kernel[i].x = rand() / (float)RAND_MAX;
@@ -142,17 +142,17 @@ void runTest(int argc, char **argv)
     // with load callback.
     cufftHandle plan, cb_plan;
     size_t work_size;
-    
+
     checkCudaErrors(cufftCreate(&plan));
     checkCudaErrors(cufftCreate(&cb_plan));
-    
+
     checkCudaErrors(cufftMakePlan1d(plan, new_size, CUFFT_C2C, 1, &work_size));
     checkCudaErrors(cufftMakePlan1d(cb_plan, new_size, CUFFT_C2C, 1, &work_size));
-    
-    // Define a structure used to pass in the device address of the filter kernel, and 
+
+    // Define a structure used to pass in the device address of the filter kernel, and
     // the scale factor
     cb_params h_params;
-    
+
     h_params.filter = d_filter_kernel;
     h_params.scale = 1.0f / new_size;
 
@@ -163,30 +163,30 @@ void runTest(int argc, char **argv)
     // Copy host memory to device
     checkCudaErrors(cudaMemcpy(d_params, &h_params, sizeof(cb_params),
                                cudaMemcpyHostToDevice));
-                               
-    // The host needs to get a copy of the device pointer to the callback                               
+
+    // The host needs to get a copy of the device pointer to the callback
     cufftCallbackLoadC hostCopyOfCallbackPtr;
 
-    checkCudaErrors(cudaMemcpyFromSymbol(&hostCopyOfCallbackPtr, 
-                                          myOwnCallbackPtr, 
+    checkCudaErrors(cudaMemcpyFromSymbol(&hostCopyOfCallbackPtr,
+                                          myOwnCallbackPtr,
                                           sizeof(hostCopyOfCallbackPtr)));
-                                          
+
     // Now associate the load callback with the plan.
-    cufftResult status = cufftXtSetCallback(cb_plan, 
-                                            (void **)&hostCopyOfCallbackPtr, 
+    cufftResult status = cufftXtSetCallback(cb_plan,
+                                            (void **)&hostCopyOfCallbackPtr,
                                             CUFFT_CB_LD_COMPLEX,
-                                            (void **)&d_params);                            
+                                            (void **)&d_params);
     if (status == CUFFT_LICENSE_ERROR)
     {
         printf("This sample requires a valid license file.\n");
         printf("The file was either not found, out of date, or otherwise invalid.\n");
-        exit(EXIT_WAIVED);
-    } else {
-    checkCudaErrors(cufftXtSetCallback(cb_plan, 
-                                       (void **)&hostCopyOfCallbackPtr, 
+        return EXIT_WAIVED;
+    }
+
+    checkCudaErrors(cufftXtSetCallback(cb_plan,
+                                       (void **)&hostCopyOfCallbackPtr,
                                        CUFFT_CB_LD_COMPLEX,
-                                       (void **)&d_params));                                         
-    }    
+                                       (void **)&d_params));
 
     // Transform signal and kernel
     printf("Transforming signal cufftExecC2C\n");
@@ -228,13 +228,7 @@ void runTest(int argc, char **argv)
     checkCudaErrors(cudaFree(d_filter_kernel));
     checkCudaErrors(cudaFree(d_params));
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
-    exit(bTestResult ? EXIT_SUCCESS : EXIT_FAILURE);
+    return bTestResult ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 // Pad data
@@ -321,5 +315,3 @@ static __device__ __host__ inline Complex ComplexMul(Complex a, Complex b)
     c.y = a.x * b.y + a.y * b.x;
     return c;
 }
-
-

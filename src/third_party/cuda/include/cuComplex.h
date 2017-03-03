@@ -50,10 +50,11 @@
 #if !defined(CU_COMPLEX_H_)
 #define CU_COMPLEX_H_
 
-// When tyring to include C header file in C++ Code extern "C" is required
-// But the Standard QNX headers already have ifdef extern in them when compiling C++ Code
-// extern "C" cannot be nested
-// Hence keep the header out of extern "C" block
+/* When trying to include C header file in C++ Code extern "C" is required
+ * But the Standard QNX headers already have ifdef extern in them when compiling C++ Code
+ * extern "C" cannot be nested
+ * Hence keep the header out of extern "C" block
+ */
 
 #include <math.h>       /* import fabsf, sqrt */
 

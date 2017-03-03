@@ -15,6 +15,8 @@
 
 #include <math.h>
 #include <stdlib.h>
+#define HELPERGL_EXTERN_GL_FUNC_IMPLEMENTATION
+#include <helper_gl.h>
 #include "SmokeRenderer.h"
 #include "SmokeShaders.h"
 
@@ -96,20 +98,20 @@ SmokeRenderer::~SmokeRenderer()
 // draw points from vertex buffer objects
 void SmokeRenderer::drawPoints(int start, int count, bool sort)
 {
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB, mPosVbo);
+    glBindBuffer(GL_ARRAY_BUFFER, mPosVbo);
     glVertexPointer(4, GL_FLOAT, 0, 0);
     glEnableClientState(GL_VERTEX_ARRAY);
 
     if (mColorVbo)
     {
-        glBindBufferARB(GL_ARRAY_BUFFER_ARB, mColorVbo);
+        glBindBuffer(GL_ARRAY_BUFFER, mColorVbo);
         glColorPointer(4, GL_FLOAT, 0, 0);
         glEnableClientState(GL_COLOR_ARRAY);
     }
 
     if (mVelVbo)
     {
-        glBindBufferARB(GL_ARRAY_BUFFER_ARB, mVelVbo);
+        glBindBuffer(GL_ARRAY_BUFFER, mVelVbo);
         glClientActiveTexture(GL_TEXTURE0);
         glTexCoordPointer(4, GL_FLOAT, 0, 0);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -117,9 +119,9 @@ void SmokeRenderer::drawPoints(int start, int count, bool sort)
 
     if (sort)
     {
-        glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, mIndexBuffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER_ARB, mIndexBuffer);
         glDrawElements(GL_POINTS, count, GL_UNSIGNED_INT, (void *)(start*sizeof(unsigned int)));
-        glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER_ARB, 0);
     }
     else
     {

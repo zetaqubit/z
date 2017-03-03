@@ -1,0 +1,296 @@
+.TH "Accounting Statistics" 3 "12 Jan 2017" "Version 1.1" "NVML" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Accounting Statistics \- 
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBnvmlAccountingStats_t\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBnvmlReturn_t\fP DECLDIR \fBnvmlDeviceGetAccountingMode\fP (nvmlDevice_t device, \fBnvmlEnableState_t\fP *mode)"
+.br
+.ti -1c
+.RI "\fBnvmlReturn_t\fP DECLDIR \fBnvmlDeviceGetAccountingStats\fP (nvmlDevice_t device, unsigned int pid, \fBnvmlAccountingStats_t\fP *stats)"
+.br
+.ti -1c
+.RI "\fBnvmlReturn_t\fP DECLDIR \fBnvmlDeviceGetAccountingPids\fP (nvmlDevice_t device, unsigned int *count, unsigned int *pids)"
+.br
+.ti -1c
+.RI "\fBnvmlReturn_t\fP DECLDIR \fBnvmlDeviceGetAccountingBufferSize\fP (nvmlDevice_t device, unsigned int *bufferSize)"
+.br
+.ti -1c
+.RI "\fBnvmlReturn_t\fP DECLDIR \fBnvmlDeviceSetAccountingMode\fP (nvmlDevice_t device, \fBnvmlEnableState_t\fP mode)"
+.br
+.ti -1c
+.RI "\fBnvmlReturn_t\fP DECLDIR \fBnvmlDeviceClearAccountingPids\fP (nvmlDevice_t device)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Set of APIs designed to provide per process information about usage of GPU.
+.PP
+\fBNote:\fP
+.RS 4
+All accounting statistics and accounting mode live in nvidia driver and reset to default (Disabled) when driver unloads. It is advised to run with persistence mode enabled.
+.PP
+Enabling accounting mode has no negative impact on the GPU performance. 
+.RE
+.PP
+
+.SH "Function Documentation"
+.PP 
+.SS "\fBnvmlReturn_t\fP DECLDIR nvmlDeviceClearAccountingPids (nvmlDevice_t device)"
+.PP
+Clears accounting information about all processes that have already terminated.
+.PP
+For Kepler (TM) or newer fully supported devices. Requires root/admin permissions.
+.PP
+See \fBnvmlDeviceGetAccountingMode\fP See \fBnvmlDeviceGetAccountingStats\fP See \fBnvmlDeviceSetAccountingMode\fP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevice\fP The identifier of the target device
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+.IP "\(bu" 2
+\fBNVML_SUCCESS\fP if accounting information has been cleared
+.IP "\(bu" 2
+\fBNVML_ERROR_UNINITIALIZED\fP if the library has not been successfully initialized
+.IP "\(bu" 2
+\fBNVML_ERROR_INVALID_ARGUMENT\fP if \fIdevice\fP are invalid
+.IP "\(bu" 2
+\fBNVML_ERROR_NOT_SUPPORTED\fP if the device doesn't support this feature
+.IP "\(bu" 2
+\fBNVML_ERROR_NO_PERMISSION\fP if the user doesn't have permission to perform this operation
+.IP "\(bu" 2
+\fBNVML_ERROR_UNKNOWN\fP on any unexpected error 
+.PP
+.RE
+.PP
+
+.SS "\fBnvmlReturn_t\fP DECLDIR nvmlDeviceGetAccountingBufferSize (nvmlDevice_t device, unsigned int * bufferSize)"
+.PP
+Returns the number of processes that the circular buffer with accounting pids can hold.
+.PP
+For Kepler (TM) or newer fully supported devices.
+.PP
+This is the maximum number of processes that accounting information will be stored for before information about oldest processes will get overwritten by information about new processes.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevice\fP The identifier of the target device 
+.br
+\fIbufferSize\fP Reference in which to provide the size (in number of elements) of the circular buffer for accounting stats.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+.IP "\(bu" 2
+\fBNVML_SUCCESS\fP if buffer size was successfully retrieved
+.IP "\(bu" 2
+\fBNVML_ERROR_UNINITIALIZED\fP if the library has not been successfully initialized
+.IP "\(bu" 2
+\fBNVML_ERROR_INVALID_ARGUMENT\fP if \fIdevice\fP is invalid or \fIbufferSize\fP is NULL
+.IP "\(bu" 2
+\fBNVML_ERROR_NOT_SUPPORTED\fP if the device doesn't support this feature or accounting mode is disabled
+.IP "\(bu" 2
+\fBNVML_ERROR_UNKNOWN\fP on any unexpected error
+.PP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBnvmlDeviceGetAccountingStats\fP 
+.PP
+\fBnvmlDeviceGetAccountingPids\fP 
+.RE
+.PP
+
+.SS "\fBnvmlReturn_t\fP DECLDIR nvmlDeviceGetAccountingMode (nvmlDevice_t device, \fBnvmlEnableState_t\fP * mode)"
+.PP
+Queries the state of per process accounting mode.
+.PP
+For Kepler (TM) or newer fully supported devices.
+.PP
+See \fBnvmlDeviceGetAccountingStats\fP for more details. See \fBnvmlDeviceSetAccountingMode\fP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevice\fP The identifier of the target device 
+.br
+\fImode\fP Reference in which to return the current accounting mode
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+.IP "\(bu" 2
+\fBNVML_SUCCESS\fP if the mode has been successfully retrieved
+.IP "\(bu" 2
+\fBNVML_ERROR_UNINITIALIZED\fP if the library has not been successfully initialized
+.IP "\(bu" 2
+\fBNVML_ERROR_INVALID_ARGUMENT\fP if \fIdevice\fP is invalid or \fImode\fP are NULL
+.IP "\(bu" 2
+\fBNVML_ERROR_NOT_SUPPORTED\fP if the device doesn't support this feature
+.IP "\(bu" 2
+\fBNVML_ERROR_UNKNOWN\fP on any unexpected error 
+.PP
+.RE
+.PP
+
+.SS "\fBnvmlReturn_t\fP DECLDIR nvmlDeviceGetAccountingPids (nvmlDevice_t device, unsigned int * count, unsigned int * pids)"
+.PP
+Queries list of processes that can be queried for accounting stats. The list of processes returned can be in running or terminated state.
+.PP
+For Kepler (TM) or newer fully supported devices.
+.PP
+To just query the number of processes ready to be queried, call this function with *count = 0 and pids=NULL. The return code will be NVML_ERROR_INSUFFICIENT_SIZE, or NVML_SUCCESS if list is empty.
+.PP
+For more details see \fBnvmlDeviceGetAccountingStats\fP.
+.PP
+\fBNote:\fP
+.RS 4
+In case of PID collision some processes might not be accessible before the circular buffer is full.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevice\fP The identifier of the target device 
+.br
+\fIcount\fP Reference in which to provide the \fIpids\fP array size, and to return the number of elements ready to be queried 
+.br
+\fIpids\fP Reference in which to return list of process ids
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+.IP "\(bu" 2
+\fBNVML_SUCCESS\fP if pids were successfully retrieved
+.IP "\(bu" 2
+\fBNVML_ERROR_UNINITIALIZED\fP if the library has not been successfully initialized
+.IP "\(bu" 2
+\fBNVML_ERROR_INVALID_ARGUMENT\fP if \fIdevice\fP is invalid or \fIcount\fP is NULL
+.IP "\(bu" 2
+\fBNVML_ERROR_NOT_SUPPORTED\fP if the device doesn't support this feature or accounting mode is disabled
+.IP "\(bu" 2
+\fBNVML_ERROR_INSUFFICIENT_SIZE\fP if \fIcount\fP is too small (\fIcount\fP is set to expected value)
+.IP "\(bu" 2
+\fBNVML_ERROR_UNKNOWN\fP on any unexpected error
+.PP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBnvmlDeviceGetAccountingBufferSize\fP 
+.RE
+.PP
+
+.SS "\fBnvmlReturn_t\fP DECLDIR nvmlDeviceGetAccountingStats (nvmlDevice_t device, unsigned int pid, \fBnvmlAccountingStats_t\fP * stats)"
+.PP
+Queries process's accounting stats.
+.PP
+For Kepler (TM) or newer fully supported devices.
+.PP
+Accounting stats capture GPU utilization and other statistics across the lifetime of a process. Accounting stats can be queried during life time of the process and after its termination. The time field in \fBnvmlAccountingStats_t\fP is reported as 0 during the lifetime of the process and updated to actual running time after its termination. Accounting stats are kept in a circular buffer, newly created processes overwrite information about old processes.
+.PP
+See \fBnvmlAccountingStats_t\fP for description of each returned metric. List of processes that can be queried can be retrieved from \fBnvmlDeviceGetAccountingPids\fP.
+.PP
+\fBNote:\fP
+.RS 4
+Accounting Mode needs to be on. See \fBnvmlDeviceGetAccountingMode\fP. 
+.PP
+Only compute and graphics applications stats can be queried. Monitoring applications stats can't be queried since they don't contribute to GPU utilization. 
+.PP
+In case of pid collision stats of only the latest process (that terminated last) will be reported
+.RE
+.PP
+\fBWarning:\fP
+.RS 4
+On Kepler devices per process statistics are accurate only if there's one process running on a GPU.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevice\fP The identifier of the target device 
+.br
+\fIpid\fP Process Id of the target process to query stats for 
+.br
+\fIstats\fP Reference in which to return the process's accounting stats
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+.IP "\(bu" 2
+\fBNVML_SUCCESS\fP if stats have been successfully retrieved
+.IP "\(bu" 2
+\fBNVML_ERROR_UNINITIALIZED\fP if the library has not been successfully initialized
+.IP "\(bu" 2
+\fBNVML_ERROR_INVALID_ARGUMENT\fP if \fIdevice\fP is invalid or \fIstats\fP are NULL
+.IP "\(bu" 2
+\fBNVML_ERROR_NOT_FOUND\fP if process stats were not found
+.IP "\(bu" 2
+\fBNVML_ERROR_NOT_SUPPORTED\fP if the device doesn't support this feature or accounting mode is disabled
+.IP "\(bu" 2
+\fBNVML_ERROR_UNKNOWN\fP on any unexpected error
+.PP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBnvmlDeviceGetAccountingBufferSize\fP 
+.RE
+.PP
+
+.SS "\fBnvmlReturn_t\fP DECLDIR nvmlDeviceSetAccountingMode (nvmlDevice_t device, \fBnvmlEnableState_t\fP mode)"
+.PP
+Enables or disables per process accounting.
+.PP
+For Kepler (TM) or newer fully supported devices. Requires root/admin permissions.
+.PP
+\fBNote:\fP
+.RS 4
+This setting is not persistent and will default to disabled after driver unloads. Enable persistence mode to be sure the setting doesn't switch off to disabled.
+.PP
+Enabling accounting mode has no negative impact on the GPU performance.
+.PP
+Disabling accounting clears all accounting pids information.
+.RE
+.PP
+See \fBnvmlDeviceGetAccountingMode\fP See \fBnvmlDeviceGetAccountingStats\fP See \fBnvmlDeviceClearAccountingPids\fP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevice\fP The identifier of the target device 
+.br
+\fImode\fP The target accounting mode
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+.IP "\(bu" 2
+\fBNVML_SUCCESS\fP if the new mode has been set
+.IP "\(bu" 2
+\fBNVML_ERROR_UNINITIALIZED\fP if the library has not been successfully initialized
+.IP "\(bu" 2
+\fBNVML_ERROR_INVALID_ARGUMENT\fP if \fIdevice\fP or \fImode\fP are invalid
+.IP "\(bu" 2
+\fBNVML_ERROR_NOT_SUPPORTED\fP if the device doesn't support this feature
+.IP "\(bu" 2
+\fBNVML_ERROR_NO_PERMISSION\fP if the user doesn't have permission to perform this operation
+.IP "\(bu" 2
+\fBNVML_ERROR_UNKNOWN\fP on any unexpected error 
+.PP
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for NVML from the source code.

@@ -74,7 +74,7 @@ int main(int argc, char **argv)
     // Allocate host memory for the signal
     Complex *h_signal = (Complex *)malloc(sizeof(Complex) * SIGNAL_SIZE);
 
-    // Initalize the memory for the signal
+    // Initialize the memory for the signal
     for (int i = 0; i < SIGNAL_SIZE; ++i)
     {
         h_signal[i].x = rand() / (float)RAND_MAX;
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
     // Allocate host memory for the filter
     Complex *h_filter_kernel = (Complex *)malloc(sizeof(Complex) * FILTER_KERNEL_SIZE);
 
-    // Initalize the memory for the filter
+    // Initialize the memory for the filter
     for (int i = 0; i < FILTER_KERNEL_SIZE; ++i)
     {
         h_filter_kernel[i].x = rand() / (float)RAND_MAX;
@@ -194,23 +194,23 @@ int main(int argc, char **argv)
     result = cufftXtExecDescriptorC2C(plan_input, d_out_signal,  d_out_signal, CUFFT_INVERSE);
     if (result != CUFFT_SUCCESS) { printf ("*XtExecC2C  failed\n"); exit (EXIT_FAILURE) ; }
 
-    // Create host pointer pointing to padded signal  
+    // Create host pointer pointing to padded signal
     Complex *h_convolved_signal = h_padded_signal;
 
     // Allocate host memory for the convolution result
     Complex *h_convolved_signal_ref = (Complex *)malloc(sizeof(Complex) * SIGNAL_SIZE);
 
-    // cufftXtMemcpy() - Copy data from multiple GPUs to host 
+    // cufftXtMemcpy() - Copy data from multiple GPUs to host
     result = cufftXtMemcpy (plan_input,h_convolved_signal, d_out_signal, CUFFT_COPY_DEVICE_TO_HOST);
     if (result != CUFFT_SUCCESS) { printf ("*XtMemcpy failed\n"); exit (EXIT_FAILURE); }
 
     // Convolve on the host
-    Convolve(h_signal, SIGNAL_SIZE, h_filter_kernel, 
+    Convolve(h_signal, SIGNAL_SIZE, h_filter_kernel,
              FILTER_KERNEL_SIZE, h_convolved_signal_ref);
 
-    // Compare CPU and GPU result 
-    bool bTestResult = sdkCompareL2fe((float *)h_convolved_signal_ref, 
-                                      (float *)h_convolved_signal, 2 * SIGNAL_SIZE, 
+    // Compare CPU and GPU result
+    bool bTestResult = sdkCompareL2fe((float *)h_convolved_signal_ref,
+                                      (float *)h_convolved_signal, 2 * SIGNAL_SIZE,
                                       1e-5f);
     printf("\nvalue of TestResult %d\n", bTestResult);
 
@@ -222,7 +222,7 @@ int main(int argc, char **argv)
     free(h_padded_signal);
     free(h_padded_filter_kernel);
     free(h_convolved_signal_ref);
-    
+
     // cudaXtFree() - Free GPU memory
     result = cufftXtFree(d_signal);
     if (result != CUFFT_SUCCESS) { printf ("*XtFree failed\n"); exit (EXIT_FAILURE); }
@@ -237,17 +237,11 @@ int main(int argc, char **argv)
     result = cufftDestroy(plan_input);
     if (result != CUFFT_SUCCESS) { printf ("cufftDestroy failed: code %d\n",(int)result); exit (EXIT_FAILURE); }
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exitsits
-    cudaDeviceReset();
     exit(bTestResult ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-// Function for padding orginal data 
+// Function for padding original data
 //////////////////////////////////////////////////////////////////////////////////
 int PadData(const Complex *signal, Complex **padded_signal, int signal_size,
             const Complex *filter_kernel, Complex **padded_filter_kernel, int filter_kernel_size)
@@ -301,9 +295,9 @@ void Convolve(const Complex *signal, int signal_size,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Launch Kernel on multiple GPU 
+//  Launch Kernel on multiple GPU
 ////////////////////////////////////////////////////////////////////////////////
-void  multiplyCoefficient( cudaLibXtDesc *d_signal,cudaLibXtDesc *d_filter_kernel, 
+void  multiplyCoefficient( cudaLibXtDesc *d_signal,cudaLibXtDesc *d_filter_kernel,
                            int new_size, float val , int nGPUs)
 {
     int device ;
@@ -311,19 +305,19 @@ void  multiplyCoefficient( cudaLibXtDesc *d_signal,cudaLibXtDesc *d_filter_kerne
     for(int i=0; i < nGPUs ;i++)
     {
         device = d_signal->descriptor->GPUs[i];
-        
+
         //Set device
         checkCudaErrors(cudaSetDevice(device));
 
         //Perform GPU computations
         ComplexPointwiseMulAndScale<<<32, 256>>>((cufftComplex*) d_signal->descriptor->data[i],
-                                                 (cufftComplex*) d_filter_kernel->descriptor->data[i], 
+                                                 (cufftComplex*) d_filter_kernel->descriptor->data[i],
                                                   int(d_signal->descriptor->size[i]/sizeof(cufftComplex)), val);
     }
-    
+
     // Wait for device to finish all operation
-    for( int i=0; i< nGPUs ; i++ ) 
-    { 
+    for( int i=0; i< nGPUs ; i++ )
+    {
         device = d_signal->descriptor->GPUs[i];
         checkCudaErrors(cudaSetDevice(device));
         cudaDeviceSynchronize();

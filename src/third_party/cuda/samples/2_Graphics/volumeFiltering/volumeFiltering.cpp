@@ -25,7 +25,7 @@
  */
 
 // OpenGL Graphics includes
-#include <GL/glew.h>
+#include <helper_gl.h>
 #if defined (__APPLE__) || defined(MACOSX)
   #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   #include <GLUT/glut.h>
@@ -326,10 +326,10 @@ void display()
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     // draw using texture
     // copy from pbo to texture
-    glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
     glBindTexture(GL_TEXTURE_2D, volumeTex);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-    glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
 
     // draw textured quad
     glEnable(GL_TEXTURE_2D);
@@ -524,11 +524,10 @@ void initGL(int *argc, char **argv)
     glutInitWindowSize(width, height);
     glutCreateWindow("CUDA 3D Volume Filtering");
 
-    glewInit();
-
-    if (!glewIsSupported("GL_VERSION_2_0 GL_ARB_pixel_buffer_object"))
+    if (!isGLVersionSupported(2,0) ||
+        !areGLExtensionsSupported("GL_ARB_pixel_buffer_object"))
     {
-        printf("Required OpenGL extensions missing.");
+        printf("Required OpenGL extensions are missing.");
         exit(EXIT_SUCCESS);
     }
 }
@@ -541,15 +540,15 @@ void initPixelBuffer()
         checkCudaErrors(cudaGraphicsUnregisterResource(cuda_pbo_resource));
 
         // delete old buffer
-        glDeleteBuffersARB(1, &pbo);
+        glDeleteBuffers(1, &pbo);
         glDeleteTextures(1, &volumeTex);
     }
 
     // create pixel buffer object for display
-    glGenBuffersARB(1, &pbo);
-    glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
-    glBufferDataARB(GL_PIXEL_UNPACK_BUFFER_ARB, width*height*sizeof(GLubyte)*4, 0, GL_STREAM_DRAW_ARB);
-    glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+    glGenBuffers(1, &pbo);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER_ARB, width*height*sizeof(GLubyte)*4, 0, GL_STREAM_DRAW_ARB);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
 
     // register this buffer object with CUDA
     checkCudaErrors(cudaGraphicsGLRegisterBuffer(&cuda_pbo_resource, pbo, cudaGraphicsMapFlagsWriteDiscard));
@@ -578,16 +577,9 @@ void cleanup()
     if (pbo)
     {
         cudaGraphicsUnregisterResource(cuda_pbo_resource);
-        glDeleteBuffersARB(1, &pbo);
+        glDeleteBuffers(1, &pbo);
         glDeleteTextures(1, &volumeTex);
     }
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 }
 
 // Load raw data from disk
@@ -768,12 +760,6 @@ void checkDeviceMeetComputeSpec(int argc, char **argv)
         fprintf(stderr, "\tCUDA Compute Capability >= %d.%d is required\n", MIN_COMPUTE_VERSION/16, MIN_COMPUTE_VERSION%16);
         fprintf(stderr, "\tCUDA Runtime Version    >= %d.%d is required\n", MIN_RUNTIME_VERSION/1000, (MIN_RUNTIME_VERSION%100)/10);
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_SUCCESS);
     }
 }
@@ -920,12 +906,6 @@ main(int argc, char **argv)
             }
             else
             {
-                // cudaDeviceReset causes the driver to clean up all state. While
-                // not mandatory in normal operation, it is good practice.  It is also
-                // needed to ensure correct operation when the application is being
-                // profiled. Calling cudaDeviceReset causes all profile data to be
-                // flushed before the application exits
-                cudaDeviceReset();
                 exit(EXIT_SUCCESS);
             }
         }

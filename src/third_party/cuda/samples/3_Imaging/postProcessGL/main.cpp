@@ -51,7 +51,7 @@
 #endif
 
 // OpenGL Graphics includes
-#include <GL/glew.h>
+#include <helper_gl.h>
 #if defined(__APPLE__) || defined(MACOSX)
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #include <GLUT/glut.h>
@@ -143,38 +143,6 @@ StopWatchInterface *timer = NULL;
 #   pragma message("Note: Using Texture RGBA8UI + GLSL for teapot rendering")
 #endif
 GLuint shDrawPot;  // colors the teapot
-
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-bool IsOpenGLAvailable(const char *appName)
-{
-    return true;
-}
-#else
-#if (defined(__APPLE__) || defined(MACOSX))
-bool IsOpenGLAvailable(const char *appName)
-{
-    return true;
-}
-#else
-// check if this is a linux machine
-#include <X11/Xlib.h>
-
-bool IsOpenGLAvailable(const char *appName)
-{
-    Display *Xdisplay = XOpenDisplay(NULL);
-
-    if (Xdisplay == NULL)
-    {
-        return false;
-    }
-    else
-    {
-        XCloseDisplay(Xdisplay);
-        return true;
-    }
-}
-#endif
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 extern "C" void
@@ -845,13 +813,6 @@ void FreeResource()
     deleteDepthBuffer(&depth_buffer);
     deleteFramebuffer(&framebuffer);
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
-
     if (iGLUTWindowHandle)
     {
         glutDestroyWindow(iGLUTWindowHandle);
@@ -1089,16 +1050,6 @@ initCUDA(int argc, char **argv, bool bUseGL)
 bool
 initGL(int *argc, char **argv)
 {
-    if (IsOpenGLAvailable(sSDKname))
-    {
-        fprintf(stderr, "   OpenGL device is Available\n");
-    }
-    else
-    {
-        fprintf(stderr, "   OpenGL device is NOT Available, [%s] exiting...\n", sSDKname);
-        exit(EXIT_WAIVED);
-    }
-
     // Create GL context
     glutInit(argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_ALPHA | GLUT_DOUBLE | GLUT_DEPTH);
@@ -1106,12 +1057,10 @@ initGL(int *argc, char **argv)
     iGLUTWindowHandle = glutCreateWindow("CUDA OpenGL post-processing");
 
     // initialize necessary OpenGL extensions
-    glewInit();
-
-    if (! glewIsSupported(
-            "GL_VERSION_2_0 "
+    if (! isGLVersionSupported(2,0) ||
+        ! areGLExtensionsSupported (
             "GL_ARB_pixel_buffer_object "
-            "GL_EXT_framebuffer_object "
+            "GL_EXT_framebuffer_object"
         ))
     {
         printf("ERROR: Support for necessary OpenGL extensions missing.");

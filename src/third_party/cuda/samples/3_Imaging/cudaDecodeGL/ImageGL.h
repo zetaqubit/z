@@ -13,13 +13,9 @@
 #define NV_IMAGE_GL
 
 #include <cuda.h>
-#include <GL/glew.h>
 
-#if defined(__APPLE__) || defined(__MACOSX)
-#include <GLUT/glut.h>
-#else
-#include <GL/freeglut.h>
-#endif
+#define HELPERGL_EXTERN_GL_FUNC_IMPLEMENTATION
+#include <helper_gl.h>
 
 #define PAD_ALIGN(x,mask) ( (x + mask) & ~mask )
 

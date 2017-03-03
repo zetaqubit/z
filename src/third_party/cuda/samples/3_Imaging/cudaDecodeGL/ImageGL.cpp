@@ -55,13 +55,13 @@ ImageGL::ImageGL(unsigned int nDispWidth,
 {
     int nFrames = bIsProgressive_ ? 1 : 2;
 
-    glGenBuffersARB(nFrames, gl_pbo_);
+    glGenBuffers(nFrames, gl_pbo_);
 
     for (int n=0; n < nFrames; n++)
     {
-        glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, gl_pbo_[n]);
-        glBufferDataARB(GL_PIXEL_UNPACK_BUFFER_ARB, nTexWidth*nTexHeight*4, NULL, GL_STREAM_DRAW_ARB);
-        glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, gl_pbo_[n]);
+        glBufferData(GL_PIXEL_UNPACK_BUFFER_ARB, nTexWidth*nTexHeight*4, NULL, GL_STREAM_DRAW_ARB);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
         registerAsCudaResource(n);
     }
 
@@ -84,7 +84,7 @@ ImageGL::~ImageGL()
         unregisterAsCudaResource(n);
     }
 
-    glDeleteBuffersARB(nFrames, gl_pbo_);
+    glDeleteBuffers(nFrames, gl_pbo_);
     glDeleteTextures(nFrames, gl_texid_);
     glDeleteProgramsARB(1, &gl_shader_);
 }
@@ -104,7 +104,6 @@ ImageGL::unregisterAsCudaResource(int field_num)
     CUresult result = cuCtxPushCurrent(oContext_);
     checkCudaErrors(cuGLUnregisterBufferObject(gl_pbo_[field_num]));
     bIsCudaResource_ = false;
-    cuCtxPopCurrent(NULL);
 }
 
 void
@@ -188,10 +187,10 @@ const
         glClear(GL_COLOR_BUFFER_BIT);
 
         // load texture from pbo
-        glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, gl_pbo_[field_num]);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, gl_pbo_[field_num]);
         glBindTexture(GL_TEXTURE_TYPE, gl_texid_[field_num]);
         glTexSubImage2D(GL_TEXTURE_TYPE, 0, 0, 0, nTexWidth_, nTexHeight_, GL_BGRA, GL_UNSIGNED_BYTE, 0);
-        glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
 
         // fragment program is required to display floating point texture
         glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, gl_shader_);

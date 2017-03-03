@@ -208,7 +208,8 @@ typedef enum {
     CUPTI_ERROR_UM_PROFILING_NOT_SUPPORTED_ON_NON_P2P_DEVICES = 30,
     /**
      * Unified memory profiling is not supported under the
-     * Multi-Process Service (MPS) environment
+     * Multi-Process Service (MPS) environment. CUDA 7.5 removes this
+     * restriction.
      */
     CUPTI_ERROR_UM_PROFILING_NOT_SUPPORTED_WITH_MPS      = 31,
     /**

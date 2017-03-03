@@ -12,18 +12,18 @@
 
 
 /*
- * This sample demonstrates two adaptive image denoising technqiues:
+ * This sample demonstrates two adaptive image denoising techniques:
  * KNN and NLM, based on computation of both geometric and color distance
  * between texels. While both techniques are already implemented in the
  * DirectX SDK using shaders, massively speeded up variation
- * of the latter techique, taking advantage of shared memory, is implemented
+ * of the latter technique, taking advantage of shared memory, is implemented
  * in addition to DirectX counterparts.
  * See supplied whitepaper for more explanations.
  */
 
 
 // OpenGL Graphics includes
-#include <GL/glew.h>
+#include <helper_gl.h>
 #if defined(__APPLE__) || defined(MACOSX)
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #include <GLUT/glut.h>
@@ -313,12 +313,12 @@ void keyboard(unsigned char k, int /*x*/, int /*y*/)
             break;
 
         case 'l':
-            printf("Decrease LERP quotent.\n");
+            printf("Decrease LERP quotient.\n");
             lerpC = MAX(lerpC - lerpStep, 0.0f);
             break;
 
         case 'L':
-            printf("Increase LERP quotent.\n");
+            printf("Increase LERP quotient.\n");
             lerpC = MIN(lerpC + lerpStep, 1.0f);
             break;
 
@@ -355,10 +355,8 @@ int initGL(int *argc, char **argv)
     glutCloseFunc(cleanup);
 #endif
 
-    glewInit();
-    printf("Loading extensions: %s\n", glewGetErrorString(glewInit()));
-
-    if (!glewIsSupported("GL_VERSION_1_5 GL_ARB_vertex_buffer_object GL_ARB_pixel_buffer_object"))
+    if (!isGLVersionSupported(1,5) ||
+        !areGLExtensionsSupported("GL_ARB_vertex_buffer_object GL_ARB_pixel_buffer_object"))
     {
         fprintf(stderr, "Error: failed to get minimal extensions for demo\n");
         fprintf(stderr, "This sample requires:\n");
@@ -456,13 +454,6 @@ void cleanup()
     glDeleteProgramsARB(1, &shader);
 
     sdkDeleteTimer(&timer);
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 }
 
 void runAutoTest(int argc, char **argv, const char *filename, int kernel_param)
@@ -511,12 +502,6 @@ void runAutoTest(int argc, char **argv, const char *filename, int kernel_param)
 
     printf("\n[%s] -> Kernel %d, Saved: %s\n", sSDKsample, kernel_param, filename);
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(g_TotalErrors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 

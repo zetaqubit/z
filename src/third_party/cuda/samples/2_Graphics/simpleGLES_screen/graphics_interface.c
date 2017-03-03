@@ -13,9 +13,11 @@
 #include <GLES3/gl31.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+#include <sys/keycodes.h>
 
 screen_window_t screen_window;
 screen_context_t screen_context;
+screen_event_t screen_ev;
 
 EGLDisplay eglDisplay = EGL_NO_DISPLAY;
 EGLSurface eglSurface = EGL_NO_SURFACE;
@@ -27,8 +29,18 @@ void error_exit(const char* format, ... )
     va_start( args, format );
     vfprintf( stderr, format, args );
     va_end( args );
-    exit(1); 
+    exit(1);
 }
+
+enum 
+{
+    NvGlDemoKeyCode_Escape = 27
+};
+
+typedef void (*GlCloseCB)(void);
+typedef void (*GlKeyCB)(char key, int state);
+GlCloseCB closeCB = NULL;
+GlKeyCB keyCB = NULL;
 
 void CHECK_GLERROR()
 {
@@ -63,15 +75,117 @@ void CHECK_GLERROR()
     }
 }
 
+static void UpdateEventMask(void)
+{
+    static int rc = 1;
+
+    if(rc) {
+       rc = screen_create_event(&screen_ev);
+    }
+}
+
+
+void SetCloseCB(GlCloseCB cb)
+{
+    // Call the eglQnxScreenConsumer module if option is enabled
+    closeCB = cb;
+    UpdateEventMask();
+}
+
+void SetKeyCB(GlKeyCB cb)
+{
+    keyCB = cb;
+    UpdateEventMask();
+}
+
+// Add keys here, that are used in demo apps.
+static unsigned char GetKeyPress(int *screenKey)
+{
+    unsigned char key = '\0';
+
+    switch (*screenKey) {
+
+        case KEYCODE_ESCAPE:
+            key = NvGlDemoKeyCode_Escape;
+        break;
+        default:
+            /* For "normal" keys, Screen KEYCODE is just ASCII. */
+            if (*screenKey <= 127) {
+                key = *screenKey;
+            }
+        break;
+    }
+
+    return key;
+}
+
+
+void CheckEvents(void)
+{
+
+    static int vis = 1, val = 1;
+    int rc;
+
+    /**
+     ** We start the loop by processing any events that might be in our
+     ** queue. The only event that is of interest to us are the resize
+     ** and close events. The timeout variable is set to 0 (no wait) or
+     ** forever depending if the window is visible or invisible.
+     **/
+
+    while (!screen_get_event(screen_context, screen_ev, vis ? 0ull : ~0ull)) 
+    {
+           // Get QNX CAR 2.1 event property
+           rc = screen_get_event_property_iv(screen_ev, SCREEN_PROPERTY_TYPE, &val);
+           if (rc || val == SCREEN_EVENT_NONE) {
+               break;
+           }
+
+           switch (val) {
+
+               case SCREEN_EVENT_CLOSE:
+                    /**
+                     ** All we have to do when we receive the close event is
+                     ** exit the application loop.
+                     **/
+                    if (closeCB) {
+                        closeCB();
+                    }
+                    break;
+
+               case SCREEN_EVENT_KEYBOARD:
+                    rc = screen_get_event_property_iv(screen_ev, SCREEN_PROPERTY_KEY_FLAGS, &val);
+                    if (rc || val == SCREEN_EVENT_NONE) {
+                        break;
+                    }
+                    if (val & KEY_DOWN) {
+                        rc = screen_get_event_property_iv(screen_ev, SCREEN_PROPERTY_KEY_SYM, &val);
+                        if (rc || val == SCREEN_EVENT_NONE) {
+                            break;
+                        }
+                        unsigned char key;
+                        key = GetKeyPress(&val);
+                        if (key != '\0') {
+                            keyCB(key, 1);
+                        }
+                    }
+                    break;
+
+               default:
+                    break;
+           }
+    }
+}
+
+
 int graphics_setup_window(int xpos, int ypos, int width, int height, const char *windowname , int reqdispno)
 {
     EGLint configAttrs[] = {
-        EGL_RED_SIZE,        1,
-        EGL_GREEN_SIZE,      1,
-        EGL_BLUE_SIZE,       1,
-        EGL_DEPTH_SIZE,    16,
-        EGL_SAMPLE_BUFFERS,  0,
-        EGL_SAMPLES,         0,
+        EGL_RED_SIZE,        8,
+        EGL_GREEN_SIZE,      8,
+        EGL_BLUE_SIZE,       8,
+        EGL_ALPHA_SIZE,      8,
+        EGL_DEPTH_SIZE,      16,
         EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
         EGL_NONE
     };
@@ -174,7 +288,7 @@ int graphics_setup_window(int xpos, int ypos, int width, int height, const char 
         error_exit("Error setting SCREEN_PROPERTY_FORMAT\n");
     }
 
-    int usage = (1 << 11); // SCREEN_USAGE_OPENGL_ES3
+    int usage = SCREEN_USAGE_OPENGL_ES2;
     if (screen_set_window_property_iv(screen_window, SCREEN_PROPERTY_USAGE, &usage))
     {
         error_exit("Error setting SCREEN_PROPERTY_USAGE\n");
@@ -235,7 +349,7 @@ int graphics_setup_window(int xpos, int ypos, int width, int height, const char 
         printf("Using OpenGL API\n");
         break;
     case EGL_OPENGL_ES_API:
-        printf("Using OpenGL ES API");
+        printf("Using OpenGL ES API\n");
         break;
     case EGL_OPENVG_API:
         error_exit("Context Query Returned OpenVG. This is Unsupported\n");
@@ -280,9 +394,13 @@ void graphics_close_window()
         screen_destroy_window(screen_window);
         screen_window = NULL;
     }
-
     if (screen_context)
     {
         screen_destroy_context(screen_context);
     }
+    if (screen_ev)
+    {
+        screen_destroy_event(screen_ev);
+    }
 }
+

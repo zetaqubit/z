@@ -1,0 +1,133 @@
+.TH "Direct3D 11 Interoperability [DEPRECATED]" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Direct3D 11 Interoperability [DEPRECATED] \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCUresult\fP \fBcuD3D11CtxCreate\fP (\fBCUcontext\fP *pCtx, \fBCUdevice\fP *pCudaDevice, unsigned int Flags, ID3D11Device *pD3DDevice)"
+.br
+.RI "\fICreate a CUDA context for interoperability with Direct3D 11. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuD3D11CtxCreateOnDevice\fP (\fBCUcontext\fP *pCtx, unsigned int flags, ID3D11Device *pD3DDevice, \fBCUdevice\fP cudaDevice)"
+.br
+.RI "\fICreate a CUDA context for interoperability with Direct3D 11. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuD3D11GetDirect3DDevice\fP (ID3D11Device **ppD3DDevice)"
+.br
+.RI "\fIGet the Direct3D 11 device against which the current CUDA context was created. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief deprecated Direct3D 11 interoperability functions of the low-level CUDA driver API (cudaD3D11.h)
+.PP
+This section describes deprecated Direct3D 11 interoperability functionality. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBCUresult\fP cuD3D11CtxCreate (\fBCUcontext\fP * pCtx, \fBCUdevice\fP * pCudaDevice, unsigned int Flags, ID3D11Device * pD3DDevice)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 5.0.
+.RE
+.PP
+This function is deprecated and should no longer be used. It is no longer necessary to associate a CUDA context with a D3D11 device in order to achieve maximum interoperability performance.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpCtx\fP - Returned newly created CUDA context 
+.br
+\fIpCudaDevice\fP - Returned pointer to the device on which the context was created 
+.br
+\fIFlags\fP - Context creation flags (see \fBcuCtxCreate()\fP for details) 
+.br
+\fIpD3DDevice\fP - Direct3D device to create interoperability context with
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_OUT_OF_MEMORY\fP, \fBCUDA_ERROR_UNKNOWN\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuD3D11GetDevice\fP, \fBcuGraphicsD3D11RegisterResource\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuD3D11CtxCreateOnDevice (\fBCUcontext\fP * pCtx, unsigned int flags, ID3D11Device * pD3DDevice, \fBCUdevice\fP cudaDevice)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 5.0.
+.RE
+.PP
+This function is deprecated and should no longer be used. It is no longer necessary to associate a CUDA context with a D3D11 device in order to achieve maximum interoperability performance.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpCtx\fP - Returned newly created CUDA context 
+.br
+\fIflags\fP - Context creation flags (see \fBcuCtxCreate()\fP for details) 
+.br
+\fIpD3DDevice\fP - Direct3D device to create interoperability context with 
+.br
+\fIcudaDevice\fP - The CUDA device on which to create the context. This device must be among the devices returned when querying CU_D3D11_DEVICES_ALL from \fBcuD3D11GetDevices\fP.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_OUT_OF_MEMORY\fP, \fBCUDA_ERROR_UNKNOWN\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuD3D11GetDevices\fP, \fBcuGraphicsD3D11RegisterResource\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuD3D11GetDirect3DDevice (ID3D11Device ** ppD3DDevice)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 5.0.
+.RE
+.PP
+This function is deprecated and should no longer be used. It is no longer necessary to associate a CUDA context with a D3D11 device in order to achieve maximum interoperability performance.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIppD3DDevice\fP - Returned Direct3D device corresponding to CUDA context
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuD3D11GetDevice\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

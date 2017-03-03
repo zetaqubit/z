@@ -1,0 +1,174 @@
+.TH "Peer Context Memory Access" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Peer Context Memory Access \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCUresult\fP \fBcuCtxDisablePeerAccess\fP (\fBCUcontext\fP peerContext)"
+.br
+.RI "\fIDisables direct access to memory allocations in a peer context and unregisters any registered allocations. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuCtxEnablePeerAccess\fP (\fBCUcontext\fP peerContext, unsigned int Flags)"
+.br
+.RI "\fIEnables direct access to memory allocations in a peer context. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuDeviceCanAccessPeer\fP (int *canAccessPeer, \fBCUdevice\fP dev, \fBCUdevice\fP peerDev)"
+.br
+.RI "\fIQueries if a device may directly access a peer device's memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuDeviceGetP2PAttribute\fP (int *value, \fBCUdevice_P2PAttribute\fP attrib, \fBCUdevice\fP srcDevice, \fBCUdevice\fP dstDevice)"
+.br
+.RI "\fIQueries attributes of the link between two devices. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief direct peer context memory access functions of the low-level CUDA driver API (\fBcuda.h\fP)
+.PP
+This section describes the direct peer context memory access functions of the low-level CUDA driver application programming interface. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBCUresult\fP cuCtxDisablePeerAccess (\fBCUcontext\fP peerContext)"
+.PP
+Returns \fBCUDA_ERROR_PEER_ACCESS_NOT_ENABLED\fP if direct peer access has not yet been enabled from \fCpeerContext\fP to the current context.
+.PP
+Returns \fBCUDA_ERROR_INVALID_CONTEXT\fP if there is no current context, or if \fCpeerContext\fP is not a valid context.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpeerContext\fP - Peer context to disable direct access to
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_PEER_ACCESS_NOT_ENABLED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuDeviceCanAccessPeer\fP, \fBcuCtxEnablePeerAccess\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuCtxEnablePeerAccess (\fBCUcontext\fP peerContext, unsigned int Flags)"
+.PP
+If both the current context and \fCpeerContext\fP are on devices which support unified addressing (as may be queried using \fBCU_DEVICE_ATTRIBUTE_UNIFIED_ADDRESSING\fP) and same major compute capability, then on success all allocations from \fCpeerContext\fP will immediately be accessible by the current context. See \fBUnified Addressing\fP for additional details.
+.PP
+Note that access granted by this call is unidirectional and that in order to access memory from the current context in \fCpeerContext\fP, a separate symmetric call to \fBcuCtxEnablePeerAccess()\fP is required.
+.PP
+There is a system-wide maximum of eight peer connections per device.
+.PP
+Returns \fBCUDA_ERROR_PEER_ACCESS_UNSUPPORTED\fP if \fBcuDeviceCanAccessPeer()\fP indicates that the \fBCUdevice\fP of the current context cannot directly access memory from the \fBCUdevice\fP of \fCpeerContext\fP.
+.PP
+Returns \fBCUDA_ERROR_PEER_ACCESS_ALREADY_ENABLED\fP if direct access of \fCpeerContext\fP from the current context has already been enabled.
+.PP
+Returns \fBCUDA_ERROR_TOO_MANY_PEERS\fP if direct peer access is not possible because hardware resources required for peer access have been exhausted.
+.PP
+Returns \fBCUDA_ERROR_INVALID_CONTEXT\fP if there is no current context, \fCpeerContext\fP is not a valid context, or if the current context is \fCpeerContext\fP.
+.PP
+Returns \fBCUDA_ERROR_INVALID_VALUE\fP if \fCFlags\fP is not 0.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpeerContext\fP - Peer context to enable direct access to from the current context 
+.br
+\fIFlags\fP - Reserved for future use and must be set to 0
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_PEER_ACCESS_ALREADY_ENABLED\fP, \fBCUDA_ERROR_TOO_MANY_PEERS\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_PEER_ACCESS_UNSUPPORTED\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuDeviceCanAccessPeer\fP, \fBcuCtxDisablePeerAccess\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuDeviceCanAccessPeer (int * canAccessPeer, \fBCUdevice\fP dev, \fBCUdevice\fP peerDev)"
+.PP
+Returns in \fC*canAccessPeer\fP a value of 1 if contexts on \fCdev\fP are capable of directly accessing memory from contexts on \fCpeerDev\fP and 0 otherwise. If direct access of \fCpeerDev\fP from \fCdev\fP is possible, then access may be enabled on two specific contexts by calling \fBcuCtxEnablePeerAccess()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcanAccessPeer\fP - Returned access capability 
+.br
+\fIdev\fP - Device from which allocations on \fCpeerDev\fP are to be directly accessed. 
+.br
+\fIpeerDev\fP - Device on which the allocations to be directly accessed by \fCdev\fP reside.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_DEVICE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuCtxEnablePeerAccess\fP, \fBcuCtxDisablePeerAccess\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuDeviceGetP2PAttribute (int * value, \fBCUdevice_P2PAttribute\fP attrib, \fBCUdevice\fP srcDevice, \fBCUdevice\fP dstDevice)"
+.PP
+Returns in \fC*value\fP the value of the requested attribute \fCattrib\fP of the link between \fCsrcDevice\fP and \fCdstDevice\fP. The supported attributes are:
+.IP "\(bu" 2
+\fBCU_DEVICE_P2P_ATTRIBUTE_PERFORMANCE_RANK\fP: A relative value indicating the performance of the link between two devices.
+.IP "\(bu" 2
+\fBCU_DEVICE_P2P_ATTRIBUTE_ACCESS_SUPPORTED\fP P2P: 1 if P2P Access is enable.
+.IP "\(bu" 2
+\fBCU_DEVICE_P2P_ATTRIBUTE_NATIVE_ATOMIC_SUPPORTED\fP: 1 if Atomic operations over the link are supported.
+.PP
+.PP
+Returns \fBCUDA_ERROR_INVALID_DEVICE\fP if \fCsrcDevice\fP or \fCdstDevice\fP are not valid or if they represent the same device.
+.PP
+Returns \fBCUDA_ERROR_INVALID_VALUE\fP if \fCattrib\fP is not valid or if \fCvalue\fP is a null pointer.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIvalue\fP - Returned value of the requested attribute 
+.br
+\fIattrib\fP - The requested attribute of the link between \fCsrcDevice\fP and \fCdstDevice\fP. 
+.br
+\fIsrcDevice\fP - The source device of the target link. 
+.br
+\fIdstDevice\fP - The destination device of the target link.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_DEVICE\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuCtxEnablePeerAccess\fP, \fBcuCtxDisablePeerAccess\fP, cuCtxCanAccessPeer 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

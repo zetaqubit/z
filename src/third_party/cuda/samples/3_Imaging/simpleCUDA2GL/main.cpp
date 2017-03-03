@@ -23,7 +23,7 @@
 #endif
 
 // OpenGL Graphics includes
-#include <GL/glew.h>
+#include <helper_gl.h>
 #if defined(__APPLE__) || defined(MACOSX)
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #include <GLUT/glut.h>
@@ -105,41 +105,10 @@ StopWatchInterface *timer = NULL;
 // expected RGBA8. To prevent this issue, the driver team decided to prevent this to happen
 // instead, use RGBA8UI which required the additional work of scaling the fragment shader
 // output from 0-1 to 0-255. This is why we have some GLSL code, in this case
-#   pragma message("Note: Using Texture RGBA8UI + GLSL for teapot rendering")
+#   pragma message("Note: Using Texture RGBA8UI + GLSL for rendering")
 #endif
-GLuint shDrawPot;  // colors the teapot
+GLuint shDraw;
 
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-bool IsOpenGLAvailable(const char *appName)
-{
-    return true;
-}
-#else
-#if (defined(__APPLE__) || defined(MACOSX))
-bool IsOpenGLAvailable(const char *appName)
-{
-    return true;
-}
-#else
-// check if this is a linux machine
-#include <X11/Xlib.h>
-
-bool IsOpenGLAvailable(const char *appName)
-{
-    Display *Xdisplay = XOpenDisplay(NULL);
-
-    if (Xdisplay == NULL)
-    {
-        return false;
-    }
-    else
-    {
-        XCloseDisplay(Xdisplay);
-        return true;
-    }
-}
-#endif
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 extern "C" void
@@ -231,7 +200,7 @@ static const char *glsl_drawtex_fragshader_src =
     "}\n";
 #endif
 
-static const char *glsl_drawpot_fragshader_src =
+static const char *glsl_draw_fragshader_src =
     //WARNING: seems like the gl_FragColor doesn't want to output >1 colors...
     //you need version 1.3 so you can define a uvec4 output...
     //but MacOSX complains about not supporting 1.3 !!
@@ -564,13 +533,6 @@ void FreeResource()
     deleteTexture(&tex_screen);
     deleteTexture(&tex_cudaResult);
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
-
     if (iGLUTWindowHandle)
     {
         glutDestroyWindow(iGLUTWindowHandle);
@@ -694,7 +656,7 @@ void initGLBuffers()
     // create texture that will receive the result of CUDA
     createTextureDst(&tex_cudaResult, image_width, image_height);
     // load shader programs
-    shDrawPot = compileGLSLprogram(NULL, glsl_drawpot_fragshader_src);
+    shDraw = compileGLSLprogram(NULL, glsl_draw_fragshader_src);
 
 #ifndef USE_TEXSUBIMAGE2D
     shDrawTex = compileGLSLprogram(glsl_drawtex_vertshader_src, glsl_drawtex_fragshader_src);
@@ -783,16 +745,6 @@ initCUDA(int argc, char **argv, bool bUseGL)
 bool
 initGL(int *argc, char **argv)
 {
-    if (IsOpenGLAvailable(sSDKname))
-    {
-        fprintf(stderr, "   OpenGL device is Available\n");
-    }
-    else
-    {
-        fprintf(stderr, "   OpenGL device is NOT Available, [%s] exiting...\n", sSDKname);
-        exit(EXIT_WAIVED);
-    }
-
     // Create GL context
     glutInit(argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_ALPHA | GLUT_DOUBLE | GLUT_DEPTH);
@@ -800,12 +752,10 @@ initGL(int *argc, char **argv)
     iGLUTWindowHandle = glutCreateWindow("CUDA OpenGL post-processing");
 
     // initialize necessary OpenGL extensions
-    glewInit();
-
-    if (! glewIsSupported(
-            "GL_VERSION_2_0 "
+    if (!isGLVersionSupported (2,0) ||
+        !areGLExtensionsSupported (
             "GL_ARB_pixel_buffer_object "
-            "GL_EXT_framebuffer_object "
+            "GL_EXT_framebuffer_object"
         ))
     {
         printf("ERROR: Support for necessary OpenGL extensions missing.");

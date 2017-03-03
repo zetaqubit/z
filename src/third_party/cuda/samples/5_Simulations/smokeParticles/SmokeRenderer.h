@@ -14,7 +14,6 @@
 #ifndef SMOKE_RENDERER_H
 #define SMOKE_RENDERER_H
 
-#include <GL/glew.h>
 #include "framebufferObject.h"
 #include "GLSLProgram.h"
 #include "nvMath.h"

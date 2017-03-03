@@ -1,0 +1,215 @@
+.TH "Direct3D 10 Interoperability" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Direct3D 10 Interoperability \- 
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBcudaD3D10DeviceList\fP { \fBcudaD3D10DeviceListAll\fP =  1, \fBcudaD3D10DeviceListCurrentFrame\fP =  2, \fBcudaD3D10DeviceListNextFrame\fP =  3 }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaD3D10GetDevice\fP (int *device, IDXGIAdapter *pAdapter)"
+.br
+.RI "\fIGets the device number for an adapter. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaD3D10GetDevices\fP (unsigned int *pCudaDeviceCount, int *pCudaDevices, unsigned int cudaDeviceCount, ID3D10Device *pD3D10Device, enum \fBcudaD3D10DeviceList\fP deviceList)"
+.br
+.RI "\fIGets the CUDA devices corresponding to a Direct3D 10 device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaGraphicsD3D10RegisterResource\fP (struct cudaGraphicsResource **resource, ID3D10Resource *pD3DResource, unsigned int flags)"
+.br
+.RI "\fIRegisters a Direct3D 10 resource for access by CUDA. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+This section describes the Direct3D 10 interoperability functions of the CUDA runtime application programming interface. Note that mapping of Direct3D 10 resources is performed with the graphics API agnostic, resource mapping interface described in \fBGraphics Interopability\fP. 
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBcudaD3D10DeviceList\fP"
+.PP
+CUDA devices corresponding to a D3D10 device 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaD3D10DeviceListAll \fP\fP
+The CUDA devices for all GPUs used by a D3D10 device 
+.TP
+\fB\fIcudaD3D10DeviceListCurrentFrame \fP\fP
+The CUDA devices for the GPUs used by a D3D10 device in its currently rendering frame 
+.TP
+\fB\fIcudaD3D10DeviceListNextFrame \fP\fP
+The CUDA devices for the GPUs to be used by a D3D10 device in the next frame 
+.SH "Function Documentation"
+.PP 
+.SS "\fBcudaError_t\fP cudaD3D10GetDevice (int * device, IDXGIAdapter * pAdapter)"
+.PP
+Returns in \fC*device\fP the CUDA-compatible device corresponding to the adapter \fCpAdapter\fP obtained from IDXGIFactory::EnumAdapters. This call will succeed only if a device on adapter \fCpAdapter\fP is CUDA-compatible.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevice\fP - Returns the device corresponding to pAdapter 
+.br
+\fIpAdapter\fP - D3D10 adapter to get device for
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorUnknown\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaGraphicsD3D10RegisterResource\fP, 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaD3D10GetDevices (unsigned int * pCudaDeviceCount, int * pCudaDevices, unsigned int cudaDeviceCount, ID3D10Device * pD3D10Device, enum \fBcudaD3D10DeviceList\fP deviceList)"
+.PP
+Returns in \fC*pCudaDeviceCount\fP the number of CUDA-compatible devices corresponding to the Direct3D 10 device \fCpD3D10Device\fP. Also returns in \fC*pCudaDevices\fP at most \fCcudaDeviceCount\fP of the the CUDA-compatible devices corresponding to the Direct3D 10 device \fCpD3D10Device\fP.
+.PP
+If any of the GPUs being used to render \fCpDevice\fP are not CUDA capable then the call will return \fBcudaErrorNoDevice\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpCudaDeviceCount\fP - Returned number of CUDA devices corresponding to \fCpD3D10Device\fP 
+.br
+\fIpCudaDevices\fP - Returned CUDA devices corresponding to \fCpD3D10Device\fP 
+.br
+\fIcudaDeviceCount\fP - The size of the output device array \fCpCudaDevices\fP 
+.br
+\fIpD3D10Device\fP - Direct3D 10 device to query for CUDA devices 
+.br
+\fIdeviceList\fP - The set of devices to return. This set may be \fBcudaD3D10DeviceListAll\fP for all devices, \fBcudaD3D10DeviceListCurrentFrame\fP for the devices used to render the current frame (in SLI), or \fBcudaD3D10DeviceListNextFrame\fP for the devices used to render the next frame (in SLI).
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorNoDevice\fP, \fBcudaErrorUnknown\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaGraphicsUnregisterResource\fP, \fBcudaGraphicsMapResources\fP, \fBcudaGraphicsSubResourceGetMappedArray\fP, \fBcudaGraphicsResourceGetMappedPointer\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaGraphicsD3D10RegisterResource (struct cudaGraphicsResource ** resource, ID3D10Resource * pD3DResource, unsigned int flags)"
+.PP
+Registers the Direct3D 10 resource \fCpD3DResource\fP for access by CUDA.
+.PP
+If this call is successful, then the application will be able to map and unmap this resource until it is unregistered through \fBcudaGraphicsUnregisterResource()\fP. Also on success, this call will increase the internal reference count on \fCpD3DResource\fP. This reference count will be decremented when this resource is unregistered through \fBcudaGraphicsUnregisterResource()\fP.
+.PP
+This call potentially has a high-overhead and should not be called every frame in interactive applications.
+.PP
+The type of \fCpD3DResource\fP must be one of the following.
+.PP
+.IP "\(bu" 2
+ID3D10Buffer: may be accessed via a device pointer
+.IP "\(bu" 2
+ID3D10Texture1D: individual subresources of the texture may be accessed via arrays
+.IP "\(bu" 2
+ID3D10Texture2D: individual subresources of the texture may be accessed via arrays
+.IP "\(bu" 2
+ID3D10Texture3D: individual subresources of the texture may be accessed via arrays
+.PP
+.PP
+The \fCflags\fP argument may be used to specify additional parameters at register time. The valid values for this parameter are
+.PP
+.IP "\(bu" 2
+\fBcudaGraphicsRegisterFlagsNone\fP: Specifies no hints about how this resource will be used.
+.IP "\(bu" 2
+\fBcudaGraphicsRegisterFlagsSurfaceLoadStore\fP: Specifies that CUDA will bind this resource to a surface reference.
+.IP "\(bu" 2
+\fBcudaGraphicsRegisterFlagsTextureGather\fP: Specifies that CUDA will perform texture gather operations on this resource.
+.PP
+.PP
+Not all Direct3D resources of the above types may be used for interoperability with CUDA. The following are some limitations.
+.PP
+.IP "\(bu" 2
+The primary rendertarget may not be registered with CUDA.
+.IP "\(bu" 2
+Resources allocated as shared may not be registered with CUDA.
+.IP "\(bu" 2
+Textures which are not of a format which is 1, 2, or 4 channels of 8, 16, or 32-bit integer or floating-point data cannot be shared.
+.IP "\(bu" 2
+Surfaces of depth or stencil formats cannot be shared.
+.PP
+.PP
+A complete list of supported DXGI formats is as follows. For compactness the notation A_{B,C,D} represents A_B, A_C, and A_D.
+.IP "\(bu" 2
+DXGI_FORMAT_A8_UNORM
+.IP "\(bu" 2
+DXGI_FORMAT_B8G8R8A8_UNORM
+.IP "\(bu" 2
+DXGI_FORMAT_B8G8R8X8_UNORM
+.IP "\(bu" 2
+DXGI_FORMAT_R16_FLOAT
+.IP "\(bu" 2
+DXGI_FORMAT_R16G16B16A16_{FLOAT,SINT,SNORM,UINT,UNORM}
+.IP "\(bu" 2
+DXGI_FORMAT_R16G16_{FLOAT,SINT,SNORM,UINT,UNORM}
+.IP "\(bu" 2
+DXGI_FORMAT_R16_{SINT,SNORM,UINT,UNORM}
+.IP "\(bu" 2
+DXGI_FORMAT_R32_FLOAT
+.IP "\(bu" 2
+DXGI_FORMAT_R32G32B32A32_{FLOAT,SINT,UINT}
+.IP "\(bu" 2
+DXGI_FORMAT_R32G32_{FLOAT,SINT,UINT}
+.IP "\(bu" 2
+DXGI_FORMAT_R32_{SINT,UINT}
+.IP "\(bu" 2
+DXGI_FORMAT_R8G8B8A8_{SINT,SNORM,UINT,UNORM,UNORM_SRGB}
+.IP "\(bu" 2
+DXGI_FORMAT_R8G8_{SINT,SNORM,UINT,UNORM}
+.IP "\(bu" 2
+DXGI_FORMAT_R8_{SINT,SNORM,UINT,UNORM}
+.PP
+.PP
+If \fCpD3DResource\fP is of incorrect type or is already registered, then \fBcudaErrorInvalidResourceHandle\fP is returned. If \fCpD3DResource\fP cannot be registered, then \fBcudaErrorUnknown\fP is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIresource\fP - Pointer to returned resource handle 
+.br
+\fIpD3DResource\fP - Direct3D resource to register 
+.br
+\fIflags\fP - Parameters for resource registration
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidDevice\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidResourceHandle\fP, \fBcudaErrorUnknown\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaGraphicsUnregisterResource\fP, \fBcudaGraphicsMapResources\fP, \fBcudaGraphicsSubResourceGetMappedArray\fP, \fBcudaGraphicsResourceGetMappedPointer\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

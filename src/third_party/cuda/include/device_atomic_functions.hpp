@@ -58,8 +58,6 @@
 
 #if defined(__cplusplus) && defined(__CUDACC__)
 
-#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 110
-
 /*******************************************************************************
 *                                                                              *
 *                                                                              *
@@ -180,9 +178,6 @@ __DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicCAS(unsigned int *address, u
   return __uAtomicCAS(address, compare, val);
 }
 
-#endif /* !__CUDA_ARCH__ || __CUDA_ARCH__ >= 110 */
-#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 120
-
 /*******************************************************************************
 *                                                                              *
 *                                                                              *
@@ -222,8 +217,6 @@ __DEVICE_ATOMIC_FUNCTIONS_DECL__ bool all(bool cond)
 {
   return (bool)__all((int)cond);
 }
-
-#endif /* !__CUDA_ARCH__ || __CUDA_ARCH__ >= 120 */
 
 #endif /* __cplusplus && __CUDACC__ */
 

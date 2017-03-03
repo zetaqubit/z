@@ -786,11 +786,11 @@ class SegmentationTreeBuilder
                     dNewStartpoints + edgesCount_,
                     IsGreaterEqualThan<uint>(newVerticesCount)).get();
 
-            // Calculate how many edes there are in the reduced graph.
+            // Calculate how many edges there are in the reduced graph.
             uint validEdgesCount =
                 static_cast<uint>(invalidEdgesPtr - dNewStartpoints.get());
 
-            // Mark groups of edges correspoding to the same vertex in the
+            // Mark groups of edges corresponding to the same vertex in the
             // reduced graph.
             thrust::adjacent_difference(dNewStartpoints,
                                         dNewStartpoints + edgesCount_,
@@ -847,7 +847,7 @@ class SegmentationTreeBuilder
 
             // The graph's reconstruction is now finished.
 
-            // Build new level of the segementation tree. It is a trivial task
+            // Build new level of the segmentation tree. It is a trivial task
             // as we already have "dVerticesMapping" that contains all
             // sufficient information about the vertices' transformations.
             thrust::device_ptr<uint> dVerticesIDs =
@@ -1030,63 +1030,37 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
-    int devID = findCudaDevice(argc, (const char **)argv);
-    cudaDeviceProp deviceProp;
-    checkCudaErrors(cudaGetDeviceProperties(&deviceProp, devID));
+    findCudaDevice(argc, (const char **)argv);
 
-    // This requires a minimum of SM 1.3 to be able to run
-    if ((deviceProp.major > 1) ||
-        (deviceProp.major == 1 && deviceProp.minor >= 3))
-    {
-        Graph graph;
-        buildGraph(image, imageWidth, imageHeight, graph);
+    Graph graph;
+    buildGraph(image, imageWidth, imageHeight, graph);
 
-        Pyramid segmentations;
+    Pyramid segmentations;
 
-        cout << "* Building segmentation tree... ";
-        cout.flush();
+    cout << "* Building segmentation tree... ";
+    cout.flush();
 
-        SegmentationTreeBuilder algo;
-        float elapsedTime = algo.run(graph, segmentations);
+    SegmentationTreeBuilder algo;
+    float elapsedTime = algo.run(graph, segmentations);
 
-        cout << "done in " << elapsedTime << " (ms)" << endl;
+    cout << "done in " << elapsedTime << " (ms)" << endl;
 
-        cout << "* Dumping levels for each tree..." << endl << endl;
+    cout << "* Dumping levels for each tree..." << endl << endl;
 
-        segmentations.dump(imageWidth, imageHeight);
+    segmentations.dump(imageWidth, imageHeight);
 
-        bool bResults[2];
+    bool bResults[2];
 
-        bResults[0] = sdkComparePPM("level_00.ppm",
-                                    sdkFindFilePath("ref_00.ppm", argv[0]),
-                                    5.0f,
-                                    0.15f,
-                                    false);
-        bResults[1] = sdkComparePPM("level_09.ppm",
-                                    sdkFindFilePath("ref_09.ppm", argv[0]),
-                                    5.0f,
-                                    0.15f,
-                                    false);
+    bResults[0] = sdkComparePPM("level_00.ppm",
+                                sdkFindFilePath("ref_00.ppm", argv[0]),
+                                5.0f,
+                                0.15f,
+                                false);
+    bResults[1] = sdkComparePPM("level_09.ppm",
+                                sdkFindFilePath("ref_09.ppm", argv[0]),
+                                5.0f,
+                                0.15f,
+                                false);
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
-        exit((bResults[0] && bResults[1]) ? EXIT_SUCCESS : EXIT_FAILURE);
-    }
-    else
-    {
-        printf("segmentationTreeThrust requires a GPU with Compute Capability "
-               "1.3 or higher, exiting...\n\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
-        exit(EXIT_SUCCESS);
-    }
+    exit((bResults[0] && bResults[1]) ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -15,7 +15,7 @@
  */
 
 // OpenGL Graphics includes
-#include <GL/glew.h>
+#include <helper_gl.h>
 #if defined(__APPLE__) || defined(__MACOSX)
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #include <GLUT/glut.h>
@@ -438,7 +438,7 @@ bool initCudaResources(int argc, char **argv, int *bTCC)
         checkCudaErrors(cuCtxCreate(&g_oContext, CU_CTX_BLOCKING_SYNC, g_oDevice));
     }
 
-    // Initialize CUDA releated Driver API
+    // Initialize CUDA related Driver API
     // Determine if we are running on a 32-bit or 64-bit OS and choose the right PTX file
     try
     {
@@ -955,6 +955,7 @@ bool initGL(int argc, char **argv, int *pbTCC)
         glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
         glutInitWindowSize(g_nWindowWidth, g_nWindowHeight);
         glutCreateWindow(sAppName);
+		reshape(g_nWindowWidth, g_nWindowHeight);
 
         printf(">> initGL() creating window [%d x %d]\n", g_nWindowWidth, g_nWindowHeight);
 
@@ -963,9 +964,8 @@ bool initGL(int argc, char **argv, int *pbTCC)
         glutKeyboardFunc(keyboard);
         glutIdleFunc(idle);
 
-        glewInit();
-
-        if (!glewIsSupported("GL_VERSION_1_5 GL_ARB_vertex_buffer_object GL_ARB_pixel_buffer_object"))
+        if (!isGLVersionSupported(1,5) ||
+            !areGLExtensionsSupported("GL_ARB_vertex_buffer_object GL_ARB_pixel_buffer_object"))
         {
             fprintf(stderr, "Error: failed to get minimal extensions for demo\n");
             fprintf(stderr, "This sample requires:\n");
@@ -1308,12 +1308,12 @@ bool drawScene(int field_num)
     return hr;
 }
 
-// Release all previously initd objects
+// Release all previously initialized objects
 bool cleanup(bool bDestroyContext)
 {
     if (bDestroyContext)
     {
-        // Attach the CUDA Context (so we may properly free memroy)
+        // Attach the CUDA Context (so we may properly free memory)
         checkCudaErrors(cuCtxPushCurrent(g_oContext));
 
         if (g_pInteropFrame[0])

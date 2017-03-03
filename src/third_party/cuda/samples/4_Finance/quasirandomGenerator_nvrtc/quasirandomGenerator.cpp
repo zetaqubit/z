@@ -12,7 +12,6 @@
 // CUDA Runtime
 #include <cuda_runtime.h>
 #include <cuda.h>
-#include <cudaProfiler.h>
 
 // Utilities and system includes
 #include <helper_functions.h>
@@ -164,8 +163,6 @@ int main(int argc, char **argv)
     free(h_OutputGPU);
 
     checkCudaErrors(cuMemFree(d_Output));
-
-    cuProfilerStop();
 
     exit(L1norm < 1e-6 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

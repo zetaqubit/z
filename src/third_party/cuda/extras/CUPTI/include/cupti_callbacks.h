@@ -51,7 +51,7 @@
 #define __CUPTI_CALLBACKS_H__
 
 #include <cuda.h>
-#include <builtin_types.h>         
+#include <builtin_types.h>
 #include <string.h>
 #include <cuda_stdint.h>
 #include <cupti_result.h>
@@ -59,14 +59,14 @@
 #ifndef CUPTIAPI
 #ifdef _WIN32
 #define CUPTIAPI __stdcall
-#else 
+#else
 #define CUPTIAPI
-#endif 
+#endif
 #endif
 
 #if defined(__cplusplus)
 extern "C" {
-#endif 
+#endif
 
 /**
  * \defgroup CUPTI_CALLBACK_API CUPTI Callback API
@@ -86,7 +86,7 @@ typedef enum {
    * The callback is at the entry of the API call.
    */
   CUPTI_API_ENTER                 = 0,
-  /** 
+  /**
    * The callback is at the exit of the API call.
    */
   CUPTI_API_EXIT                  = 1,
@@ -222,17 +222,17 @@ typedef struct {
   /**
    * Point in the runtime or driver function from where the callback
    * was issued.
-   */ 
+   */
   CUpti_ApiCallbackSite callbackSite;
 
   /**
    * Name of the runtime or driver API function which issued the
    * callback. This string is a global constant and so may be
    * accessed outside of the callback.
-   */ 
+   */
   const char *functionName;
 
-  /**  
+  /**
    * Pointer to the arguments passed to the runtime or driver API
    * call. See generated_cuda_runtime_api_meta.h and
    * generated_cuda_meta.h for structure definitions for the
@@ -254,22 +254,22 @@ typedef struct {
    * function which issued the callback. This entry is valid only for
    * driver and runtime launch callbacks, where it returns the name of
    * the kernel.
-   */ 
+   */
   const char *symbolName;
 
-  /** 
+  /**
    * Driver context current to the thread, or null if no context is
    * current. This value can change from the entry to exit callback
    * of a runtime API function if the runtime initializes a context.
    */
   CUcontext context;
-    
+
   /**
    * Unique ID for the CUDA context associated with the thread. The
    * UIDs are assigned sequentially as contexts are created and are
    * unique within a process.
    */
-  uint32_t contextUid;  
+  uint32_t contextUid;
 
   /**
    * Pointer to data shared between the entry and exit callbacks of
@@ -292,7 +292,7 @@ typedef struct {
    * field is new in 4.1.
    */
   uint32_t correlationId;
- 
+
 } CUpti_CallbackData;
 
 /**
@@ -323,7 +323,7 @@ typedef struct {
      */
     CUstream stream;
   } resourceHandle;
-  
+
   /**
    * Reserved for future use.
    */
@@ -395,10 +395,10 @@ typedef struct {
    * Name of the NVTX API function which issued the callback. This
    * string is a global constant and so may be accessed outside of the
    * callback.
-   */ 
+   */
   const char *functionName;
 
-  /**  
+  /**
    * Pointer to the arguments passed to the NVTX API call. See
    * generated_nvtx_meta.h for structure definitions for the
    * parameters for each NVTX API function.
@@ -419,7 +419,7 @@ typedef struct {
  * callback this should be interpreted as a \ref
  * CUpti_CallbackIdResource value. Within a synchronize API callback
  * this should be interpreted as a \ref CUpti_CallbackIdSync value.
- */ 
+ */
 typedef uint32_t CUpti_CallbackId;
 
 /**
@@ -443,7 +443,7 @@ typedef void (CUPTIAPI *CUpti_CallbackFunc)(
     void *userdata,
     CUpti_CallbackDomain domain,
     CUpti_CallbackId cbid,
-    const void *cbdata); 
+    const void *cbdata);
 
 /**
  * \brief A callback subscriber.
@@ -457,25 +457,25 @@ typedef CUpti_CallbackDomain *CUpti_DomainTable;
 
 /**
  * \brief Get the available callback domains.
- * 
+ *
  * Returns in \p *domainTable an array of size \p *domainCount of all
- * the available callback domains. 
+ * the available callback domains.
  * \note \b Thread-safety: this function is thread safe.
  *
  * \param domainCount Returns number of callback domains
- * \param domainTable Returns pointer to array of available callback domains 
- * 
+ * \param domainTable Returns pointer to array of available callback domains
+ *
  * \retval CUPTI_SUCCESS on success
  * \retval CUPTI_ERROR_NOT_INITIALIZED if unable to initialize CUPTI
  * \retval CUPTI_ERROR_INVALID_PARAMETER if \p domainCount or \p domainTable are NULL
  */
-CUptiResult CUPTIAPI cuptiSupportedDomains(size_t *domainCount, 
+CUptiResult CUPTIAPI cuptiSupportedDomains(size_t *domainCount,
                                            CUpti_DomainTable *domainTable);
 
-/** 
+/**
  * \brief Initialize a callback subscriber with a callback function
  * and user data.
- * 
+ *
  * Initializes a callback subscriber with a callback function and
  * (optionally) a pointer to user data. The returned subscriber handle
  * can be used to enable and disable the callback for specific domains
@@ -494,13 +494,13 @@ CUptiResult CUPTIAPI cuptiSupportedDomains(size_t *domainCount,
  * \retval CUPTI_ERROR_MAX_LIMIT_REACHED if there is already a CUPTI subscriber
  * \retval CUPTI_ERROR_INVALID_PARAMETER if \p subscriber is NULL
  */
-CUptiResult CUPTIAPI cuptiSubscribe(CUpti_SubscriberHandle *subscriber, 
-                                    CUpti_CallbackFunc callback, 
+CUptiResult CUPTIAPI cuptiSubscribe(CUpti_SubscriberHandle *subscriber,
+                                    CUpti_CallbackFunc callback,
                                     void *userdata);
 
 /**
  * \brief Unregister a callback subscriber.
- * 
+ *
  * Removes a callback subscriber so that no future callbacks will be
  * issued to that subscriber.
  * \note \b Thread-safety: this function is thread safe.
@@ -511,12 +511,12 @@ CUptiResult CUPTIAPI cuptiSubscribe(CUpti_SubscriberHandle *subscriber,
  * \retval CUPTI_ERROR_NOT_INITIALIZED if unable to initialized CUPTI
  * \retval CUPTI_ERROR_INVALID_PARAMETER if \p subscriber is NULL or not initialized
  */
-CUptiResult CUPTIAPI cuptiUnsubscribe(CUpti_SubscriberHandle subscriber); 
+CUptiResult CUPTIAPI cuptiUnsubscribe(CUpti_SubscriberHandle subscriber);
 
 /**
  * \brief Get the current enabled/disabled state of a callback for a specific
- * domain and function ID. 
- * 
+ * domain and function ID.
+ *
  * Returns non-zero in \p *enable if the callback for a domain and
  * callback ID is enabled, and zero if not enabled.
  *
@@ -525,7 +525,7 @@ CUptiResult CUPTIAPI cuptiUnsubscribe(CUpti_SubscriberHandle subscriber);
  * cuptiEnableAllDomains. For example, if cuptiGetCallbackState(sub,
  * d, c) and cuptiEnableCallback(sub, d, c) are called concurrently,
  * the results are undefined.
- * 
+ *
  * \param enable Returns non-zero if callback enabled, zero if not enabled
  * \param subscriber Handle to the initialize subscriber
  * \param domain The domain of the callback
@@ -536,7 +536,7 @@ CUptiResult CUPTIAPI cuptiUnsubscribe(CUpti_SubscriberHandle subscriber);
  * \retval CUPTI_ERROR_INVALID_PARAMETER if \p enabled is NULL, or if \p
  * subscriber, \p domain or \p cbid is invalid.
  */
-CUptiResult CUPTIAPI cuptiGetCallbackState(uint32_t *enable,               
+CUptiResult CUPTIAPI cuptiGetCallbackState(uint32_t *enable,
                                            CUpti_SubscriberHandle subscriber,
                                            CUpti_CallbackDomain domain,
                                            CUpti_CallbackId cbid);
@@ -553,10 +553,10 @@ CUptiResult CUPTIAPI cuptiGetCallbackState(uint32_t *enable,
  * cuptiEnableAllDomains. For example, if cuptiGetCallbackState(sub,
  * d, c) and cuptiEnableCallback(sub, d, c) are called concurrently,
  * the results are undefined.
- * 
+ *
  * \param enable New enable state for the callback. Zero disables the
  * callback, non-zero enables the callback.
- * \param subscriber - Handle to callback subscription 
+ * \param subscriber - Handle to callback subscription
  * \param domain The domain of the callback
  * \param cbid The ID of the callback
  *
@@ -566,7 +566,7 @@ CUptiResult CUPTIAPI cuptiGetCallbackState(uint32_t *enable,
  * cbid is invalid.
  */
 CUptiResult CUPTIAPI cuptiEnableCallback(uint32_t enable,
-                                         CUpti_SubscriberHandle subscriber, 
+                                         CUpti_SubscriberHandle subscriber,
                                          CUpti_CallbackDomain domain,
                                          CUpti_CallbackId cbid);
 
@@ -584,7 +584,7 @@ CUptiResult CUPTIAPI cuptiEnableCallback(uint32_t enable,
  * \param enable New enable state for all callbacks in the
  * domain. Zero disables all callbacks, non-zero enables all
  * callbacks.
- * \param subscriber - Handle to callback subscription 
+ * \param subscriber - Handle to callback subscription
  * \param domain The domain of the callback
  *
  * \retval CUPTI_SUCCESS on success
@@ -592,14 +592,14 @@ CUptiResult CUPTIAPI cuptiEnableCallback(uint32_t enable,
  * \retval CUPTI_ERROR_INVALID_PARAMETER if \p subscriber or \p domain is invalid
  */
 CUptiResult CUPTIAPI cuptiEnableDomain(uint32_t enable,
-                                       CUpti_SubscriberHandle subscriber, 
+                                       CUpti_SubscriberHandle subscriber,
                                        CUpti_CallbackDomain domain);
 
 /**
  * \brief Enable or disable all callbacks in all domains.
  *
  * Enable or disable all callbacks in all domains.
- * 
+ *
  * \note \b Thread-safety: a subscriber must serialize access to
  * cuptiGetCallbackState, cuptiEnableCallback, cuptiEnableDomain, and
  * cuptiEnableAllDomains. For example, if cuptiGetCallbackState(sub,
@@ -609,18 +609,18 @@ CUptiResult CUPTIAPI cuptiEnableDomain(uint32_t enable,
  * \param enable New enable state for all callbacks in all
  * domain. Zero disables all callbacks, non-zero enables all
  * callbacks.
- * \param subscriber - Handle to callback subscription 
+ * \param subscriber - Handle to callback subscription
  *
  * \retval CUPTI_SUCCESS on success
  * \retval CUPTI_ERROR_NOT_INITIALIZED if unable to initialized CUPTI
  * \retval CUPTI_ERROR_INVALID_PARAMETER if \p subscriber is invalid
  */
-CUptiResult CUPTIAPI cuptiEnableAllDomains(uint32_t enable, 
+CUptiResult CUPTIAPI cuptiEnableAllDomains(uint32_t enable,
                                            CUpti_SubscriberHandle subscriber);
 
 /**
  * \brief Get the name of a callback for a specific domain and callback ID.
- * 
+ *
  * Returns a pointer to the name c_string in \p **name.
  *
  * \note \b Names are available only for the DRIVER and RUNTIME domains.
@@ -637,11 +637,11 @@ CUptiResult CUPTIAPI cuptiGetCallbackName(CUpti_CallbackDomain domain,
                                           uint32_t cbid,
                                           const char **name);
 
-/** @} */ /* END CUPTI_CALLBACK_API */ 
+/** @} */ /* END CUPTI_CALLBACK_API */
 
 #if defined(__cplusplus)
 }
-#endif 
+#endif
 
 #endif  // file guard
 

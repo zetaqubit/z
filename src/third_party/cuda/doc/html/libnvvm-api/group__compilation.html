@@ -45,7 +45,7 @@
       <div id="site-content">
          <nav id="site-nav">
             <div class="category closed"><a href="../index.html" title="The root of the site.">CUDA Toolkit
-                  v7.0</a></div>
+                  v8.0</a></div>
             <div class="category"><a href="index.html" title="libNVVM API">libNVVM API</a></div>
             <ul>
                <li>
@@ -81,10 +81,10 @@
                   (<a href="../../pdf/libNVVM_API.pdf">PDF</a>)
                   -
                   
-                  v7.0
+                  v8.0
                   (<a href="https://developer.nvidia.com/cuda-toolkit-archive">older</a>)
                   -
-                  Last updated March 5, 2015
+                  Last updated January 12, 2017
                   -
                   <a href="mailto:cudatools@nvidia.com?subject=CUDA Toolkit Documentation Feedback: libNVVM API">Send Feedback</a>
                   -
@@ -170,7 +170,10 @@
                            </div>
                            <div class="section">
                               <h6 class="description_header">Description</h6>
-                              <p>The buffer should contain an NVVM IR module either in the bitcode representation or in the text representation.</p>
+                              <p>The buffer should contain an NVVM IR module. The module may have NVVM IR version 1.3 in LLVM 3.8 bitcode format. Alternatively,
+                                 the module may have NVVM IR version 1.2 either in the LLVM 3.4 bitcode representation or in the LLVM 3.4 text representation.
+                                 Support for reading the text representation of NVVM IR is deprecated and may be removed in a later version.
+                              </p>
                               <p class="p"></p>
                               <p class="p"></p>
                            </div>
@@ -239,7 +242,22 @@
                                                 <p class="p">compute_30</p>
                                              </li>
                                              <li class="li">
+                                                <p class="p">compute_32</p>
+                                             </li>
+                                             <li class="li">
                                                 <p class="p">compute_35</p>
+                                             </li>
+                                             <li class="li">
+                                                <p class="p">compute_37</p>
+                                             </li>
+                                             <li class="li">
+                                                <p class="p">compute_50</p>
+                                             </li>
+                                             <li class="li">
+                                                <p class="p">compute_52</p>
+                                             </li>
+                                             <li class="li">
+                                                <p class="p">compute_53</p>
                                              </li>
                                           </ul>
                                        </div>
@@ -525,9 +543,12 @@
                            <div class="section">
                               <h6 class="description_header">Description</h6>
                               <p>The valid compiler options are:</p>
-                              <p class="p">NONE. The <tt class="ph tt code">numOptions</tt> and <tt class="ph tt code">options</tt> parameters are ignored, and are for future use.
+                              <p class="p">Same as for <a class="xref" href="group__compilation.html#group__compilation_1g76ac1e23f5d0e2240e78be0e63450346" title="Compile the NVVM program." shape="rect">nvvmCompileProgram()</a>.
                               </p>
                               <p class="p"></p>
+                              <p class="p"></p>
+                              <p class="p apiDesc_subtitle"><strong class="ph b">See also:</strong></p>
+                              <p class="p see_subsection"><a class="xref" href="group__compilation.html#group__compilation_1g76ac1e23f5d0e2240e78be0e63450346" title="Compile the NVVM program." shape="rect">nvvmCompileProgram()</a></p>
                               <p class="p"></p>
                            </div>
                         </dd>

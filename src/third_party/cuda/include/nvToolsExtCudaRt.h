@@ -1,5 +1,5 @@
 /*
-* Copyright 2012  NVIDIA Corporation.  All rights reserved.
+* Copyright 2009-2016  NVIDIA Corporation.  All rights reserved.
 *
 * NOTICE TO USER:
 *
@@ -39,7 +39,7 @@
 #define NVTOOLSEXT_CUDART_H_
 
 #include "cuda.h"
-#include "cuda_runtime_api.h"
+#include "driver_types.h"
 
 #include "nvToolsExt.h"
 
@@ -51,13 +51,32 @@ extern "C" {
 /** \name Functions for CUDA Resource Naming
 */
 /** \addtogroup RESOURCE_NAMING
- * \section RESOURCE_NAMING_CUDA CUDA Resource Naming
+ * \section RESOURCE_NAMING_CUDART CUDA Runtime Resource Naming
  *
  * This section covers the API functions that allow to annotate CUDA resources
  * with user-provided names.
  *
  * @{
  */
+
+/*  ------------------------------------------------------------------------- */
+/* \cond SHOW_HIDDEN 
+* \brief Used to build a non-colliding value for resource types separated class
+* \version \NVTX_VERSION_2
+*/
+#define NVTX_RESOURCE_CLASS_CUDART 5
+/** \endcond */
+
+/*  ------------------------------------------------------------------------- */
+/** \brief Resource types for CUDART
+*/
+typedef enum nvtxResourceCUDARTType_t
+{
+    NVTX_RESOURCE_TYPE_CUDART_DEVICE = NVTX_RESOURCE_MAKE_TYPE(CUDART, 0), /* int device */
+    NVTX_RESOURCE_TYPE_CUDART_STREAM = NVTX_RESOURCE_MAKE_TYPE(CUDART, 1), /* cudaStream_t */
+    NVTX_RESOURCE_TYPE_CUDART_EVENT = NVTX_RESOURCE_MAKE_TYPE(CUDART, 2), /* cudaEvent_t */
+} nvtxResourceCUDARTType_t;
+
 
 /* ------------------------------------------------------------------------- */
 /** \brief Annotates a CUDA device.

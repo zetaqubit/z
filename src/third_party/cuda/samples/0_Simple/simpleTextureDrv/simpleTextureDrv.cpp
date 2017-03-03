@@ -597,6 +597,7 @@ initCUDA(int argc, char **argv, CUfunction *transform)
     }
 
     *transform = cuFunction;
+
     return CUDA_SUCCESS;
 Error:
     cuCtxDestroy(cuContext);

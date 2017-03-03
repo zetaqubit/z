@@ -25,7 +25,7 @@
 // * - Base point for every thread, + - pixel around which ColorDistance is computed
 // The idea behind this method:
 // - Every thread in a 8x8 block computes just one ColorDistance
-// - It is saved in the weights array that is shared accross the threads
+// - It is saved in the weights array that is shared across the threads
 // - Threads are synced
 // - For every pixel inside the block weights are considered to be constants
 ////////////////////////////////////////////////////////////////////////////////
@@ -110,7 +110,7 @@ __global__ void NLM2(
         clr.y *= sumWeights;
         clr.z *= sumWeights;
 
-        //Choose LERP quotent basing on how many texels
+        //Choose LERP quotient basing on how many texels
         //within the NLM window exceeded the weight threshold
         float lerpQ = (fCount > NLM_LERP_THRESHOLD) ? lerpC : 1.0f - lerpC;
 
@@ -202,7 +202,7 @@ __global__ void NLM2diag(
                 fCount      += (weightIJ > NLM_WEIGHT_THRESHOLD) ? INV_NLM_WINDOW_AREA : 0;
             }
 
-        //Choose LERP quotent basing on how many texels
+        //Choose LERP quotient basing on how many texels
         //within the NLM window exceeded the weight threshold
         float lerpQ = (fCount > NLM_LERP_THRESHOLD) ? 1.0f : 0.0f;
 

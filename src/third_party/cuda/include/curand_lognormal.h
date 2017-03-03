@@ -91,9 +91,9 @@ QUALIFIERS float curand_log_normal(curandStateXORWOW_t *state, float mean, float
         x = curand(state);
         y = curand(state);
         float2 v = _curand_box_muller(x, y);
-        state->boxmuller_extra = exp(mean + (stddev * v.y));
+        state->boxmuller_extra = expf(mean + (stddev * v.y));
         state->boxmuller_flag = EXTRA_FLAG_LOG_NORMAL;
-        return exp(mean + (stddev * v.x));
+        return expf(mean + (stddev * v.x));
     }
     state->boxmuller_flag = 0;
     return state->boxmuller_extra;
@@ -127,9 +127,9 @@ QUALIFIERS float curand_log_normal(curandStatePhilox4_32_10_t *state, float mean
         x = curand(state);
         y = curand(state);
         float2 v = _curand_box_muller(x, y);
-        state->boxmuller_extra = exp(mean + (stddev * v.y));
+        state->boxmuller_extra = expf(mean + (stddev * v.y));
         state->boxmuller_flag = EXTRA_FLAG_LOG_NORMAL;
-        return exp(mean + (stddev * v.x));
+        return expf(mean + (stddev * v.x));
     }
     state->boxmuller_flag = 0;
     return state->boxmuller_extra;
@@ -156,8 +156,8 @@ QUALIFIERS float curand_log_normal(curandStatePhilox4_32_10_t *state, float mean
 QUALIFIERS float2 curand_log_normal2(curandStateXORWOW_t *state, float mean, float stddev)
 {
     float2 v = curand_box_muller(state);
-    v.x = exp(mean + (stddev * v.x));
-    v.y = exp(mean + (stddev * v.y));
+    v.x = expf(mean + (stddev * v.x));
+    v.y = expf(mean + (stddev * v.y));
     return v;
 }
 
@@ -182,8 +182,8 @@ QUALIFIERS float2 curand_log_normal2(curandStateXORWOW_t *state, float mean, flo
 QUALIFIERS float2 curand_log_normal2(curandStatePhilox4_32_10_t *state, float mean, float stddev)
 {
     float2 v = curand_box_muller(state);
-    v.x = exp(mean + (stddev * v.x));
-    v.y = exp(mean + (stddev * v.y));
+    v.x = expf(mean + (stddev * v.x));
+    v.y = expf(mean + (stddev * v.y));
     return v;
 }
 /**
@@ -207,10 +207,10 @@ QUALIFIERS float2 curand_log_normal2(curandStatePhilox4_32_10_t *state, float me
 QUALIFIERS float4 curand_log_normal4(curandStatePhilox4_32_10_t *state, float mean, float stddev)
 {
     float4 v = curand_box_muller4(state);
-    v.x = exp(mean + (stddev * v.x));
-    v.y = exp(mean + (stddev * v.y));
-    v.z = exp(mean + (stddev * v.z));
-    v.w = exp(mean + (stddev * v.w));
+    v.x = expf(mean + (stddev * v.x));
+    v.y = expf(mean + (stddev * v.y));
+    v.z = expf(mean + (stddev * v.z));
+    v.w = expf(mean + (stddev * v.w));
     return v;
 }
 
@@ -238,9 +238,9 @@ QUALIFIERS float curand_log_normal(curandStateMRG32k3a_t *state, float mean, flo
 {
     if(state->boxmuller_flag != EXTRA_FLAG_LOG_NORMAL) {
         float2 v = curand_box_muller_mrg(state);
-        state->boxmuller_extra = exp(mean + (stddev * v.y));
+        state->boxmuller_extra = expf(mean + (stddev * v.y));
         state->boxmuller_flag = EXTRA_FLAG_LOG_NORMAL;
-        return exp(mean + (stddev * v.x));
+        return expf(mean + (stddev * v.x));
     }
     state->boxmuller_flag = 0;
     return state->boxmuller_extra;
@@ -267,8 +267,8 @@ QUALIFIERS float curand_log_normal(curandStateMRG32k3a_t *state, float mean, flo
 QUALIFIERS float2 curand_log_normal2(curandStateMRG32k3a_t *state, float mean, float stddev)
 {
     float2 v = curand_box_muller_mrg(state);
-    v.x = exp(mean + (stddev * v.x));
-    v.y = exp(mean + (stddev * v.y));
+    v.x = expf(mean + (stddev * v.x));
+    v.y = expf(mean + (stddev * v.y));
     return v;
 }
 
@@ -292,7 +292,7 @@ QUALIFIERS float2 curand_log_normal2(curandStateMRG32k3a_t *state, float mean, f
  */
 QUALIFIERS float curand_log_normal(curandStateMtgp32_t *state, float mean, float stddev)
 {
-    return exp(mean + (stddev * _curand_normal_icdf(curand(state))));
+    return expf(mean + (stddev * _curand_normal_icdf(curand(state))));
 }
 
 /**
@@ -315,7 +315,7 @@ QUALIFIERS float curand_log_normal(curandStateMtgp32_t *state, float mean, float
  */
 QUALIFIERS float curand_log_normal(curandStateSobol32_t *state, float mean, float stddev)
 {
-    return exp(mean + (stddev * _curand_normal_icdf(curand(state))));
+    return expf(mean + (stddev * _curand_normal_icdf(curand(state))));
 }
 /**
  * \brief Return a log-normally distributed float from a scrambled Sobol32 generator.
@@ -337,7 +337,7 @@ QUALIFIERS float curand_log_normal(curandStateSobol32_t *state, float mean, floa
  */
 QUALIFIERS float curand_log_normal(curandStateScrambledSobol32_t *state, float mean, float stddev)
 {
-    return exp(mean + (stddev * _curand_normal_icdf(curand(state))));
+    return expf(mean + (stddev * _curand_normal_icdf(curand(state))));
 }
 
 /**
@@ -360,7 +360,7 @@ QUALIFIERS float curand_log_normal(curandStateScrambledSobol32_t *state, float m
  */
 QUALIFIERS float curand_log_normal(curandStateSobol64_t *state, float mean, float stddev)
 {
-    return exp(mean + (stddev * _curand_normal_icdf(curand(state))));
+    return expf(mean + (stddev * _curand_normal_icdf(curand(state))));
 }
 
 /**
@@ -383,7 +383,7 @@ QUALIFIERS float curand_log_normal(curandStateSobol64_t *state, float mean, floa
  */
 QUALIFIERS float curand_log_normal(curandStateScrambledSobol64_t *state, float mean, float stddev)
 {
-    return exp(mean + (stddev * _curand_normal_icdf(curand(state))));
+    return expf(mean + (stddev * _curand_normal_icdf(curand(state))));
 }
 
 /**

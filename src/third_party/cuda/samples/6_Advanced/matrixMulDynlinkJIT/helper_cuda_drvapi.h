@@ -102,6 +102,7 @@ inline int _ConvertSMVer2CoresDRV(int major, int minor)
         { 0x37, 192}, // Kepler Generation (SM 3.7) GK21x class
         { 0x50, 128}, // Maxwell Generation (SM 5.0) GM10x class
         { 0x52, 128}, // Maxwell Generation (SM 5.2) GM20x class
+        { 0x53, 128}, // Maxwell Generation (SM 5.3) GM20x class
         {   -1, -1 }
     };
 

@@ -19,7 +19,7 @@
     Reductions are a very common computation in parallel algorithms.  Any time
     an array of values needs to be reduced to a single value using a binary
     associative operator, a reduction can be used.  Example applications include
-    statistics computaions such as mean and standard deviation, and image
+    statistics computations such as mean and standard deviation, and image
     processing applications such as finding the total luminance of an
     image.
 
@@ -115,7 +115,7 @@ main(int argc, char **argv)
         }
         else if (strcasecmp(typeInput, "int"))
         {
-            printf("Type %s is not recoginized. Using default type int.\n\n", typeInput);
+            printf("Type %s is not recognized. Using default type int.\n\n", typeInput);
         }
     }
 
@@ -145,13 +145,6 @@ main(int argc, char **argv)
     {
         printf("Error: the selected device does not support the minimum compute capability of %d.%d.\n\n",
                minimumComputeVersion / 10, minimumComputeVersion % 10);
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 
@@ -175,12 +168,6 @@ main(int argc, char **argv)
             break;
     }
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     printf(bResult ? "Test passed\n" : "Test failed!\n");
 }
 
@@ -234,7 +221,7 @@ unsigned int nextPow2(unsigned int x)
 void getNumBlocksAndThreads(int whichKernel, int n, int maxBlocks, int maxThreads, int &blocks, int &threads)
 {
 
-    //get device capability, to avoid block/grid size excceed the upbound
+    //get device capability, to avoid block/grid size exceed the upper bound
     cudaDeviceProp prop;
     int device;
     checkCudaErrors(cudaGetDevice(&device));
@@ -258,7 +245,7 @@ void getNumBlocksAndThreads(int whichKernel, int n, int maxBlocks, int maxThread
 
     if (blocks > prop.maxGridSize[0])
     {
-        printf("Grid size <%d> excceeds the device capability <%d>, set block size as %d (original %d)\n",
+        printf("Grid size <%d> exceeds the device capability <%d>, set block size as %d (original %d)\n",
                blocks, prop.maxGridSize[0], threads*2, threads);
 
         blocks /= 2;
@@ -305,6 +292,8 @@ T benchmarkReduce(int  n,
 
         // check if kernel execution generated an error
         getLastCudaError("Kernel execution failed");
+        // Clear d_idata for later use as temporary buffer.
+        cudaMemset(d_idata, 0, n*sizeof(T));
 
         if (cpuFinalReduction)
         {
@@ -329,8 +318,8 @@ T benchmarkReduce(int  n,
             {
                 int threads = 0, blocks = 0;
                 getNumBlocksAndThreads(kernel, s, maxBlocks, maxThreads, blocks, threads);
-
-                reduce<T>(s, threads, blocks, kernel, d_odata, d_odata);
+                cudaMemcpy(d_idata, d_odata, s*sizeof(T), cudaMemcpyDeviceToDevice);
+                reduce<T>(s, threads, blocks, kernel, d_idata, d_odata);
 
                 if (kernel < 3)
                 {
@@ -470,7 +459,7 @@ void shmoo(int minN, int maxN, int maxThreads, int maxBlocks, ReduceType datatyp
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// The main function whihc runs the reduction test.
+// The main function which runs the reduction test.
 ////////////////////////////////////////////////////////////////////////////////
 template <class T>
 bool

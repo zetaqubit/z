@@ -58,8 +58,6 @@
 
 #if defined(__cplusplus) && defined(__CUDACC__)
 
-#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 110
-
 /*******************************************************************************
 *                                                                              *
 *                                                                              *
@@ -69,6 +67,13 @@
 #include "builtin_types.h"
 #include "host_defines.h"
 
+#ifndef __CUDA_ARCH__
+#define __DEF_IF_HOST { }
+#else  /* !__CUDA_ARCH__ */
+#define __DEF_IF_HOST ;
+#endif /* __CUDA_ARCH__ */
+
+#ifdef __CUDA_ARCH__
 #if !defined(__CUDACC_RTC__)
 extern "C"
 {
@@ -95,6 +100,7 @@ extern __device__ __device_builtin__ unsigned int __uAtomicCAS(unsigned int *add
 #if !defined(__CUDACC_RTC__)
 }
 #endif /* !__CUDACC_RTC__ */
+#endif /* __CUDA_ARCH__ */
 
 /*******************************************************************************
 *                                                                              *
@@ -102,50 +108,47 @@ extern __device__ __device_builtin__ unsigned int __uAtomicCAS(unsigned int *add
 *                                                                              *
 *******************************************************************************/
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicAdd(int *address, int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicAdd(int *address, int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicAdd(unsigned int *address, unsigned int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicAdd(unsigned int *address, unsigned int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicSub(int *address, int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicSub(int *address, int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicSub(unsigned int *address, unsigned int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicSub(unsigned int *address, unsigned int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicExch(int *address, int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicExch(int *address, int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicExch(unsigned int *address, unsigned int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicExch(unsigned int *address, unsigned int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ float atomicExch(float *address, float val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ float atomicExch(float *address, float val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicMin(int *address, int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicMin(int *address, int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicMin(unsigned int *address, unsigned int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicMin(unsigned int *address, unsigned int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicMax(int *address, int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicMax(int *address, int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicMax(unsigned int *address, unsigned int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicMax(unsigned int *address, unsigned int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicInc(unsigned int *address, unsigned int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicInc(unsigned int *address, unsigned int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicDec(unsigned int *address, unsigned int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicDec(unsigned int *address, unsigned int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicAnd(int *address, int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicAnd(int *address, int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicAnd(unsigned int *address, unsigned int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicAnd(unsigned int *address, unsigned int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicOr(int *address, int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicOr(int *address, int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicOr(unsigned int *address, unsigned int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicOr(unsigned int *address, unsigned int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicXor(int *address, int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicXor(int *address, int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicXor(unsigned int *address, unsigned int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicXor(unsigned int *address, unsigned int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicCAS(int *address, int compare, int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ int atomicCAS(int *address, int compare, int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicCAS(unsigned int *address, unsigned int compare, unsigned int val);
-
-#endif /* !__CUDA_ARCH__ || __CUDA_ARCH__ >= 110 */
-#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 120
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicCAS(unsigned int *address, unsigned int compare, unsigned int val) __DEF_IF_HOST
 
 /*******************************************************************************
 *                                                                              *
@@ -156,18 +159,22 @@ __DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned int atomicCAS(unsigned int *address, u
 #include "builtin_types.h"
 #include "host_defines.h"
 
+
 #if !defined(__CUDACC_RTC__)
 extern "C"
 {
 #endif /* !__CUDACC_RTC__ */
+#ifdef __CUDA_ARCH__
 extern __device__ __device_builtin__ unsigned long long int __ullAtomicAdd(unsigned long long int *address, unsigned long long int val);
 extern __device__ __device_builtin__ unsigned long long int __ullAtomicExch(unsigned long long int *address, unsigned long long int val);
 extern __device__ __device_builtin__ unsigned long long int __ullAtomicCAS(unsigned long long int *address, unsigned long long int compare, unsigned long long int val);
+#endif  /* __CUDA_ARCH__ */
 extern __device__ __device_builtin__ int                    __any(int cond);
 extern __device__ __device_builtin__ int                    __all(int cond);
 #if !defined(__CUDACC_RTC__)
 }
 #endif /* !__CUDACC_RTC__ */
+
 
 /*******************************************************************************
 *                                                                              *
@@ -175,24 +182,23 @@ extern __device__ __device_builtin__ int                    __all(int cond);
 *                                                                              *
 *******************************************************************************/
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned long long int atomicAdd(unsigned long long int *address, unsigned long long int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned long long int atomicAdd(unsigned long long int *address, unsigned long long int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned long long int atomicExch(unsigned long long int *address, unsigned long long int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned long long int atomicExch(unsigned long long int *address, unsigned long long int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned long long int atomicCAS(unsigned long long int *address, unsigned long long int compare, unsigned long long int val);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ unsigned long long int atomicCAS(unsigned long long int *address, unsigned long long int compare, unsigned long long int val) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ bool any(bool cond);
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ bool any(bool cond) __DEF_IF_HOST
 
-__DEVICE_ATOMIC_FUNCTIONS_DECL__ bool all(bool cond);
-
-#endif /* !__CUDA_ARCH__ || __CUDA_ARCH__ >= 120 */
+__DEVICE_ATOMIC_FUNCTIONS_DECL__ bool all(bool cond) __DEF_IF_HOST
 
 #endif /* __cplusplus && __CUDACC__ */
 
+#undef __DEF_IF_HOST
 #undef __DEVICE_ATOMIC_FUNCTIONS_DECL__
 
-#if !defined(__CUDACC_RTC__)
+#if !defined(__CUDACC_RTC__) && defined(__CUDA_ARCH__)
 #include "device_atomic_functions.hpp"
-#endif /* !__CUDACC_RTC__ */
+#endif /* !__CUDACC_RTC__ && defined(__CUDA_ARCH__) */
 
 #endif /* !__DEVICE_ATOMIC_FUNCTIONS_H__ */

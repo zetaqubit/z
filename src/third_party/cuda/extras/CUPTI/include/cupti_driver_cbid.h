@@ -460,7 +460,18 @@ typedef enum CUpti_driver_api_trace_cbid_enum {
     CUPTI_DRIVER_TRACE_CBID_cuPointerGetAttributes                                         = 450,
     CUPTI_DRIVER_TRACE_CBID_cuOccupancyMaxActiveBlocksPerMultiprocessorWithFlags           = 451,
     CUPTI_DRIVER_TRACE_CBID_cuOccupancyMaxPotentialBlockSizeWithFlags                      = 452,
-    CUPTI_DRIVER_TRACE_CBID_SIZE                                                           = 453,
+    CUPTI_DRIVER_TRACE_CBID_cuDeviceGetP2PAttribute                                        = 454,
+    CUPTI_DRIVER_TRACE_CBID_cuTexRefSetBorderColor                                         = 455,
+    CUPTI_DRIVER_TRACE_CBID_cuTexRefGetBorderColor                                         = 456,
+    CUPTI_DRIVER_TRACE_CBID_cuMemAdvise                                                    = 457,
+    CUPTI_DRIVER_TRACE_CBID_cuStreamWaitValue32                                            = 458,
+    CUPTI_DRIVER_TRACE_CBID_cuStreamWaitValue32_ptsz                                       = 459,
+    CUPTI_DRIVER_TRACE_CBID_cuStreamWriteValue32                                           = 460,
+    CUPTI_DRIVER_TRACE_CBID_cuStreamWriteValue32_ptsz                                      = 461,
+    CUPTI_DRIVER_TRACE_CBID_cuStreamBatchMemOp                                             = 462,
+    CUPTI_DRIVER_TRACE_CBID_cuStreamBatchMemOp_ptsz                                        = 463,
+    CUPTI_DRIVER_TRACE_CBID_cuEGLStreamConsumerConnectWithFlags                            = 470,
+    CUPTI_DRIVER_TRACE_CBID_SIZE                                                           = 464,
     CUPTI_DRIVER_TRACE_CBID_FORCE_INT                                                      = 0x7fffffff
 } CUpti_driver_api_trace_cbid;
 

@@ -256,7 +256,7 @@ main(int argc, char **argv)
     // If there are 2 or more GPUs, query to determine whether RDMA is supported
     if (deviceCount >= 2)
     {
-        int gpuid[64]; // we want to find the first two GPU's that can support P2P
+        int gpuid[64]; // we want to find the first two GPUs that can support P2P
         int gpu_p2p_count = 0;
         int tccDriver = 0;
 
@@ -268,7 +268,7 @@ main(int argc, char **argv)
             // Only boards based on Fermi or later can support P2P
             if ((major >= 2)
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-                // on Windows (64-bit), the Tesla Compute Cluster driver for windows must be enabled to supprot this
+                // on Windows (64-bit), the Tesla Compute Cluster driver for windows must be enabled to support this
                 && tccDriver
 #endif
                )
@@ -279,39 +279,31 @@ main(int argc, char **argv)
         }
 
         // Show all the combinations of support P2P GPUs
-        int can_access_peer_0_1, can_access_peer_1_0;
+        int can_access_peer;
         char deviceName0[256], deviceName1[256];
 
         if (gpu_p2p_count >= 2)
         {
-            for (int i = 0; i < gpu_p2p_count-1; i++)
+            for (int i = 0; i < gpu_p2p_count; i++)
             {
-                for (int j = 1; j < gpu_p2p_count; j++)
+                for (int j = 0; j < gpu_p2p_count; j++)
                 {
-                    checkCudaErrors(cuDeviceCanAccessPeer(&can_access_peer_0_1, gpuid[i], gpuid[j]));
+                    if (gpuid[i] == gpuid[j])
+                    {
+                        continue;
+                    }
+                    checkCudaErrors(cuDeviceCanAccessPeer(&can_access_peer, gpuid[i], gpuid[j]));
                     checkCudaErrors(cuDeviceGetName(deviceName0, 256, gpuid[i]));
                     checkCudaErrors(cuDeviceGetName(deviceName1, 256, gpuid[j]));
                     printf("> Peer-to-Peer (P2P) access from %s (GPU%d) -> %s (GPU%d) : %s\n", deviceName0, gpuid[i],
                            deviceName1, gpuid[j] ,
-                           can_access_peer_0_1 ? "Yes" : "No");
-                }
-            }
-
-            for (int j = 1; j < gpu_p2p_count; j++)
-            {
-                for (int i = 0; i < gpu_p2p_count-1; i++)
-                {
-                    checkCudaErrors(cuDeviceCanAccessPeer(&can_access_peer_1_0, gpuid[j], gpuid[i]));
-                    checkCudaErrors(cuDeviceGetName(deviceName0, 256, gpuid[j]));
-                    checkCudaErrors(cuDeviceGetName(deviceName1, 256, gpuid[i]));
-                    printf("> Peer-to-Peer (P2P) access from %s (GPU%d) -> %s (GPU%d) : %s\n", deviceName0, gpuid[j],
-                           deviceName1, gpuid[i] ,
-                           can_access_peer_1_0 ? "Yes" : "No");
+                           can_access_peer ? "Yes" : "No");
                 }
             }
         }
     }
 
     printf("Result = PASS\n");
+
     exit(EXIT_SUCCESS);
 }

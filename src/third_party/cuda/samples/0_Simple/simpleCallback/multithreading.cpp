@@ -49,7 +49,7 @@ CUTBarrier cutCreateBarrier(int releaseCount)
     return barrier;
 }
 
-//Increment barrier. (excution continues)
+//Increment barrier. (execution continues)
 void cutIncrementBarrier(CUTBarrier *barrier)
 {
     int myBarrierCount;
@@ -69,7 +69,7 @@ void cutWaitForBarrier(CUTBarrier *barrier)
     WaitForSingleObject(barrier->barrierEvent, INFINITE);
 }
 
-//Destory barrier
+//Destroy barrier
 void cutDestroyBarrier(CUTBarrier *barrier)
 {
 
@@ -115,7 +115,7 @@ CUTBarrier cutCreateBarrier(int releaseCount)
     return barrier;
 }
 
-//Increment barrier. (excution continues)
+//Increment barrier. (execution continues)
 void cutIncrementBarrier(CUTBarrier *barrier)
 {
     int myBarrierCount;
@@ -142,7 +142,7 @@ void cutWaitForBarrier(CUTBarrier *barrier)
     pthread_mutex_unlock(&barrier->mutex);
 }
 
-//Destory barrier
+//Destroy barrier
 void cutDestroyBarrier(CUTBarrier *barrier)
 {
     pthread_mutex_destroy(&barrier->mutex);

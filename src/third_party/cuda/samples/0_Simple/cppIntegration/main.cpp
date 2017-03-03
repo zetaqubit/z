@@ -22,6 +22,7 @@
 // Required to include CUDA vector types
 #include <cuda_runtime.h>
 #include <vector_types.h>
+#include <helper_cuda.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 // declaration, forward
@@ -69,11 +70,5 @@ main(int argc, char **argv)
 
     std::cout << str_device << std::endl;
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(bTestResult ? EXIT_SUCCESS : EXIT_FAILURE);
 }

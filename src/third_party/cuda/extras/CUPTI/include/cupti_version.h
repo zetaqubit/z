@@ -87,8 +87,9 @@ extern "C" {
  * v6 : CUDA Toolkit 6.5
  * v7 : CUDA Toolkit 6.5(with sm_52 support)
  * v8 : CUDA Toolkit 7.0
+ * v9 : CUDA Toolkit 8.0
  */
-#define CUPTI_API_VERSION 8
+#define CUPTI_API_VERSION 9
 
 /**
  * \brief Get the CUPTI API version.

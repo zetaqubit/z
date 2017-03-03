@@ -12,12 +12,12 @@
 /*
 This file contains simple wrapper functions that call the CUDA kernels
 */
-
+#define HELPERGL_EXTERN_GL_FUNC_IMPLEMENTATION
+#include <helper_gl.h>
 #include <helper_cuda.h>
 #include <cstdlib>
 #include <cstdio>
 #include <string.h>
-#include <GL/glew.h>
 #include <cuda_gl_interop.h>
 
 #include "thrust/device_ptr.h"

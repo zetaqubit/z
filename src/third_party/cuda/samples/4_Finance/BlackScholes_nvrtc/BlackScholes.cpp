@@ -17,7 +17,6 @@
 
 #include <cuda_runtime.h>
 #include <nvrtc_helper.h>
-#include <cudaProfiler.h>
 
 #include <helper_functions.h>   // helper functions for string parsing
 
@@ -270,8 +269,6 @@ int main(int argc, char **argv)
     printf("Shutdown done.\n");
 
     printf("\n[%s] - Test Summary\n", argv[0]);
-
-    cuProfilerStop();
 
     if (L1norm > 1e-6)
     {

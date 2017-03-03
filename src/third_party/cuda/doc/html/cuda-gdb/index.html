@@ -48,7 +48,7 @@
       <div id="site-content">
          <nav id="site-nav">
             <div class="category closed"><a href="../index.html" title="The root of the site.">CUDA Toolkit
-                  v7.0</a></div>
+                  v8.0</a></div>
             <div class="category"><a href="index.html" title="CUDA-GDB">CUDA-GDB</a></div>
             <ul>
                <li>
@@ -72,62 +72,56 @@
                   <div class="section-link"><a href="#getting-started">3.&nbsp;Getting Started</a></div>
                   <ul>
                      <li>
-                        <div class="section-link"><a href="#installation-instructions">3.1.&nbsp;Installation Instructions</a></div>
-                     </li>
-                     <li>
-                        <div class="section-link"><a href="#setting-up-the-debugger-environment">3.2.&nbsp;Setting Up the Debugger Environment</a></div>
+                        <div class="section-link"><a href="#setting-up-the-debugger-environment">3.1.&nbsp;Setting Up the Debugger Environment</a></div>
                         <ul>
                            <li>
-                              <div class="section-link"><a href="#linux">3.2.1.&nbsp;Linux</a></div>
+                              <div class="section-link"><a href="#mac-specific-customizations">3.1.1.&nbsp;Mac Specific Customizations</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#mac-os-x">3.2.2.&nbsp;Mac OS X</a></div>
-                           </li>
-                           <li>
-                              <div class="section-link"><a href="#temporary-directory">3.2.3.&nbsp;Temporary Directory</a></div>
+                              <div class="section-link"><a href="#temporary-directory">3.1.2.&nbsp;Temporary Directory</a></div>
                            </li>
                         </ul>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#compiling-application">3.3.&nbsp;Compiling the Application</a></div>
+                        <div class="section-link"><a href="#compiling-application">3.2.&nbsp;Compiling the Application</a></div>
                         <ul>
                            <li>
-                              <div class="section-link"><a href="#debug-compilation">3.3.1.&nbsp;Debug Compilation</a></div>
+                              <div class="section-link"><a href="#debug-compilation">3.2.1.&nbsp;Debug Compilation</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#compiling-for-specific-gpus">3.3.2.&nbsp;Compiling For Specific GPU architectures</a></div>
+                              <div class="section-link"><a href="#compiling-for-specific-gpus">3.2.2.&nbsp;Compiling For Specific GPU architectures</a></div>
                            </li>
                         </ul>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#using-debugger">3.4.&nbsp;Using the Debugger</a></div>
+                        <div class="section-link"><a href="#using-debugger">3.3.&nbsp;Using the Debugger</a></div>
                         <ul>
                            <li>
-                              <div class="section-link"><a href="#single-gpu-debugging">3.4.1.&nbsp;Single-GPU Debugging</a></div>
+                              <div class="section-link"><a href="#single-gpu-debugging">3.3.1.&nbsp;Single-GPU Debugging</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#single-gpu-debugging-with-desktop-manager-running">3.4.2.&nbsp;Single-GPU Debugging with the Desktop Manager Running</a></div>
+                              <div class="section-link"><a href="#single-gpu-debugging-with-desktop-manager-running">3.3.2.&nbsp;Single-GPU Debugging with the Desktop Manager Running</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#multi-gpu-debugging">3.4.3.&nbsp;Multi-GPU Debugging</a></div>
+                              <div class="section-link"><a href="#multi-gpu-debugging">3.3.3.&nbsp;Multi-GPU Debugging</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#multi-gpu-debugging-in-console-mode">3.4.4.&nbsp;Multi-GPU Debugging in Console Mode</a></div>
+                              <div class="section-link"><a href="#multi-gpu-debugging-in-console-mode">3.3.4.&nbsp;Multi-GPU Debugging in Console Mode</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#multi-gpu-debugging-with-desktop-manager-running">3.4.5.&nbsp;Multi-GPU Debugging with the Desktop Manager Running</a></div>
+                              <div class="section-link"><a href="#multi-gpu-debugging-with-desktop-manager-running">3.3.5.&nbsp;Multi-GPU Debugging with the Desktop Manager Running</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#remote-debugging">3.4.6.&nbsp;Remote Debugging</a></div>
+                              <div class="section-link"><a href="#remote-debugging">3.3.6.&nbsp;Remote Debugging</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#multiple-debuggers">3.4.7.&nbsp;Multiple Debuggers</a></div>
+                              <div class="section-link"><a href="#multiple-debuggers">3.3.7.&nbsp;Multiple Debuggers</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#attaching">3.4.8.&nbsp;Attaching/Detaching</a></div>
+                              <div class="section-link"><a href="#attaching">3.3.8.&nbsp;Attaching/Detaching</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#cuda-opengl-interop-applications-on-linux">3.4.9.&nbsp;CUDA/OpenGL Interop Applications on Linux</a></div>
+                              <div class="section-link"><a href="#cuda-opengl-interop-applications-on-linux">3.3.9.&nbsp;CUDA/OpenGL Interop Applications on Linux</a></div>
                            </li>
                         </ul>
                      </li>
@@ -188,7 +182,7 @@
                         <div class="section-link"><a href="#line-breakpoints">7.2.&nbsp;Line Breakpoints</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#unique_445151602">7.3.&nbsp;Address Breakpoints</a></div>
+                        <div class="section-link"><a href="#unique_2010722138">7.3.&nbsp;Address Breakpoints</a></div>
                      </li>
                      <li>
                         <div class="section-link"><a href="#kernel-entry-breakpoints">7.4.&nbsp;Kernel Entry Breakpoints</a></div>
@@ -363,10 +357,10 @@
                   (<a href="../../pdf/cuda-gdb.pdf">PDF</a>)
                   -
                   
-                  v7.0
+                  v8.0
                   (<a href="https://developer.nvidia.com/cuda-toolkit-archive">older</a>)
                   -
-                  Last updated March 5, 2015
+                  Last updated January 12, 2017
                   -
                   <a href="mailto:cudatools@nvidia.com?subject=CUDA Toolkit Documentation Feedback: CUDA-GDB">Send Feedback</a>
                   -
@@ -698,43 +692,20 @@
                <div class="topic concept nested0" id="getting-started"><a name="getting-started" shape="rect">
                      <!-- --></a><h2 class="title topictitle1"><a href="#getting-started" name="getting-started" shape="rect">3.&nbsp;Getting Started</a></h2>
                   <div class="body conbody">
-                     <p class="p">Included in this chapter are instructions for installing CUDA-GDB and for using NVCC, the
-                        NVIDIA CUDA compiler driver, to compile CUDA programs for debugging.
+                     <p class="p">
+                        The CUDA toolkit can be installed by following instructions in the <a class="xref" href="http://docs.nvidia.com/cuda/cuda-quick-start-guide/" target="_blank" shape="rect">Quick Start Guide</a>.
+                        
+                     </p>
+                     <p class="p">
+                        Further steps should be taken to set up the debugger environment, build the application, and run the debugger.
+                        
                      </p>
                   </div>
-                  <div class="topic task nested1" id="installation-instructions"><a name="installation-instructions" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#installation-instructions" name="installation-instructions" shape="rect">3.1.&nbsp;Installation Instructions</a></h3>
-                     <div class="body taskbody">
-                        <div class="section context">
-                           <p class="p">Follow these steps to install CUDA-GDB.</p>
-                        </div>
-                        <ol class="ol steps">
-                           <li class="li step"><span class="ph cmd">Visit the NVIDIA CUDA Zone download page:</span><a class="xref" href="http://www.nvidia.com/object/cuda_get.html" target="_blank" shape="rect">http://www.nvidia.com/object/cuda_get.html</a></li>
-                           <li class="li step"><span class="ph cmd">Select the appropriate operating system, MacOS X or Linux.</span>
-                              (See <a class="xref" href="index.html#supported-platforms" shape="rect">Supported Platforms</a>.)
-                              
-                           </li>
-                           <li class="li step"><span class="ph cmd">Download and install the CUDA Driver.</span></li>
-                           <li class="li step"><span class="ph cmd">Download and install the CUDA Toolkit.</span></li>
-                        </ol>
-                     </div>
-                  </div>
                   <div class="topic concept nested1" id="setting-up-the-debugger-environment"><a name="setting-up-the-debugger-environment" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#setting-up-the-debugger-environment" name="setting-up-the-debugger-environment" shape="rect">3.2.&nbsp;Setting Up the Debugger Environment</a></h3>
-                     <div class="topic concept nested2" id="linux"><a name="linux" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#linux" name="linux" shape="rect">3.2.1.&nbsp;Linux</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#setting-up-the-debugger-environment" name="setting-up-the-debugger-environment" shape="rect">3.1.&nbsp;Setting Up the Debugger Environment</a></h3>
+                     <div class="topic concept nested2" id="mac-specific-customizations"><a name="mac-specific-customizations" shape="rect">
+                           <!-- --></a><h3 class="title topictitle2"><a href="#mac-specific-customizations" name="mac-specific-customizations" shape="rect">3.1.1.&nbsp;Mac Specific Customizations</a></h3>
                         <div class="body conbody">
-                           <p class="p">Set up the PATH and LD_LIBRARY_PATH environment variables:</p><pre class="pre screen" xml:space="preserve"><strong class="ph b">export PATH=/usr/local/cuda-<span class="ph">7.0</span>/bin:$PATH
-
-export LD_LIBRARY_PATH=/usr/local/cuda-<span class="ph">7.0</span>/lib64:/usr/local/cuda-<span class="ph">7.0</span>/
-lib:$LD_LIBRARY_PATH</strong></pre></div>
-                     </div>
-                     <div class="topic concept nested2" id="mac-os-x"><a name="mac-os-x" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#mac-os-x" name="mac-os-x" shape="rect">3.2.2.&nbsp;Mac OS X</a></h3>
-                        <div class="body conbody">
-                           <div class="section">
-                              <h4 class="title sectiontitle">Set up environment variables</h4><pre class="pre screen" xml:space="preserve"><strong class="ph b">$</strong> export PATH=/Developer/NVIDIA/CUDA-<span class="ph">7.0</span>/bin:$PATH
-<strong class="ph b">$</strong> export DYLD_LIBRARY_PATH=/Developer/NVIDIA/CUDA-<span class="ph">7.0</span>/lib:$DYLD_LIBRARY_PATH</pre></div>
                            <div class="section">
                               <h4 class="title sectiontitle">Set permissions</h4>
                               <p class="p">
@@ -747,9 +718,9 @@ lib:$LD_LIBRARY_PATH</strong></pre></div>
                                  Another solution used in the past is to add the <samp class="ph codeph">cuda-binary-gdb</samp> to the <samp class="ph codeph">procmod</samp> group and set the <samp class="ph codeph">taskgated</samp> daemon to let such processes take control of other processes.
                                  It used to be the solution to fix the <samp class="ph codeph">Unable to find Mach task port for processid</samp> error.
                                  
-                              </p><pre class="pre screen" xml:space="preserve"><strong class="ph b">$</strong> sudo chgrp procmod /Developer/NVIDIA/CUDA-<span class="ph">7.0</span>/bin/cuda-binary-gdb 
-<strong class="ph b">$</strong> sudo chmod 2755 /Developer/NVIDIA/CUDA-<span class="ph">7.0</span>/bin/cuda-binary-gdb 
-<strong class="ph b">$</strong> sudo chmod 755 /Developer/NVIDIA/CUDA-<span class="ph">7.0</span>/bin/cuda-gdb</pre><p class="p">To set the <samp class="ph codeph">taskgated</samp> daemon to allow the processes in the <samp class="ph codeph">procmod</samp> group to access Task Ports, <samp class="ph codeph">taskgated</samp> must be launched with the -p option.
+                              </p><pre class="pre screen" xml:space="preserve"><strong class="ph b">$</strong> sudo chgrp procmod /Developer/NVIDIA/CUDA-<span class="ph">8.0</span>/bin/cuda-binary-gdb 
+<strong class="ph b">$</strong> sudo chmod 2755 /Developer/NVIDIA/CUDA-<span class="ph">8.0</span>/bin/cuda-binary-gdb 
+<strong class="ph b">$</strong> sudo chmod 755 /Developer/NVIDIA/CUDA-<span class="ph">8.0</span>/bin/cuda-gdb</pre><p class="p">To set the <samp class="ph codeph">taskgated</samp> daemon to allow the processes in the <samp class="ph codeph">procmod</samp> group to access Task Ports, <samp class="ph codeph">taskgated</samp> must be launched with the -p option.
                                  To make it a permanent option, edit <samp class="ph codeph">/System/Library/LaunchDaemons/com.apple.taskgated.plist</samp>.
                                  See <samp class="ph codeph">man taskgated</samp> for more information.
                                  Here is an example:
@@ -791,8 +762,7 @@ lib:$LD_LIBRARY_PATH</strong></pre></div>
                               <div class="p">
                                  While debugging the application in console mode, it is not uncommon to encounter kernel warnings about unnesting DYLD shared
                                  regions for a debugger or a debugged process that look as follows:
-                                 <pre class="pre screen" xml:space="preserve">cuda-binary-gdb (map: 0xffffff8038644658) triggered DYLD shared region unnest for map: 0xffffff8038644bc8, region 0x7fff95e00000-&gt;0x7fff96000000. While not abnormal for debuggers, this increases system memory footprint until the target exits.
-</pre>
+                                 <pre class="pre screen" xml:space="preserve">cuda-binary-gdb (map: 0xffffff8038644658) triggered DYLD shared region unnest for map: 0xffffff8038644bc8, region 0x7fff95e00000-&gt;0x7fff96000000. While not abnormal for debuggers, this increases system memory footprint until the target exits.</pre>
                                  
                                  To prevent such messages from appearing, make sure that the <samp class="ph codeph">vm.shared_region_unnest_logging</samp> kernel parameter is set to zero, for example, by using the following command:
                                  <pre class="pre screen" xml:space="preserve"><strong class="ph b">$</strong> sudo sysctl -w vm.shared_region_unnest_logging=0</pre></div>
@@ -800,7 +770,7 @@ lib:$LD_LIBRARY_PATH</strong></pre></div>
                         </div>
                      </div>
                      <div class="topic concept nested2" id="temporary-directory"><a name="temporary-directory" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#temporary-directory" name="temporary-directory" shape="rect">3.2.3.&nbsp;Temporary Directory</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#temporary-directory" name="temporary-directory" shape="rect">3.1.2.&nbsp;Temporary Directory</a></h3>
                         <div class="body conbody">
                            <p class="p">
                               By default, CUDA-GDB uses <samp class="ph codeph">/tmp</samp> as the directory to store temporary files.
@@ -821,9 +791,9 @@ lib:$LD_LIBRARY_PATH</strong></pre></div>
                      </div>
                   </div>
                   <div class="topic concept nested1" id="compiling-application"><a name="compiling-application" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#compiling-application" name="compiling-application" shape="rect">3.3.&nbsp;Compiling the Application</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#compiling-application" name="compiling-application" shape="rect">3.2.&nbsp;Compiling the Application</a></h3>
                      <div class="topic concept nested2" id="debug-compilation"><a name="debug-compilation" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#debug-compilation" name="debug-compilation" shape="rect">3.3.1.&nbsp;Debug Compilation</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#debug-compilation" name="debug-compilation" shape="rect">3.2.1.&nbsp;Debug Compilation</a></h3>
                         <div class="body conbody">
                            <div class="p">NVCC, the NVIDIA CUDA compiler driver, provides a mechanism for generating the debugging information necessary for CUDA-GDB
                               to work properly. The <samp class="ph codeph">-g -G</samp> option pair must be passed to NVCC when an application is compiled in order to debug with CUDA-GDB; for example,
@@ -844,7 +814,7 @@ lib:$LD_LIBRARY_PATH</strong></pre></div>
                         </div>
                      </div>
                      <div class="topic concept nested2" id="compiling-for-specific-gpus"><a name="compiling-for-specific-gpus" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#compiling-for-specific-gpus" name="compiling-for-specific-gpus" shape="rect">3.3.2.&nbsp;Compiling For Specific GPU architectures</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#compiling-for-specific-gpus" name="compiling-for-specific-gpus" shape="rect">3.2.2.&nbsp;Compiling For Specific GPU architectures</a></h3>
                         <div class="body conbody">
                            <p class="p">By default, the compiler will only generate code for the compute_20
                               PTX and sm_20 cubins. For later GPUs, the kernels are recompiled at runtime from
@@ -877,14 +847,14 @@ lib:$LD_LIBRARY_PATH</strong></pre></div>
                      </div>
                   </div>
                   <div class="topic concept nested1" id="using-debugger"><a name="using-debugger" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#using-debugger" name="using-debugger" shape="rect">3.4.&nbsp;Using the Debugger</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#using-debugger" name="using-debugger" shape="rect">3.3.&nbsp;Using the Debugger</a></h3>
                      <div class="body conbody">
                         <p class="p">Debugging a CUDA GPU involves pausing that GPU. When the graphics desktop manager is running on the same GPU, then debugging
                            that GPU freezes the GUI and makes the desktop unusable. To avoid this, use CUDA-GDB in the following system configurations:
                         </p>
                      </div>
                      <div class="topic concept nested2" id="single-gpu-debugging"><a name="single-gpu-debugging" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#single-gpu-debugging" name="single-gpu-debugging" shape="rect">3.4.1.&nbsp;Single-GPU Debugging</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#single-gpu-debugging" name="single-gpu-debugging" shape="rect">3.3.1.&nbsp;Single-GPU Debugging</a></h3>
                         <div class="body conbody">
                            <p class="p">In a single GPU system, CUDA-GDB can be used to debug CUDA applications only if no X11 server (on Linux) or no Aqua desktop
                               manager (on Mac OS X) is running on that system.
@@ -915,7 +885,7 @@ lib:$LD_LIBRARY_PATH</strong></pre></div>
                         </div>
                      </div>
                      <div class="topic concept nested2" id="single-gpu-debugging-with-desktop-manager-running"><a name="single-gpu-debugging-with-desktop-manager-running" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#single-gpu-debugging-with-desktop-manager-running" name="single-gpu-debugging-with-desktop-manager-running" shape="rect">3.4.2.&nbsp;Single-GPU Debugging with the Desktop Manager Running</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#single-gpu-debugging-with-desktop-manager-running" name="single-gpu-debugging-with-desktop-manager-running" shape="rect">3.3.2.&nbsp;Single-GPU Debugging with the Desktop Manager Running</a></h3>
                         <div class="body conbody">
                            <div class="section">
                               <p class="p">CUDA-GDB can be used to debug CUDA applications on the same GPU that is running the desktop GUI.</p>
@@ -939,7 +909,7 @@ lib:$LD_LIBRARY_PATH</strong></pre></div>
                         </div>
                      </div>
                      <div class="topic concept nested2" id="multi-gpu-debugging"><a name="multi-gpu-debugging" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#multi-gpu-debugging" name="multi-gpu-debugging" shape="rect">3.4.3.&nbsp;Multi-GPU Debugging</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#multi-gpu-debugging" name="multi-gpu-debugging" shape="rect">3.3.3.&nbsp;Multi-GPU Debugging</a></h3>
                         <div class="body conbody">
                            <p class="p">
                               Multi-GPU debugging designates the scenario where the application is running on more than one CUDA-capable device.
@@ -963,7 +933,7 @@ lib:$LD_LIBRARY_PATH</strong></pre></div>
                         </div>
                      </div>
                      <div class="topic concept nested2" id="multi-gpu-debugging-in-console-mode"><a name="multi-gpu-debugging-in-console-mode" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#multi-gpu-debugging-in-console-mode" name="multi-gpu-debugging-in-console-mode" shape="rect">3.4.4.&nbsp;Multi-GPU Debugging in Console Mode</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#multi-gpu-debugging-in-console-mode" name="multi-gpu-debugging-in-console-mode" shape="rect">3.3.4.&nbsp;Multi-GPU Debugging in Console Mode</a></h3>
                         <div class="body conbody">
                            <p class="p">CUDA-GDB allows simultaneous debugging of applications running CUDA kernels on multiple GPUs. In console mode, CUDA-GDB can
                               be used to pause and debug every GPU in the system. You can enable console mode as described above for the single GPU console
@@ -972,7 +942,7 @@ lib:$LD_LIBRARY_PATH</strong></pre></div>
                         </div>
                      </div>
                      <div class="topic concept nested2" id="multi-gpu-debugging-with-desktop-manager-running"><a name="multi-gpu-debugging-with-desktop-manager-running" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#multi-gpu-debugging-with-desktop-manager-running" name="multi-gpu-debugging-with-desktop-manager-running" shape="rect">3.4.5.&nbsp;Multi-GPU Debugging with the Desktop Manager Running</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#multi-gpu-debugging-with-desktop-manager-running" name="multi-gpu-debugging-with-desktop-manager-running" shape="rect">3.3.5.&nbsp;Multi-GPU Debugging with the Desktop Manager Running</a></h3>
                         <div class="body conbody">
                            <div class="section">
                               <p class="p">This can be achieved by running the desktop GUI on one GPU and CUDA on the other GPU to avoid hanging the desktop GUI.</p>
@@ -991,21 +961,21 @@ lib:$LD_LIBRARY_PATH</strong></pre></div>
 Detected 2 CUDA Capable device(s)
 
 Device 0: "GeForce GT 330M"
-  CUDA Driver Version / Runtime Version          <span class="keyword">7.0</span> / <span class="keyword">7.0</span>
+  CUDA Driver Version / Runtime Version          <span class="keyword">8.0</span> / <span class="keyword">8.0</span>
   CUDA Capability Major/Minor version number:    1.2
   Total amount of global memory:                 512 MBytes (536543232 bytes)
   ( 6) Multiprocessors x (  8) CUDA Cores/MP:    48 CUDA Cores
   [... truncated output ...]
  
 Device 1: "Quadro K5000"
-  CUDA Driver Version / Runtime Version          <span class="keyword">7.0</span> / <span class="keyword">7.0</span>
+  CUDA Driver Version / Runtime Version          <span class="keyword">8.0</span> / <span class="keyword">8.0</span>
   CUDA Capability Major/Minor version number:    3.0
   Total amount of global memory:                 4096 MBytes (4294508544 bytes)
   ( 8) Multiprocessors x (192) CUDA Cores/MP:    1536 CUDA Cores
   [... truncated output ...]
 
 deviceQuery, CUDA Driver = CUDART, \
-   CUDA Driver Version = <span class="keyword">7.0</span>, CUDA Runtime Version = <span class="keyword">7.0</span>, \
+   CUDA Driver Version = <span class="keyword">8.0</span>, CUDA Runtime Version = <span class="keyword">8.0</span>, \
    NumDevs = 2, Device0 = GeForce GT 330M, Device1 = Quadro K5000
 </pre><p class="p">If Device 0 is rendering the desktop, then Device 1 must be selected for running and debugging the CUDA application. This
                                  exclusion of a device can be achieved by setting the <samp class="ph codeph">CUDA_VISIBLE_DEVICES</samp> environment variable to the index of the device that will be used for CUDA. In this particular example, the value would be
@@ -1018,7 +988,7 @@ deviceQuery, CUDA Driver = CUDART, \
                         </div>
                      </div>
                      <div class="topic concept nested2" id="remote-debugging"><a name="remote-debugging" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#remote-debugging" name="remote-debugging" shape="rect">3.4.6.&nbsp;Remote Debugging</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#remote-debugging" name="remote-debugging" shape="rect">3.3.6.&nbsp;Remote Debugging</a></h3>
                         <div class="body conbody">
                            <p class="p">
                               There are multiple methods to remote debug an application with CUDA_GDB.
@@ -1071,7 +1041,7 @@ deviceQuery, CUDA Driver = CUDART, \
                         </div>
                      </div>
                      <div class="topic concept nested2" id="multiple-debuggers"><a name="multiple-debuggers" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#multiple-debuggers" name="multiple-debuggers" shape="rect">3.4.7.&nbsp;Multiple Debuggers</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#multiple-debuggers" name="multiple-debuggers" shape="rect">3.3.7.&nbsp;Multiple Debuggers</a></h3>
                         <div class="body conbody">
                            <p class="p">In a multi-GPU environment, several debugging sessions may take place simultaneously as long as the CUDA devices are used
                               exclusively. For instance, one instance of CUDA-GDB can debug a first application that uses the first GPU while another instance
@@ -1081,7 +1051,7 @@ deviceQuery, CUDA Driver = CUDART, \
                            </p><pre class="pre screen" xml:space="preserve"><strong class="ph b">$</strong> cuda-gdb --cuda-use-lockfile=0 my_app</pre></div>
                      </div>
                      <div class="topic concept nested2" id="attaching"><a name="attaching" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#attaching" name="attaching" shape="rect">3.4.8.&nbsp;Attaching/Detaching</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#attaching" name="attaching" shape="rect">3.3.8.&nbsp;Attaching/Detaching</a></h3>
                         <div class="body conbody">
                            <p class="p">CUDA-GDB can attach to and detach from a CUDA application running on GPUs with compute capability 2.0 and beyond, using GDB's
                               built-in commands for attaching to or detaching from a process.
@@ -1100,7 +1070,7 @@ deviceQuery, CUDA Driver = CUDART, \
                         </div>
                      </div>
                      <div class="topic task nested2" id="cuda-opengl-interop-applications-on-linux"><a name="cuda-opengl-interop-applications-on-linux" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#cuda-opengl-interop-applications-on-linux" name="cuda-opengl-interop-applications-on-linux" shape="rect">3.4.9.&nbsp;CUDA/OpenGL Interop Applications on Linux</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#cuda-opengl-interop-applications-on-linux" name="cuda-opengl-interop-applications-on-linux" shape="rect">3.3.9.&nbsp;CUDA/OpenGL Interop Applications on Linux</a></h3>
                         <div class="body taskbody">
                            <div class="section context">
                               <p class="p">Any CUDA application that uses OpenGL interoperability requires an active windows server.  Such applications will fail to
@@ -1387,8 +1357,8 @@ device 0, sm 3, warp 0, lane 3]
                         </p>
                      </div>
                   </div>
-                  <div class="topic concept nested1" id="unique_445151602"><a name="unique_445151602" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_445151602" name="unique_445151602" shape="rect">Address Breakpoints</a></h3>
+                  <div class="topic concept nested1" id="unique_2010722138"><a name="unique_2010722138" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_2010722138" name="unique_2010722138" shape="rect">Address Breakpoints</a></h3>
                      <div class="body conbody">
                         <div class="p">To set a breakpoint at a specific address, use the <samp class="ph codeph">break</samp> command with the address as argument:
                            <pre class="pre screen" xml:space="preserve">(cuda-gdb) <strong class="ph b">break *0x1afe34d0</strong></pre></div>
@@ -1999,127 +1969,127 @@ CC             0x0	0</pre></div>
                                  <caption><span class="tablecap">Table 1. CUDA Exception Codes</span></caption>
                                  <thead class="thead" align="left">
                                     <tr class="row" valign="top">
-                                       <th class="entry" valign="top" width="33.33333333333333%" id="d54e3292" rowspan="1" colspan="1">Exception Code</th>
-                                       <th class="entry" valign="top" width="13.333333333333334%" id="d54e3295" rowspan="1" colspan="1">Precision of the Error</th>
-                                       <th class="entry" valign="top" width="13.333333333333334%" id="d54e3298" rowspan="1" colspan="1">Scope of the Error</th>
-                                       <th class="entry" valign="top" width="40%" id="d54e3301" rowspan="1" colspan="1">Description</th>
+                                       <th class="entry" valign="top" width="33.33333333333333%" id="d54e3198" rowspan="1" colspan="1">Exception Code</th>
+                                       <th class="entry" valign="top" width="13.333333333333334%" id="d54e3201" rowspan="1" colspan="1">Precision of the Error</th>
+                                       <th class="entry" valign="top" width="13.333333333333334%" id="d54e3204" rowspan="1" colspan="1">Scope of the Error</th>
+                                       <th class="entry" valign="top" width="40%" id="d54e3207" rowspan="1" colspan="1">Description</th>
                                     </tr>
                                  </thead>
                                  <tbody class="tbody">
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3292" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_0 : "Device Unknown Exception"</samp></td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3295" rowspan="1" colspan="1">Not precise</td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3298" rowspan="1" colspan="1">Global error on the GPU</td>
-                                       <td class="entry" valign="top" width="40%" headers="d54e3301" rowspan="1" colspan="1">This is a global GPU error caused by the application which does not match any of the listed error codes below. This should
+                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3198" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_0 : "Device Unknown Exception"</samp></td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3201" rowspan="1" colspan="1">Not precise</td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3204" rowspan="1" colspan="1">Global error on the GPU</td>
+                                       <td class="entry" valign="top" width="40%" headers="d54e3207" rowspan="1" colspan="1">This is a global GPU error caused by the application which does not match any of the listed error codes below. This should
                                           be a rare occurrence. Potentially, this may be due to <samp class="ph codeph">Device Hardware Stack</samp> overflows or a kernel generating an exception very close to its termination.
                                        </td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3292" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_1 : "Lane Illegal Address"</samp></td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3295" rowspan="1" colspan="1">Precise (Requires <samp class="ph codeph">memcheck on</samp>)
+                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3198" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_1 : "Lane Illegal Address"</samp></td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3201" rowspan="1" colspan="1">Precise (Requires <samp class="ph codeph">memcheck on</samp>)
                                        </td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3298" rowspan="1" colspan="1">Per lane/thread error </td>
-                                       <td class="entry" valign="top" width="40%" headers="d54e3301" rowspan="1" colspan="1">This occurs when a thread accesses an illegal(out of bounds) global address.</td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3204" rowspan="1" colspan="1">Per lane/thread error </td>
+                                       <td class="entry" valign="top" width="40%" headers="d54e3207" rowspan="1" colspan="1">This occurs when a thread accesses an illegal(out of bounds) global address.</td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3292" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_2 : "Lane User Stack Overflow"</samp></td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3295" rowspan="1" colspan="1">Precise</td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3298" rowspan="1" colspan="1">Per lane/thread error</td>
-                                       <td class="entry" valign="top" width="40%" headers="d54e3301" rowspan="1" colspan="1">This occurs when a thread exceeds its stack memory limit.</td>
+                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3198" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_2 : "Lane User Stack Overflow"</samp></td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3201" rowspan="1" colspan="1">Precise</td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3204" rowspan="1" colspan="1">Per lane/thread error</td>
+                                       <td class="entry" valign="top" width="40%" headers="d54e3207" rowspan="1" colspan="1">This occurs when a thread exceeds its stack memory limit.</td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3292" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_3 : "Device Hardware Stack Overflow"</samp></td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3295" rowspan="1" colspan="1">Not precise</td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3298" rowspan="1" colspan="1">Global error on the GPU</td>
-                                       <td class="entry" valign="top" width="40%" headers="d54e3301" rowspan="1" colspan="1">This occurs when the application triggers a global hardware stack overflow. The main cause of this error is large amounts
+                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3198" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_3 : "Device Hardware Stack Overflow"</samp></td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3201" rowspan="1" colspan="1">Not precise</td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3204" rowspan="1" colspan="1">Global error on the GPU</td>
+                                       <td class="entry" valign="top" width="40%" headers="d54e3207" rowspan="1" colspan="1">This occurs when the application triggers a global hardware stack overflow. The main cause of this error is large amounts
                                           of divergence in the presence of function calls.
                                        </td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3292" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_4 : "Warp Illegal Instruction"</samp></td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3295" rowspan="1" colspan="1">Not precise</td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3298" rowspan="1" colspan="1">Warp error</td>
-                                       <td class="entry" valign="top" width="40%" headers="d54e3301" rowspan="1" colspan="1">This occurs when any thread within a warp has executed an illegal instruction.</td>
+                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3198" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_4 : "Warp Illegal Instruction"</samp></td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3201" rowspan="1" colspan="1">Not precise</td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3204" rowspan="1" colspan="1">Warp error</td>
+                                       <td class="entry" valign="top" width="40%" headers="d54e3207" rowspan="1" colspan="1">This occurs when any thread within a warp has executed an illegal instruction.</td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3292" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_5 : "Warp Out-of-range Address"</samp></td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3295" rowspan="1" colspan="1">Not precise</td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3298" rowspan="1" colspan="1">Warp error</td>
-                                       <td class="entry" valign="top" width="40%" headers="d54e3301" rowspan="1" colspan="1">This occurs when any thread within a warp accesses an address that is outside the valid range of local or shared memory regions.</td>
+                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3198" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_5 : "Warp Out-of-range Address"</samp></td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3201" rowspan="1" colspan="1">Not precise</td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3204" rowspan="1" colspan="1">Warp error</td>
+                                       <td class="entry" valign="top" width="40%" headers="d54e3207" rowspan="1" colspan="1">This occurs when any thread within a warp accesses an address that is outside the valid range of local or shared memory regions.</td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3292" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_6 : "Warp Misaligned Address"</samp></td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3295" rowspan="1" colspan="1">Not precise</td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3298" rowspan="1" colspan="1">Warp error</td>
-                                       <td class="entry" valign="top" width="40%" headers="d54e3301" rowspan="1" colspan="1">This occurs when any thread within a warp accesses an address in the local or shared memory segments that is not correctly
+                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3198" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_6 : "Warp Misaligned Address"</samp></td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3201" rowspan="1" colspan="1">Not precise</td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3204" rowspan="1" colspan="1">Warp error</td>
+                                       <td class="entry" valign="top" width="40%" headers="d54e3207" rowspan="1" colspan="1">This occurs when any thread within a warp accesses an address in the local or shared memory segments that is not correctly
                                           aligned.
                                        </td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3292" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_7 : "Warp Invalid Address Space"</samp></td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3295" rowspan="1" colspan="1">Not precise</td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3298" rowspan="1" colspan="1">Warp error</td>
-                                       <td class="entry" valign="top" width="40%" headers="d54e3301" rowspan="1" colspan="1">This occurs when any thread within a warp executes an instruction that accesses a memory space not permitted for that instruction.</td>
+                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3198" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_7 : "Warp Invalid Address Space"</samp></td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3201" rowspan="1" colspan="1">Not precise</td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3204" rowspan="1" colspan="1">Warp error</td>
+                                       <td class="entry" valign="top" width="40%" headers="d54e3207" rowspan="1" colspan="1">This occurs when any thread within a warp executes an instruction that accesses a memory space not permitted for that instruction.</td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3292" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_8 : "Warp Invalid PC"</samp></td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3295" rowspan="1" colspan="1">Not precise</td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3298" rowspan="1" colspan="1">Warp error</td>
-                                       <td class="entry" valign="top" width="40%" headers="d54e3301" rowspan="1" colspan="1">This occurs when any thread within a warp advances its PC beyond the 40-bit address space.</td>
+                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3198" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_8 : "Warp Invalid PC"</samp></td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3201" rowspan="1" colspan="1">Not precise</td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3204" rowspan="1" colspan="1">Warp error</td>
+                                       <td class="entry" valign="top" width="40%" headers="d54e3207" rowspan="1" colspan="1">This occurs when any thread within a warp advances its PC beyond the 40-bit address space.</td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3292" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_9 : "Warp Hardware Stack Overflow"</samp></td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3295" rowspan="1" colspan="1">Not precise</td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3298" rowspan="1" colspan="1">Warp error</td>
-                                       <td class="entry" valign="top" width="40%" headers="d54e3301" rowspan="1" colspan="1">This occurs when any thread in a warp triggers a hardware stack overflow. This should be a rare occurrence.</td>
+                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3198" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_9 : "Warp Hardware Stack Overflow"</samp></td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3201" rowspan="1" colspan="1">Not precise</td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3204" rowspan="1" colspan="1">Warp error</td>
+                                       <td class="entry" valign="top" width="40%" headers="d54e3207" rowspan="1" colspan="1">This occurs when any thread in a warp triggers a hardware stack overflow. This should be a rare occurrence.</td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3292" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_10 : "Device Illegal Address"</samp></td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3295" rowspan="1" colspan="1">Not precise</td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3298" rowspan="1" colspan="1">Global error</td>
-                                       <td class="entry" valign="top" width="40%" headers="d54e3301" rowspan="1" colspan="1">This occurs when a thread accesses an illegal(out of bounds) global address. For increased precision, use the 'set cuda memcheck'
+                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3198" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_10 : "Device Illegal Address"</samp></td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3201" rowspan="1" colspan="1">Not precise</td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3204" rowspan="1" colspan="1">Global error</td>
+                                       <td class="entry" valign="top" width="40%" headers="d54e3207" rowspan="1" colspan="1">This occurs when a thread accesses an illegal(out of bounds) global address. For increased precision, use the 'set cuda memcheck'
                                           option.
                                        </td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3292" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_11 : "Lane Misaligned Address"</samp></td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3295" rowspan="1" colspan="1">Precise (Requires memcheck on)</td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3298" rowspan="1" colspan="1">Per lane/thread error</td>
-                                       <td class="entry" valign="top" width="40%" headers="d54e3301" rowspan="1" colspan="1">This occurs when a thread accesses a global address that is not correctly aligned.</td>
+                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3198" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_11 : "Lane Misaligned Address"</samp></td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3201" rowspan="1" colspan="1">Precise (Requires memcheck on)</td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3204" rowspan="1" colspan="1">Per lane/thread error</td>
+                                       <td class="entry" valign="top" width="40%" headers="d54e3207" rowspan="1" colspan="1">This occurs when a thread accesses a global address that is not correctly aligned.</td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3292" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_12 : "Warp Assert"</samp></td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3295" rowspan="1" colspan="1">Precise</td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3298" rowspan="1" colspan="1">Per warp</td>
-                                       <td class="entry" valign="top" width="40%" headers="d54e3301" rowspan="1" colspan="1">
+                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3198" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_12 : "Warp Assert"</samp></td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3201" rowspan="1" colspan="1">Precise</td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3204" rowspan="1" colspan="1">Per warp</td>
+                                       <td class="entry" valign="top" width="40%" headers="d54e3207" rowspan="1" colspan="1">
                                           <p class="p">This occurs when any thread in the warp hits a device side assertion.</p>
                                        </td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3292" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_13: "Lane Syscall Error"</samp></td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3295" rowspan="1" colspan="1">Precise (Requires memcheck on)</td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3298" rowspan="1" colspan="1">Per lane/thread error</td>
-                                       <td class="entry" valign="top" width="40%" headers="d54e3301" rowspan="1" colspan="1">
+                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3198" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_13: "Lane Syscall Error"</samp></td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3201" rowspan="1" colspan="1">Precise (Requires memcheck on)</td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3204" rowspan="1" colspan="1">Per lane/thread error</td>
+                                       <td class="entry" valign="top" width="40%" headers="d54e3207" rowspan="1" colspan="1">
                                           <p class="p">This occurs when a thread corrupts the heap by invoking free with an invalid address (for example, trying to free the same
                                              memory region twice)
                                           </p>
                                        </td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3292" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_14 : "Warp Illegal Address"</samp></td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3295" rowspan="1" colspan="1">Not precise</td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3298" rowspan="1" colspan="1">Per warp</td>
-                                       <td class="entry" valign="top" width="40%" headers="d54e3301" rowspan="1" colspan="1">
+                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3198" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_14 : "Warp Illegal Address"</samp></td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3201" rowspan="1" colspan="1">Not precise</td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3204" rowspan="1" colspan="1">Per warp</td>
+                                       <td class="entry" valign="top" width="40%" headers="d54e3207" rowspan="1" colspan="1">
                                           <p class="p">This occurs when a thread accesses an illegal(out of bounds) global/local/shared address. For increased precision, use the
                                              'set cuda memcheck' option.
                                           </p>
                                        </td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3292" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_15 : "Invalid Managed Memory Access"</samp></td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3295" rowspan="1" colspan="1">Precise</td>
-                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3298" rowspan="1" colspan="1">Per host thread</td>
-                                       <td class="entry" valign="top" width="40%" headers="d54e3301" rowspan="1" colspan="1">
+                                       <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3198" rowspan="1" colspan="1"><samp class="ph codeph">CUDA_EXCEPTION_15 : "Invalid Managed Memory Access"</samp></td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3201" rowspan="1" colspan="1">Precise</td>
+                                       <td class="entry" valign="top" width="13.333333333333334%" headers="d54e3204" rowspan="1" colspan="1">Per host thread</td>
+                                       <td class="entry" valign="top" width="40%" headers="d54e3207" rowspan="1" colspan="1">
                                           <p class="p">This occurs when a host thread attempts to access managed memory currently used by the GPU.</p>
                                        </td>
                                     </tr>
@@ -2947,7 +2917,7 @@ PID 5488 on node nv2 is ready for attach
                      <div class="body refbody">
                         <div class="section">
                            <h3 class="title sectiontitle">Copyright</h3>
-                           <p class="p">© 2007-<span class="ph">2015</span> NVIDIA Corporation. All rights reserved.
+                           <p class="p">© 2007-<span class="ph">2017</span> NVIDIA Corporation. All rights reserved.
                            </p>
                            <p class="p">This product includes software developed by the Syncro Soft SRL (http://www.sync.ro/).</p>
                         </div>

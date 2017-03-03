@@ -1,5 +1,5 @@
 /*
- * Copyright 1993-2012 NVIDIA Corporation.  All rights reserved.
+ * Copyright 1993-2016 NVIDIA Corporation.  All rights reserved.
  *
  * NOTICE TO LICENSEE:
  *
@@ -74,13 +74,27 @@
 
 #if defined(__ICC)
 
-#if __ICC != 1500 || !defined(__GNUC__) || !defined(__LP64__)
+#if (__ICC != 1500 && __ICC != 1600) || !defined(__GNUC__) || !defined(__LP64__)
 
-#error -- unsupported ICC configuration! Only ICC 15.0 on Linux x86_64 is supported!
+#error -- unsupported ICC configuration! Only ICC 15.0 and ICC 16.0 on Linux x86_64 are supported!
 
-#endif /* __ICC != 1500 || !__GNUC__ || !__LP64__ */
+#endif /* (__ICC != 1500 && __ICC != 1600) || !__GNUC__ || !__LP64__ */
 
 #endif /* __ICC */
+
+#if defined(__PGIC__)
+
+#if (!(__PGIC__ == 16) && \
+     !(__PGIC__ == 99 && __PGIC_MINOR__ == 99)) || \
+    !defined(__GNUC__) || !defined(__LP64__)
+
+#error -- unsupported pgc++ configuration! Only pgc++ 16 on Linux x86_64 are supported!
+
+#endif /* (!(__PGIC__ == 16) &&
+           !(__PGIC__ == 99 && __PGIC_MINOR__ == 99 )) ||
+          !__GNUC__ || !__LP64__ */
+
+#endif /* __PGIC__ */
 
 #if defined(__powerpc__)
 
@@ -90,20 +104,21 @@
 
 #endif /* !__powerpc64__ || !__LITTLE_ENDIAN__ */
 
-#if defined(__ibmxl_vrm__) && __ibmxl_vrm__ != 0x0d010100
+#if defined(__ibmxl_vrm__) && (__ibmxl_vrm__ < 0x0d010000 && __ibmxl_vrm__ >= 0x0d020000)
 
-#error -- unsupported xlC version! only xlC 13.1.1 is supported
+#error -- unsupported xlC version! only xlC 13.1 is supported
 
-#endif /* __ibmxl_vrm__ && __ibmxl_vrm__ != 0x0d010100 */
+#endif /* __ibmxl_vrm__ && (__ibmxl_vrm__ < 0x0d010000 && __ibmxl_vrm__ >= 0x0d020000) */
 
 #endif /* __powerpc__ */
 
 #if defined(__GNUC__)
 
-#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 9)
+#if __GNUC__ > 5
 
+#error -- unsupported GNU version! gcc versions later than 5 are not supported!
 
-#endif /* __GNUC__> 4 || (__GNUC__ == 4 && __GNUC_MINOR__ > 9) */
+#endif /* __GNUC__ > 5 */
 
 #if defined(__APPLE__) && defined(__MACH__) && !defined(__clang__)
 #error -- clang and clang++ are the only supported host compilers on Mac OS X!
@@ -113,11 +128,15 @@
 
 #if defined(_WIN32)
 
-#if _MSC_VER < 1600 || _MSC_VER > 1800
+#if _MSC_VER < 1600 || _MSC_VER > 1900
 
-#error -- unsupported Microsoft Visual Studio version! Only the versions 2010, 2012, and 2013 are supported!
+#error -- unsupported Microsoft Visual Studio version! Only the versions 2012, 2013, and 2015 are supported!
 
-#endif /* _MSC_VER < 1600 || _MSC_VER > 1800 */
+#elif _MSC_VER == 1600 /* _MSC_VERION == 1600 */
+
+#pragma message("support for Microsoft Visual Studio 2010 has been deprecated!")
+
+#endif /* _MSC_VER < 1600 || _MSC_VER > 1800 || _MSC_VERSION == 1600 */
 
 #endif /* _WIN32 */
 
@@ -125,6 +144,7 @@
 #if defined(__APPLE__)
 
 #define _CRTIMP
+#define _ACRTIMP
 #define __THROW
 
 #if defined(__BLOCKS__) /* nvcc does not support closures */
@@ -136,16 +156,19 @@
 #elif defined(__ANDROID__)
 
 #define _CRTIMP
+#define _ACRTIMP
 #define __THROW
 
 #elif defined(__QNX__)
 
 #define _CRTIMP
+#define _ACRTIMP
 #define __THROW
 
 #elif defined(__GNUC__)
 
 #define _CRTIMP
+#define _ACRTIMP
 
 #include <features.h> /* for __THROW */
 
@@ -178,12 +201,59 @@
 #endif /* !NOMINMAX */
 
 #include <crtdefs.h> /* for _CRTIMP */
+#if _MSC_VER >= 1900
+#include <corecrt.h> /* for _ACRTIMP */
+#endif /* _MSC_VER >= 1900 */
 
 #define __THROW
 
 #endif /* __APPLE__ */
 
 #endif /* __CUDACC_RTC__ */
+
+
+#if defined(__cplusplus) && defined(__CUDA_ARCH__) && (defined(__PGIC__) || defined(__CUDACC_RTC__) || (defined(_WIN32) && defined(_MSC_VER)))
+
+#if __CUDACC_RTC__
+typedef char *va_list;
+#else /* !__CUDACC_RTC__ */
+#include <cstdarg>
+#endif /* __CUDACC_RTC__ */
+
+
+#undef va_start
+#undef va_end
+#undef va_arg
+
+#ifdef __PGIC__
+
+#undef __builtin_va_end
+
+#define va_start(v,l) __builtin_alt_va_start(v,l)
+#define va_end(v) __builtin_va_end(v)
+#define va_arg(v,l) __builtin_alt_va_arg(v,l)
+
+#if (__cplusplus >= 201103L)
+#undef va_copy
+#define va_copy(d,s)  __builtin_va_copy(d,s)
+#endif
+
+#else /* !__PGIC__ */
+
+
+#define va_start(ap, x) (__cu_va_start(&ap, x))
+#define va_end(ap) (__cu_va_end(&ap))
+#define va_arg(ap, t)  (*((t *)__cu_va_arg(&ap, (t *)0)))
+
+#if (_MSC_VER >= 1800) || (defined(__CUDACC_RTC__) && (__cplusplus >= 201103L))
+#undef va_copy
+#define va_copy(apd, aps) (__cu_va_copy(&(apd), &(aps)))
+#endif /* (_MSC_VER >= 1800)  || (defined(__CUDACC_RTC__) && (__cplusplus >= 201103L)) */
+#endif /* __PGIC__ */
+
+#endif /* defined(__cplusplus) && (defined(__CUDACC_RTC__) || (defined(_WIN32) && defined(_MSC_VER))) */
+
+
 
 #endif /* __CUDACC__ */
 

@@ -1,15 +1,4 @@
 /*
- * Copyright 1993-2015 NVIDIA Corporation.  All rights reserved.
- *
- * Please refer to the NVIDIA end user license agreement (EULA) associated
- * with this source code for terms and conditions that govern your use of
- * this software. Any use, reproduction, disclosure, or distribution of
- * this software and related documentation outside the terms of the EULA
- * is strictly prohibited.
- *
- */
-
-/*
  Copyright (c) 2005,
   Aaron Lefohn   (lefohn@cs.ucdavis.edu)
   Robert Strzodka (strzodka@stanford.edu)
@@ -31,7 +20,7 @@
  this list of conditions and the following disclaimer in the documentation
  and/or other materials provided with the distribution.
 
- Neither the name of the University of Californa, Davis nor the names of
+ Neither the name of the University of California, Davis nor the names of
  the contributors may be used to endorse or promote products derived
  from this software without specific prior written permission.
 
@@ -49,11 +38,20 @@
  THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  OF SUCH DAMAGE.
 */
+/*
+ * Copyright 2005-2015 NVIDIA Corporation.  All rights reserved.
+ *
+ * Please refer to the NVIDIA end user license agreement (EULA) associated
+ * with this source code for terms and conditions that govern your use of
+ * this software. Any use, reproduction, disclosure, or distribution of
+ * this software and related documentation outside the terms of the EULA
+ * is strictly prohibited.
+ *
+ */
 
 #ifndef UCDAVIS_FRAMEBUFFER_OBJECT_H
 #define UCDAVIS_FRAMEBUFFER_OBJECT_H
 
-#include <GL/glew.h>
 #include <iostream>
 
 /*!
@@ -176,10 +174,10 @@ class FramebufferObject
         GLenum GetAttachedType(GLenum attachment);
 
         /// What is the Id of Renderbuffer/texture currently
-        /// attached to "attachement?"
+        /// attached to "attachment?"
         GLuint GetAttachedId(GLenum attachment);
 
-        /// Which mipmap level is currently attached to "attachement?"
+        /// Which mipmap level is currently attached to "attachment?"
         GLint  GetAttachedMipLevel(GLenum attachment);
 
         /// Which cube face is currently attached to "attachment?"
@@ -202,7 +200,7 @@ class FramebufferObject
         ///     and named "Disable" instead of "Unbind" for this reason. The
         ///     motivation for this strange semantic is performance. Providing
         ///     "Unbind" would likely lead to a large number of unnecessary
-        ///     FBO enablings/disabling.
+        ///     FBO enabling/disabling.
         static void Disable();
         /// END : Static methods global to all FBOs
 

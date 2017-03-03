@@ -1,0 +1,122 @@
+.TH "Execution Control [DEPRECATED]" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Execution Control [DEPRECATED] \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaConfigureCall\fP (dim3 gridDim, dim3 blockDim, size_t sharedMem=0, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fIConfigure a device-launch. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaLaunch\fP (const void *func)"
+.br
+.RI "\fILaunches a device function. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaSetupArgument\fP (const void *arg, size_t size, size_t offset)"
+.br
+.RI "\fIConfigure a device launch. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief deprecated execution control functions of the CUDA runtime API (cuda_runtime_api.h)
+.PP
+This section describes the deprecated execution control functions of the CUDA runtime application programming interface.
+.PP
+Some functions have overloaded C++ API template versions documented separately in the \fBC++ API Routines\fP module. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBcudaError_t\fP cudaConfigureCall (dim3 gridDim, dim3 blockDim, size_t sharedMem = \fC0\fP, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 7.0
+.RE
+.PP
+Specifies the grid and block dimensions for the device call to be executed similar to the execution configuration syntax. \fBcudaConfigureCall()\fP is stack based. Each call pushes data on top of an execution stack. This data contains the dimension for the grid and thread blocks, together with any arguments for the call.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIgridDim\fP - Grid dimensions 
+.br
+\fIblockDim\fP - Block dimensions 
+.br
+\fIsharedMem\fP - Shared memory 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidConfiguration\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+This function uses standard  semantics. 
+.PP
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBcudaLaunchKernel (C API)\fP, \fBcudaFuncSetCacheConfig (C API)\fP, \fBcudaFuncGetAttributes (C API)\fP, \fBcudaLaunch (C API)\fP, \fBcudaSetDoubleForDevice\fP, \fBcudaSetDoubleForHost\fP, \fBcudaSetupArgument (C API)\fP, 
+.SS "\fBcudaError_t\fP cudaLaunch (const void * func)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 7.0
+.RE
+.PP
+Launches the function \fCfunc\fP on the device. The parameter \fCfunc\fP must be a device function symbol. The parameter specified by \fCfunc\fP must be declared as a \fC__global__\fP function. For templated functions, pass the function symbol as follows: func_name<template_arg_0,...,template_arg_N> \fBcudaLaunch()\fP must be preceded by a call to \fBcudaConfigureCall()\fP since it pops the data that was pushed by \fBcudaConfigureCall()\fP from the execution stack.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfunc\fP - Device function symbol
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidDeviceFunction\fP, \fBcudaErrorInvalidConfiguration\fP, \fBcudaErrorLaunchFailure\fP, \fBcudaErrorLaunchTimeout\fP, \fBcudaErrorLaunchOutOfResources\fP, \fBcudaErrorSharedObjectInitFailed\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+Use of a string naming a variable as the \fCsymbol\fP paramater was removed in CUDA 5.0.
+.RE
+.PP
+\fBcudaLaunchKernel (C API)\fP, \fBcudaFuncSetCacheConfig (C API)\fP, \fBcudaFuncGetAttributes (C API)\fP, \fBcudaLaunch (C++ API)\fP, \fBcudaSetDoubleForDevice\fP, \fBcudaSetDoubleForHost\fP, \fBcudaSetupArgument (C API)\fP, \fBcudaThreadGetCacheConfig\fP, \fBcudaThreadSetCacheConfig\fP 
+.SS "\fBcudaError_t\fP cudaSetupArgument (const void * arg, size_t size, size_t offset)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 7.0
+.RE
+.PP
+Pushes \fCsize\fP bytes of the argument pointed to by \fCarg\fP at \fCoffset\fP bytes from the start of the parameter passing area, which starts at offset 0. The arguments are stored in the top of the execution stack. \fBcudaSetupArgument()\fP must be preceded by a call to \fBcudaConfigureCall()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIarg\fP - Argument to push for a kernel launch 
+.br
+\fIsize\fP - Size of argument 
+.br
+\fIoffset\fP - Offset in argument stack to push new arg
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBcudaLaunchKernel (C API)\fP, \fBcudaFuncSetCacheConfig (C API)\fP, \fBcudaFuncGetAttributes (C API)\fP, \fBcudaLaunch (C API)\fP, \fBcudaSetDoubleForDevice\fP, \fBcudaSetDoubleForHost\fP, \fBcudaSetupArgument (C++ API)\fP, 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

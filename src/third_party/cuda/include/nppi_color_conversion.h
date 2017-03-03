@@ -1,4 +1,4 @@
- /* Copyright 2009-2014 NVIDIA Corporation.  All rights reserved. 
+ /* Copyright 2009-2016 NVIDIA Corporation.  All rights reserved. 
   * 
   * NOTICE TO LICENSEE: 
   * 
@@ -23,7 +23,7 @@
   * DELIVERABLES, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY, 
   * NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE. 
   * NOTWITHSTANDING ANY TERMS OR CONDITIONS TO THE CONTRARY IN THE 
-  * LICENSE AGREEMENT, IN NO EVENT SHALL NVIDIA BE LIABLE FOR ANY 
+  * LICENSE AGREEMENT, IN NO EVENT SHALL NVIDIA BE LIABLE FOR ANY                                                  
   * SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, OR ANY 
   * DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, 
   * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS 
@@ -67,6 +67,9 @@ extern "C" {
  * Routines manipulating an image's color model and sampling format.
  *
  * @{
+ *
+ * These functions can be found in either the nppi or nppicc libraries. Linking to only the sub-libraries that you use can significantly
+ * save link time, application load time, and CUDA runtime startup time when using dynamic libraries.
  *
  */
 
@@ -610,7 +613,7 @@ NppStatus nppiYUV420ToRGB_8u_P3AC4R(const Npp8u * const pSrc[3], int rSrcStep[3]
  */
 
 /**
- *  2 channel 8-bit unsigned planar NV21 to 4 channel 8-bit unsigned packed ARGB color conversion with constant alpha (0xFF).
+ *  2 channel 8-bit unsigned planar NV21 to 4 channel 8-bit unsigned packed RGBA color conversion with constant alpha (0xFF).
  *
  * \param pSrc \ref source_planar_image_pointer_array (one for Y plane, one for VU plane).
  * \param rSrcStep \ref source_planar_image_line_step_array.
@@ -1730,6 +1733,38 @@ NppStatus nppiBGRToYCbCr411_8u_AC4P3R(const Npp8u * pSrc, int nSrcStep, Npp8u * 
 
 /** @} */
 
+/** @name RGBToYCbCr411 
+ *  RGB to YCbCr411 color conversion.
+ * @{
+ */
+/**
+ * 3 channel 8-bit unsigned packed RGB to 3 channel 8-bit unsigned planar YCbCr411 color conversion.
+ * images.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param pDst \ref destination_planar_image_pointer_array.
+ * \param rDstStep \ref destination_planar_image_line_step_array.
+ * \param oSizeROI \ref roi_specification.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiRGBToYCbCr411_8u_C3P3R(const Npp8u * pSrc, int nSrcStep, Npp8u * pDst[3], int rDstStep[3], NppiSize oSizeROI);
+
+/**
+ * 4 channel 8-bit unsigned packed RGB with alpha to 3 channel 8-bit unsigned planar YCbCr411 color conversion.
+ * images.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param pDst \ref destination_planar_image_pointer_array.
+ * \param rDstStep \ref destination_planar_image_line_step_array.
+ * \param oSizeROI \ref roi_specification.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiRGBToYCbCr411_8u_AC4P3R(const Npp8u * pSrc, int nSrcStep, Npp8u * pDst[3], int rDstStep[3], NppiSize oSizeROI);
+
+/** @} */
+
 /** @name BGRToYCbCr 
  *  BGR to YCbCr color conversion.
  * @{
@@ -1803,6 +1838,37 @@ NppStatus nppiYCbCr411ToBGR_8u_P3C3R(const Npp8u * const pSrc[3], int rSrcStep[3
  * \return \ref image_data_error_codes, \ref roi_error_codes
  */
 NppStatus nppiYCbCr411ToBGR_8u_P3C4R(const Npp8u * const pSrc[3], int rSrcStep[3], Npp8u * pDst, int nDstStep, NppiSize oSizeROI, Npp8u nAval);
+
+/** @} */
+
+/** @name YCbCr411ToRGB 
+ *  YCbCr411 to RGB color conversion.
+ * @{
+ */
+/**
+ * 3 channel 8-bit unsigned planar YCbCr411 to 3 channel 8-bit unsigned packed RGB color conversion.
+ *
+ * \param pSrc \ref source_planar_image_pointer_array.
+ * \param rSrcStep \ref source_planar_image_line_step_array.
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiYCbCr411ToRGB_8u_P3C3R(const Npp8u * const pSrc[3], int rSrcStep[3], Npp8u * pDst, int nDstStep, NppiSize oSizeROI);
+
+/**
+ * 3 channel 8-bit unsigned planar YCbCr411 to 4 channel 8-bit unsigned packed RGB color conversion with constant alpha.
+ *
+ * \param pSrc \ref source_planar_image_pointer_array.
+ * \param rSrcStep \ref source_planar_image_line_step_array.
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nAval 8-bit unsigned alpha constant.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiYCbCr411ToRGB_8u_P3C4R(const Npp8u * const pSrc[3], int rSrcStep[3], Npp8u * pDst, int nDstStep, NppiSize oSizeROI, Npp8u nAval);
 
 /** @} */
 
@@ -3066,6 +3132,171 @@ NppStatus nppiColorToGray_32f_AC4C1R(const Npp32f * pSrc, int nSrcStep, Npp32f *
  * \return \ref image_data_error_codes, \ref roi_error_codes
  */
 NppStatus nppiColorToGray_32f_C4C1R(const Npp32f * pSrc, int nSrcStep, Npp32f * pDst, int nDstStep, NppiSize oSizeROI, const Npp32f aCoeffs[4]);
+
+/** @} */
+
+/** @name GradientColorToGray 
+ *  RGB Color to Gray Gradient conversion using user selected gradient distance method.
+ *
+ * @{
+ *
+ */
+
+/**
+ * 3 channel 8-bit unsigned packed RGB to 1 channel 8-bit unsigned packed Gray Gradient conversion.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eNorm Gradient distance method to use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientColorToGray_8u_C3C1R(const Npp8u * pSrc, int nSrcStep, Npp8u * pDst, int nDstStep, NppiSize oSizeROI, NppiNorm eNorm);
+
+/**
+ * 3 channel 16-bit unsigned packed RGB to 1 channel 16-bit unsigned packed Gray Gradient conversion.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eNorm Gradient distance method to use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientColorToGray_16u_C3C1R(const Npp16u * pSrc, int nSrcStep, Npp16u * pDst, int nDstStep, NppiSize oSizeROI, NppiNorm eNorm);
+
+/**
+ * 3 channel 16-bit signed packed RGB to 1 channel 16-bit signed packed Gray Gradient conversion.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eNorm Gradient distance method to use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientColorToGray_16s_C3C1R(const Npp16s * pSrc, int nSrcStep, Npp16s * pDst, int nDstStep, NppiSize oSizeROI, NppiNorm eNorm);
+
+/**
+ * 3 channel 32-bit floating point packed RGB to 1 channel 32-bit floating point packed Gray Gradient conversion.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eNorm Gradient distance method to use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientColorToGray_32f_C3C1R(const Npp32f * pSrc, int nSrcStep, Npp32f * pDst, int nDstStep, NppiSize oSizeROI, NppiNorm eNorm);
+
+/** @} */
+
+/** @name ColorDebayer 
+ *  Grayscale Color Filter Array to RGB Color Debayer conversion. Generates one RGB color pixel for every grayscale source pixel.
+ *  Source and destination images must have even width and height.  Missing pixel colors are generated using bilinear interpolation
+ *  with chroma correlation of generated green values (eInterpolation MUST be set to 0). eGrid allows the user to specify the Bayer grid 
+ *  registration position at source image location oSrcROI.x, oSrcROI.y relative to pSrc. Possible registration positions are:
+ *
+ *  \code
+ *  NPPI_BAYER_BGGR  NPPI_BAYER_RGGB  NPPI_BAYER_GBRG  NPPI_BAYER_GRBG
+ *
+ *        B G              R G              G B              G R
+ *        G R              G B              R G              B G
+ *
+ *  \endcode
+ *
+ *  If it becomes necessary to access source pixels outside source image then the source image borders are mirrored.
+ *
+ *  Here is how the algorithm works.  R, G, and B base pixels from the source image are used unmodified.  To generate R values for those
+ *  G pixels, the average of R(x - 1, y) and R(x + 1, y) or R(x, y - 1) and R(x, y + 1) is used depending on whether the left and right
+ *  or top and bottom pixels are R base pixels.  To generate B values for those G pixels, the same algorithm is used using nearest B values.
+ *  For an R base pixel, if there are no B values in the upper, lower, left, or right adjacent pixels then B is the average of B values
+ *  in the 4 diagonal (G base) pixels.  The same algorithm is used using R values to generate the R value of a B base pixel. 
+ *  Chroma correlation is applied to generated G values only, for a B base pixel G(x - 1, y) and G(x + 1, y) are averaged or G(x, y - 1)
+ *  and G(x, y + 1) are averaged depending on whether the absolute difference between B(x, y) and the average of B(x - 2, y) and B(x + 2, y)
+ *  is smaller than the absolute difference between B(x, y) and the average of B(x, y - 2) and B(x, y + 2). For an R base pixel the same
+ *  algorithm is used testing against the surrounding R values at those offsets.  If the horizontal and vertical differences are the same
+ *  at one of those pixels then the average of the four left, right, upper and lower G values is used instead.
+ *  
+ *
+ * @{
+ *
+ */
+
+/**
+ * 1 channel 8-bit unsigned packed CFA grayscale Bayer pattern to 3 channel 8-bit unsigned packed RGB conversion.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize full source image width and height relative to pSrc.
+ * \param oSrcROI rectangle specifying starting source image pixel x and y location relative to pSrc and ROI width and height. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param eGrid enumeration value specifying bayer grid registration position at location oSrcROI.x, oSrcROI.y relative to pSrc.
+ * \param eInterpolation MUST be NPPI_INTER_UNDEFINED
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiCFAToRGB_8u_C1C3R(const Npp8u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiRect oSrcROI, 
+                            Npp8u * pDst, int nDstStep, NppiBayerGridPosition eGrid, NppiInterpolationMode eInterpolation);
+
+/**
+ * 1 channel 8-bit unsigned packed CFA grayscale Bayer pattern to 4 channel 8-bit unsigned packed RGB conversion with alpha.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize full source image width and height relative to pSrc.
+ * \param oSrcROI rectangle specifying starting source image pixel x and y location relative to pSrc and ROI width and height. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param eGrid enumeration value specifying bayer grid registration position at location oSrcROI.x, oSrcROI.y relative to pSrc.
+ * \param eInterpolation MUST be NPPI_INTER_UNDEFINED
+ * \param nAlpha constant alpha value to be written to each destination pixel
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiCFAToRGBA_8u_C1AC4R(const Npp8u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiRect oSrcROI, 
+                              Npp8u * pDst, int nDstStep, NppiBayerGridPosition eGrid, NppiInterpolationMode eInterpolation, Npp8u nAlpha);
+
+/**
+ * 1 channel 16-bit unsigned packed CFA grayscale Bayer pattern to 3 channel 16-bit unsigned packed RGB conversion.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize full source image width and height relative to pSrc.
+ * \param oSrcROI rectangle specifying starting source image pixel x and y location relative to pSrc and ROI width and height. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param eGrid enumeration value specifying bayer grid registration position at location oSrcROI.x, oSrcROI.y relative to pSrc.
+ * \param eInterpolation MUST be NPPI_INTER_UNDEFINED
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiCFAToRGB_16u_C1C3R(const Npp16u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiRect oSrcROI, 
+                             Npp16u * pDst, int nDstStep, NppiBayerGridPosition eGrid, NppiInterpolationMode eInterpolation);
+
+/**
+ * 1 channel 16-bit unsigned packed CFA grayscale Bayer pattern to 4 channel 16-bit unsigned packed RGB conversion with alpha.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize full source image width and height relative to pSrc.
+ * \param oSrcROI rectangle specifying starting source image pixel x and y location relative to pSrc and ROI width and height. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param eGrid enumeration value specifying bayer grid registration position at location oSrcROI.x, oSrcROI.y relative to pSrc.
+ * \param eInterpolation MUST be NPPI_INTER_UNDEFINED
+ * \param nAlpha constant alpha value to be written to each destination pixel
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiCFAToRGBA_16u_C1AC4R(const Npp16u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiRect oSrcROI, 
+                               Npp16u * pDst, int nDstStep, NppiBayerGridPosition eGrid, NppiInterpolationMode eInterpolation, Npp16u nAlpha);
 
 /** @} */
 

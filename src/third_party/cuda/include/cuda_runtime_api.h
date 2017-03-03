@@ -86,24 +86,15 @@
  * \subsection MemcpyAsynchronousBehavior Asynchronous
  *
  * <ol>
- * <li> For transfers from pageable host memory to device memory, host memory is
- * copied to a staging buffer immediately (no device synchronization is
- * performed). The function will return once the pageable buffer has been copied
- * to the staging memory. The DMA transfer to final destination may not have
- * completed.
- *
- * <li> For transfers between pinned host memory and device memory, the function
- * is fully asynchronous.
- * 
  * <li> For transfers from device memory to pageable host memory, the function
  * will return only once the copy has completed.
+ *
+ * <li> For transfers from any host memory to any host memory, the function is fully
+ * synchronous with respect to the host.
  * 
  * <li> For all other transfers, the function is fully asynchronous. If pageable
  * memory must first be staged to pinned memory, this will be handled
  * asynchronously with a worker thread.
- *
- * <li> For transfers from any host memory to any host memory, the function is fully
- * synchronous with respect to the host.
  * </ol>
  *
  * \section memset_sync_async_behavior Memset
@@ -137,11 +128,14 @@
  */
 
 /** CUDA Runtime API Version */
-#define CUDART_VERSION  7000
+#define CUDART_VERSION  8000
 
 #include "host_defines.h"
 #include "builtin_types.h"
+
+#if !defined(__CUDACC_INTEGRATED__)
 #include "cuda_device_runtime_api.h"
+#endif /* !defined(__CUDACC_INTEGRATED__) */
 
 #if defined(CUDA_API_PER_THREAD_DEFAULT_STREAM) || defined(__CUDA_API_VERSION_INTERNAL)
     #define __CUDART_API_PER_THREAD_DEFAULT_STREAM
@@ -191,6 +185,7 @@
     #define cudaStreamSynchronize          __CUDART_API_PTSZ(cudaStreamSynchronize)
     #define cudaLaunch                     __CUDART_API_PTSZ(cudaLaunch)
     #define cudaLaunchKernel               __CUDART_API_PTSZ(cudaLaunchKernel)
+    #define cudaMemPrefetchAsync           __CUDART_API_PTSZ(cudaMemPrefetchAsync)
 #endif
 
 /** \cond impl_private */
@@ -210,7 +205,7 @@
 #endif /* !__dv */
 /** \endcond impl_private */
 
-#if !defined(__CUDA_ARCH__) || (__CUDA_ARCH__ >= 350)   /** Visible to SM>=3.5 and "__host__ __device__" only **/
+#if !defined(__CUDACC_INTEGRATED__) && (!defined(__CUDA_ARCH__) || (__CUDA_ARCH__ >= 350))   /** Visible to SM>=3.5 and "__host__ __device__" only **/
 
 #define CUDART_DEVICE __device__ 
 
@@ -1248,6 +1243,9 @@ extern __host__ __cudart_builtin__ cudaError_t CUDARTAPI cudaGetDeviceCount(int 
         int managedMemSupported;
         int isMultiGpuBoard;
         int multiGpuBoardGroupID;
+        int singleToDoublePrecisionPerfRatio;
+        int pageableMemoryAccess;
+        int concurrentManagedAccess;
     }
  \endcode
  * where:
@@ -1402,6 +1400,13 @@ extern __host__ __cudart_builtin__ cudaError_t CUDARTAPI cudaGetDeviceCount(int 
  * - \ref ::cudaDeviceProp::multiGpuBoardGroupID "multiGpuBoardGroupID" is a unique identifier
  *   for a group of devices associated with the same board.
  *   Devices on the same multi-GPU board will share the same identifier;
+ * - \ref ::cudaDeviceProp::singleToDoublePrecisionPerfRatio "singleToDoublePrecisionPerfRatio"  
+ *   is the ratio of single precision performance (in floating-point operations per second)
+ *   to double precision performance.
+ * - \ref ::cudaDeviceProp::pageableMemoryAccess "pageableMemoryAccess" is 1 if the device supports
+ *   coherently accessing pageable memory without calling cudaHostRegister on it, and 0 otherwise.
+ * - \ref ::cudaDeviceProp::concurrentManagedAccess "concurrentManagedAccess" is 1 if the device can
+ *   coherently access managed memory concurrently with the CPU, and 0 otherwise.
  *
  * \param prop   - Properties for the specified device
  * \param device - Device number to get properties for
@@ -1559,6 +1564,18 @@ extern __host__ __cudart_builtin__ cudaError_t CUDARTAPI cudaGetDeviceProperties
  * - ::cudaDevAttrIsMultiGpuBoard: 1 if device is on a multi-GPU board, 0 if not;
  * - ::cudaDevAttrMultiGpuBoardGroupID: Unique identifier for a group of devices on the
  *   same multi-GPU board;
+ * - ::cudaDevAttrHostNativeAtomicSupported: 1 if the link between the device and the
+ *   host supports native atomic operations;
+ * - ::cudaDevAttrSingleToDoublePrecisionPerfRatio: Ratio of single precision performance
+ *   (in floating-point operations per second) to double precision performance;
+ * - ::cudaDevAttrPageableMemoryAccess: 1 if the device supports coherently accessing
+ *   pageable memory without calling cudaHostRegister on it, and 0 otherwise.
+ * - ::cudaDevAttrConcurrentManagedAccess: 1 if the device can coherently access managed
+ *   memory concurrently with the CPU, and 0 otherwise.
+ * - ::cudaDevAttrComputePreemptionSupported: 1 if the device supports
+ *   Compute Preemption, 0 if not.
+ * - ::cudaDevAttrCanUseHostPointerForRegisteredMem: 1 if the device can access host
+ *   registered memory at the same virtual address as the CPU, and 0 otherwise.
  *
  * \param value  - Returned device attribute value
  * \param attr   - Device attribute to query
@@ -1574,6 +1591,41 @@ extern __host__ __cudart_builtin__ cudaError_t CUDARTAPI cudaGetDeviceProperties
  * ::cudaGetDeviceProperties
  */
 extern __host__ __cudart_builtin__ cudaError_t CUDARTAPI cudaDeviceGetAttribute(int *value, enum cudaDeviceAttr attr, int device);
+
+/**
+ * \brief Queries attributes of the link between two devices.
+ *
+ * Returns in \p *value the value of the requested attribute \p attrib of the
+ * link between \p srcDevice and \p dstDevice. The supported attributes are:
+ * - ::CudaDevP2PAttrPerformanceRank: A relative value indicating the
+ *   performance of the link between two devices. Lower value means better
+ *   performance (0 being the value used for most performant link).
+ * - ::CudaDevP2PAttrAccessSupported: 1 if peer access is enabled.
+ * - ::CudaDevP2PAttrNativeAtomicSupported: 1 if native atomic operations over
+ *   the link are supported.
+ *
+ * Returns ::cudaErrorInvalidDevice if \p srcDevice or \p dstDevice are not valid
+ * or if they represent the same device.
+ *
+ * Returns ::cudaErrorInvalidValue if \p attrib is not valid or if \p value is
+ * a null pointer.
+ *
+ * \param value         - Returned value of the requested attribute
+ * \param attrib        - The requested attribute of the link between \p srcDevice and \p dstDevice.
+ * \param srcDevice     - The source device of the target link.
+ * \param dstDevice     - The destination device of the target link.
+ *
+ * \return
+ * ::cudaSuccess,
+ * ::cudaErrorInvalidDevice,
+ * ::cudaErrorInvalidValue
+ * \notefnerr
+ *
+ * \sa ::cudaCtxEnablePeerAccess,
+ * ::cudaCtxDisablePeerAccess,
+ * ::cudaCtxCanAccessPeer
+ */
+extern __host__ __cudart_builtin__ cudaError_t CUDARTAPI cudaDeviceGetP2PAttribute(int *value, enum cudaDeviceP2PAttr attr, int srcDevice, int dstDevice);
 
 /**
  * \brief Select compute-device which best matches criteria
@@ -1867,7 +1919,7 @@ extern __host__ __cudart_builtin__ cudaError_t CUDARTAPI cudaStreamCreateWithFla
  * ::cudaErrorInvalidValue
  * \notefnerr
  *
- * \note Stream priorities are supported only on Quadro and Tesla GPUs
+ * \note Stream priorities are supported only on GPUs
  * with compute capability 3.5 or higher.
  *
  * \note In the current implementation, only compute kernels launched in
@@ -2110,18 +2162,23 @@ extern __host__ cudaError_t CUDARTAPI cudaStreamQuery(cudaStream_t stream);
  *
  * \p length must be zero, to indicate that the entire allocation's
  * stream association is being changed.  Currently, it's not possible
- * to change stream association for a portion of an allocation.
+ * to change stream association for a portion of an allocation. The default
+ * value for \p length is zero.
  *
  * The stream association is specified using \p flags which must be
  * one of ::cudaMemAttachGlobal, ::cudaMemAttachHost or ::cudaMemAttachSingle.
+ * The default value for \p flags is ::cudaMemAttachSingle
  * If the ::cudaMemAttachGlobal flag is specified, the memory can be accessed
  * by any stream on any device.
  * If the ::cudaMemAttachHost flag is specified, the program makes a guarantee
- * that it won't access the memory on the device from any stream.
- * If the ::cudaMemAttachSingle flag is specified, the program makes a guarantee
- * that it will only access the memory on the device from \p stream. It is illegal
- * to attach singly to the NULL stream, because the NULL stream is a virtual global
- * stream and not a specific stream. An error will be returned in this case.
+ * that it won't access the memory on the device from any stream on a device that
+ * has a zero value for the device attribute ::cudaDevAttrConcurrentManagedAccess.
+ * If the ::cudaMemAttachSingle flag is specified and \p stream is associated with
+ * a device that has a zero value for the device attribute ::cudaDevAttrConcurrentManagedAccess,
+ * the program makes a guarantee that it will only access the memory on the device
+ * from \p stream. It is illegal to attach singly to the NULL stream, because the
+ * NULL stream is a virtual global stream and not a specific stream. An error will
+ * be returned in this case.
  *
  * When memory is associated with a single stream, the Unified Memory system will
  * allow CPU access to this memory region so long as all operations in \p stream
@@ -2148,8 +2205,8 @@ extern __host__ cudaError_t CUDARTAPI cudaStreamQuery(cudaStream_t stream);
  *
  * \param stream  - Stream in which to enqueue the attach operation
  * \param devPtr  - Pointer to memory (must be a pointer to managed memory)
- * \param length  - Length of memory (must be zero)
- * \param flags   - Must be one of ::cudaMemAttachGlobal, ::cudaMemAttachHost or ::cudaMemAttachSingle
+ * \param length  - Length of memory (must be zero, defaults to zero)
+ * \param flags   - Must be one of ::cudaMemAttachGlobal, ::cudaMemAttachHost or ::cudaMemAttachSingle (defaults to ::cudaMemAttachSingle)
  *
  * \return
  * ::cudaSuccess,
@@ -2160,7 +2217,7 @@ extern __host__ cudaError_t CUDARTAPI cudaStreamQuery(cudaStream_t stream);
  *
  * \sa ::cudaStreamCreate, ::cudaStreamCreateWithFlags, ::cudaStreamWaitEvent, ::cudaStreamSynchronize, ::cudaStreamAddCallback, ::cudaStreamDestroy, ::cudaMallocManaged
  */
-extern __host__ __cudart_builtin__ cudaError_t CUDARTAPI cudaStreamAttachMemAsync(cudaStream_t stream, void *devPtr, size_t length, unsigned int flags);
+extern __host__ __cudart_builtin__ cudaError_t CUDARTAPI cudaStreamAttachMemAsync(cudaStream_t stream, void *devPtr, size_t length __dv(0), unsigned int flags __dv(cudaMemAttachSingle));
 
 /** @} */ /* END CUDART_STREAM */
 
@@ -2422,6 +2479,9 @@ extern __host__ cudaError_t CUDARTAPI cudaEventElapsedTime(float *ms, cudaEvent_
  * Each pointer, from <tt>args[0]</tt> to <tt>args[N - 1]</tt>, point to the region
  * of memory from which the actual parameter will be copied.
  *
+ * For templated functions, pass the function symbol as follows:
+ * func_name<template_arg_0,...,template_arg_N>
+ *
  * \p sharedMem sets the amount of dynamic shared memory that will be available to
  * each thread block.
  *
@@ -2462,7 +2522,8 @@ extern __host__ cudaError_t CUDARTAPI cudaLaunchKernel(const void *func, dim3 gr
  *
  * \p func is a device function symbol and must be declared as a
  * \c __global__ function. If the specified function does not exist,
- * then ::cudaErrorInvalidDeviceFunction is returned.
+ * then ::cudaErrorInvalidDeviceFunction is returned. For templated functions,
+ * pass the function symbol as follows: func_name<template_arg_0,...,template_arg_N>
  *
  * This setting does nothing on devices where the size of the L1 cache and
  * shared memory are fixed.
@@ -2521,6 +2582,9 @@ extern __host__ cudaError_t CUDARTAPI cudaFuncSetCacheConfig(const void *func, e
  *
  * This function will do nothing on devices with fixed shared memory bank size.
  *
+ * For templated functions, pass the function symbol as follows:
+ * func_name<template_arg_0,...,template_arg_N>
+ *
  * The supported bank configurations are:
  * - ::cudaSharedMemBankSizeDefault: use the device's shared memory configuration
  *   when launching this function.
@@ -2556,7 +2620,8 @@ extern __host__ cudaError_t CUDARTAPI cudaFuncSetSharedMemConfig(const void *fun
  * \p func is a device function symbol and must be declared as a
  * \c __global__ function. The fetched attributes are placed in \p attr.
  * If the specified function does not exist, then
- * ::cudaErrorInvalidDeviceFunction is returned.
+ * ::cudaErrorInvalidDeviceFunction is returned. For templated functions, pass
+ * the function symbol as follows: func_name<template_arg_0,...,template_arg_N>
  *
  * Note that some function attributes such as
  * \ref ::cudaFuncAttributes::maxThreadsPerBlock "maxThreadsPerBlock"
@@ -2587,6 +2652,8 @@ extern __host__ __cudart_builtin__ cudaError_t CUDARTAPI cudaFuncGetAttributes(s
  *
  * \param d - Double to convert
  *
+ * \deprecated This function is deprecated as of CUDA 7.5
+ *
  * Converts the double value of \p d to an internal float representation if
  * the device does not support double arithmetic. If the device does natively
  * support doubles, then this function does nothing.
@@ -2605,6 +2672,8 @@ extern __host__ cudaError_t CUDARTAPI cudaSetDoubleForDevice(double *d);
 
 /**
  * \brief Converts a double argument after execution on a device
+ *
+ * \deprecated This function is deprecated as of CUDA 7.5
  *
  * Converts the double value of \p d from a potentially internal float
  * representation if the device does not support double arithmetic. If the
@@ -2811,7 +2880,8 @@ extern __host__ cudaError_t CUDARTAPI cudaSetupArgument(const void *arg, size_t 
  *
  * Launches the function \p func on the device. The parameter \p func must
  * be a device function symbol. The parameter specified by \p func must be
- * declared as a \p __global__ function.
+ * declared as a \p __global__ function. For templated functions, pass the
+ * function symbol as follows: func_name<template_arg_0,...,template_arg_N>
  * \ref ::cudaLaunch(const void*) "cudaLaunch()" must be preceded by a call to
  * ::cudaConfigureCall() since it pops the data that was pushed by
  * ::cudaConfigureCall() from the execution stack.
@@ -2874,12 +2944,13 @@ extern __host__ cudaError_t CUDARTAPI cudaLaunch(const void *func);
  * All accesses to this pointer must obey the Unified Memory programming model.
  *
  * \p flags specifies the default stream association for this allocation.
- * \p flags must be one of ::cudaMemAttachGlobal or ::cudaMemAttachHost.
+ * \p flags must be one of ::cudaMemAttachGlobal or ::cudaMemAttachHost. The
+ * default value for \p flags is ::cudaMemAttachGlobal.
  * If ::cudaMemAttachGlobal is specified, then this memory is accessible from
  * any stream on any device. If ::cudaMemAttachHost is specified, then the
- * allocation is created with initial visibility restricted to host access only;
- * an explicit call to ::cudaStreamAttachMemAsync will be required to enable access
- * on the device.
+ * allocation should not be accessed from devices that have a zero value for the
+ * device attribute ::cudaDevAttrConcurrentManagedAccess; an explicit call to
+ * ::cudaStreamAttachMemAsync will be required to enable access on such devices.
  *
  * If the association is later changed via ::cudaStreamAttachMemAsync to
  * a single stream, the default association, as specifed during ::cudaMallocManaged,
@@ -2890,17 +2961,45 @@ extern __host__ cudaError_t CUDARTAPI cudaLaunch(const void *func);
  *
  * Memory allocated with ::cudaMallocManaged should be released with ::cudaFree.
  *
- * On a multi-GPU system with peer-to-peer support, where multiple GPUs support
- * managed memory, the physical storage is created on the GPU which is active
- * at the time ::cudaMallocManaged is called. All other GPUs will reference the
- * data at reduced bandwidth via peer mappings over the PCIe bus. The Unified
- * Memory management system does not migrate memory between GPUs.
+ * Device memory oversubscription is possible for GPUs that have a non-zero value for the
+ * device attribute ::cudaDevAttrConcurrentManagedAccess. Managed memory on
+ * such GPUs may be evicted from device memory to host memory at any time by the Unified
+ * Memory driver in order to make room for other allocations.
  *
- * On a multi-GPU system where multiple GPUs support managed memory, but not
- * all pairs of such GPUs have peer-to-peer support between them, the physical
- * storage is created in 'zero-copy' or system memory. All GPUs will reference
- * the data at reduced bandwidth over the PCIe bus. In these circumstances,
- * use of the environment variable, CUDA_VISIBLE_DEVICES, is recommended to
+ * In a multi-GPU system where all GPUs have a non-zero value for the device attribute
+ * ::cudaDevAttrConcurrentManagedAccess, managed memory may not be populated when this
+ * API returns and instead may be populated on access. In such systems, managed memory can
+ * migrate to any processor's memory at any time. The Unified Memory driver will employ heuristics to
+ * maintain data locality and prevent excessive page faults to the extent possible. The application
+ * can also guide the driver about memory usage patterns via ::cudaMemAdvise. The application
+ * can also explicitly migrate memory to a desired processor's memory via
+ * ::cudaMemPrefetchAsync.
+ *
+ * In a multi-GPU system where all of the GPUs have a zero value for the device attribute
+ * ::cudaDevAttrConcurrentManagedAccess and all the GPUs have peer-to-peer support
+ * with each other, the physical storage for managed memory is created on the GPU which is active
+ * at the time ::cudaMallocManaged is called. All other GPUs will reference the data at reduced
+ * bandwidth via peer mappings over the PCIe bus. The Unified Memory driver does not migrate
+ * memory among such GPUs.
+ *
+ * In a multi-GPU system where not all GPUs have peer-to-peer support with each other and
+ * where the value of the device attribute ::cudaDevAttrConcurrentManagedAccess
+ * is zero for at least one of those GPUs, the location chosen for physical storage of managed
+ * memory is system-dependent.
+ * - On Linux, the location chosen will be device memory as long as the current set of active
+ * contexts are on devices that either have peer-to-peer support with each other or have a
+ * non-zero value for the device attribute ::cudaDevAttrConcurrentManagedAccess.
+ * If there is an active context on a GPU that does not have a non-zero value for that device
+ * attribute and it does not have peer-to-peer support with the other devices that have active
+ * contexts on them, then the location for physical storage will be 'zero-copy' or host memory.
+ * Note that this means that managed memory that is located in device memory is migrated to
+ * host memory if a new context is created on a GPU that doesn't have a non-zero value for
+ * the device attribute and does not support peer-to-peer with at least one of the other devices
+ * that has an active context. This in turn implies that context creation may fail if there is
+ * insufficient host memory to migrate all managed allocations.
+ * - On Windows, the physical storage is always created in 'zero-copy' or host memory.
+ * All GPUs will reference the data at reduced bandwidth over the PCIe bus. In these
+ * circumstances, use of the environment variable CUDA_VISIBLE_DEVICES is recommended to
  * restrict CUDA to only use those GPUs that have peer-to-peer support.
  * Alternatively, users can also set CUDA_MANAGED_FORCE_DEVICE_ALLOC to a non-zero
  * value to force the driver to always use device memory for physical storage.
@@ -2915,7 +3014,7 @@ extern __host__ cudaError_t CUDARTAPI cudaLaunch(const void *func);
  *
  * \param devPtr - Pointer to allocated device memory
  * \param size   - Requested allocation size in bytes
- * \param flags  - Must be either ::cudaMemAttachGlobal or ::cudaMemAttachHost
+ * \param flags  - Must be either ::cudaMemAttachGlobal or ::cudaMemAttachHost (defaults to ::cudaMemAttachGlobal)
  *
  * \return
  * ::cudaSuccess,
@@ -2928,7 +3027,7 @@ extern __host__ cudaError_t CUDARTAPI cudaLaunch(const void *func);
  * \ref ::cudaMallocHost(void**, size_t) "cudaMallocHost (C API)",
  * ::cudaFreeHost, ::cudaHostAlloc, ::cudaDeviceGetAttribute, ::cudaStreamAttachMemAsync
  */
-extern __host__ __cudart_builtin__ cudaError_t CUDARTAPI cudaMallocManaged(void **devPtr, size_t size, unsigned int flags);
+extern __host__ __cudart_builtin__ cudaError_t CUDARTAPI cudaMallocManaged(void **devPtr, size_t size, unsigned int flags __dv(cudaMemAttachGlobal));
 
 
 /**
@@ -3245,6 +3344,11 @@ extern __host__ cudaError_t CUDARTAPI cudaHostAlloc(void **pHost, size_t size, u
  *   space. The device pointer to the memory may be obtained by calling
  *   ::cudaHostGetDevicePointer().
  *
+ * - ::cudaHostRegisterIoMemory: The passed memory pointer is treated as
+ *   pointing to some memory-mapped I/O space, e.g. belonging to a
+ *   third-party PCIe device, and it will marked as non cache-coherent and
+ *   contiguous.
+ *
  * All of these flags are orthogonal to one another: a developer may page-lock
  * memory that is portable or mapped with no restrictions.
  *
@@ -3255,6 +3359,21 @@ extern __host__ cudaError_t CUDARTAPI cudaHostAlloc(void **pHost, size_t size, u
  * devices that do not support mapped pinned memory. The failure is deferred
  * to ::cudaHostGetDevicePointer() because the memory may be mapped into
  * other CUDA contexts via the ::cudaHostRegisterPortable flag.
+ *
+ * For devices that have a non-zero value for the device attribute
+ * ::cudaDevAttrCanUseHostPointerForRegisteredMem, the memory
+ * can also be accessed from the device using the host pointer \p ptr.
+ * The device pointer returned by ::cudaHostGetDevicePointer() may or may not
+ * match the original host pointer \p ptr and depends on the devices visible to the
+ * application. If all devices visible to the application have a non-zero value for the
+ * device attribute, the device pointer returned by ::cudaHostGetDevicePointer()
+ * will match the original pointer \p ptr. If any device visible to the application
+ * has a zero value for the device attribute, the device pointer returned by
+ * ::cudaHostGetDevicePointer() will not match the original host pointer \p ptr,
+ * but it will be suitable for use on all devices provided Unified Virtual Addressing
+ * is enabled. In such systems, it is valid to access the memory using either pointer
+ * on devices that have a non-zero value for the device attribute. Note however that
+ * such devices should access the memory using only of the two pointers and not both.
  *
  * The memory page-locked by this function must be unregistered with ::cudaHostUnregister().
  *
@@ -3302,6 +3421,21 @@ extern __host__ cudaError_t CUDARTAPI cudaHostUnregister(void *ptr);
  * ::cudaHostGetDevicePointer() will fail if the ::cudaDeviceMapHost flag was
  * not specified before deferred context creation occurred, or if called on a
  * device that does not support mapped, pinned memory.
+ *
+ * For devices that have a non-zero value for the device attribute
+ * ::cudaDevAttrCanUseHostPointerForRegisteredMem, the memory
+ * can also be accessed from the device using the host pointer \p pHost.
+ * The device pointer returned by ::cudaHostGetDevicePointer() may or may not
+ * match the original host pointer \p pHost and depends on the devices visible to the
+ * application. If all devices visible to the application have a non-zero value for the
+ * device attribute, the device pointer returned by ::cudaHostGetDevicePointer()
+ * will match the original pointer \p pHost. If any device visible to the application
+ * has a zero value for the device attribute, the device pointer returned by
+ * ::cudaHostGetDevicePointer() will not match the original host pointer \p pHost,
+ * but it will be suitable for use on all devices provided Unified Virtual Addressing
+ * is enabled. In such systems, it is valid to access the memory using either pointer
+ * on devices that have a non-zero value for the device attribute. Note however that
+ * such devices should access the memory using only of the two pointers and not both.
  *
  * \p flags provides for future releases.  For now, it must be set to 0.
  *
@@ -3713,7 +3847,10 @@ cudaMemcpy3DParms myParms = {0};
  *
  * The \p kind field defines the direction of the copy. It must be one of
  * ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
- * or ::cudaMemcpyDeviceToDevice.
+ * ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault. Passing
+ * ::cudaMemcpyDefault is recommended, in which case the type of transfer is
+ * inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing.
  *
  * If the source and destination are both arrays, ::cudaMemcpy3D() will return
  * an error if they do not have the same element size.
@@ -3838,7 +3975,10 @@ cudaMemcpy3DParms myParms = {0};
  *
  * The \p kind field defines the direction of the copy. It must be one of
  * ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
- * or ::cudaMemcpyDeviceToDevice.
+ * ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault. Passing
+ * ::cudaMemcpyDefault is recommended, in which case the type of transfer is
+ * inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing.
  *
  * If the source and destination are both arrays, ::cudaMemcpy3DAsync() will
  * return an error if they do not have the same element size.
@@ -3955,12 +4095,15 @@ extern __host__ cudaError_t CUDARTAPI cudaArrayGetInfo(struct cudaChannelFormatD
  * \brief Copies data between host and device
  *
  * Copies \p count bytes from the memory area pointed to by \p src to the
- * memory area pointed to by \p dst, where \p kind is one of
- * ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
- * or ::cudaMemcpyDeviceToDevice, and specifies the direction of the copy. The
- * memory areas may not overlap. Calling ::cudaMemcpy() with \p dst and \p src
- * pointers that do not match the direction of the copy results in an
- * undefined behavior.
+ * memory area pointed to by \p dst, where \p kind specifies the direction
+ * of the copy, and must be one of ::cudaMemcpyHostToHost,
+ * ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
+ * ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault. Passing
+ * ::cudaMemcpyDefault is recommended, in which case the type of transfer is
+ * inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing. Calling
+ * ::cudaMemcpy() with dst and src pointers that do not match the direction of
+ * the copy results in an undefined behavior.
  *
  * \param dst   - Destination memory address
  * \param src   - Source memory address
@@ -4023,9 +4166,13 @@ extern __host__ cudaError_t CUDARTAPI cudaMemcpyPeer(void *dst, int dstDevice, c
  *
  * Copies \p count bytes from the memory area pointed to by \p src to the
  * CUDA array \p dst starting at the upper left corner
- * (\p wOffset, \p hOffset), where \p kind is one of ::cudaMemcpyHostToHost,
- * ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost, or
- * ::cudaMemcpyDeviceToDevice, and specifies the direction of the copy.
+ * (\p wOffset, \p hOffset), where \p kind specifies the direction
+ * of the copy, and must be one of ::cudaMemcpyHostToHost,
+ * ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
+ * ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault. Passing
+ * ::cudaMemcpyDefault is recommended, in which case the type of transfer is
+ * inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing.
  *
  * \param dst     - Destination memory address
  * \param wOffset - Destination starting X offset
@@ -4057,9 +4204,12 @@ extern __host__ cudaError_t CUDARTAPI cudaMemcpyToArray(cudaArray_t dst, size_t 
  *
  * Copies \p count bytes from the CUDA array \p src starting at the upper
  * left corner (\p wOffset, hOffset) to the memory area pointed to by \p dst,
- * where \p kind is one of ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice,
- * ::cudaMemcpyDeviceToHost, or ::cudaMemcpyDeviceToDevice, and specifies the
- * direction of the copy.
+ * where \p kind specifies the direction of the copy, and must be one of
+ * ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
+ * ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault. Passing
+ * ::cudaMemcpyDefault is recommended, in which case the type of transfer is
+ * inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing.
  *
  * \param dst     - Destination memory address
  * \param src     - Source memory address
@@ -4092,9 +4242,12 @@ extern __host__ cudaError_t CUDARTAPI cudaMemcpyFromArray(void *dst, cudaArray_c
  * Copies \p count bytes from the CUDA array \p src starting at the upper
  * left corner (\p wOffsetSrc, \p hOffsetSrc) to the CUDA array \p dst
  * starting at the upper left corner (\p wOffsetDst, \p hOffsetDst) where
- * \p kind is one of ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice,
- * ::cudaMemcpyDeviceToHost, or ::cudaMemcpyDeviceToDevice, and specifies the
- * direction of the copy.
+ * \p kind specifies the direction of the copy, and must be one of
+ * ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
+ * ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault. Passing
+ * ::cudaMemcpyDefault is recommended, in which case the type of transfer is
+ * inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing.
  *
  * \param dst        - Destination memory address
  * \param wOffsetDst - Destination starting X offset
@@ -4126,14 +4279,17 @@ extern __host__ cudaError_t CUDARTAPI cudaMemcpyArrayToArray(cudaArray_t dst, si
  *
  * Copies a matrix (\p height rows of \p width bytes each) from the memory
  * area pointed to by \p src to the memory area pointed to by \p dst, where
- * \p kind is one of ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice,
- * ::cudaMemcpyDeviceToHost, or ::cudaMemcpyDeviceToDevice, and specifies the
- * direction of the copy. \p dpitch and \p spitch are the widths in memory in
- * bytes of the 2D arrays pointed to by \p dst and \p src, including any
- * padding added to the end of each row. The memory areas may not overlap.
- * \p width must not exceed either \p dpitch or \p spitch.
- * Calling ::cudaMemcpy2D() with \p dst and \p src pointers that do not match
- * the direction of the copy results in an undefined behavior.
+ * \p kind specifies the direction of the copy, and must be one of
+ * ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
+ * ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault. Passing
+ * ::cudaMemcpyDefault is recommended, in which case the type of transfer is
+ * inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing. \p dpitch and
+ * \p spitch are the widths in memory in bytes of the 2D arrays pointed to by
+ * \p dst and \p src, including any padding added to the end of each row. The
+ * memory areas may not overlap. \p width must not exceed either \p dpitch or
+ * \p spitch. Calling ::cudaMemcpy2D() with \p dst and \p src pointers that do
+ * not match the direction of the copy results in an undefined behavior.
  * ::cudaMemcpy2D() returns an error if \p dpitch or \p spitch exceeds
  * the maximum allowed.
  *
@@ -4168,9 +4324,13 @@ extern __host__ cudaError_t CUDARTAPI cudaMemcpy2D(void *dst, size_t dpitch, con
  *
  * Copies a matrix (\p height rows of \p width bytes each) from the memory
  * area pointed to by \p src to the CUDA array \p dst starting at the
- * upper left corner (\p wOffset, \p hOffset) where \p kind is one of
- * ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
- * or ::cudaMemcpyDeviceToDevice, and specifies the direction of the copy.
+ * upper left corner (\p wOffset, \p hOffset) where \p kind specifies the
+ * direction of the copy, and must be one of ::cudaMemcpyHostToHost,
+ * ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
+ * ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault. Passing
+ * ::cudaMemcpyDefault is recommended, in which case the type of transfer is
+ * inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing.
  * \p spitch is the width in memory in bytes of the 2D array pointed to by
  * \p src, including any padding added to the end of each row. \p wOffset +
  * \p width must not exceed the width of the CUDA array \p dst. \p width must
@@ -4211,13 +4371,17 @@ extern __host__ cudaError_t CUDARTAPI cudaMemcpy2DToArray(cudaArray_t dst, size_
  * Copies a matrix (\p height rows of \p width bytes each) from the CUDA
  * array \p srcArray starting at the upper left corner
  * (\p wOffset, \p hOffset) to the memory area pointed to by \p dst, where
- * \p kind is one of ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice,
- * ::cudaMemcpyDeviceToHost, or ::cudaMemcpyDeviceToDevice, and specifies the
- * direction of the copy. \p dpitch is the width in memory in bytes of the 2D
- * array pointed to by \p dst, including any padding added to the end of each
- * row. \p wOffset + \p width must not exceed the width of the CUDA array
- * \p src. \p width must not exceed \p dpitch. ::cudaMemcpy2DFromArray()
- * returns an error if \p dpitch exceeds the maximum allowed.
+ * \p kind specifies the direction of the copy, and must be one of
+ * ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
+ * ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault. Passing
+ * ::cudaMemcpyDefault is recommended, in which case the type of transfer is
+ * inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing. \p dpitch is the
+ * width in memory in bytes of the 2D array pointed to by \p dst, including any
+ * padding added to the end of each row. \p wOffset + \p width must not exceed
+ * the width of the CUDA array \p src. \p width must not exceed \p dpitch.
+ * ::cudaMemcpy2DFromArray() returns an error if \p dpitch exceeds the maximum
+ * allowed.
  *
  * \param dst     - Destination memory address
  * \param dpitch  - Pitch of destination memory
@@ -4253,12 +4417,15 @@ extern __host__ cudaError_t CUDARTAPI cudaMemcpy2DFromArray(void *dst, size_t dp
  * Copies a matrix (\p height rows of \p width bytes each) from the CUDA
  * array \p srcArray starting at the upper left corner
  * (\p wOffsetSrc, \p hOffsetSrc) to the CUDA array \p dst starting at
- * the upper left corner (\p wOffsetDst, \p hOffsetDst), where \p kind is one
- * of ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice,
- * ::cudaMemcpyDeviceToHost, or ::cudaMemcpyDeviceToDevice, and specifies the
- * direction of the copy. \p wOffsetDst + \p width must not exceed the width
- * of the CUDA array \p dst. \p wOffsetSrc + \p width must not exceed the width
- * of the CUDA array \p src.
+ * the upper left corner (\p wOffsetDst, \p hOffsetDst), where \p kind
+ * specifies the direction of the copy, and must be one of
+ * ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
+ * ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault. Passing
+ * ::cudaMemcpyDefault is recommended, in which case the type of transfer is
+ * inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing.
+ * \p wOffsetDst + \p width must not exceed the width of the CUDA array \p dst.
+ * \p wOffsetSrc + \p width must not exceed the width of the CUDA array \p src.
  *
  * \param dst        - Destination memory address
  * \param wOffsetDst - Destination starting X offset
@@ -4294,7 +4461,10 @@ extern __host__ cudaError_t CUDARTAPI cudaMemcpy2DArrayToArray(cudaArray_t dst, 
  * to the memory area pointed to by \p offset bytes from the start of symbol
  * \p symbol. The memory areas may not overlap. \p symbol is a variable that
  * resides in global or constant memory space. \p kind can be either
- * ::cudaMemcpyHostToDevice or ::cudaMemcpyDeviceToDevice.
+ * ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault.
+ * Passing ::cudaMemcpyDefault is recommended, in which case the type of
+ * transfer is inferred from the pointer values. However, ::cudaMemcpyDefault
+ * is only allowed on systems that support unified virtual addressing.
  *
  * \param symbol - Device symbol address
  * \param src    - Source memory address
@@ -4329,7 +4499,10 @@ extern __host__ cudaError_t CUDARTAPI cudaMemcpyToSymbol(const void *symbol, con
  * from the start of symbol \p symbol to the memory area pointed to by \p dst.
  * The memory areas may not overlap. \p symbol is a variable that
  * resides in global or constant memory space. \p kind can be either
- * ::cudaMemcpyDeviceToHost or ::cudaMemcpyDeviceToDevice.
+ * ::cudaMemcpyDeviceToHost, ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault.
+ * Passing ::cudaMemcpyDefault is recommended, in which case the type of
+ * transfer is inferred from the pointer values. However, ::cudaMemcpyDefault
+ * is only allowed on systems that support unified virtual addressing.
  *
  * \param dst    - Destination memory address
  * \param symbol - Device symbol address
@@ -4362,10 +4535,15 @@ extern __host__ cudaError_t CUDARTAPI cudaMemcpyFromSymbol(void *dst, const void
  * \brief Copies data between host and device
  *
  * Copies \p count bytes from the memory area pointed to by \p src to the
- * memory area pointed to by \p dst, where \p kind is one of
- * ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
- * or ::cudaMemcpyDeviceToDevice, and specifies the direction of the copy. The
- * memory areas may not overlap. Calling ::cudaMemcpyAsync() with \p dst and
+ * memory area pointed to by \p dst, where \p kind specifies the
+ * direction of the copy, and must be one of ::cudaMemcpyHostToHost,
+ * ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
+ * ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault. Passing
+ * ::cudaMemcpyDefault is recommended, in which case the type of transfer is
+ * inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing.
+ * 
+ * The memory areas may not overlap. Calling ::cudaMemcpyAsync() with \p dst and
  * \p src pointers that do not match the direction of the copy results in an
  * undefined behavior.
  *
@@ -4440,9 +4618,13 @@ extern __host__ cudaError_t CUDARTAPI cudaMemcpyPeerAsync(void *dst, int dstDevi
  *
  * Copies \p count bytes from the memory area pointed to by \p src to the
  * CUDA array \p dst starting at the upper left corner
- * (\p wOffset, \p hOffset), where \p kind is one of ::cudaMemcpyHostToHost,
- * ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost, or
- * ::cudaMemcpyDeviceToDevice, and specifies the direction of the copy.
+ * (\p wOffset, \p hOffset), where \p kind specifies the
+ * direction of the copy, and must be one of ::cudaMemcpyHostToHost,
+ * ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
+ * ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault. Passing
+ * ::cudaMemcpyDefault is recommended, in which case the type of transfer is
+ * inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing.
  *
  * ::cudaMemcpyToArrayAsync() is asynchronous with respect to the host, so
  * the call may return before the copy is complete. The copy can optionally
@@ -4482,9 +4664,12 @@ extern __host__ cudaError_t CUDARTAPI cudaMemcpyToArrayAsync(cudaArray_t dst, si
  *
  * Copies \p count bytes from the CUDA array \p src starting at the upper
  * left corner (\p wOffset, hOffset) to the memory area pointed to by \p dst,
- * where \p kind is one of ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice,
- * ::cudaMemcpyDeviceToHost, or ::cudaMemcpyDeviceToDevice, and specifies the
- * direction of the copy.
+ * where \p kind specifies the direction of the copy, and must be one of
+ * ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
+ * ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault. Passing
+ * ::cudaMemcpyDefault is recommended, in which case the type of transfer is
+ * inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing.
  *
  * ::cudaMemcpyFromArrayAsync() is asynchronous with respect to the host, so
  * the call may return before the copy is complete. The copy can optionally
@@ -4524,12 +4709,17 @@ extern __host__ cudaError_t CUDARTAPI cudaMemcpyFromArrayAsync(void *dst, cudaAr
  *
  * Copies a matrix (\p height rows of \p width bytes each) from the memory
  * area pointed to by \p src to the memory area pointed to by \p dst, where
- * \p kind is one of ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice,
- * ::cudaMemcpyDeviceToHost, or ::cudaMemcpyDeviceToDevice, and specifies the
- * direction of the copy. \p dpitch and \p spitch are the widths in memory in
- * bytes of the 2D arrays pointed to by \p dst and \p src, including any
- * padding added to the end of each row. The memory areas may not overlap.
- * \p width must not exceed either \p dpitch or \p spitch.
+ * \p kind specifies the direction of the copy, and must be one of
+ * ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
+ * ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault. Passing
+ * ::cudaMemcpyDefault is recommended, in which case the type of transfer is
+ * inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing.
+ * \p dpitch and \p spitch are the widths in memory in bytes of the 2D arrays
+ * pointed to by \p dst and \p src, including any padding added to the end of
+ * each row. The memory areas may not overlap. \p width must not exceed either
+ * \p dpitch or \p spitch.
+ *
  * Calling ::cudaMemcpy2DAsync() with \p dst and \p src pointers that do not
  * match the direction of the copy results in an undefined behavior.
  * ::cudaMemcpy2DAsync() returns an error if \p dpitch or \p spitch is greater
@@ -4579,9 +4769,13 @@ extern __host__ __cudart_builtin__ cudaError_t CUDARTAPI cudaMemcpy2DAsync(void 
  *
  * Copies a matrix (\p height rows of \p width bytes each) from the memory
  * area pointed to by \p src to the CUDA array \p dst starting at the
- * upper left corner (\p wOffset, \p hOffset) where \p kind is one of
- * ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
- * or ::cudaMemcpyDeviceToDevice, and specifies the direction of the copy.
+ * upper left corner (\p wOffset, \p hOffset) where \p kind specifies the
+ * direction of the copy, and must be one of ::cudaMemcpyHostToHost,
+ * ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
+ * ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault. Passing
+ * ::cudaMemcpyDefault is recommended, in which case the type of transfer is
+ * inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing.
  * \p spitch is the width in memory in bytes of the 2D array pointed to by
  * \p src, including any padding added to the end of each row. \p wOffset +
  * \p width must not exceed the width of the CUDA array \p dst. \p width must
@@ -4631,9 +4825,13 @@ extern __host__ cudaError_t CUDARTAPI cudaMemcpy2DToArrayAsync(cudaArray_t dst, 
  * Copies a matrix (\p height rows of \p width bytes each) from the CUDA
  * array \p srcArray starting at the upper left corner
  * (\p wOffset, \p hOffset) to the memory area pointed to by \p dst, where
- * \p kind is one of ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice,
- * ::cudaMemcpyDeviceToHost, or ::cudaMemcpyDeviceToDevice, and specifies the
- * direction of the copy. \p dpitch is the width in memory in bytes of the 2D
+ * \p kind specifies the direction of the copy, and must be one of
+ * ::cudaMemcpyHostToHost, ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToHost,
+ * ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault. Passing
+ * ::cudaMemcpyDefault is recommended, in which case the type of transfer is
+ * inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing.
+ * \p dpitch is the width in memory in bytes of the 2D
  * array pointed to by \p dst, including any padding added to the end of each
  * row. \p wOffset + \p width must not exceed the width of the CUDA array
  * \p src. \p width must not exceed \p dpitch. ::cudaMemcpy2DFromArrayAsync()
@@ -4682,7 +4880,10 @@ extern __host__ cudaError_t CUDARTAPI cudaMemcpy2DFromArrayAsync(void *dst, size
  * to the memory area pointed to by \p offset bytes from the start of symbol
  * \p symbol. The memory areas may not overlap. \p symbol is a variable that
  * resides in global or constant memory space. \p kind can be either
- * ::cudaMemcpyHostToDevice or ::cudaMemcpyDeviceToDevice.
+ * ::cudaMemcpyHostToDevice, ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault.
+ * Passing ::cudaMemcpyDefault is recommended, in which case the type of transfer
+ * is inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing.
  *
  * ::cudaMemcpyToSymbolAsync() is asynchronous with respect to the host, so
  * the call may return before the copy is complete. The copy can optionally
@@ -4725,7 +4926,10 @@ extern __host__ cudaError_t CUDARTAPI cudaMemcpyToSymbolAsync(const void *symbol
  * from the start of symbol \p symbol to the memory area pointed to by \p dst.
  * The memory areas may not overlap. \p symbol is a variable that resides in
  * global or constant memory space. \p kind can be either
- * ::cudaMemcpyDeviceToHost or ::cudaMemcpyDeviceToDevice.
+ * ::cudaMemcpyDeviceToHost, ::cudaMemcpyDeviceToDevice, or ::cudaMemcpyDefault.
+ * Passing ::cudaMemcpyDefault is recommended, in which case the type of transfer
+ * is inferred from the pointer values. However, ::cudaMemcpyDefault is only
+ * allowed on systems that support unified virtual addressing.
  *
  * ::cudaMemcpyFromSymbolAsync() is asynchronous with respect to the host, so
  * the call may return before the copy is complete. The copy can optionally be
@@ -5024,6 +5228,251 @@ extern __host__ cudaError_t CUDARTAPI cudaGetSymbolAddress(void **devPtr, const 
  */
 extern __host__ cudaError_t CUDARTAPI cudaGetSymbolSize(size_t *size, const void *symbol);
 
+/**
+ * \brief Prefetches memory to the specified destination device
+ *
+ * Prefetches memory to the specified destination device.  \p devPtr is the 
+ * base device pointer of the memory to be prefetched and \p dstDevice is the 
+ * destination device. \p count specifies the number of bytes to copy. \p stream
+ * is the stream in which the operation is enqueued. The memory range must refer
+ * to managed memory allocated via ::cudaMallocManaged or declared via __managed__ variables.
+ *
+ * Passing in cudaCpuDeviceId for \p dstDevice will prefetch the data to host memory. If
+ * \p dstDevice is a GPU, then the device attribute ::cudaDevAttrConcurrentManagedAccess
+ * must be non-zero. Additionally, \p stream must be associated with a device that has a
+ * non-zero value for the device attribute ::cudaDevAttrConcurrentManagedAccess.
+ *
+ * The start address and end address of the memory range will be rounded down and rounded up
+ * respectively to be aligned to CPU page size before the prefetch operation is enqueued
+ * in the stream.
+ *
+ * If no physical memory has been allocated for this region, then this memory region
+ * will be populated and mapped on the destination device. If there's insufficient
+ * memory to prefetch the desired region, the Unified Memory driver may evict pages from other
+ * ::cudaMallocManaged allocations to host memory in order to make room. Device memory
+ * allocated using ::cudaMalloc or ::cudaMallocArray will not be evicted.
+ *
+ * By default, any mappings to the previous location of the migrated pages are removed and
+ * mappings for the new location are only setup on \p dstDevice. The exact behavior however
+ * also depends on the settings applied to this memory range via ::cudaMemAdvise as described
+ * below:
+ *
+ * If ::cudaMemAdviseSetReadMostly was set on any subset of this memory range,
+ * then that subset will create a read-only copy of the pages on \p dstDevice.
+ *
+ * If ::cudaMemAdviseSetPreferredLocation was called on any subset of this memory
+ * range, then the pages will be migrated to \p dstDevice even if \p dstDevice is not the
+ * preferred location of any pages in the memory range.
+ *
+ * If ::cudaMemAdviseSetAccessedBy was called on any subset of this memory range,
+ * then mappings to those pages from all the appropriate processors are updated to
+ * refer to the new location if establishing such a mapping is possible. Otherwise,
+ * those mappings are cleared.
+ *
+ * Note that this API is not required for functionality and only serves to improve performance
+ * by allowing the application to migrate data to a suitable location before it is accessed.
+ * Memory accesses to this range are always coherent and are allowed even when the data is
+ * actively being migrated.
+ *
+ * Note that this function is asynchronous with respect to the host and all work
+ * on other devices.
+ *
+ * \param devPtr    - Pointer to be prefetched
+ * \param count     - Size in bytes
+ * \param dstDevice - Destination device to prefetch to
+ * \param stream    - Stream to enqueue prefetch operation
+ *
+ * \return
+ * ::cudaSuccess,
+ * ::cudaErrorInvalidValue,
+ * ::cudaErrorInvalidDevice
+ * \notefnerr
+ * \note_async
+ * \note_null_stream
+ *
+ * \sa ::cudaMemcpy, ::cudaMemcpyPeer, ::cudaMemcpyAsync,
+ * ::cudaMemcpy3DPeerAsync, ::cudaMemAdvise
+ */
+extern __host__ cudaError_t CUDARTAPI cudaMemPrefetchAsync(const void *devPtr, size_t count, int dstDevice, cudaStream_t stream __dv(0));
+
+/**
+ * \brief Advise about the usage of a given memory range
+ *
+ * Advise the Unified Memory subsystem about the usage pattern for the memory range
+ * starting at \p devPtr with a size of \p count bytes. The start address and end address of the memory
+ * range will be rounded down and rounded up respectively to be aligned to CPU page size before the
+ * advice is applied. The memory range must refer to managed memory allocated via ::cudaMallocManaged
+ * or declared via __managed__ variables.
+ *
+ * The \p advice parameter can take the following values:
+ * - ::cudaMemAdviseSetReadMostly: This implies that the data is mostly going to be read
+ * from and only occasionally written to. Any read accesses from any processor to this region will create a
+ * read-only copy of at least the accessed pages in that processor's memory. Additionally, if ::cudaMemPrefetchAsync
+ * is called on this region, it will create a read-only copy of the data on the destination processor.
+ * If any processor writes to this region, all copies of the corresponding page will be invalidated
+ * except for the one where the write occurred. The \p device argument is ignored for this advice.
+ * Note that for a page to be read-duplicated, the accessing processor must either be the CPU or a GPU
+ * that has a non-zero value for the device attribute ::cudaDevAttrConcurrentManagedAccess.
+ * Also, if a context is created on a device that does not have the device attribute
+ * ::cudaDevAttrConcurrentManagedAccess set, then read-duplication will not occur until
+ * all such contexts are destroyed.
+ * - ::cudaMemAdviceUnsetReadMostly: Undoes the effect of ::cudaMemAdviceReadMostly and also prevents the
+ * Unified Memory driver from attempting heuristic read-duplication on the memory range. Any read-duplicated
+ * copies of the data will be collapsed into a single copy. The location for the collapsed
+ * copy will be the preferred location if the page has a preferred location and one of the read-duplicated
+ * copies was resident at that location. Otherwise, the location chosen is arbitrary.
+ * - ::cudaMemAdviseSetPreferredLocation: This advice sets the preferred location for the
+ * data to be the memory belonging to \p device. Passing in cudaCpuDeviceId for \p device sets the
+ * preferred location as host memory. If \p device is a GPU, then it must have a non-zero value for the
+ * device attribute ::cudaDevAttrConcurrentManagedAccess. Setting the preferred location
+ * does not cause data to migrate to that location immediately. Instead, it guides the migration policy
+ * when a fault occurs on that memory region. If the data is already in its preferred location and the
+ * faulting processor can establish a mapping without requiring the data to be migrated, then
+ * data migration will be avoided. On the other hand, if the data is not in its preferred location
+ * or if a direct mapping cannot be established, then it will be migrated to the processor accessing
+ * it. It is important to note that setting the preferred location does not prevent data prefetching
+ * done using ::cudaMemPrefetchAsync.
+ * Having a preferred location can override the page thrash detection and resolution logic in the Unified
+ * Memory driver. Normally, if a page is detected to be constantly thrashing between for example host and device
+ * memory, the page may eventually be pinned to host memory by the Unified Memory driver. But
+ * if the preferred location is set as device memory, then the page will continue to thrash indefinitely.
+ * If ::cudaMemAdviseSetReadMostly is also set on this memory region or any subset of it, then the
+ * policies associated with that advice will override the policies of this advice.
+ * - ::cudaMemAdviseUnsetPreferredLocation: Undoes the effect of ::cudaMemAdviseSetPreferredLocation
+ * and changes the preferred location to none.
+ * - ::cudaMemAdviseSetAccessedBy: This advice implies that the data will be accessed by \p device.
+ * Passing in ::cudaCpuDeviceId for \p device will set the advice for the CPU. If \p device is a GPU, then
+ * the device attribute ::cudaDevAttrConcurrentManagedAccess must be non-zero.
+ * This advice does not cause data migration and has no impact on the location of the data per se. Instead,
+ * it causes the data to always be mapped in the specified processor's page tables, as long as the
+ * location of the data permits a mapping to be established. If the data gets migrated for any reason,
+ * the mappings are updated accordingly.
+ * This advice is recommended in scenarios where data locality is not important, but avoiding faults is.
+ * Consider for example a system containing multiple GPUs with peer-to-peer access enabled, where the
+ * data located on one GPU is occasionally accessed by peer GPUs. In such scenarios, migrating data
+ * over to the other GPUs is not as important because the accesses are infrequent and the overhead of
+ * migration may be too high. But preventing faults can still help improve performance, and so having
+ * a mapping set up in advance is useful. Note that on CPU access of this data, the data may be migrated
+ * to host memory because the CPU typically cannot access device memory directly. Any GPU that had the
+ * ::cudaMemAdviceSetAccessedBy flag set for this data will now have its mapping updated to point to the
+ * page in host memory.
+ * If ::cudaMemAdviseSetReadMostly is also set on this memory region or any subset of it, then the
+ * policies associated with that advice will override the policies of this advice. Additionally, if the
+ * preferred location of this memory region or any subset of it is also \p device, then the policies
+ * associated with ::cudaMemAdviseSetPreferredLocation will override the policies of this advice.
+ * - ::cudaMemAdviseUnsetAccessedBy: Undoes the effect of ::cudaMemAdviseSetAccessedBy. Any mappings to
+ * the data from \p device may be removed at any time causing accesses to result in non-fatal page faults.
+ *
+ * \param devPtr - Pointer to memory to set the advice for
+ * \param count  - Size in bytes of the memory range
+ * \param advice - Advice to be applied for the specified memory range
+ * \param device - Device to apply the advice for
+ *
+ * \return
+ * ::cudaSuccess,
+ * ::cudaErrorInvalidValue,
+ * ::cudaErrorInvalidDevice
+ * \notefnerr
+ * \note_async
+ * \note_null_stream
+ *
+ * \sa ::cudaMemcpy, ::cudaMemcpyPeer, ::cudaMemcpyAsync,
+ * ::cudaMemcpy3DPeerAsync, ::cudaMemPrefetchAsync
+ */
+extern __host__ cudaError_t CUDARTAPI cudaMemAdvise(const void *devPtr, size_t count, enum cudaMemoryAdvise advice, int device);
+
+/**
+* \brief Query an attribute of a given memory range
+*
+* Query an attribute about the memory range starting at \p devPtr with a size of \p count bytes. The
+* memory range must refer to managed memory allocated via ::cudaMallocManaged or declared via
+* __managed__ variables.
+*
+* The \p attribute parameter can take the following values:
+* - ::cudaMemRangeAttributeReadMostly: If this attribute is specified, \p data will be interpreted
+* as a 32-bit integer, and \p dataSize must be 4. The result returned will be 1 if all pages in the given
+* memory range have read-duplication enabled, or 0 otherwise.
+* - ::cudaMemRangeAttributePreferredLocation: If this attribute is specified, \p data will be
+* interpreted as a 32-bit integer, and \p dataSize must be 4. The result returned will be a GPU device
+* id if all pages in the memory range have that GPU as their preferred location, or it will be cudaCpuDeviceId
+* if all pages in the memory range have the CPU as their preferred location, or it will be cudaInvalidDeviceId
+* if either all the pages don't have the same preferred location or some of the pages don't have a
+* preferred location at all. Note that the actual location of the pages in the memory range at the time of
+* the query may be different from the preferred location.
+* - ::cudaMemRangeAttributeAccessedBy: If this attribute is specified, \p data will be interpreted
+* as an array of 32-bit integers, and \p dataSize must be a non-zero multiple of 4. The result returned
+* will be a list of device ids that had ::cudaMemAdviceSetAccessedBy set for that entire memory range.
+* If any device does not have that advice set for the entire memory range, that device will not be included.
+* If \p data is larger than the number of devices that have that advice set for that memory range,
+* cudaInvalidDeviceId will be returned in all the extra space provided. For ex., if \p dataSize is 12
+* (i.e. \p data has 3 elements) and only device 0 has the advice set, then the result returned will be
+* { 0, cudaInvalidDeviceId, cudaInvalidDeviceId }. If \p data is smaller than the number of devices that have
+* that advice set, then only as many devices will be returned as can fit in the array. There is no
+* guarantee on which specific devices will be returned, however.
+* - ::cudaMemRangeAttributeLastPrefetchLocation: If this attribute is specified, \p data will be
+* interpreted as a 32-bit integer, and \p dataSize must be 4. The result returned will be the last location
+* to which all pages in the memory range were prefetched explicitly via ::cudaMemPrefetchAsync. This will either be
+* a GPU id or cudaCpuDeviceId depending on whether the last location for prefetch was a GPU or the CPU
+* respectively. If any page in the memory range was never explicitly prefetched or if all pages were not
+* prefetched to the same location, cudaInvalidDeviceId will be returned. Note that this simply returns the
+* last location that the applicaton requested to prefetch the memory range to. It gives no indication as to
+* whether the prefetch operation to that location has completed or even begun.
+*
+* \param data      - A pointers to a memory location where the result
+*                    of each attribute query will be written to.
+* \param dataSize  - Array containing the size of data
+* \param attribute - The attribute to query
+* \param devPtr    - Start of the range to query
+* \param count     - Size of the range to query
+ *
+ * \return
+ * ::cudaSuccess,
+ * ::cudaErrorInvalidValue
+ * \notefnerr
+ * \note_async
+ * \note_null_stream
+ *
+ * \sa ::cudaMemRangeGetAttributes, ::cudaMemPrefetchAsync,
+ * ::cudaMemAdvise
+ */
+extern __host__ cudaError_t CUDARTAPI cudaMemRangeGetAttribute(void *data, size_t dataSize, enum cudaMemRangeAttribute attribute, const void *devPtr, size_t count);
+
+/**
+ * \brief Query attributes of a given memory range.
+ *
+ * Query attributes of the memory range starting at \p devPtr with a size of \p count bytes. The
+ * memory range must refer to managed memory allocated via ::cudaMallocManaged or declared via
+ * __managed__ variables. The \p attributes array will be interpreted to have \p numAttributes
+ * entries. The \p dataSizes array will also be interpreted to have \p numAttributes entries.
+ * The results of the query will be stored in \p data.
+ *
+ * The list of supported attributes are given below. Please refer to ::cudaMemRangeGetAttribute for
+ * attribute descriptions and restrictions.
+ *
+ * - ::cudaMemRangeAttributeReadMostly
+ * - ::cudaMemRangeAttributePreferredLocation
+ * - ::cudaMemRangeAttributeAccessedBy
+ * - ::cudaMemRangeAttributeLastPrefetchLocation
+ *
+ * \param data          - A two-dimensional array containing pointers to memory
+ *                        locations where the result of each attribute query will be written to.
+ * \param dataSizes     - Array containing the sizes of each result
+ * \param attributes    - An array of attributes to query
+ *                        (numAttributes and the number of attributes in this array should match)
+ * \param numAttributes - Number of attributes to query
+ * \param devPtr        - Start of the range to query
+ * \param count         - Size of the range to query
+ *
+ * \return
+ * ::cudaSuccess,
+ * ::cudaErrorInvalidValue
+ * \notefnerr
+ *
+ * \sa ::cudaMemRangeGetAttribute, ::cudaMemAdvise
+ * ::cudaMemPrefetchAsync
+ */
+extern __host__ cudaError_t CUDARTAPI cudaMemRangeGetAttributes(void **data, size_t *dataSizes, enum cudaMemRangeAttribute *attributes, size_t numAttributes, const void *devPtr, size_t count);
+
 /** @} */ /* END CUDART_MEMORY */
 
 /**
@@ -5227,6 +5676,8 @@ extern __host__ cudaError_t CUDARTAPI cudaDeviceCanAccessPeer(int *canAccessPeer
  * memory on the current device from \p peerDevice, a separate symmetric call 
  * to ::cudaDeviceEnablePeerAccess() is required.
  *
+ * Each device can support a system-wide maximum of eight peer connections.
+ *
  * Peer access is not supported in 32 bit applications.
  *
  * Returns ::cudaErrorInvalidDevice if ::cudaDeviceCanAccessPeer() indicates
@@ -5290,6 +5741,8 @@ extern __host__ cudaError_t CUDARTAPI cudaDeviceDisablePeerAccess(int peerDevice
 /** \defgroup CUDART_D3D11_DEPRECATED Direct3D 11 Interoperability [DEPRECATED] */
 
 /** \defgroup CUDART_VDPAU VDPAU Interoperability */
+
+/** \defgroup CUDART_EGL EGL Interoperability */
 
 /**
  * \defgroup CUDART_INTEROP Graphics Interoperability
@@ -5976,6 +6429,7 @@ extern __host__ cudaError_t CUDARTAPI cudaGetSurfaceReference(const struct surfa
             enum cudaTextureFilterMode  filterMode;
             enum cudaTextureReadMode    readMode;
             int                         sRGB;
+            float                       borderColor[4];
             int                         normalizedCoords;
             unsigned int                maxAnisotropy;
             enum cudaTextureFilterMode  mipmapFilterMode;
@@ -6017,6 +6471,14 @@ extern __host__ cudaError_t CUDARTAPI cudaGetSurfaceReference(const struct surfa
  *   whether or not this ::cudaTextureDesc::readMode is set ::cudaReadModeNormalizedFloat is specified.
  *
  * - ::cudaTextureDesc::sRGB specifies whether sRGB to linear conversion should be performed during texture fetch.
+ *
+ * - ::cudaTextureDesc::borderColor specifies the float values of color. where:
+ *   ::cudaTextureDesc::borderColor[0] contains value of 'R', 
+ *   ::cudaTextureDesc::borderColor[1] contains value of 'G',
+ *   ::cudaTextureDesc::borderColor[2] contains value of 'B', 
+ *   ::cudaTextureDesc::borderColor[3] contains value of 'A'
+ *   Note that application using integer border color values will need to <reinterpret_cast> these values to float.
+ *   The values are set only when the addressing mode specified by ::cudaTextureDesc::addressMode is cudaAddressModeBorder.
  *
  * - ::cudaTextureDesc::normalizedCoords specifies whether the texture coordinates will be normalized or not.
  *
@@ -6447,6 +6909,7 @@ extern __host__ cudaError_t CUDARTAPI cudaGetExportTable(const void **ppExportTa
     #undef cudaStreamSynchronize
     #undef cudaLaunch
     #undef cudaLaunchKernel
+    #undef cudaMemPrefetchAsync
     extern __host__ cudaError_t CUDARTAPI cudaMemcpy(void *dst, const void *src, size_t count, enum cudaMemcpyKind kind);
     extern __host__ cudaError_t CUDARTAPI cudaMemcpyToSymbol(const void *symbol, const void *src, size_t count, size_t offset __dv(0), enum cudaMemcpyKind kind __dv(cudaMemcpyHostToDevice));
     extern __host__ cudaError_t CUDARTAPI cudaMemcpyFromSymbol(void *dst, const void *symbol, size_t count, size_t offset __dv(0), enum cudaMemcpyKind kind __dv(cudaMemcpyDeviceToHost));
@@ -6485,6 +6948,7 @@ extern __host__ cudaError_t CUDARTAPI cudaGetExportTable(const void **ppExportTa
     extern __host__ cudaError_t CUDARTAPI cudaStreamSynchronize(cudaStream_t stream);
     extern __host__ cudaError_t CUDARTAPI cudaLaunch(const void *func);
     extern __host__ cudaError_t CUDARTAPI cudaLaunchKernel(const void *func, dim3 gridDim, dim3 blockDim, void **args, size_t sharedMem, cudaStream_t stream);
+    extern __host__ cudaError_t CUDARTAPI cudaMemPrefetchAsync(const void *devPtr, size_t count, int dstDevice, cudaStream_t stream);
 #elif defined(__CUDART_API_PER_THREAD_DEFAULT_STREAM)
     // nvcc stubs reference the 'cudaLaunch' identifier even if it was defined
     // to 'cudaLaunch_ptsz'. Redirect through a static inline function.

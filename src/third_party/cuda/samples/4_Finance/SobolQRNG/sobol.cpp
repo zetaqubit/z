@@ -1,16 +1,11 @@
 /*
- * Copyright 1993-2015 NVIDIA Corporation.  All rights reserved.
- *
- * Please refer to the NVIDIA end user license agreement (EULA) associated
- * with this source code for terms and conditions that govern your use of
- * this software. Any use, reproduction, disclosure, or distribution of
- * this software and related documentation outside the terms of the EULA
- * is strictly prohibited.
- *
- */
-
-/*
-* Portions Copyright (c) 1993-2014 NVIDIA Corporation.  All rights reserved.
+* Portions Copyright (c) 1993-2015 NVIDIA Corporation.  All rights reserved.
+* Please refer to the NVIDIA end user license agreement (EULA) associated
+* with this source code for terms and conditions that govern your use of
+* this software. Any use, reproduction, disclosure, or distribution of
+* this software and related documentation outside the terms of the EULA
+* is strictly prohibited.
+*
 * Portions Copyright (c) 2009 Mike Giles, Oxford University.  All rights reserved.
 * Portions Copyright (c) 2008 Frances Y. Kuo and Stephen Joe.  All rights reserved.
 *
@@ -296,12 +291,6 @@ int main(int argc, char *argv[])
     checkCudaErrors(cudaFree(d_directions));
     checkCudaErrors(cudaFree(d_output));
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     // Check pass/fail using L1 error
     exit(l1error < L1ERROR_TOLERANCE ? EXIT_SUCCESS : EXIT_FAILURE);
 }

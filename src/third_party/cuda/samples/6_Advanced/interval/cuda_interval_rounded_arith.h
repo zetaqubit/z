@@ -15,12 +15,6 @@
 #ifndef CUDA_INTERVAL_ROUNDED_ARITH_H
 #define CUDA_INTERVAL_ROUNDED_ARITH_H
 
-// Temporary workaround for CUDA 3.0/3.1 on SM 1.3 devices:
-// missing double-precision div/sqrt with directed rounding
-#if defined(__CUDA_ARCH__) && __CUDA_ARCH__ <= 130
-#define NO_DOUBLE_DIV
-#endif
-
 // Generic class, no actual implementation yet
 template<class T>
 struct rounded_arith
@@ -142,51 +136,6 @@ struct rounded_arith<float>
     }
 };
 
-__device__ double my_div_ru(double a, double b)
-{
-    int expo;
-    b = frexp(b, &expo);
-    double y0 = (double)(1.0f / __double2float_rn(b));    // y0 22 bits
-
-    // Cubic iteration from Alex
-    double e1 = __fma_rn(-b, y0, 1.0);
-    double e2 = __fma_rn(e1, e1, e1);
-    double y2 = __fma_rn(y0, e2, y0);        // y2 ~ 1/b 66 bits + rounding RN => faithful
-
-    double e3 = __fma_rn(-b, y2, 1.0);       // M
-    double y3 = __fma_rn(y2, e3, y2);        // y3 ~ 1/b correct except for 1/(2-eps)
-
-    double q0 = __dmul_rn(a, y0);
-    double r0 = __fma_rn(-q0, b, a);         // M
-    double q1 = __fma_rn(r0, y2, q0);        // q1 ~ a/b faithful
-
-    double r1 = __fma_ru(-q1, b, a);         // M
-    double q2 = __fma_ru(r1, y3, q1);        // q2 = a/b correct
-    return ldexp(q2, -expo);
-}
-
-__device__ double my_div_rd(double a, double b)
-{
-    int expo;
-    b = frexp(b, &expo);
-    double y0 = (double)(1.0f / __double2float_rn(b));    // y0 22 bits
-
-    double e1 = __fma_rn(-b, y0, 1.0);
-    double e2 = __fma_rn(e1, e1, e1);
-    double y2 = __fma_rn(y0, e2, y0);        // y2 ~ 1/b 66 bits + rounding RN => faithful
-
-    double e3 = __fma_rn(-b, y2, 1.0);       // M
-    double y3 = __fma_rn(y2, e3, y2);        // y3 ~ 1/b correct except for 1/(2-eps)
-
-    double q0 = __dmul_rn(a, y0);
-    double r0 = __fma_rn(-q0, b, a);         // M
-    double q1 = __fma_rn(r0, y2, q0);        // q1 ~ a/b faithful
-
-    double r1 = __fma_rd(-q1, b, a);         // M
-    double q2 = __fma_rd(r1, y3, q1);
-    return ldexp(q2, -expo);
-}
-
 // Specialization for double
 template<>
 struct rounded_arith<double>
@@ -223,27 +172,18 @@ struct rounded_arith<double>
 
     __device__ double div_down(const double &x, const double &y)
     {
-#ifndef NO_DOUBLE_DIV
         return __ddiv_rd(x, y);
-#else
-        return my_div_rd(x, y);
-#endif
     }
 
     __device__ double div_up(const double &x, const double &y)
     {
-#ifndef NO_DOUBLE_DIV
         return __ddiv_ru(x, y);
-#else
-        return my_div_ru(x, y);
-#endif
     }
     __device__ double median(const double &x, const double &y)
     {
         return (x + y) * .5;
     }
 
-#ifndef NO_DOUBLE_DIV
     __device__ double sqrt_down(const double &x)
     {
         return __dsqrt_rd(x);
@@ -253,7 +193,7 @@ struct rounded_arith<double>
     {
         return __dsqrt_ru(x);
     }
-#endif
+
     __device__ double int_down(const double &x)
     {
         return floor(x);

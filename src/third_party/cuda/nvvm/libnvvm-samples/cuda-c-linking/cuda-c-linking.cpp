@@ -200,7 +200,9 @@ std::string generatePtx(const std::string &module,
   // Clean-up libNVVM
   checkNVVMCall(nvvmDestroyProgram(&compileUnit));
 
-  return std::string(ptx);
+  std::string result(ptx);
+  delete [] ptx;
+  return result;
 }
 
 

@@ -1,5 +1,5 @@
-Sample: Stream Priorities
-Minimum spec: SM 3.2
+Sample: StreamPriorities
+Minimum spec: SM 3.5
 
 This sample demonstrates basic use of stream priorities.
 

@@ -1,0 +1,115 @@
+.TH "Error Handling" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Error Handling \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "__cudart_builtin__ const char * \fBcudaGetErrorName\fP (\fBcudaError_t\fP error)"
+.br
+.RI "\fIReturns the string representation of an error code enum name. \fP"
+.ti -1c
+.RI "__cudart_builtin__ const char * \fBcudaGetErrorString\fP (\fBcudaError_t\fP error)"
+.br
+.RI "\fIReturns the description string for an error code. \fP"
+.ti -1c
+.RI "__cudart_builtin__ \fBcudaError_t\fP \fBcudaGetLastError\fP (void)"
+.br
+.RI "\fIReturns the last error from a runtime call. \fP"
+.ti -1c
+.RI "__cudart_builtin__ \fBcudaError_t\fP \fBcudaPeekAtLastError\fP (void)"
+.br
+.RI "\fIReturns the last error from a runtime call. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief error handling functions of the CUDA runtime API (cuda_runtime_api.h)
+.PP
+This section describes the error handling functions of the CUDA runtime application programming interface. 
+.SH "Function Documentation"
+.PP 
+.SS "__cudart_builtin__ const char* cudaGetErrorName (\fBcudaError_t\fP error)"
+.PP
+Returns a string containing the name of an error code in the enum. If the error code is not recognized, 'unrecognized error code' is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIerror\fP - Error code to convert to string
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fCchar*\fP pointer to a NULL-terminated string
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaGetErrorString\fP, \fBcudaGetLastError\fP, \fBcudaPeekAtLastError\fP, \fBcudaError\fP 
+.RE
+.PP
+
+.SS "__cudart_builtin__ const char* cudaGetErrorString (\fBcudaError_t\fP error)"
+.PP
+Returns the description string for an error code. If the error code is not recognized, 'unrecognized error code' is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIerror\fP - Error code to convert to string
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fCchar*\fP pointer to a NULL-terminated string
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaGetErrorName\fP, \fBcudaGetLastError\fP, \fBcudaPeekAtLastError\fP, \fBcudaError\fP 
+.RE
+.PP
+
+.SS "__cudart_builtin__ \fBcudaError_t\fP cudaGetLastError (void)"
+.PP
+Returns the last error that has been produced by any of the runtime calls in the same host thread and resets it to \fBcudaSuccess\fP.
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorMissingConfiguration\fP, \fBcudaErrorMemoryAllocation\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorLaunchFailure\fP, \fBcudaErrorLaunchTimeout\fP, \fBcudaErrorLaunchOutOfResources\fP, \fBcudaErrorInvalidDeviceFunction\fP, \fBcudaErrorInvalidConfiguration\fP, \fBcudaErrorInvalidDevice\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidPitchValue\fP, \fBcudaErrorInvalidSymbol\fP, \fBcudaErrorUnmapBufferObjectFailed\fP, \fBcudaErrorInvalidHostPointer\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidTexture\fP, \fBcudaErrorInvalidTextureBinding\fP, \fBcudaErrorInvalidChannelDescriptor\fP, \fBcudaErrorInvalidMemcpyDirection\fP, \fBcudaErrorInvalidFilterSetting\fP, \fBcudaErrorInvalidNormSetting\fP, \fBcudaErrorUnknown\fP, \fBcudaErrorInvalidResourceHandle\fP, \fBcudaErrorInsufficientDriver\fP, \fBcudaErrorSetOnActiveProcess\fP, \fBcudaErrorStartupFailure\fP, 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaPeekAtLastError\fP, \fBcudaGetErrorName\fP, \fBcudaGetErrorString\fP, \fBcudaError\fP 
+.RE
+.PP
+
+.SS "__cudart_builtin__ \fBcudaError_t\fP cudaPeekAtLastError (void)"
+.PP
+Returns the last error that has been produced by any of the runtime calls in the same host thread. Note that this call does not reset the error to \fBcudaSuccess\fP like \fBcudaGetLastError()\fP.
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorMissingConfiguration\fP, \fBcudaErrorMemoryAllocation\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorLaunchFailure\fP, \fBcudaErrorLaunchTimeout\fP, \fBcudaErrorLaunchOutOfResources\fP, \fBcudaErrorInvalidDeviceFunction\fP, \fBcudaErrorInvalidConfiguration\fP, \fBcudaErrorInvalidDevice\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidPitchValue\fP, \fBcudaErrorInvalidSymbol\fP, \fBcudaErrorUnmapBufferObjectFailed\fP, \fBcudaErrorInvalidHostPointer\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidTexture\fP, \fBcudaErrorInvalidTextureBinding\fP, \fBcudaErrorInvalidChannelDescriptor\fP, \fBcudaErrorInvalidMemcpyDirection\fP, \fBcudaErrorInvalidFilterSetting\fP, \fBcudaErrorInvalidNormSetting\fP, \fBcudaErrorUnknown\fP, \fBcudaErrorInvalidResourceHandle\fP, \fBcudaErrorInsufficientDriver\fP, \fBcudaErrorSetOnActiveProcess\fP, \fBcudaErrorStartupFailure\fP, 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaGetLastError\fP, \fBcudaGetErrorName\fP, \fBcudaGetErrorString\fP, \fBcudaError\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

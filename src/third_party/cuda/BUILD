@@ -33,10 +33,10 @@ cc_library(
 cc_library(
     name = "cudart",
     srcs = [
-        "lib64/libcudart.so.7.0",
+        "lib64/libcudart.so.8.0",
     ],
     data = [
-        "lib64/libcudart.so.7.0",
+        "lib64/libcudart.so.8.0",
     ],
     includes = ["include/"],
     visibility = ["//visibility:public"],
@@ -46,10 +46,10 @@ cc_library(
 cc_library(
     name = "cublas",
     srcs = [
-        "lib64/libcublas.so.7.0",
+        "lib64/libcublas.so.8.0",
     ],
     data = [
-        "lib64/libcublas.so.7.0",
+        "lib64/libcublas.so.8.0",
     ],
     includes = ["include/"],
     visibility = ["//visibility:public"],
@@ -59,10 +59,10 @@ cc_library(
 cc_library(
     name = "cudnn",
     srcs = [
-        "lib64/libcudnn.so.4",
+        "lib64/libcudnn.so.5",
     ],
     data = [
-        "lib64/libcudnn.so.4",
+        "lib64/libcudnn.so.5",
     ],
     includes = ["include/"],
     visibility = ["//visibility:public"],
@@ -72,10 +72,10 @@ cc_library(
 cc_library(
     name = "cufft",
     srcs = [
-        "lib64/libcufft.so.7.0",
+        "lib64/libcufft.so.8.0",
     ],
     data = [
-        "lib64/libcufft.so.7.0",
+        "lib64/libcufft.so.8.0",
     ],
     includes = ["include/"],
     visibility = ["//visibility:public"],
@@ -85,10 +85,10 @@ cc_library(
 cc_library(
     name = "curand",
     srcs = [
-        "lib64/libcurand.so.7.0",
+        "lib64/libcurand.so.8.0",
     ],
     data = [
-        "lib64/libcurand.so.7.0",
+        "lib64/libcurand.so.8.0",
     ],
     includes = ["include/"],
     visibility = ["//visibility:public"],

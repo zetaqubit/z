@@ -116,6 +116,13 @@ typedef struct cudaDeviceGetAttribute_v5000_params_st {
     int device;
 } cudaDeviceGetAttribute_v5000_params;
 
+typedef struct cudaDeviceGetP2PAttribute_v8000_params_st {
+    int *value;
+    enum cudaDeviceP2PAttr attr;
+    int srcDevice;
+    int dstDevice;
+} cudaDeviceGetP2PAttribute_v8000_params;
+
 typedef struct cudaChooseDevice_v3020_params_st {
     int *device;
     const struct cudaDeviceProp *prop;
@@ -672,6 +679,37 @@ typedef struct cudaGetSymbolSize_v3020_params_st {
     const void *symbol;
 } cudaGetSymbolSize_v3020_params;
 
+typedef struct cudaMemPrefetchAsync_ptsz_v8000_params_st {
+    const void *devPtr;
+    size_t count;
+    int dstDevice;
+    cudaStream_t stream;
+} cudaMemPrefetchAsync_ptsz_v8000_params;
+
+typedef struct cudaMemAdvise_v8000_params_st {
+    const void *devPtr;
+    size_t count;
+    enum cudaMemoryAdvise advice;
+    int device;
+} cudaMemAdvise_v8000_params;
+
+typedef struct cudaMemRangeGetAttribute_v8000_params_st {
+    void *data;
+    size_t dataSize;
+    enum cudaMemRangeAttribute attribute;
+    const void *devPtr;
+    size_t count;
+} cudaMemRangeGetAttribute_v8000_params;
+
+typedef struct cudaMemRangeGetAttributes_v8000_params_st {
+    void **data;
+    size_t *dataSizes;
+    enum cudaMemRangeAttribute *attributes;
+    size_t numAttributes;
+    const void *devPtr;
+    size_t count;
+} cudaMemRangeGetAttributes_v8000_params;
+
 typedef struct cudaPointerGetAttributes_v4000_params_st {
     struct cudaPointerAttributes *attributes;
     const void *ptr;
@@ -1140,6 +1178,13 @@ typedef struct cudaLaunchKernel_v7000_params_st {
     size_t sharedMem;
     cudaStream_t stream;
 } cudaLaunchKernel_v7000_params;
+
+typedef struct cudaMemPrefetchAsync_v8000_params_st {
+    const void *devPtr;
+    size_t count;
+    int dstDevice;
+    cudaStream_t stream;
+} cudaMemPrefetchAsync_v8000_params;
 
 // Parameter trace structures for removed functions 
 typedef struct cudaStreamDestroy_v3020_params_st {

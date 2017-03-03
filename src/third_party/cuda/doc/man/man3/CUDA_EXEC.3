@@ -1,0 +1,254 @@
+.TH "Execution Control" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Execution Control \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCUresult\fP \fBcuFuncGetAttribute\fP (int *pi, \fBCUfunction_attribute\fP attrib, \fBCUfunction\fP hfunc)"
+.br
+.RI "\fIReturns information about a function. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuFuncSetCacheConfig\fP (\fBCUfunction\fP hfunc, \fBCUfunc_cache\fP config)"
+.br
+.RI "\fISets the preferred cache configuration for a device function. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuFuncSetSharedMemConfig\fP (\fBCUfunction\fP hfunc, \fBCUsharedconfig\fP config)"
+.br
+.RI "\fISets the shared memory configuration for a device function. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuLaunchKernel\fP (\fBCUfunction\fP f, unsigned int gridDimX, unsigned int gridDimY, unsigned int gridDimZ, unsigned int blockDimX, unsigned int blockDimY, unsigned int blockDimZ, unsigned int sharedMemBytes, \fBCUstream\fP hStream, void **kernelParams, void **extra)"
+.br
+.RI "\fILaunches a CUDA function. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief execution control functions of the low-level CUDA driver API (\fBcuda.h\fP)
+.PP
+This section describes the execution control functions of the low-level CUDA driver application programming interface. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBCUresult\fP cuFuncGetAttribute (int * pi, \fBCUfunction_attribute\fP attrib, \fBCUfunction\fP hfunc)"
+.PP
+Returns in \fC*pi\fP the integer value of the attribute \fCattrib\fP on the kernel given by \fChfunc\fP. The supported attributes are:
+.IP "\(bu" 2
+\fBCU_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK\fP: The maximum number of threads per block, beyond which a launch of the function would fail. This number depends on both the function and the device on which the function is currently loaded.
+.IP "\(bu" 2
+\fBCU_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES\fP: The size in bytes of statically-allocated shared memory per block required by this function. This does not include dynamically-allocated shared memory requested by the user at runtime.
+.IP "\(bu" 2
+\fBCU_FUNC_ATTRIBUTE_CONST_SIZE_BYTES\fP: The size in bytes of user-allocated constant memory required by this function.
+.IP "\(bu" 2
+\fBCU_FUNC_ATTRIBUTE_LOCAL_SIZE_BYTES\fP: The size in bytes of local memory used by each thread of this function.
+.IP "\(bu" 2
+\fBCU_FUNC_ATTRIBUTE_NUM_REGS\fP: The number of registers used by each thread of this function.
+.IP "\(bu" 2
+\fBCU_FUNC_ATTRIBUTE_PTX_VERSION\fP: The PTX virtual architecture version for which the function was compiled. This value is the major PTX version * 10 + the minor PTX version, so a PTX version 1.3 function would return the value 13. Note that this may return the undefined value of 0 for cubins compiled prior to CUDA 3.0.
+.IP "\(bu" 2
+\fBCU_FUNC_ATTRIBUTE_BINARY_VERSION\fP: The binary architecture version for which the function was compiled. This value is the major binary version * 10 + the minor binary version, so a binary version 1.3 function would return the value 13. Note that this will return a value of 10 for legacy cubins that do not have a properly-encoded binary architecture version.
+.IP "\(bu" 2
+CU_FUNC_CACHE_MODE_CA: The attribute to indicate whether the function has been compiled with user specified option '-Xptxas --dlcm=ca' set .
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpi\fP - Returned attribute value 
+.br
+\fIattrib\fP - Attribute requested 
+.br
+\fIhfunc\fP - Function to query attribute of
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuCtxGetCacheConfig\fP, \fBcuCtxSetCacheConfig\fP, \fBcuFuncSetCacheConfig\fP, \fBcuLaunchKernel\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuFuncSetCacheConfig (\fBCUfunction\fP hfunc, \fBCUfunc_cache\fP config)"
+.PP
+On devices where the L1 cache and shared memory use the same hardware resources, this sets through \fCconfig\fP the preferred cache configuration for the device function \fChfunc\fP. This is only a preference. The driver will use the requested configuration if possible, but it is free to choose a different configuration if required to execute \fChfunc\fP. Any context-wide preference set via \fBcuCtxSetCacheConfig()\fP will be overridden by this per-function setting unless the per-function setting is \fBCU_FUNC_CACHE_PREFER_NONE\fP. In that case, the current context-wide setting will be used.
+.PP
+This setting does nothing on devices where the size of the L1 cache and shared memory are fixed.
+.PP
+Launching a kernel with a different preference than the most recent preference setting may insert a device-side synchronization point.
+.PP
+The supported cache configurations are:
+.IP "\(bu" 2
+\fBCU_FUNC_CACHE_PREFER_NONE\fP: no preference for shared memory or L1 (default)
+.IP "\(bu" 2
+\fBCU_FUNC_CACHE_PREFER_SHARED\fP: prefer larger shared memory and smaller L1 cache
+.IP "\(bu" 2
+\fBCU_FUNC_CACHE_PREFER_L1\fP: prefer larger L1 cache and smaller shared memory
+.IP "\(bu" 2
+\fBCU_FUNC_CACHE_PREFER_EQUAL\fP: prefer equal sized L1 cache and shared memory
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhfunc\fP - Kernel to configure cache for 
+.br
+\fIconfig\fP - Requested cache configuration
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuCtxGetCacheConfig\fP, \fBcuCtxSetCacheConfig\fP, \fBcuFuncGetAttribute\fP, \fBcuLaunchKernel\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuFuncSetSharedMemConfig (\fBCUfunction\fP hfunc, \fBCUsharedconfig\fP config)"
+.PP
+On devices with configurable shared memory banks, this function will force all subsequent launches of the specified device function to have the given shared memory bank size configuration. On any given launch of the function, the shared memory configuration of the device will be temporarily changed if needed to suit the function's preferred configuration. Changes in shared memory configuration between subsequent launches of functions, may introduce a device side synchronization point.
+.PP
+Any per-function setting of shared memory bank size set via \fBcuFuncSetSharedMemConfig\fP will override the context wide setting set with \fBcuCtxSetSharedMemConfig\fP.
+.PP
+Changing the shared memory bank size will not increase shared memory usage or affect occupancy of kernels, but may have major effects on performance. Larger bank sizes will allow for greater potential bandwidth to shared memory, but will change what kinds of accesses to shared memory will result in bank conflicts.
+.PP
+This function will do nothing on devices with fixed shared memory bank size.
+.PP
+The supported bank configurations are:
+.IP "\(bu" 2
+\fBCU_SHARED_MEM_CONFIG_DEFAULT_BANK_SIZE\fP: use the context's shared memory configuration when launching this function.
+.IP "\(bu" 2
+\fBCU_SHARED_MEM_CONFIG_FOUR_BYTE_BANK_SIZE\fP: set shared memory bank width to be natively four bytes when launching this function.
+.IP "\(bu" 2
+\fBCU_SHARED_MEM_CONFIG_EIGHT_BYTE_BANK_SIZE\fP: set shared memory bank width to be natively eight bytes when launching this function.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhfunc\fP - kernel to be given a shared memory config 
+.br
+\fIconfig\fP - requested shared memory configuration
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuCtxGetCacheConfig\fP, \fBcuCtxSetCacheConfig\fP, \fBcuCtxGetSharedMemConfig\fP, \fBcuCtxSetSharedMemConfig\fP, \fBcuFuncGetAttribute\fP, \fBcuLaunchKernel\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuLaunchKernel (\fBCUfunction\fP f, unsigned int gridDimX, unsigned int gridDimY, unsigned int gridDimZ, unsigned int blockDimX, unsigned int blockDimY, unsigned int blockDimZ, unsigned int sharedMemBytes, \fBCUstream\fP hStream, void ** kernelParams, void ** extra)"
+.PP
+Invokes the kernel \fCf\fP on a \fCgridDimX\fP x \fCgridDimY\fP x \fCgridDimZ\fP grid of blocks. Each block contains \fCblockDimX\fP x \fCblockDimY\fP x \fCblockDimZ\fP threads.
+.PP
+\fCsharedMemBytes\fP sets the amount of dynamic shared memory that will be available to each thread block.
+.PP
+Kernel parameters to \fCf\fP can be specified in one of two ways:
+.PP
+1) Kernel parameters can be specified via \fCkernelParams\fP. If \fCf\fP has N parameters, then \fCkernelParams\fP needs to be an array of N pointers. Each of \fCkernelParams\fP[0] through \fCkernelParams\fP[N-1] must point to a region of memory from which the actual kernel parameter will be copied. The number of kernel parameters and their offsets and sizes do not need to be specified as that information is retrieved directly from the kernel's image.
+.PP
+2) Kernel parameters can also be packaged by the application into a single buffer that is passed in via the \fCextra\fP parameter. This places the burden on the application of knowing each kernel parameter's size and alignment/padding within the buffer. Here is an example of using the \fCextra\fP parameter in this manner: 
+.PP
+.nf
+    size_t argBufferSize;
+    char argBuffer[256];
+
+    // populate argBuffer and argBufferSize
+
+    void *config[] = {
+        CU_LAUNCH_PARAM_BUFFER_POINTER, argBuffer,
+        CU_LAUNCH_PARAM_BUFFER_SIZE,    &argBufferSize,
+        CU_LAUNCH_PARAM_END
+    };
+    status = cuLaunchKernel(f, gx, gy, gz, bx, by, bz, sh, s, NULL, config);
+
+.fi
+.PP
+.PP
+The \fCextra\fP parameter exists to allow \fBcuLaunchKernel\fP to take additional less commonly used arguments. \fCextra\fP specifies a list of names of extra settings and their corresponding values. Each extra setting name is immediately followed by the corresponding value. The list must be terminated with either NULL or \fBCU_LAUNCH_PARAM_END\fP.
+.PP
+.IP "\(bu" 2
+\fBCU_LAUNCH_PARAM_END\fP, which indicates the end of the \fCextra\fP array;
+.IP "\(bu" 2
+\fBCU_LAUNCH_PARAM_BUFFER_POINTER\fP, which specifies that the next value in \fCextra\fP will be a pointer to a buffer containing all the kernel parameters for launching kernel \fCf\fP;
+.IP "\(bu" 2
+\fBCU_LAUNCH_PARAM_BUFFER_SIZE\fP, which specifies that the next value in \fCextra\fP will be a pointer to a size_t containing the size of the buffer specified with \fBCU_LAUNCH_PARAM_BUFFER_POINTER\fP;
+.PP
+.PP
+The error \fBCUDA_ERROR_INVALID_VALUE\fP will be returned if kernel parameters are specified with both \fCkernelParams\fP and \fCextra\fP (i.e. both \fCkernelParams\fP and \fCextra\fP are non-NULL).
+.PP
+Calling \fBcuLaunchKernel()\fP sets persistent function state that is the same as function state set through the following deprecated APIs: \fBcuFuncSetBlockShape()\fP, \fBcuFuncSetSharedSize()\fP, \fBcuParamSetSize()\fP, \fBcuParamSeti()\fP, \fBcuParamSetf()\fP, \fBcuParamSetv()\fP.
+.PP
+When the kernel \fCf\fP is launched via \fBcuLaunchKernel()\fP, the previous block shape, shared size and parameter info associated with \fCf\fP is overwritten.
+.PP
+Note that to use \fBcuLaunchKernel()\fP, the kernel \fCf\fP must either have been compiled with toolchain version 3.2 or later so that it will contain kernel parameter information, or have no kernel parameters. If either of these conditions is not met, then \fBcuLaunchKernel()\fP will return \fBCUDA_ERROR_INVALID_IMAGE\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIf\fP - Kernel to launch 
+.br
+\fIgridDimX\fP - Width of grid in blocks 
+.br
+\fIgridDimY\fP - Height of grid in blocks 
+.br
+\fIgridDimZ\fP - Depth of grid in blocks 
+.br
+\fIblockDimX\fP - X dimension of each thread block 
+.br
+\fIblockDimY\fP - Y dimension of each thread block 
+.br
+\fIblockDimZ\fP - Z dimension of each thread block 
+.br
+\fIsharedMemBytes\fP - Dynamic shared-memory size per thread block in bytes 
+.br
+\fIhStream\fP - Stream identifier 
+.br
+\fIkernelParams\fP - Array of pointers to kernel parameters 
+.br
+\fIextra\fP - Extra options
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_INVALID_IMAGE\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_LAUNCH_FAILED\fP, \fBCUDA_ERROR_LAUNCH_OUT_OF_RESOURCES\fP, \fBCUDA_ERROR_LAUNCH_TIMEOUT\fP, \fBCUDA_ERROR_LAUNCH_INCOMPATIBLE_TEXTURING\fP, \fBCUDA_ERROR_SHARED_OBJECT_INIT_FAILED\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+This function uses standard  semantics. 
+.PP
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuCtxGetCacheConfig\fP, \fBcuCtxSetCacheConfig\fP, \fBcuFuncSetCacheConfig\fP, \fBcuFuncGetAttribute\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

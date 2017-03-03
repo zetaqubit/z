@@ -30,7 +30,7 @@ static cudaArray *array = NULL;
 #define SharedPitch 384
 #endif
 
-// A function pointer can be declared explicity like this line:
+// A function pointer can be declared explicitly like this line:
 //__device__ unsigned char (*pointFunction)(unsigned char, float ) = NULL;
 // or by using typedef's like below:
 

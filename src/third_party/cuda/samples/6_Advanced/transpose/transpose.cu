@@ -25,7 +25,7 @@
 
 // Utilities and system includes
 #include <helper_string.h>    // helper for string parsing
-#include <helper_image.h>     // helper for image and data compariosn
+#include <helper_image.h>     // helper for image and data comparison
 #include <helper_cuda.h>      // helper for cuda error checking functions
 
 const char *sSDKsample = "Transpose";
@@ -421,26 +421,12 @@ main(int argc, char **argv)
     if (size_x != size_y)
     {
         printf("\n[%s] does not support non-square matrices (row_dim_size(%d) != col_dim_size(%d))\nExiting...\n\n", sSDKsample, size_x, size_y);
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 
     if (size_x%TILE_DIM != 0 || size_y%TILE_DIM != 0)
     {
         printf("[%s] Matrix size must be integral multiple of tile size\nExiting...\n\n", sSDKsample);
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 
@@ -454,13 +440,6 @@ main(int argc, char **argv)
     if (grid.x < 1 || grid.y < 1)
     {
         printf("[%s] grid size computation incorrect in test \nExiting...\n\n", sSDKsample);
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 
@@ -474,13 +453,6 @@ main(int argc, char **argv)
     {
         printf("Input matrix size is larger than the available device memory!\n");
         printf("Please choose a smaller size matrix\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 
@@ -495,7 +467,7 @@ main(int argc, char **argv)
     checkCudaErrors(cudaMalloc((void **) &d_idata, mem_size));
     checkCudaErrors(cudaMalloc((void **) &d_odata, mem_size));
 
-    // initalize host data
+    // initialize host data
     for (int i = 0; i < (size_x*size_y); ++i)
     {
         h_idata[i] = (float) i;
@@ -640,13 +612,6 @@ main(int argc, char **argv)
 
     checkCudaErrors(cudaEventDestroy(start));
     checkCudaErrors(cudaEventDestroy(stop));
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 
     if (!success)
     {

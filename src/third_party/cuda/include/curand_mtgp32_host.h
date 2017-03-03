@@ -273,13 +273,13 @@ int mtgp32_init_by_array(unsigned int state[],
  * @return memory allocation result. if 0 then O.K.
  */
 int mtgp32_init_by_str(unsigned int state[],
-               const mtgp32_params_fast_t *para, char *array) {
+               const mtgp32_params_fast_t *para, unsigned char *array) {
     int i, j, count;
     unsigned int r;
     int lag;
     int mid;
     int size = para->mexp / 32 + 1;
-    int length = (unsigned int)strlen(array);
+    int length = (unsigned int)strlen((char *)array);
     unsigned int hidden_seed;
     unsigned int tmp;
 

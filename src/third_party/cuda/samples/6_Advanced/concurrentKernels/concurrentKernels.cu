@@ -147,7 +147,12 @@ int main(int argc, char **argv)
     //////////////////////////////////////////////////////////////////////
     // time execution with nkernels streams
     clock_t total_clocks = 0;
+#if defined(__arm__) || defined(__aarch64__)
+    // the kernel takes more time than the channel reset time on arm archs, so to prevent hangs reduce time_clocks.
+    clock_t time_clocks = (clock_t)(kernel_time * (deviceProp.clockRate / 1000));
+#else
     clock_t time_clocks = (clock_t)(kernel_time * deviceProp.clockRate);
+#endif
 
     cudaEventRecord(start_event, 0);
 
@@ -194,13 +199,6 @@ int main(int argc, char **argv)
     cudaEventDestroy(stop_event);
     cudaFreeHost(a);
     cudaFree(d_a);
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 
     if (!bTestResult)
     {

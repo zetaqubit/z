@@ -34,7 +34,6 @@
 // CUDA runtime
 #include <cuda_runtime.h>
 #include "nvrtc_helper.h"
-#include <cudaProfiler.h>
 
 // Helper functions and utilities to work with CUDA
 #include <helper_functions.h>
@@ -247,8 +246,6 @@ int main(int argc, char **argv)
     printf("MatrixA(%d,%d), MatrixB(%d,%d)\n", dimsA.x, dimsA.y, dimsB.x, dimsB.y);
 
     int matrix_result = matrixMultiply(argc, argv, block_size, dimsA, dimsB);
-
-    cuProfilerStop();
 
     exit(matrix_result);
 }

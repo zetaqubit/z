@@ -68,7 +68,7 @@ __global__ void KNN(
         clr.y *= sumWeights;
         clr.z *= sumWeights;
 
-        //Choose LERP quotent basing on how many texels
+        //Choose LERP quotient basing on how many texels
         //within the KNN window exceeded the weight threshold
         float lerpQ = (fCount > KNN_LERP_THRESHOLD) ? lerpC : 1.0f - lerpC;
 
@@ -135,7 +135,7 @@ __global__ void KNNdiag(
                 fCount += (weightIJ > KNN_WEIGHT_THRESHOLD) ? INV_KNN_WINDOW_AREA : 0.0f;
             }
 
-        //Choose LERP quotent basing on how many texels
+        //Choose LERP quotient basing on how many texels
         //within the KNN window exceeded the weight threshold
         float lerpQ = (fCount > KNN_LERP_THRESHOLD) ? 1.0f : 0;
 

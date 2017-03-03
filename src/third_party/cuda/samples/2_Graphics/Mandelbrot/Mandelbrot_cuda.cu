@@ -16,48 +16,18 @@
 
 // The Mandelbrot CUDA GPU thread function
 
-/*
-    Version using software scheduling of thread blocks.
-
-    The idea here is to launch of fixed number of worker blocks to fill the
-    machine, and have each block loop over the available work until it is all done.
-
-    We use a counter in global memory to keep track of which blocks have been
-    completed. The counter is incremented atomically by each worker block.
-
-    This method can achieve higher performance when blocks take a wide range of
-    different times to complete.
-*/
-
-__device__ unsigned int blockCounter;   // global counter, initialized to zero before kernel launch
 
 template<class T>
 __global__ void Mandelbrot0(uchar4 *dst, const int imageW, const int imageH, const int crunch, const T xOff, const T yOff,
                             const T xJP, const T yJP, const T scale, const uchar4 colors, const int frame,
                             const int animationFrame, const int gridWidth, const int numBlocks, const bool isJ)
 {
-    __shared__ unsigned int blockIndex;
-    __shared__ unsigned int blockX, blockY;
 
     // loop until all blocks completed
-    while (1)
+     for (unsigned int blockIndex=blockIdx.x; blockIndex < numBlocks; blockIndex += gridDim.x)
     {
-      __syncthreads(); // (needed to avoid race condition between threadblocks after first iteration)
-
-        if ((threadIdx.x==0) && (threadIdx.y==0))
-        {
-            // get block to process
-            blockIndex = atomicAdd(&blockCounter, 1);
-            blockX = blockIndex % gridWidth;            // note: this is slow, but only called once per block here
-            blockY = blockIndex / gridWidth;
-        }
-
-        __syncthreads();
-
-        if (blockIndex >= numBlocks)
-        {
-            break;    // finish
-        }
+        unsigned int blockX = blockIndex % gridWidth;
+        unsigned int blockY = blockIndex / gridWidth;
 
         // process this block
         const int ix = blockDim.x * blockX + threadIdx.x;
@@ -120,28 +90,12 @@ __global__ void MandelbrotDS0(uchar4 *dst, const int imageW, const int imageH, c
                               const uchar4 colors, const int frame, const int animationFrame, const int gridWidth,
                               const int numBlocks, const bool isJ)
 {
-    __shared__ unsigned int blockIndex;
-    __shared__ unsigned int blockX, blockY;
 
     // loop until all blocks completed
-    while (1)
+    for (unsigned int blockIndex=blockIdx.x; blockIndex < numBlocks; blockIndex += gridDim.x)
     {
-      __syncthreads(); // (needed to avoid race condition between threadblocks after first iteration)
-
-        if ((threadIdx.x==0) && (threadIdx.y==0))
-        {
-            // get block to process
-            blockIndex = atomicAdd(&blockCounter, 1);
-            blockX = blockIndex % gridWidth;            // note: this is slow, but only called once per block here
-            blockY = blockIndex / gridWidth;
-        }
-
-        __syncthreads();
-
-        if (blockIndex >= numBlocks)
-        {
-            break;    // finish
-        }
+        unsigned int blockX = blockIndex % gridWidth;
+        unsigned int blockY = blockIndex / gridWidth;
 
         // process this block
         const int ix = blockDim.x * blockX + threadIdx.x;
@@ -205,28 +159,12 @@ __global__ void Mandelbrot1(uchar4 *dst, const int imageW, const int imageH, con
                             const T xJP, const T yJP, const T scale, const uchar4 colors, const int frame,
                             const int animationFrame, const int gridWidth, const int numBlocks, const bool isJ)
 {
-    __shared__ unsigned int blockIndex;
-    __shared__ unsigned int blockX, blockY;
 
     // loop until all blocks completed
-    while (1)
+    for (unsigned int blockIndex=blockIdx.x; blockIndex < numBlocks; blockIndex += gridDim.x)
     {
-      __syncthreads(); // (needed to avoid race condition between threadblocks after first iteration)
-
-        if ((threadIdx.x==0) && (threadIdx.y==0))
-        {
-            // get block to process
-            blockIndex = atomicAdd(&blockCounter, 1);
-            blockX = blockIndex % gridWidth;            // note: this is slow, but only called once per block here
-            blockY = blockIndex / gridWidth;
-        }
-
-        __syncthreads();
-
-        if (blockIndex >= numBlocks)
-        {
-            break;    // finish
-        }
+        unsigned int blockX = blockIndex % gridWidth;
+        unsigned int blockY = blockIndex / gridWidth;
 
         // process this block
         const int ix = blockDim.x * blockX + threadIdx.x;
@@ -305,28 +243,12 @@ __global__ void MandelbrotDS1(uchar4 *dst, const int imageW, const int imageH, c
                               const float xJP, const float yJP, const float scale, const uchar4 colors,
                               const int frame, const int animationFrame, const int gridWidth, const int numBlocks, const bool isJ)
 {
-    __shared__ unsigned int blockIndex;
-    __shared__ unsigned int blockX, blockY;
 
     // loop until all blocks completed
-    while (1)
+    for (unsigned int blockIndex=blockIdx.x; blockIndex < numBlocks; blockIndex += gridDim.x)
     {
-      __syncthreads(); // (needed to avoid race condition between threadblocks after first iteration)
-
-        if ((threadIdx.x==0) && (threadIdx.y==0))
-        {
-            // get block to process
-            blockIndex = atomicAdd(&blockCounter, 1);
-            blockX = blockIndex % gridWidth;            // note: this is slow, but only called once per block here
-            blockY = blockIndex / gridWidth;
-        }
-
-        __syncthreads();
-
-        if (blockIndex >= numBlocks)
-        {
-            break;    // finish
-        }
+        unsigned int blockX = blockIndex % gridWidth;
+        unsigned int blockY = blockIndex / gridWidth;
 
         // process this block
         const int ix = blockDim.x * blockX + threadIdx.x;
@@ -411,10 +333,6 @@ void RunMandelbrot0(uchar4 *dst, const int imageW, const int imageH, const int c
     dim3 threads(BLOCKDIM_X, BLOCKDIM_Y);
     dim3 grid(iDivUp(imageW, BLOCKDIM_X), iDivUp(imageH, BLOCKDIM_Y));
 
-    // zero block counter
-    unsigned int hBlockCounter = 0;
-    checkCudaErrors(cudaMemcpyToSymbol(blockCounter, &hBlockCounter, sizeof(unsigned int), 0, cudaMemcpyHostToDevice));
-
     int numWorkerBlocks = numSMs;
 
     switch (mode)
@@ -447,10 +365,6 @@ void RunMandelbrot1(uchar4 *dst, const int imageW, const int imageH, const int c
 {
     dim3 threads(BLOCKDIM_X, BLOCKDIM_Y);
     dim3 grid(iDivUp(imageW, BLOCKDIM_X), iDivUp(imageH, BLOCKDIM_Y));
-
-    // zero block counter
-    unsigned int hBlockCounter = 0;
-    checkCudaErrors(cudaMemcpyToSymbol(blockCounter, &hBlockCounter, sizeof(unsigned int), 0, cudaMemcpyHostToDevice));
 
     int numWorkerBlocks = numSMs;
 

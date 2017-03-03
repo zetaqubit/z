@@ -60,12 +60,6 @@ int main(int argc, char **argv)
 
     runTest(argc, argv);
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     printf("%s completed, returned %s\n",
            sampleName,
            testResult ? "OK" : "ERROR!");
@@ -108,12 +102,6 @@ void runTest(int argc, char **argv)
         printf("simpleAssert requires a GPU with compute capability "
                "2.0 or later, exiting...\n");
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_SUCCESS);
     }
 

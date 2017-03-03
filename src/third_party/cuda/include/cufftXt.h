@@ -198,6 +198,46 @@ cufftResult CUFFTAPI cufftXtSetCallback(cufftHandle plan, void **callback_routin
 cufftResult CUFFTAPI cufftXtClearCallback(cufftHandle plan, cufftXtCallbackType cbType);
 cufftResult CUFFTAPI cufftXtSetCallbackSharedSize(cufftHandle plan, cufftXtCallbackType cbType, size_t sharedSize);
 
+cufftResult CUFFTAPI cufftXtMakePlanMany(cufftHandle plan,
+                                         int rank,
+                                         long long int *n,
+                                         long long int *inembed,
+                                         long long int istride,
+                                         long long int idist,
+                                         cudaDataType inputtype,
+                                         long long int *onembed,
+                                         long long int ostride,
+                                         long long int odist,
+                                         cudaDataType outputtype,
+                                         long long int batch,
+                                         size_t *workSize,
+                                       	 cudaDataType executiontype);
+
+cufftResult CUFFTAPI cufftXtGetSizeMany(cufftHandle plan,
+                                        int rank,
+                                        long long int *n,
+                                        long long int *inembed, 
+                                        long long int istride, 
+                                        long long int idist,
+                                        cudaDataType inputtype,
+                                        long long int *onembed, 
+                                        long long int ostride, 
+                                        long long int odist,
+                                        cudaDataType outputtype,
+                                        long long int batch,
+                                        size_t *workSize,
+                                        cudaDataType executiontype);
+
+cufftResult CUFFTAPI cufftXtExec(cufftHandle plan,
+                                 void *input,
+                                 void *output,
+                                 int direction);
+
+cufftResult CUFFTAPI cufftXtExecDescriptor(cufftHandle plan,
+                                           cudaLibXtDesc *input,
+                                           cudaLibXtDesc *output,
+                                           int direction);
+
 #ifdef __cplusplus
 }
 #endif

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2015 NVIDIA Corporation.  All rights reserved.
+ * Copyright 2011-2016 NVIDIA Corporation.  All rights reserved.
  *
  * NOTICE TO LICENSEE:
  *
@@ -55,6 +55,9 @@
 #include <cupti_events.h>
 #include <cupti_metrics.h>
 #include <cupti_result.h>
+#if defined(CUPTI_OPENACC_SUPPORT)
+#include <openacc/cupti_openacc.h>
+#endif
 
 #ifndef CUPTIAPI
 #ifdef _WIN32
@@ -124,6 +127,7 @@ extern "C" {
  * \see CUpti_ActivityMetricInstance
  * \see CUpti_ActivityName
  * \see CUpti_ActivityMarker
+ * \see CUpti_ActivityMarker2
  * \see CUpti_ActivityMarkerData
  * \see CUpti_ActivitySourceLocator
  * \see CUpti_ActivityGlobalAccess
@@ -138,9 +142,18 @@ extern "C" {
  * \see CUpti_ActivityModule
  * \see CUpti_ActivitySharedAccess
  * \see CUpti_ActivityPCSampling
+ * \see CUpti_ActivityPCSampling2
  * \see CUpti_ActivityPCSamplingRecordInfo
+ * \see CUpti_ActivityCudaEvent
+ * \see CUpti_ActivityStream
+ * \see CUpti_ActivitySynchronization
  * \see CUpti_ActivityInstructionCorrelation
+ * \see CUpti_ActivityExternalCorrelation
  * \see CUpti_ActivityUnifiedMemoryCounter2
+ * \see CUpti_ActivityOpenAccData
+ * \see CUpti_ActivityOpenAccLaunch
+ * \see CUpti_ActivityOpenAccOther
+ * \see CUpti_ActivityNvLink
  */
 typedef enum {
   /**
@@ -206,7 +219,7 @@ typedef enum {
   CUPTI_ACTIVITY_KIND_NAME     = 11,
   /**
    * Instantaneous, start, or end marker. The corresponding activity
-   * record structure is \ref CUpti_ActivityMarker.
+   * record structure is \ref CUpti_ActivityMarker2.
    */
   CUPTI_ACTIVITY_KIND_MARKER = 12,
   /**
@@ -308,7 +321,7 @@ typedef enum {
   /**
    * Enable PC sampling for kernels. This will serialize
    * kernels. The corresponding activity record structure
-   * is \ref CUpti_ActivityPCSampling.
+   * is \ref CUpti_ActivityPCSampling2.
    */
   CUPTI_ACTIVITY_KIND_PC_SAMPLING = 30,
   /**
@@ -325,8 +338,82 @@ typedef enum {
    * The corresponding activity record structure is \ref
    * CUpti_ActivityInstructionCorrelation.
    */
-   CUPTI_ACTIVITY_KIND_INSTRUCTION_CORRELATION = 32,
-   CUPTI_ACTIVITY_KIND_FORCE_INT     = 0x7fffffff
+  CUPTI_ACTIVITY_KIND_INSTRUCTION_CORRELATION = 32,
+  /**
+   * OpenACC data events.
+   * The corresponding activity record structure is \ref
+   * CUpti_ActivityOpenAccData.
+   */
+  CUPTI_ACTIVITY_KIND_OPENACC_DATA = 33,
+  /**
+   * OpenACC launch events.
+   * The corresponding activity record structure is \ref
+   * CUpti_ActivityOpenAccLaunch.
+   */
+  CUPTI_ACTIVITY_KIND_OPENACC_LAUNCH = 34,
+  /**
+   * OpenACC other events.
+   * The corresponding activity record structure is \ref
+   * CUpti_ActivityOpenAccOther.
+   */
+  CUPTI_ACTIVITY_KIND_OPENACC_OTHER = 35,
+  /**
+   * Information about a CUDA event. The
+   * corresponding activity record structure is \ref
+   * CUpti_ActivityCudaEvent.
+   */
+  CUPTI_ACTIVITY_KIND_CUDA_EVENT = 36,
+  /**
+   * Information about a CUDA stream. The
+   * corresponding activity record structure is \ref
+   * CUpti_ActivityStream.
+   */
+  CUPTI_ACTIVITY_KIND_STREAM = 37,
+  /**
+   * Records for synchronization management. The
+   * corresponding activity record structure is \ref
+   * CUpti_ActivitySynchronization.
+   */
+  CUPTI_ACTIVITY_KIND_SYNCHRONIZATION = 38,
+  /**
+   * Records for correlation of different programming APIs. The
+   * corresponding activity record structure is \ref
+   * CUpti_ActivityExternalCorrelation.
+   */
+  CUPTI_ACTIVITY_KIND_EXTERNAL_CORRELATION = 39,
+  /**
+   * Nvlink information.
+   * The corresponding activity record structure is \ref
+   * CUpti_ActivityNvLink.
+   */
+  CUPTI_ACTIVITY_KIND_NVLINK = 40,
+  /**
+   * Instantaneous Event information.
+   * The corresponding activity record structure is \ref
+   * CUpti_ActivityInstantaneousEvent.
+   */
+  CUPTI_ACTIVITY_KIND_INSTANTANEOUS_EVENT = 41,
+  /**
+   * Instantaneous Event information for a specific event 
+   * domain instance.
+   * The corresponding activity record structure is \ref
+   * CUpti_ActivityInstantaneousEventInstance
+   */
+  CUPTI_ACTIVITY_KIND_INSTANTANEOUS_EVENT_INSTANCE = 42,
+  /**
+   * Instantaneous Metric information
+   * The corresponding activity record structure is \ref
+   * CUpti_ActivityInstantaneousMetric.
+   */
+  CUPTI_ACTIVITY_KIND_INSTANTANEOUS_METRIC = 43,
+  /**
+   * Instantaneous Metric information for a specific metric
+   * domain instance.
+   * The corresponding activity record structure is \ref
+   * CUpti_ActivityInstantaneousMetricInstance.
+   */
+  CUPTI_ACTIVITY_KIND_INSTANTANEOUS_METRIC_INSTANCE = 44,
+  CUPTI_ACTIVITY_KIND_FORCE_INT     = 0x7fffffff
 } CUpti_ActivityKind;
 
 /**
@@ -490,6 +577,34 @@ typedef enum {
   CUPTI_ACTIVITY_FLAG_MARKER_END  = 1 << 2,
 
   /**
+   * Indicates the activity represents an attempt to acquire a user
+   * defined synchronization object.
+   * Valid for CUPTI_ACTIVITY_KIND_MARKER.
+   */
+  CUPTI_ACTIVITY_FLAG_MARKER_SYNC_ACQUIRE = 1 << 3,
+
+  /**
+   * Indicates the activity represents success in acquiring the
+   * user defined synchronization object.
+   * Valid for CUPTI_ACTIVITY_KIND_MARKER.
+   */
+  CUPTI_ACTIVITY_FLAG_MARKER_SYNC_ACQUIRE_SUCCESS = 1 << 4,
+
+  /**
+   * Indicates the activity represents failure in acquiring the
+   * user defined synchronization object.
+   * Valid for CUPTI_ACTIVITY_KIND_MARKER.
+   */
+  CUPTI_ACTIVITY_FLAG_MARKER_SYNC_ACQUIRE_FAILED = 1 << 5,
+
+  /**
+   * Indicates the activity represents releasing a reservation on
+   * user defined synchronization object.
+   * Valid for CUPTI_ACTIVITY_KIND_MARKER.
+   */
+  CUPTI_ACTIVITY_FLAG_MARKER_SYNC_RELEASE = 1 << 6,
+
+  /**
    * Indicates the activity represents a marker that does not specify
    * a color. Valid for CUPTI_ACTIVITY_KIND_MARKER_DATA.
    */
@@ -560,6 +675,12 @@ typedef enum {
    */
   CUPTI_ACTIVITY_FLAG_SHARED_ACCESS_KIND_LOAD       = 1 << 8,
 
+  /**
+   * Indicates the activity represents an asynchronous memset
+   * operation. Valid for CUPTI_ACTIVITY_KIND_MEMSET.
+   */
+  CUPTI_ACTIVITY_FLAG_MEMSET_ASYNC  = 1 << 0,
+
   CUPTI_ACTIVITY_FLAG_FORCE_INT = 0x7fffffff
 } CUpti_ActivityFlag;
 
@@ -572,7 +693,7 @@ typedef enum {
    */
   CUPTI_ACTIVITY_PC_SAMPLING_STALL_INVALID      = 0,
    /**
-   * No stall, instruciton is selected for issue
+   * No stall, instruction is selected for issue
    */
   CUPTI_ACTIVITY_PC_SAMPLING_STALL_NONE         = 1,
   /**
@@ -736,6 +857,10 @@ typedef enum {
    * The memory is an array.
    */
   CUPTI_ACTIVITY_MEMORY_KIND_ARRAY              = 4,
+  /**
+   * The memory is managed
+   */
+  CUPTI_ACTIVITY_MEMORY_KIND_MANAGED            = 5,
   CUPTI_ACTIVITY_MEMORY_KIND_FORCE_INT          = 0x7fffffff
 } CUpti_ActivityMemoryKind;
 
@@ -877,13 +1002,76 @@ typedef enum {
    */
   CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_BYTES_TRANSFER_DTOH = 2,
   /**
-   * Number of CPU page faults
+   * Number of CPU page faults, this is only supported on 64 bit
+   * linux platforms
    */
   CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_CPU_PAGE_FAULT_COUNT = 3,
+  /**
+   * Number of GPU page faults, this is only supported on devices with 
+   * compute capability 6.0 and higher and 64 bit linux platforms
+   */
+  CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_GPU_PAGE_FAULT = 4,
 
   CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_COUNT,
   CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_FORCE_INT = 0x7fffffff
 } CUpti_ActivityUnifiedMemoryCounterKind;
+
+/**
+ * \brief Access type of the Unified Memory counter
+ *
+ * This is valid for \ref CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_GPU_PAGE_FAULT
+ */
+typedef enum {
+    /**
+     * The unified memory access type is not known
+     */
+    CUPTI_ACTIVITY_UNIFIED_MEMORY_ACCESS_TYPE_UNKNOWN = 0,
+    /**
+     * The unified memory access type is read
+     */
+    CUPTI_ACTIVITY_UNIFIED_MEMORY_ACCESS_TYPE_READ = 1,
+    /**
+     * The unified memory access type is write
+     */
+    CUPTI_ACTIVITY_UNIFIED_MEMORY_ACCESS_TYPE_WRITE = 2,
+    /**
+     * The unified memory access type is atomic
+     */
+    CUPTI_ACTIVITY_UNIFIED_MEMORY_ACCESS_TYPE_ATOMIC = 3,
+    /**
+     * The unified memory access type is prefetch
+     */
+    CUPTI_ACTIVITY_UNIFIED_MEMORY_ACCESS_TYPE_PREFETCH = 4
+} CUpti_ActivityUnifiedMemoryAccessType;
+
+/**
+ * \brief Migration cause of the Unified Memory counter
+ *
+ * This is valid for \ref CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_BYTES_TRANSFER_HTOD and
+ * \ref CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_BYTES_TRANSFER_DTOH
+ */
+typedef enum {
+    /**
+     * The unified memory migration cause is not known
+     */
+    CUPTI_ACTIVITY_UNIFIED_MEMORY_MIGRATION_CAUSE_UNKNOWN = 0,
+    /**
+     * The unified memory migration cause is user
+     */
+    CUPTI_ACTIVITY_UNIFIED_MEMORY_MIGRATION_CAUSE_USER = 1,
+    /**
+     * The unified memory migration cause is coherence
+     */
+    CUPTI_ACTIVITY_UNIFIED_MEMORY_MIGRATION_CAUSE_COHERENCE = 2,
+    /**
+     * The unified memory migration cause is prefetch
+     */
+    CUPTI_ACTIVITY_UNIFIED_MEMORY_MIGRATION_CAUSE_PREFETCH = 3,
+    /**
+     * The unified memory migration cause is eviction
+     */
+    CUPTI_ACTIVITY_UNIFIED_MEMORY_MIGRATION_CAUSE_EVICTION = 4,
+} CUpti_ActivityUnifiedMemoryMigrationCause;
 
 /**
  * \brief SASS instruction classification.
@@ -967,6 +1155,10 @@ typedef enum {
    * Represents some miscellaneous instructions which do not fit in the above classification.
    */
   CUPTI_ACTIVITY_INSTRUCTION_CLASS_MISCELLANEOUS = 18,
+  /**
+   * Represents a 16 bit floating point operation.
+   */
+  CUPTI_ACTIVITY_INSTRUCTION_CLASS_FP_16 = 19,
 
   CUPTI_ACTIVITY_INSTRUCTION_CLASS_KIND_FORCE_INT     = 0x7fffffff
 } CUpti_ActivityInstructionClass;
@@ -995,6 +1187,96 @@ typedef enum {
 } CUpti_ActivityPartitionedGlobalCacheConfig;
 
 /**
+ * \brief Synchronization type.
+ *
+ * The types of synchronization to be used with CUpti_ActivitySynchronization.
+ */
+
+typedef enum {
+  /**
+   * Unknown data.
+   */
+  CUPTI_ACTIVITY_SYNCHRONIZATION_TYPE_UNKNOWN = 0,
+  /**
+   * Event synchronize API.
+   */
+  CUPTI_ACTIVITY_SYNCHRONIZATION_TYPE_EVENT_SYNCHRONIZE = 1,
+  /**
+   * Stream wait event API.
+   */
+  CUPTI_ACTIVITY_SYNCHRONIZATION_TYPE_STREAM_WAIT_EVENT = 2,
+  /**
+   * Stream synchronize API.
+   */
+  CUPTI_ACTIVITY_SYNCHRONIZATION_TYPE_STREAM_SYNCHRONIZE = 3,
+  /**
+   * Context synchronize API.
+   */
+  CUPTI_ACTIVITY_SYNCHRONIZATION_TYPE_CONTEXT_SYNCHRONIZE = 4,
+
+  CUPTI_ACTIVITY_SYNCHRONIZATION_TYPE_FORCE_INT     = 0x7fffffff
+} CUpti_ActivitySynchronizationType;
+
+/**
+ * \brief stream type.
+ *
+ * The types of stream to be used with CUpti_ActivityStream.
+ */
+
+typedef enum {
+  /**
+   * Unknown data.
+   */
+  CUPTI_ACTIVITY_STREAM_CREATE_FLAG_UNKNOWN = 0,
+  /**
+   * Default stream.
+   */
+  CUPTI_ACTIVITY_STREAM_CREATE_FLAG_DEFAULT = 1,
+  /**
+   * Non-blocking stream.
+   */
+  CUPTI_ACTIVITY_STREAM_CREATE_FLAG_NON_BLOCKING = 2,
+  /**
+   * Null stream.
+   */
+  CUPTI_ACTIVITY_STREAM_CREATE_FLAG_NULL = 3,
+  /**
+   * Stream create Mask
+   */
+  CUPTI_ACTIVITY_STREAM_CREATE_MASK = 0xFFFF,
+
+  CUPTI_ACTIVITY_STREAM_CREATE_FLAG_FORCE_INT = 0x7fffffff
+} CUpti_ActivityStreamFlag;
+
+/**
+* \brief Link flags.
+*
+* Describes link properties, to be used with CUpti_ActivityNvLink.
+*/
+
+typedef enum {
+  CUPTI_LINK_FLAG_INVALID = 0,
+  /**
+  * Is peer to peer access supported by this link.
+  */
+  CUPTI_LINK_FLAG_PEER_ACCESS = (1 << 1),
+  /**
+  * Is system memory access supported by this link.
+  */
+  CUPTI_LINK_FLAG_SYSMEM_ACCESS = (1 << 2),
+  /**
+  * Is peer atomic access supported by this link.
+  */
+  CUPTI_LINK_FLAG_PEER_ATOMICS = (1 << 3),
+  /**
+  * Is system memory atomic access supported by this link.
+  */
+  CUPTI_LINK_FLAG_SYSMEM_ATOMICS = (1 << 4),
+
+  CUPTI_LINK_FLAG_FORCE_INT = 0x7fffffff
+} CUpti_LinkFlag;
+
+/**
  * The source-locator ID that indicates an unknown source
  * location. There is not an actual CUpti_ActivitySourceLocator object
  * corresponding to this value.
@@ -1019,9 +1301,19 @@ typedef enum {
 #define CUPTI_TIMESTAMP_UNKNOWN 0LL
 
 /**
+ * An invalid/unknown value.
+ */
+#define CUPTI_SYNCHRONIZATION_INVALID_VALUE -1
+
+/**
  * An invalid/unknown process id.
  */
 #define CUPTI_AUTO_BOOST_INVALID_CLIENT_PID 0
+
+/**
+ * Invalid/unknown NVlink port number.
+*/
+#define CUPTI_NVLINK_INVALID_PORT -1
 
 START_PACKED_ALIGNMENT
 /**
@@ -1391,12 +1683,14 @@ typedef struct PACKED_ALIGNMENT {
   uint32_t correlationId;
 
   /**
-   * The runtime correlation ID of the memory set. Each memory set
-   * is assigned a unique runtime correlation ID that is identical to
-   * the correlation ID in the runtime API activity record that
-   * launched the memory set.
+   * The flags associated with the memset. \see CUpti_ActivityFlag
    */
-  uint32_t runtimeCorrelationId;
+  uint16_t flags;
+
+  /**
+   * The memory kind of the memory set \see CUpti_ActivityMemoryKind
+   */
+  uint16_t memoryKind;
 
 #ifdef CUPTILP64
   /**
@@ -2330,7 +2624,9 @@ typedef struct PACKED_ALIGNMENT {
 
 /**
  * \brief The activity record for a CUPTI metric with instance
- * information.  This activity record represents a CUPTI metric value
+ * information.
+ *
+ * This activity record represents a CUPTI metric value
  * for a specific metric domain instance
  * (CUPTI_ACTIVITY_KIND_METRIC_INSTANCE).  This activity record kind
  * is not produced by the activity API but is included for
@@ -3086,10 +3382,12 @@ typedef struct PACKED_ALIGNMENT {
 
 /**
  * \brief The activity record providing a marker which is an
- * instantaneous point in time.
+ * instantaneous point in time. (deprecated in CUDA 8.0)
  *
  * The marker is specified with a descriptive name and unique id
  * (CUPTI_ACTIVITY_KIND_MARKER).
+ * Marker activity is now reported using the
+ * CUpti_ActivityMarker2 activity record.
  */
 typedef struct PACKED_ALIGNMENT {
   /**
@@ -3138,6 +3436,66 @@ typedef struct PACKED_ALIGNMENT {
   const char *name;
 
 } CUpti_ActivityMarker;
+
+/**
+ * \brief The activity record providing a marker which is an
+ * instantaneous point in time.
+ *
+ * The marker is specified with a descriptive name and unique id
+ * (CUPTI_ACTIVITY_KIND_MARKER).
+ */
+typedef struct PACKED_ALIGNMENT {
+  /**
+   * The activity record kind, must be CUPTI_ACTIVITY_KIND_MARKER.
+   */
+  CUpti_ActivityKind kind;
+
+  /**
+   * The flags associated with the marker. \see CUpti_ActivityFlag
+   */
+  CUpti_ActivityFlag flags;
+
+  /**
+   * The timestamp for the marker, in ns. A value of 0 indicates that
+   * timestamp information could not be collected for the marker.
+   */
+  uint64_t timestamp;
+
+  /**
+   * The marker ID.
+   */
+  uint32_t id;
+
+  /**
+   * The kind of activity object associated with this marker.
+   */
+  CUpti_ActivityObjectKind objectKind;
+
+  /**
+   * The identifier for the activity object associated with this
+   * marker. 'objectKind' indicates which ID is valid for this record.
+   */
+  CUpti_ActivityObjectKindId objectId;
+
+  /**
+   * Undefined. Reserved for internal use.
+   */
+  uint32_t pad;
+
+
+  /**
+   * The marker name for an instantaneous or start marker. This will
+   * be NULL for an end marker.
+   */
+  const char *name;
+
+  /**
+   * The name of the domain to which this marker belongs to.
+   * This will be NULL for default domain.
+   */
+  const char *domain;
+
+} CUpti_ActivityMarker2;
 
 /**
  * \brief The activity record providing detailed information for a marker.
@@ -3391,6 +3749,58 @@ typedef struct PACKED_ALIGNMENT {
 } CUpti_ActivityInstructionExecution;
 
 /**
+ * \brief The activity record for PC sampling. (deprecated in CUDA 8.0)
+ *
+ * This activity records information obtained by sampling PC
+ * (CUPTI_ACTIVITY_KIND_PC_SAMPLING).
+ * PC sampling activities are now reported using the
+ * CUpti_ActivityPCSampling2 activity record.
+ */
+typedef struct PACKED_ALIGNMENT {
+  /**
+   * The activity record kind, must be CUPTI_ACTIVITY_KIND_PC_SAMPLING.
+   */
+  CUpti_ActivityKind kind;
+
+  /**
+   * The properties of this instruction.
+   */
+  CUpti_ActivityFlag flags;
+
+  /**
+   * The ID for source locator.
+   */
+  uint32_t sourceLocatorId;
+
+  /**
+   * The correlation ID of the kernel to which this result is associated.
+   */
+  uint32_t correlationId;
+
+ /**
+  * Correlation ID with global/device function name
+  */
+  uint32_t functionId;
+
+  /**
+   * The pc offset for the instruction.
+   */
+  uint32_t pcOffset;
+
+  /**
+   * Number of times the PC was sampled with the stallReason in the record.
+   * The same PC can be sampled with different stall reasons.
+   */
+  uint32_t samples;
+
+  /**
+   * Current stall reason. Includes one of the reasons from
+   * \ref CUpti_ActivityPCSamplingStallReason
+   */
+  CUpti_ActivityPCSamplingStallReason stallReason;
+} CUpti_ActivityPCSampling;
+
+/**
  * \brief The activity record for PC sampling.
  *
  * This activity records information obtained by sampling PC
@@ -3429,7 +3839,16 @@ typedef struct PACKED_ALIGNMENT {
 
   /**
    * Number of times the PC was sampled with the stallReason in the record.
-   * The same PC can be sampled with difference stall reasons.
+   * These samples indicate that no instruction was issued in that cycle from
+   * the warp scheduler from where the warp was sampled.
+   * Field is valid for devices with compute capability 6.0 and higher
+   */
+  uint32_t latencySamples;
+
+  /**
+   * Number of times the PC was sampled with the stallReason in the record.
+   * The same PC can be sampled with different stall reasons. The count includes
+   * latencySamples.
    */
   uint32_t samples;
 
@@ -3438,7 +3857,9 @@ typedef struct PACKED_ALIGNMENT {
    * \ref CUpti_ActivityPCSamplingStallReason
    */
   CUpti_ActivityPCSamplingStallReason stallReason;
-} CUpti_ActivityPCSampling;
+
+  uint32_t pad;
+} CUpti_ActivityPCSampling2;
 
 /**
  * \brief The activity record for record status for PC sampling.
@@ -3538,10 +3959,7 @@ typedef struct PACKED_ALIGNMENT {
   CUpti_ActivityKind kind;
 
   /**
-   * The Unified Memory counter kind. See /ref CUpti_ActivityUnifiedMemoryCounterKind.
-   * In CUDA 7.0+ only transfer counters are supported, so possible values for this
-   * field are CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_BYTES_TRANSFER_HTOD and
-   * CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_BYTES_TRANSFER_DTOH.
+   * The Unified Memory counter kind
    */
   CUpti_ActivityUnifiedMemoryCounterKind counterKind;
 
@@ -3553,26 +3971,45 @@ typedef struct PACKED_ALIGNMENT {
 
   /**
    * The start timestamp of the counter, in ns.
+   * For counterKind CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_BYTES_TRANSFER_HTOD and
+   * CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_BYTES_TRANSFER_DTOH, timestamp is 
+   * captured when activity starts on GPU. For counterKind 
+   * CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_GPU_PAGE_FAULT and 
+   * CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_CPU_PAGE_FAULT_COUNT, timestamp is 
+   * captured when CUDA driver started processing the fault.
    */
   uint64_t start;
 
   /**
    * The end timestamp of the counter, in ns.
+   * Ignore this field if counterKind is 
+   * CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_CPU_PAGE_FAULT_COUNT.
+   * For counterKind CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_BYTES_TRANSFER_HTOD and
+   * CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_BYTES_TRANSFER_DTOH, timestamp is 
+   * captured when activity finishes on GPU. For counterKind 
+   * CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_GPU_PAGE_FAULT, timestamp is 
+   * captured when CUDA driver queues the replay of faulting memory accesses on the GPU
    */
   uint64_t end;
 
   /**
-   * This is the virtual base address of the page/s being transferred.
+   * This is the virtual base address of the page/s being transferred. For cpu and
+   * gpu faults, the virtual address for the page that faulted.
    */
   uint64_t address;
 
   /**
-   * The ID of the source CPU/device involved in the memory transfer operation.
+   * The ID of the source CPU/device involved in the memory transfer or page
+   * fault operation. Ignore this field if counterKind is 
+   * CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_CPU_PAGE_FAULT_COUNT
    */
   uint32_t srcId;
 
   /**
    * The ID of the destination CPU/device involved in the memory transfer operation.
+   * Ignore this field if counterKind is 
+   * CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_GPU_PAGE_FAULT or
+   * CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_CPU_PAGE_FAULT_COUNT
    */
   uint32_t dstId;
 
@@ -3588,9 +4025,18 @@ typedef struct PACKED_ALIGNMENT {
   uint32_t processId;
 
   /**
+   * The flags associated with this record. See enums \ref CUpti_ActivityUnifiedMemoryAccessType
+   * if counterKind is CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_GPU_PAGE_FAULT
+   * and \ref CUpti_ActivityUnifiedMemoryMigrationCause if counterKind is 
+   * CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_BYTES_TRANSFER_HTOD or 
+   * CUPTI_ACTIVITY_UNIFIED_MEMORY_COUNTER_KIND_BYTES_TRANSFER_HTOD
+   */
+  uint32_t flags;
+
+  /**
    * Undefined. Reserved for internal use.
    */
-  uint64_t pad;
+  uint32_t pad;
 } CUpti_ActivityUnifiedMemoryCounter2;
 
 /**
@@ -3752,6 +4198,140 @@ typedef struct PACKED_ALIGNMENT {
 } CUpti_ActivitySharedAccess;
 
 /**
+ * \brief The activity record for CUDA event.
+ *
+ * This activity is used to track recorded events.
+ * (CUPTI_ACTIVITY_KIND_CUDA_EVENT).
+ */
+typedef struct PACKED_ALIGNMENT {
+  /**
+   * The activity record kind, must be CUPTI_ACTIVITY_KIND_CUDA_EVENT.
+   */
+  CUpti_ActivityKind kind;
+
+  /**
+   * The correlation ID of the API to which this result is associated.
+   */
+  uint32_t correlationId;
+
+  /**
+   * The ID of the context where the event was recorded.
+   */
+  uint32_t contextId;
+
+  /**
+   * The compute stream where the event was recorded.
+   */
+  uint32_t streamId;
+
+  /**
+   * A unique event ID to identify the event record.
+   */
+  uint32_t eventId;
+
+  /**
+   * Undefined. Reserved for internal use.
+   */
+  uint32_t pad;
+} CUpti_ActivityCudaEvent;
+
+/**
+ * \brief The activity record for CUDA stream.
+ *
+ * This activity is used to track created streams.
+ * (CUPTI_ACTIVITY_KIND_STREAM).
+ */
+typedef struct PACKED_ALIGNMENT {
+  /**
+   * The activity record kind, must be CUPTI_ACTIVITY_KIND_STREAM.
+   */
+  CUpti_ActivityKind kind;
+  /**
+   * The ID of the context where the stream was created.
+   */
+  uint32_t contextId;
+
+  /**
+   * A unique stream ID to identify the stream.
+   */
+  uint32_t streamId;
+
+  /**
+   * The clamped priority for the stream.
+   */
+  uint32_t priority;
+
+  /**
+   * Flags associated with the stream.
+   */
+  CUpti_ActivityStreamFlag flag;
+
+  /**
+   * Undefined. Reserved for internal use.
+   */
+  uint32_t pad;
+} CUpti_ActivityStream;
+
+/**
+ * \brief The activity record for synchronization management.
+ *
+ * This activity is used to track various CUDA synchronization APIs.
+ * (CUPTI_ACTIVITY_KIND_SYNCHRONIZATION).
+ */
+typedef struct PACKED_ALIGNMENT {
+  /**
+   * The activity record kind, must be CUPTI_ACTIVITY_KIND_SYNCHRONIZATION.
+   */
+  CUpti_ActivityKind kind;
+
+  /**
+   * The type of record.
+   */
+  CUpti_ActivitySynchronizationType type;
+
+  /**
+   * The start timestamp for the function, in ns. A value of 0 for
+   * both the start and end timestamps indicates that timestamp
+   * information could not be collected for the function.
+   */
+  uint64_t start;
+
+  /**
+   * The end timestamp for the function, in ns. A value of 0 for both
+   * the start and end timestamps indicates that timestamp information
+   * could not be collected for the function.
+   */
+  uint64_t end;
+
+  /**
+   * The correlation ID of the API to which this result is associated.
+   */
+  uint32_t correlationId;
+
+  /**
+   * The ID of the context for which the synchronization API is called.
+   * In case of context synchronization API it is the context id for which the API is called.
+   * In case of stream/event synchronization it is the ID of the context where the stream/event was created.
+   */
+  uint32_t contextId;
+
+  /**
+   * The compute stream for which the synchronization API is called.
+   * A CUPTI_SYNCHRONIZATION_INVALID_VALUE value indicate the field is not applicable for this record.
+   * Not valid for cuCtxSynchronize, cuEventSynchronize.
+   */
+  uint32_t streamId;
+
+  /**
+   * The event ID for which the synchronization API is called.
+   * A CUPTI_SYNCHRONIZATION_INVALID_VALUE value indicate the field is not applicable for this record.
+   * Not valid for cuCtxSynchronize, cuStreamSynchronize.
+   */
+  uint32_t cudaEventId;
+} CUpti_ActivitySynchronization;
+
+
+/**
  * \brief The activity record for source-level sass/source
  * line-by-line correlation.
  *
@@ -3791,6 +4371,1067 @@ typedef struct PACKED_ALIGNMENT {
   uint32_t pad;
 } CUpti_ActivityInstructionCorrelation;
 
+/**
+ * \brief The OpenAcc event kind for OpenAcc activity records.
+ *
+ * \see CUpti_ActivityKindOpenAcc
+ */
+typedef enum {
+    CUPTI_OPENACC_EVENT_KIND_INVALID              = 0,
+    CUPTI_OPENACC_EVENT_KIND_DEVICE_INIT          = 1,
+    CUPTI_OPENACC_EVENT_KIND_DEVICE_SHUTDOWN      = 2,
+    CUPTI_OPENACC_EVENT_KIND_RUNTIME_SHUTDOWN     = 3,
+    CUPTI_OPENACC_EVENT_KIND_ENQUEUE_LAUNCH       = 4,
+    CUPTI_OPENACC_EVENT_KIND_ENQUEUE_UPLOAD       = 5,
+    CUPTI_OPENACC_EVENT_KIND_ENQUEUE_DOWNLOAD     = 6,
+    CUPTI_OPENACC_EVENT_KIND_WAIT                 = 7,
+    CUPTI_OPENACC_EVENT_KIND_IMPLICIT_WAIT        = 8,
+    CUPTI_OPENACC_EVENT_KIND_COMPUTE_CONSTRUCT    = 9,
+    CUPTI_OPENACC_EVENT_KIND_UPDATE               = 10,
+    CUPTI_OPENACC_EVENT_KIND_ENTER_DATA           = 11,
+    CUPTI_OPENACC_EVENT_KIND_EXIT_DATA            = 12,
+    CUPTI_OPENACC_EVENT_KIND_CREATE               = 13,
+    CUPTI_OPENACC_EVENT_KIND_DELETE               = 14,
+    CUPTI_OPENACC_EVENT_KIND_ALLOC                = 15,
+    CUPTI_OPENACC_EVENT_KIND_FREE                 = 16,
+    CUPTI_OPENACC_EVENT_KIND_FORCE_INT            = 0x7fffffff
+} CUpti_OpenAccEventKind;
+
+/**
+ * \brief The OpenAcc parent construct kind for OpenAcc activity records.
+ */
+typedef enum {
+    CUPTI_OPENACC_CONSTRUCT_KIND_UNKNOWN          = 0,
+    CUPTI_OPENACC_CONSTRUCT_KIND_PARALLEL         = 1,
+    CUPTI_OPENACC_CONSTRUCT_KIND_KERNELS          = 2,
+    CUPTI_OPENACC_CONSTRUCT_KIND_LOOP             = 3,
+    CUPTI_OPENACC_CONSTRUCT_KIND_DATA             = 4,
+    CUPTI_OPENACC_CONSTRUCT_KIND_ENTER_DATA       = 5,
+    CUPTI_OPENACC_CONSTRUCT_KIND_EXIT_DATA        = 6,
+    CUPTI_OPENACC_CONSTRUCT_KIND_HOST_DATA        = 7,
+    CUPTI_OPENACC_CONSTRUCT_KIND_ATOMIC           = 8,
+    CUPTI_OPENACC_CONSTRUCT_KIND_DECLARE          = 9,
+    CUPTI_OPENACC_CONSTRUCT_KIND_INIT             = 10,
+    CUPTI_OPENACC_CONSTRUCT_KIND_SHUTDOWN         = 11,
+    CUPTI_OPENACC_CONSTRUCT_KIND_SET              = 12,
+    CUPTI_OPENACC_CONSTRUCT_KIND_UPDATE           = 13,
+    CUPTI_OPENACC_CONSTRUCT_KIND_ROUTINE          = 14,
+    CUPTI_OPENACC_CONSTRUCT_KIND_WAIT             = 15,
+    CUPTI_OPENACC_CONSTRUCT_KIND_RUNTIME_API      = 16,
+    CUPTI_OPENACC_CONSTRUCT_KIND_FORCE_INT        = 0x7fffffff
+
+} CUpti_OpenAccConstructKind;
+
+/**
+ * \brief The base activity record for OpenAcc records.
+ *
+ * The OpenACC activity API part uses a CUpti_ActivityOpenAcc as a generic
+ * representation for any OpenACC activity. The 'kind' field is used to determine the
+ * specific activity kind, and from that the CUpti_ActivityOpenAcc object can
+ * be cast to the specific OpenACC activity record type appropriate for that kind.
+ *
+ * Note that all OpenACC activity record types are padded and aligned to
+ * ensure that each member of the record is naturally aligned.
+ *
+ * \see CUpti_ActivityKind
+ */
+typedef struct PACKED_ALIGNMENT {
+  /**
+   * The kind of this activity.
+   */
+  CUpti_ActivityKind kind;
+
+  /**
+   * CUPTI OpenACC event kind (\see CUpti_OpenAccEventKind)
+   */
+  CUpti_OpenAccEventKind eventKind;
+
+  /**
+   * CUPTI OpenACC parent construct kind (\see CUpti_OpenAccConstructKind)
+   *
+   * Note that for applications using PGI OpenACC runtime < 16.1, this
+   * will always be CUPTI_OPENACC_CONSTRUCT_KIND_UNKNOWN.
+   */
+  CUpti_OpenAccConstructKind parentConstruct;
+
+  /*
+   * Version number
+   */
+  uint32_t version;
+
+  /*
+   * 1 for any implicit event, such as an implicit wait at a synchronous data construct
+   * 0 otherwise
+   */
+  uint32_t implicit;
+
+  /*
+   * Device type
+   */
+  uint32_t deviceType;
+
+  /*
+   * Device number
+   */
+  uint32_t deviceNumber;
+
+  /**
+   * ThreadId
+   */
+  uint32_t threadId;
+
+  /*
+   * Value of async() clause of the corresponding directive
+   */
+  uint64_t async;
+
+  /*
+   * Internal asynchronous queue number used
+   */
+  uint64_t asyncMap;
+
+  /*
+   * The line number of the directive or program construct or the starting line
+   * number of the OpenACC construct corresponding to the event.
+   * A zero value means the line number is not known.
+   */
+  uint32_t lineNo;
+
+  /*
+   * For an OpenACC construct, this contains the line number of the end
+   * of the construct. A zero value means the line number is not known.
+   */
+  uint32_t endLineNo;
+
+  /*
+   * The line number of the first line of the function named in funcName.
+   * A zero value means the line number is not known.
+   */
+  uint32_t funcLineNo;
+
+  /*
+   * The last line number of the function named in funcName.
+   * A zero value means the line number is not known.
+   */
+  uint32_t funcEndLineNo;
+
+  /**
+   * CUPTI start timestamp
+   */
+  uint64_t start;
+
+  /**
+   * CUPTI end timestamp
+   */
+  uint64_t end;
+
+  /**
+   * CUDA device id
+   * Valid only if deviceType is acc_device_nvidia.
+   */
+  uint32_t cuDeviceId;
+
+  /**
+   * CUDA context id
+   * Valid only if deviceType is acc_device_nvidia.
+   */
+  uint32_t cuContextId;
+
+  /**
+   * CUDA stream id
+   * Valid only if deviceType is acc_device_nvidia.
+   */
+  uint32_t cuStreamId;
+
+  /**
+   * The ID of the process where the OpenACC activity is executing.
+   */
+  uint32_t cuProcessId;
+
+  /**
+   * The ID of the thread where the OpenACC activity is executing.
+   */
+  uint32_t cuThreadId;
+
+  /**
+   * The OpenACC correlation ID.
+   * Valid only if deviceType is acc_device_nvidia.
+   * If not 0, it uniquely identifies this record. It is identical to the
+   * externalId in the preceeding external correlation record of type
+   * CUPTI_EXTERNAL_CORRELATION_KIND_OPENACC.
+   */
+  uint32_t externalId;
+
+  /*
+   * A pointer to null-terminated string containing the name of or path to
+   * the source file, if known, or a null pointer if not.
+   */
+  const char *srcFile;
+
+  /*
+   * A pointer to a null-terminated string containing the name of the
+   * function in which the event occurred.
+   */
+  const char *funcName;
+} CUpti_ActivityOpenAcc;
+
+/**
+ * \brief The activity record for OpenACC data.
+ *
+ * (CUPTI_ACTIVITY_KIND_OPENACC_DATA).
+ */
+typedef struct PACKED_ALIGNMENT {
+  /**
+   * The activity record kind, must be CUPTI_ACTIVITY_KIND_OPENACC_DATA.
+   */
+  CUpti_ActivityKind kind;
+
+  /**
+   * CUPTI OpenACC event kind (\see CUpti_OpenAccEventKind)
+   */
+  CUpti_OpenAccEventKind eventKind;
+
+  /*
+   * CUPTI OpenACC parent construct kind (\see CUpti_OpenAccConstructKind)
+   *
+   * Note that for applications using PGI OpenACC runtime < 16.1, this
+   * will always be CUPTI_OPENACC_CONSTRUCT_KIND_UNKNOWN.
+   */
+  CUpti_OpenAccConstructKind parentConstruct;
+
+  /*
+   * Version number
+   */
+  uint32_t version;
+
+  /*
+   * 1 for any implicit event, such as an implicit wait at a synchronous data construct
+   * 0 otherwise
+   */
+  uint32_t implicit;
+
+  /*
+   * Device type
+   */
+  uint32_t deviceType;
+
+  /*
+   * Device number
+   */
+  uint32_t deviceNumber;
+
+  /**
+   * ThreadId
+   */
+  uint32_t threadId;
+
+  /*
+   * Value of async() clause of the corresponding directive
+   */
+  uint64_t async;
+
+  /*
+   * Internal asynchronous queue number used
+   */
+  uint64_t asyncMap;
+
+  /*
+   * The line number of the directive or program construct or the starting line
+   * number of the OpenACC construct corresponding to the event.
+   * A negative or zero value means the line number is not known.
+   */
+  uint32_t lineNo;
+
+  /*
+   * For an OpenACC construct, this contains the line number of the end
+   * of the construct. A negative or zero value means the line number is not known.
+   */
+  uint32_t endLineNo;
+
+  /*
+   * The line number of the first line of the function named in func_name.
+   * A negative or zero value means the line number is not known.
+   */
+  uint32_t funcLineNo;
+
+  /*
+   * The last line number of the function named in func_name.
+   * A negative or zero value means the line number is not known.
+   */
+  uint32_t funcEndLineNo;
+
+  /**
+   * CUPTI start timestamp
+   */
+  uint64_t start;
+
+  /**
+   * CUPTI end timestamp
+   */
+  uint64_t end;
+
+  /**
+   * CUDA device id
+   * Valid only if deviceType is acc_device_nvidia.
+   */
+  uint32_t cuDeviceId;
+
+  /**
+   * CUDA context id
+   * Valid only if deviceType is acc_device_nvidia.
+   */
+  uint32_t cuContextId;
+
+  /**
+   * CUDA stream id
+   * Valid only if deviceType is acc_device_nvidia.
+   */
+  uint32_t cuStreamId;
+
+  /**
+   * The ID of the process where the OpenACC activity is executing.
+   */
+  uint32_t cuProcessId;
+
+  /**
+   * The ID of the thread where the OpenACC activity is executing.
+   */
+  uint32_t cuThreadId;
+
+  /**
+   * The OpenACC correlation ID.
+   * Valid only if deviceType is acc_device_nvidia.
+   * If not 0, it uniquely identifies this record. It is identical to the
+   * externalId in the preceeding external correlation record of type
+   * CUPTI_EXTERNAL_CORRELATION_KIND_OPENACC.
+   */
+  uint32_t externalId;
+
+  /*
+   * A pointer to null-terminated string containing the name of or path to
+   * the source file, if known, or a null pointer if not.
+   */
+  const char *srcFile;
+
+  /*
+   * A pointer to a null-terminated string containing the name of the
+   * function in which the event occurred.
+   */
+  const char *funcName;
+
+  /* --- end of common CUpti_ActivityOpenAcc part --- */
+
+  /**
+   * Number of bytes
+   */
+  uint64_t bytes;
+
+  /**
+   * Host pointer if available
+   */
+  uint64_t hostPtr;
+
+  /**
+   * Device pointer if available
+   */
+  uint64_t devicePtr;
+
+#ifndef CUPTILP64
+  /**
+   * Undefined. Reserved for internal use.
+   */
+  uint32_t pad1;
+#endif
+
+  /*
+   * A pointer to null-terminated string containing the name of the variable
+   * for which this event is triggered, if known, or a null pointer if not.
+   */
+  const char *varName;
+
+} CUpti_ActivityOpenAccData;
+
+/**
+ * \brief The activity record for OpenACC launch.
+ *
+ * (CUPTI_ACTIVITY_KIND_OPENACC_LAUNCH).
+ */
+typedef struct PACKED_ALIGNMENT {
+  /**
+   * The activity record kind, must be CUPTI_ACTIVITY_KIND_OPENACC_LAUNCH.
+   */
+  CUpti_ActivityKind kind;
+
+  /**
+   * CUPTI OpenACC event kind (\see CUpti_OpenAccEventKind)
+   */
+  CUpti_OpenAccEventKind eventKind;
+
+  /*
+   * CUPTI OpenACC parent construct kind (\see CUpti_OpenAccConstructKind)
+   *
+   * Note that for applications using PGI OpenACC runtime < 16.1, this
+   * will always be CUPTI_OPENACC_CONSTRUCT_KIND_UNKNOWN.
+   */
+  CUpti_OpenAccConstructKind parentConstruct;
+
+  /*
+   * Version number
+   */
+  uint32_t version;
+
+  /*
+   * 1 for any implicit event, such as an implicit wait at a synchronous data construct
+   * 0 otherwise
+   */
+  uint32_t implicit;
+
+  /*
+   * Device type
+   */
+  uint32_t deviceType;
+
+  /*
+   * Device number
+   */
+  uint32_t deviceNumber;
+
+  /**
+   * ThreadId
+   */
+  uint32_t threadId;
+
+  /*
+   * Value of async() clause of the corresponding directive
+   */
+  uint64_t async;
+
+  /*
+   * Internal asynchronous queue number used
+   */
+  uint64_t asyncMap;
+
+  /*
+   * The line number of the directive or program construct or the starting line
+   * number of the OpenACC construct corresponding to the event.
+   * A negative or zero value means the line number is not known.
+   */
+  uint32_t lineNo;
+
+  /*
+   * For an OpenACC construct, this contains the line number of the end
+   * of the construct. A negative or zero value means the line number is not known.
+   */
+  uint32_t endLineNo;
+
+  /*
+   * The line number of the first line of the function named in func_name.
+   * A negative or zero value means the line number is not known.
+   */
+  uint32_t funcLineNo;
+
+  /*
+   * The last line number of the function named in func_name.
+   * A negative or zero value means the line number is not known.
+   */
+  uint32_t funcEndLineNo;
+
+  /**
+   * CUPTI start timestamp
+   */
+  uint64_t start;
+
+  /**
+   * CUPTI end timestamp
+   */
+  uint64_t end;
+
+  /**
+   * CUDA device id
+   * Valid only if deviceType is acc_device_nvidia.
+   */
+  uint32_t cuDeviceId;
+
+  /**
+   * CUDA context id
+   * Valid only if deviceType is acc_device_nvidia.
+   */
+  uint32_t cuContextId;
+
+  /**
+   * CUDA stream id
+   * Valid only if deviceType is acc_device_nvidia.
+   */
+  uint32_t cuStreamId;
+
+  /**
+   * The ID of the process where the OpenACC activity is executing.
+   */
+  uint32_t cuProcessId;
+
+  /**
+   * The ID of the thread where the OpenACC activity is executing.
+   */
+  uint32_t cuThreadId;
+
+  /**
+   * The OpenACC correlation ID.
+   * Valid only if deviceType is acc_device_nvidia.
+   * If not 0, it uniquely identifies this record. It is identical to the
+   * externalId in the preceeding external correlation record of type
+   * CUPTI_EXTERNAL_CORRELATION_KIND_OPENACC.
+   */
+  uint32_t externalId;
+
+  /*
+   * A pointer to null-terminated string containing the name of or path to
+   * the source file, if known, or a null pointer if not.
+   */
+  const char *srcFile;
+
+  /*
+   * A pointer to a null-terminated string containing the name of the
+   * function in which the event occurred.
+   */
+  const char *funcName;
+
+  /* --- end of common CUpti_ActivityOpenAcc part --- */
+
+  /**
+   * The number of gangs created for this kernel launch
+   */
+  uint64_t numGangs;
+
+  /**
+   * The number of workers created for this kernel launch
+   */
+  uint64_t numWorkers;
+
+  /**
+   * The number of vector lanes created for this kernel launch
+   */
+  uint64_t vectorLength;
+
+#ifndef CUPTILP64
+  /**
+   * Undefined. Reserved for internal use.
+   */
+  uint32_t pad1;
+#endif
+
+  /*
+   * A pointer to null-terminated string containing the name of the
+   * kernel being launched, if known, or a null pointer if not.
+   */
+  const char *kernelName;
+
+} CUpti_ActivityOpenAccLaunch;
+
+/**
+ * \brief The activity record for OpenACC other.
+ *
+ * (CUPTI_ACTIVITY_KIND_OPENACC_OTHER).
+ */
+typedef struct PACKED_ALIGNMENT {
+  /**
+   * The activity record kind, must be CUPTI_ACTIVITY_KIND_OPENACC_OTHER.
+   */
+  CUpti_ActivityKind kind;
+
+  /**
+   * CUPTI OpenACC event kind (\see CUpti_OpenAccEventKind)
+   */
+  CUpti_OpenAccEventKind eventKind;
+
+  /*
+   * CUPTI OpenACC parent construct kind (\see CUpti_OpenAccConstructKind)
+   *
+   * Note that for applications using PGI OpenACC runtime < 16.1, this
+   * will always be CUPTI_OPENACC_CONSTRUCT_KIND_UNKNOWN.
+   */
+  CUpti_OpenAccConstructKind parentConstruct;
+
+  /*
+   * Version number
+   */
+  uint32_t version;
+
+  /*
+   * 1 for any implicit event, such as an implicit wait at a synchronous data construct
+   * 0 otherwise
+   */
+  uint32_t implicit;
+
+  /*
+   * Device type
+   */
+  uint32_t deviceType;
+
+  /*
+   * Device number
+   */
+  uint32_t deviceNumber;
+
+  /**
+   * ThreadId
+   */
+  uint32_t threadId;
+
+  /*
+   * Value of async() clause of the corresponding directive
+   */
+  uint64_t async;
+
+  /*
+   * Internal asynchronous queue number used
+   */
+  uint64_t asyncMap;
+
+  /*
+   * The line number of the directive or program construct or the starting line
+   * number of the OpenACC construct corresponding to the event.
+   * A negative or zero value means the line number is not known.
+   */
+  uint32_t lineNo;
+
+  /*
+   * For an OpenACC construct, this contains the line number of the end
+   * of the construct. A negative or zero value means the line number is not known.
+   */
+  uint32_t endLineNo;
+
+  /*
+   * The line number of the first line of the function named in func_name.
+   * A negative or zero value means the line number is not known.
+   */
+  uint32_t funcLineNo;
+
+  /*
+   * The last line number of the function named in func_name.
+   * A negative or zero value means the line number is not known.
+   */
+  uint32_t funcEndLineNo;
+
+  /**
+   * CUPTI start timestamp
+   */
+  uint64_t start;
+
+  /**
+   * CUPTI end timestamp
+   */
+  uint64_t end;
+
+  /**
+   * CUDA device id
+   * Valid only if deviceType is acc_device_nvidia.
+   */
+  uint32_t cuDeviceId;
+
+  /**
+   * CUDA context id
+   * Valid only if deviceType is acc_device_nvidia.
+   */
+  uint32_t cuContextId;
+
+  /**
+   * CUDA stream id
+   * Valid only if deviceType is acc_device_nvidia.
+   */
+  uint32_t cuStreamId;
+
+  /**
+   * The ID of the process where the OpenACC activity is executing.
+   */
+  uint32_t cuProcessId;
+
+  /**
+   * The ID of the thread where the OpenACC activity is executing.
+   */
+  uint32_t cuThreadId;
+
+  /**
+   * The OpenACC correlation ID.
+   * Valid only if deviceType is acc_device_nvidia.
+   * If not 0, it uniquely identifies this record. It is identical to the
+   * externalId in the preceeding external correlation record of type
+   * CUPTI_EXTERNAL_CORRELATION_KIND_OPENACC.
+   */
+  uint32_t externalId;
+
+  /*
+   * A pointer to null-terminated string containing the name of or path to
+   * the source file, if known, or a null pointer if not.
+   */
+  const char *srcFile;
+
+  /*
+   * A pointer to a null-terminated string containing the name of the
+   * function in which the event occurred.
+   */
+  const char *funcName;
+
+  /* --- end of common CUpti_ActivityOpenAcc part --- */
+} CUpti_ActivityOpenAccOther;
+
+/**
+ * \brief The kind of external APIs supported for correlation.
+ *
+ * \see CUpti_ActivityExternalCorrelation
+ */
+typedef enum {
+    CUPTI_EXTERNAL_CORRELATION_KIND_INVALID              = 0,
+
+    /* The external API is unknown to CUPTI */
+    CUPTI_EXTERNAL_CORRELATION_KIND_UNKNOWN              = 1,
+
+    /* The external API is OpenACC */
+    CUPTI_EXTERNAL_CORRELATION_KIND_OPENACC              = 2,
+
+    /* Add new kinds before this line */
+    CUPTI_EXTERNAL_CORRELATION_KIND_SIZE,
+
+    CUPTI_EXTERNAL_CORRELATION_KIND_FORCE_INT            = 0x7fffffff
+} CUpti_ExternalCorrelationKind;
+
+/**
+ * \brief The activity record for correlation with external records
+ *
+ * This activity record correlates native CUDA records (e.g. CUDA Driver API,
+ * kernels, memcpys, ...) with records from external APIs such as OpenACC.
+ * (CUPTI_ACTIVITY_KIND_EXTERNAL_CORRELATION).
+ *
+ * \see CUpti_ActivityKind
+ */
+typedef struct PACKED_ALIGNMENT {
+  /**
+   * The kind of this activity.
+   */
+  CUpti_ActivityKind kind;
+
+  /**
+   * The kind of external API this record correlated to.
+   */
+  CUpti_ExternalCorrelationKind externalKind;
+
+  /**
+   * The correlation ID of the associated non-CUDA API record.
+   * The exact field in the associated external record depends
+   * on that record's activity kind (\see externalKind).
+   */
+  uint64_t externalId;
+
+  /**
+   * The correlation ID of the associated CUDA driver or runtime API record.
+   */
+  uint32_t correlationId;
+
+  /**
+   * Undefined. Reserved for internal use.
+   */
+  uint32_t reserved;
+} CUpti_ActivityExternalCorrelation;
+
+/**
+* \brief The device type for device connected to nvLink.
+*/
+typedef enum {
+    CUPTI_DEV_TYPE_INVALID = 0,
+    /**
+    * The device type in GPU.
+    */
+    CUPTI_DEV_TYPE_GPU = 1,
+    /**
+    * The device type nvLink processing unit in CPU.
+    */
+    CUPTI_DEV_TYPE_NPU = 2,
+    CUPTI_DEV_TYPE_FORCE_INT = 0x7fffffff
+} CUpti_DevType;
+
+/**
+* \brief NvLink information
+*
+* This structure gives capabilities of each logical nvlink connection between two devices,
+* gpu<->gpu or gpu<->CPU which can be used to understand the topology.
+*/
+
+typedef struct PACKED_ALIGNMENT {
+    /**
+    * The activity record kind, must be CUPTI_ACTIVITY_KIND_NVLINK.
+    */
+    CUpti_ActivityKind kind;
+    /**
+    * NvLink version.
+    */
+    uint32_t  nvlinkVersion;
+    /**
+    * Type of device 0 \ref CUpti_DevType
+    */
+    CUpti_DevType typeDev0;
+    /**
+    * Type of device 1 \ref CUpti_DevType
+    */
+    CUpti_DevType typeDev1;
+    /**
+    * If typeDev0 is CUPTI_DEV_TYPE_GPU, UUID for device 0. \ref CUpti_ActivityDevice2.
+    * If typeDev0 is CUPTI_DEV_TYPE_NPU, struct npu for NPU.
+    */
+    union {
+        CUuuid    uuidDev;
+        struct {
+            /**
+            * Index of the NPU. First index will always be zero.
+            */
+            uint32_t  index;
+            /**
+            * Domain ID of NPU. On Linux, this can be queried using lspci.
+            */
+            uint32_t  domainId;
+        } npu;
+    } idDev0;
+    /**
+    * If typeDev1 is CUPTI_DEV_TYPE_GPU, UUID for device 1. \ref CUpti_ActivityDevice2.
+    * If typeDev1 is CUPTI_DEV_TYPE_NPU, struct npu for NPU.
+    */
+    union {
+        CUuuid    uuidDev;
+        struct {
+            /**
+            * Index of the NPU. First index will always be zero.
+            */
+            uint32_t  index;
+            /**
+            * Domain ID of NPU. On Linux, this can be queried using lspci.
+            */
+            uint32_t  domainId;
+        } npu;
+    } idDev1;
+    /**
+    * Flag gives capabilities of the link \see CUpti_LinkFlag
+    */
+    uint32_t flag;
+    /**
+    * Number of physical nvlinks present between two devices.
+    */
+    uint32_t  physicalNvLinkCount;
+    /**
+    * Port numbers for maximum 4 nvlinks connected to device 0.
+    * If typeDev0 is CUPTI_DEV_TYPE_NPU, ignore this field.
+    * In case of invalid/unknown port number, this field will be set
+    * to value CUPTI_NVLINK_INVALID_PORT.
+    * This will be used to correlate the metric values to individual
+    * physical link and attribute traffic to the logical nvlink in
+    * the topology.
+    */
+    int8_t  portDev0[4];
+    /**
+    * Port numbers for maximum 4 nvlinks connected to device 1.
+    * If typeDev1 is CUPTI_DEV_TYPE_NPU, ignore this field.
+    * In case of invalid/unknown port number, this field will be set
+    * to value CUPTI_NVLINK_INVALID_PORT.
+    * This will be used to correlate the metric values to individual
+    * physical link and attribute traffic to the logical nvlink in
+    * the topology.
+    */
+    int8_t  portDev1[4];
+    /**
+    * Banwidth of NvLink in kbytes/sec
+    */
+    uint64_t  bandwidth;
+} CUpti_ActivityNvLink;
+
+/**
+ * \brief The activity record for an instantaneous CUPTI event.
+ *
+ * This activity record represents a CUPTI event value
+ * (CUPTI_ACTIVITY_KIND_EVENT) sampled at a particular instant.
+ * This activity record kind is not produced by the activity API but is
+ * included for completeness and ease-of-use. Profiler frameworks built on
+ * top of CUPTI that collect event data at a particular time may choose to
+ * use this type to store the collected event data.
+ */
+typedef struct PACKED_ALIGNMENT {
+  /**
+   * The activity record kind, must be CUPTI_ACTIVITY_KIND_INSTANTANEOUS_EVENT.
+   */
+  CUpti_ActivityKind kind;
+
+  /**
+   * The event ID.
+   */
+  CUpti_EventID id;
+
+  /**
+   * The event value.
+   */
+  uint64_t value;
+
+  /**
+   * The timestamp at which event is sampled
+   */
+  uint64_t timestamp;
+
+  /**
+   * The device id
+   */
+  uint32_t deviceId;
+  /**
+   * Undefined. reserved for internal use
+   */
+  uint32_t reserved;
+} CUpti_ActivityInstantaneousEvent;
+
+/**
+ * \brief The activity record for an instantaneous CUPTI event
+ * with event domain instance information.
+ *
+ * This activity record represents the a CUPTI event value for a
+ * specific event domain instance
+ * (CUPTI_ACTIVITY_KIND_EVENT_INSTANCE) sampled at a particular instant.
+ * This activity record kind is not produced by the activity API but is
+ * included for completeness and ease-of-use. Profiler frameworks built on
+ * top of CUPTI that collect event data may choose to use this type to store the
+ * collected event data. This activity record should be used when
+ * event domain instance information needs to be associated with the
+ * event.
+ */
+typedef struct PACKED_ALIGNMENT {
+  /**
+   * The activity record kind, must be CUPTI_ACTIVITY_KIND_INSTANTANEOUS_EVENT_INSTANCE.
+   */
+  CUpti_ActivityKind kind;
+
+  /**
+   * The event ID.
+   */
+  CUpti_EventID id;
+
+  /**
+   * The event value.
+   */
+  uint64_t value;
+
+  /**
+   * The timestamp at which event is sampled
+   */
+  uint64_t timestamp;
+
+  /**
+   * The device id
+   */
+  uint32_t deviceId;
+  /**
+   * The event domain instance
+   */
+  uint8_t instance;
+  /**
+   * Undefined. reserved for internal use
+   */
+  uint8_t pad[3];
+} CUpti_ActivityInstantaneousEventInstance;
+
+/**
+ * \brief The activity record for an instantaneous CUPTI metric.
+ *
+ * This activity record represents the collection of a CUPTI metric
+ * value (CUPTI_ACTIVITY_KIND_METRIC) at a particular instance.
+ * This activity record kind is not produced by the activity API but
+ * is included for completeness and ease-of-use. Profiler frameworks built
+ * on top of CUPTI that collect metric data may choose to use this type to
+ * store the collected metric data.
+ */
+typedef struct PACKED_ALIGNMENT {
+  /**
+   * The activity record kind, must be CUPTI_ACTIVITY_KIND_INSTANTANEOUS_METRIC.
+   */
+  CUpti_ActivityKind kind;
+
+  /**
+   * The metric ID.
+   */
+  CUpti_MetricID id;
+
+  /**
+   * The metric value.
+   */
+  CUpti_MetricValue value;
+
+  /**
+   * The timestamp at which metric is sampled
+   */
+  uint64_t timestamp;
+
+  /**
+   * The device id
+   */
+  uint32_t deviceId;
+
+  /**
+   * The properties of this metric. \see CUpti_ActivityFlag
+   */
+  uint8_t flags;
+
+  /**
+   * Undefined. reserved for internal use
+   */
+  uint8_t pad[3];
+} CUpti_ActivityInstantaneousMetric;
+
+/**
+ * \brief The instantaneous activity record for a CUPTI metric with instance
+ * information.  
+
+ * This activity record represents a CUPTI metric value
+ * for a specific metric domain instance
+ * (CUPTI_ACTIVITY_KIND_METRIC_INSTANCE) sampled at a particular time. This
+ * activity record kind is not produced by the activity API but is included for
+ * completeness and ease-of-use. Profiler frameworks built on top of
+ * CUPTI that collect metric data may choose to use this type to store
+ * the collected metric data. This activity record should be used when
+ * metric domain instance information needs to be associated with the
+ * metric.
+ */
+typedef struct PACKED_ALIGNMENT {
+  /**
+   * The activity record kind, must be CUPTI_ACTIVITY_KIND_INSTANTANEOUS_METRIC_INSTANCE.
+   */
+  CUpti_ActivityKind kind;
+
+  /**
+   * The metric ID.
+   */
+  CUpti_MetricID id;
+
+  /**
+   * The metric value.
+   */
+  CUpti_MetricValue value;
+
+  /**
+   * The timestamp at which metric is sampled
+   */
+  uint64_t timestamp;
+
+  /**
+   * The device id
+   */
+  uint32_t deviceId;
+
+  /**
+   * The properties of this metric. \see CUpti_ActivityFlag
+   */
+  uint8_t flags;
+
+  /**
+   * The metric domain instance
+   */
+  uint8_t instance;
+  /**
+   * Undefined. reserved for internal use
+   */
+  uint8_t pad[2];
+} CUpti_ActivityInstantaneousMetricInstance;
+
 END_PACKED_ALIGNMENT
 
 /**
@@ -3814,7 +5455,7 @@ typedef enum {
      * Set this value before initializing CUDA or before creating a
      * context to ensure it is considered for the following allocations.
      *
-     * The default value is 4194304 (4MB).
+     * The default value is 8388608 (8MB).
      *
      * Note: The actual amount of device memory per buffer reserved by
      * CUPTI might be larger.
@@ -3856,6 +5497,35 @@ typedef enum {
 
     CUPTI_ACTIVITY_ATTR_DEVICE_BUFFER_FORCE_INT     = 0x7fffffff
 } CUpti_ActivityAttribute;
+
+/**
+ * \brief Thread-Id types.
+ *
+ * CUPTI uses different methods to obtain the thread-id depending on the
+ * support and the underlying platform. This enum documents these methods
+ * for each type. APIs \ref cuptiSetThreadIdType and \ref cuptiGetThreadIdType
+ * can be used to set and get the thread-id type.
+ */
+typedef enum {
+    /**
+     * Default type
+     * Windows uses API GetCurrentThreadId()
+     * Linux/Mac/Android/QNX use POSIX pthread API pthread_self()
+     */
+    CUPTI_ACTIVITY_THREAD_ID_TYPE_DEFAULT       = 0,
+
+    /**
+     * This type is based on the system API available on the underlying platform
+     * and thread-id obtained is supposed to be unique for the process lifetime.
+     * Windows uses API GetCurrentThreadId()
+     * Linux uses syscall SYS_gettid
+     * Mac uses syscall SYS_thread_selfid
+     * Android/QNX use gettid()
+     */
+    CUPTI_ACTIVITY_THREAD_ID_TYPE_SYSTEM        = 1,
+
+    CUPTI_ACTIVITY_THREAD_ID_TYPE_FORCE_INT     = 0x7fffffff
+} CUpti_ActivityThreadIdType;
 
 /**
  * \brief Get the CUPTI timestamp.
@@ -3906,10 +5576,33 @@ CUptiResult CUPTIAPI cuptiGetContextId(CUcontext context, uint32_t *contextId);
  * context
  * \retval CUPTI_ERROR_INVALID_PARAMETER if \p streamId is NULL
  *
- * \see cuptiActivityEnqueueBuffer
- * \see cuptiActivityDequeueBuffer
+ * **DEPRECATED** This method is deprecated as of CUDA 8.0.
+ * Use method cuptiGetStreamIdEx instead.
  */
 CUptiResult CUPTIAPI cuptiGetStreamId(CUcontext context, CUstream stream, uint32_t *streamId);
+
+/**
+* \brief Get the ID of a stream.
+*
+* Get the ID of a stream. The stream ID is unique within a context
+* (i.e. all streams within a context will have unique stream
+* IDs).
+*
+* \param context If non-NULL then the stream is checked to ensure
+* that it belongs to this context. Typically this parameter should be
+* null.
+* \param stream The stream
+* \param perThreadStream Flag to indicate if program is compiled for per-thread streams
+* \param streamId Returns a context-unique ID for the stream
+*
+* \retval CUPTI_SUCCESS
+* \retval CUPTI_ERROR_NOT_INITIALIZED
+* \retval CUPTI_ERROR_INVALID_STREAM if unable to get stream ID, or
+* if \p context is non-NULL and \p stream does not belong to the
+* context
+* \retval CUPTI_ERROR_INVALID_PARAMETER if \p streamId is NULL
+*/
+CUptiResult CUPTIAPI cuptiGetStreamIdEx(CUcontext context, CUstream stream, uint8_t perThreadStream, uint32_t *streamId);
 
 /**
  * \brief Get the ID of a device
@@ -4032,8 +5725,7 @@ CUptiResult CUPTIAPI cuptiActivityGetNumDroppedRecords(CUcontext context, uint32
  *
  * This is a helper function to iterate over the activity records in a
  * buffer. A buffer of activity records is typically obtained by
- * using the cuptiActivityDequeueBuffer() function or by receiving a
- * CUpti_BuffersCallbackCompleteFunc callback.
+ * receiving a CUpti_BuffersCallbackCompleteFunc callback.
  *
  * An example of typical usage:
  * \code
@@ -4267,8 +5959,6 @@ CUptiResult CUPTIAPI cuptiActivitySetAttribute(CUpti_ActivityAttribute attr,
  * \retval CUPTI_ERROR_UM_PROFILING_NOT_SUPPORTED_ON_NON_P2P_DEVICES Indicates that
  * multi-GPU configuration without P2P support between any pair of devices
  * does not support the unified memory counters
- * \retval CUPTI_ERROR_UM_PROFILING_NOT_SUPPORTED_WITH_MPS Indicates that the
- * Multi-Process Service (MPS) environment does not support the unified memory counters
  */
 CUptiResult CUPTIAPI cuptiActivityConfigureUnifiedMemoryCounter(CUpti_ActivityUnifiedMemoryCounterConfig *config, uint32_t count);
 
@@ -4309,6 +5999,99 @@ CUptiResult CUPTIAPI cuptiGetAutoBoostState(CUcontext context, CUpti_ActivityAut
  * does not support the unified memory counters
  */
 CUptiResult CUPTIAPI cuptiActivityConfigurePCSampling(CUcontext ctx, CUpti_ActivityPCSamplingConfig *config);
+
+/**
+ * \brief Returns the last error from a cupti call or callback
+ *
+ * Returns the last error that has been produced by any of the cupti api calls
+ * or the callback in the same host thread and resets it to CUPTI_SUCCESS.
+ */
+CUptiResult CUPTIAPI cuptiGetLastError(void);
+
+/**
+ * \brief Set the thread-id type
+ *
+ * CUPTI uses the method corresponding to set type to generate the thread-id.
+ * See enum /ref CUpti_ActivityThreadIdType for the list of methods.
+ * Activity records having thread-id field contain the same value.
+ * Thread id type must not be changed during the profiling session to
+ * avoid thread-id value mismatch across activity records.
+ *
+ * \retval CUPTI_SUCCESS
+ * \retval CUPTI_ERROR_NOT_SUPPORTED if \p type is not supported on the platform
+ */
+CUptiResult CUPTIAPI cuptiSetThreadIdType(CUpti_ActivityThreadIdType type);
+
+/**
+ * \brief Get the thread-id type
+ *
+ * Returns the thread-id type used in CUPTI
+ *
+ * \retval CUPTI_SUCCESS
+ * \retval CUPTI_ERROR_INVALID_PARAMETER if \p type is NULL
+  */
+CUptiResult CUPTIAPI cuptiGetThreadIdType(CUpti_ActivityThreadIdType *type);
+
+/**
+* \brief Check support for a compute capability
+*
+* This function is used to check the support for a device based on
+* it's compute capability. It sets the \p support when the compute
+* capability is supported by the current version of CUPTI, and clears
+* it otherwise.
+*
+* \param major The major revision number of the compute capability
+* \param minor The minor revision number of the compute capability
+* \param support Pointer to an integer to return the support status
+*
+* \retval CUPTI_SUCCESS
+* \retval CUPTI_ERROR_INVALID_PARAMETER if \p support is NULL
+*/
+CUptiResult CUPTIAPI cuptiComputeCapabilitySupported(int major, int minor, int *support);
+
+/**
+ * \brief Cleanup CUPTI
+ * 
+ * Explicitly destroys and cleans up all resources associated with CUPTI
+ * in the current process. Any subsequent CUPTI API call will reinitialize CUPTI.
+ * This API can be called at any time but for the safe use it is suggested that
+ * CUPTI client makes sure that required CUDA synchronization is done before
+ * calling the API.
+ *
+ * \retval CUPTI_SUCCESS
+ * \retval CUPTI_ERROR_API_NOT_IMPLEMENTED indicates API is not implemented
+ */
+CUptiResult CUPTIAPI cuptiFinalize(void);
+
+/**
+ * \brief Push an external correlation id for the calling thread
+ *
+ * This function notifies CUPTI that the calling thread is entering an external API region.
+ * When a CUPTI activity API record is created while within an external API region and
+ * CUPTI_ACTIVITY_KIND_EXTERNAL_CORRELATION is enabled, the activity API record will
+ * be preceeded by a CUpti_ActivityExternalCorrelation record for each \ref CUpti_ExternalCorrelationKind.
+ *
+ * \param kind The kind of external API activities should be correlated with.
+ * \param id External correlation id.
+ *
+ * \retval CUPTI_SUCCESS
+ * \retval CUPTI_ERROR_INVALID_PARAMETER The external API kind is invalid
+ */
+CUptiResult CUPTIAPI cuptiActivityPushExternalCorrelationId(CUpti_ExternalCorrelationKind kind, uint64_t id);
+
+/**
+ * \brief Pop an external correlation id for the calling thread
+ *
+ * This function notifies CUPTI that the calling thread is leaving an external API region.
+ *
+ * \param kind The kind of external API activities should be correlated with.
+ * \param lastId If the function returns successful, contains the last external correlation id for this \p kind, can be NULL.
+ *
+ * \retval CUPTI_SUCCESS
+ * \retval CUPTI_ERROR_INVALID_PARAMETER The external API kind is invalid.
+ * \retval CUPTI_ERROR_QUEUE_EMPTY No external id is currently associated with \p kind.
+ */
+CUptiResult CUPTIAPI cuptiActivityPopExternalCorrelationId(CUpti_ExternalCorrelationKind kind, uint64_t *lastId);
 
 /** @} */ /* END CUPTI_ACTIVITY_API */
 

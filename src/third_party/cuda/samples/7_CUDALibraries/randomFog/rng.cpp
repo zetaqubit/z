@@ -25,7 +25,7 @@
 */
 
 // Utilities and System includes
-#include <helper_cuda.h>
+
 
 // Includes
 #include <curand.h>
@@ -35,6 +35,7 @@
 
 // Shared Library Test Functions
 #include <helper_timer.h>
+#include <helper_cuda.h>
 
 const unsigned int RNG::s_maxQrngDimensions = 20000;
 
@@ -142,13 +143,6 @@ RNG::~RNG()
     {
         free(m_h_samples);
     }
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 }
 
 void RNG::generateBatch(void)

@@ -40,12 +40,6 @@ inline void getCudaAttribute(T *attribute, CUdevice_attribute device_attribute, 
         fprintf(stderr, "cuSafeCallNoSync() Driver API error = %04d from file <%s>, line %i.\n",
                 error, __FILE__, __LINE__);
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 }
@@ -194,7 +188,7 @@ main(int argc, char **argv)
     if (deviceCount >= 2)
     {
         cudaDeviceProp prop[64];
-        int gpuid[64]; // we want to find the first two GPU's that can support P2P
+        int gpuid[64]; // we want to find the first two GPUs that can support P2P
         int gpu_p2p_count = 0;
 
         for (int i=0; i < deviceCount; i++)
@@ -204,7 +198,7 @@ main(int argc, char **argv)
             // Only boards based on Fermi or later can support P2P
             if ((prop[i].major >= 2)
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-                // on Windows (64-bit), the Tesla Compute Cluster driver for windows must be enabled to supprot this
+                // on Windows (64-bit), the Tesla Compute Cluster driver for windows must be enabled to support this
                 && prop[i].tccDriver
 #endif
                )
@@ -215,29 +209,22 @@ main(int argc, char **argv)
         }
 
         // Show all the combinations of support P2P GPUs
-        int can_access_peer_0_1, can_access_peer_1_0;
+        int can_access_peer;
 
         if (gpu_p2p_count >= 2)
         {
-            for (int i = 0; i < gpu_p2p_count-1; i++)
+            for (int i = 0; i < gpu_p2p_count; i++)
             {
-                for (int j = 1; j < gpu_p2p_count; j++)
+                for (int j = 0; j < gpu_p2p_count; j++)
                 {
-                    checkCudaErrors(cudaDeviceCanAccessPeer(&can_access_peer_0_1, gpuid[i], gpuid[j]));
-                    printf("> Peer access from %s (GPU%d) -> %s (GPU%d) : %s\n", prop[gpuid[i]].name, gpuid[i],
+                    if (gpuid[i] == gpuid[j])
+                    {
+                        continue;
+                    }
+                    checkCudaErrors(cudaDeviceCanAccessPeer(&can_access_peer, gpuid[i], gpuid[j]));
+                        printf("> Peer access from %s (GPU%d) -> %s (GPU%d) : %s\n", prop[gpuid[i]].name, gpuid[i],
                            prop[gpuid[j]].name, gpuid[j] ,
-                           can_access_peer_0_1 ? "Yes" : "No");
-                }
-            }
-
-            for (int j = 1; j < gpu_p2p_count; j++)
-            {
-                for (int i = 0; i < gpu_p2p_count-1; i++)
-                {
-                    checkCudaErrors(cudaDeviceCanAccessPeer(&can_access_peer_1_0, gpuid[j], gpuid[i]));
-                    printf("> Peer access from %s (GPU%d) -> %s (GPU%d) : %s\n", prop[gpuid[j]].name, gpuid[j],
-                           prop[gpuid[i]].name, gpuid[i] ,
-                           can_access_peer_1_0 ? "Yes" : "No");
+                           can_access_peer ? "Yes" : "No");
                 }
             }
         }
@@ -297,11 +284,5 @@ main(int argc, char **argv)
     printf("Result = PASS\n");
 
     // finish
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(EXIT_SUCCESS);
 }

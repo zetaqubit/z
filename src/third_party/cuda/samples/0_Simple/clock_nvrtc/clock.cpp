@@ -11,7 +11,7 @@
 
 
 // This example shows how to use the clock function to measure the performance of
-// a kernel accurately.
+// block of threads of a kernel accurately.
 //
 
 // Blocks are executed in parallel and out of order. Since there's no synchronization
@@ -20,11 +20,11 @@
 
 // System includes
 #include <stdio.h>
+#include <stdint.h>
 #include <assert.h>
 
 #include <cuda_runtime.h>
 #include <nvrtc_helper.h>
-#include <cudaProfiler.h>
 
 // helper functions and utilities to work with CUDA
 #include <helper_functions.h>
@@ -106,19 +106,15 @@ int main(int argc, char **argv)
     checkCudaErrors(cuMemFree(doutput));
     checkCudaErrors(cuMemFree(dtimer));
 
-    // Compute the difference between the last block end and the first block start.
-    clock_t minStart = timer[0];
-    clock_t maxEnd = timer[NUM_BLOCKS];
+    long double avgElapsedClocks = 0;
 
-    for (int i = 1; i < NUM_BLOCKS; i++)
+    for (int i = 0; i < NUM_BLOCKS; i++)
     {
-        minStart = timer[i] < minStart ? timer[i] : minStart;
-        maxEnd = timer[NUM_BLOCKS+i] > maxEnd ? timer[NUM_BLOCKS+i] : maxEnd;
+        avgElapsedClocks += (long double) (timer[i + NUM_BLOCKS] - timer[i]);
     }
 
-    printf("Total clocks = %d\n", (int)(maxEnd - minStart));
-
-    cuProfilerStop();
+    avgElapsedClocks = avgElapsedClocks/NUM_BLOCKS;
+    printf("Average clocks/block = %Lf\n", avgElapsedClocks);
 
     return EXIT_SUCCESS;
 }

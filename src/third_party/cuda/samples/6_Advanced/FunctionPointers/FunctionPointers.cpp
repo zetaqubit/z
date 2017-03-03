@@ -10,7 +10,7 @@
  */
 
 // OpenGL Graphics includes
-#include <GL/glew.h>
+#include <helper_gl.h>
 #if defined(__APPLE__) || defined(MACOSX)
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   #include <GLUT/glut.h>
@@ -28,7 +28,7 @@
 #include <helper_functions.h> // helper functions for timing, string parsing
 
 #include <cuda_runtime.h>     // CUDA Runtime
-#include <cuda_gl_interop.h>  // CUDA OpenGL intero
+#include <cuda_gl_interop.h>  // CUDA OpenGL interop
 
 #include <helper_cuda.h>      // includes for CUDA initialization and error checking
 #include <helper_cuda_gl.h>
@@ -263,13 +263,6 @@ void cleanup(void)
     deleteTexture();
 
     sdkDeleteTimer(&timer);
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 }
 
 void initializeData(char *file)
@@ -300,12 +293,6 @@ void initializeData(char *file)
     }
     else
     {
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 
@@ -332,13 +319,6 @@ void initializeData(char *file)
         if ((GLuint)bsize != (g_Bpp * sizeof(Pixel) * imWidth * imHeight))
         {
             printf("Buffer object (%d) has incorrect size (%d).\n", (unsigned)pbo_buffer, (unsigned)bsize);
-
-            // cudaDeviceReset causes the driver to clean up all state. While
-            // not mandatory in normal operation, it is good practice.  It is also
-            // needed to ensure correct operation when the application is being
-            // profiled. Calling cudaDeviceReset causes all profile data to be
-            // flushed before the application exits
-            cudaDeviceReset();
             exit(EXIT_FAILURE);
         }
 
@@ -382,9 +362,8 @@ void initGL(int *argc, char **argv)
     glutInitWindowSize(wWidth, wHeight);
     glutCreateWindow("Function Pointers [CUDA Edge Detection]n");
 
-    glewInit();
-
-    if (!glewIsSupported("GL_VERSION_1_5 GL_ARB_vertex_buffer_object GL_ARB_pixel_buffer_object"))
+    if (!isGLVersionSupported(1,5) ||
+        !areGLExtensionsSupported("GL_ARB_vertex_buffer_object GL_ARB_pixel_buffer_object"))
     {
         fprintf(stderr, "Error: failed to get minimal extensions for demo\n");
         fprintf(stderr, "This sample requires:\n");
@@ -392,12 +371,6 @@ void initGL(int *argc, char **argv)
         fprintf(stderr, "  GL_ARB_vertex_buffer_object\n");
         fprintf(stderr, "  GL_ARB_pixel_buffer_object\n");
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_WAIVED);
     }
 }
@@ -491,12 +464,6 @@ void checkDeviceMeetComputeSpec(int argc, char **argv)
         fprintf(stderr, "\tCUDA Compute Capability >= %d.%d is required\n", MIN_COMPUTE_VERSION/16, MIN_COMPUTE_VERSION%16);
         fprintf(stderr, "\tCUDA Runtime Version    >= %d.%d is required\n", MIN_RUNTIME_VERSION/1000, (MIN_RUNTIME_VERSION%100)/10);
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_WAIVED);
     }
 }
@@ -564,24 +531,10 @@ void runAutoTest(int argc, char *argv[])
     if (g_TotalErrors != 0)
     {
         printf("Test failed!\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 
     printf("Test passed!\n");
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(EXIT_SUCCESS);
 }
 
@@ -590,6 +543,10 @@ int main(int argc, char **argv)
 {
     pArgc = &argc;
     pArgv = argv;
+
+#if defined(__linux__)
+    setenv ("DISPLAY", ":0", 0);
+#endif
 
     printf("%s Starting...\n\n", argv[0]);
 
@@ -617,12 +574,6 @@ int main(int argc, char **argv)
         printf(" > %s -device=n\n\n", argv[0]);
         printf("exiting...\n");
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_WAIVED);
     }
 
@@ -642,12 +593,6 @@ int main(int argc, char **argv)
         }
         else
         {
-            // cudaDeviceReset causes the driver to clean up all state. While
-            // not mandatory in normal operation, it is good practice.  It is also
-            // needed to ensure correct operation when the application is being
-            // profiled. Calling cudaDeviceReset causes all profile data to be
-            // flushed before the application exits
-            cudaDeviceReset();
             exit(EXIT_WAIVED);
         }
 

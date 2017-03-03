@@ -30,7 +30,7 @@
  this list of conditions and the following disclaimer in the documentation
  and/or other materials provided with the distribution.
 
- Neither the name of the University of Californa, Davis nor the names of
+ Neither the name of the University of California, Davis nor the names of
  the contributors may be used to endorse or promote products derived
  from this software without specific prior written permission.
 
@@ -66,7 +66,7 @@ represent "traditional" framebuffer memory (depth, stencil, and color buffers).
 By "traditional," we mean that the memory cannot be bound as a texture.
 With respect to GPU shaders, Renderbuffer memory is "write-only." Framebuffer
 operations such as alpha blending, depth test, alpha test, stencil test, etc.
-read from this memory in post-fragement-shader (ROP) operations.
+read from this memory in post-fragment-shader (ROP) operations.
 
 The most common use of Renderbuffers is to create depth and stencil buffers.
 Note that as of 7/1/05, NVIDIA drivers to do not support stencil Renderbuffers.

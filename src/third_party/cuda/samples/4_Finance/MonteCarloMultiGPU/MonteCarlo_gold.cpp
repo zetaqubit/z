@@ -37,7 +37,7 @@
 #define A5 1.330274429
 #define RSQRT2PI 0.39894228040143267793994605993438
 
-//Polynomial approxiamtion of
+//Polynomial approximation of
 //cumulative normal distribution function
 double CND(double d)
 {
@@ -137,7 +137,7 @@ extern "C" void MonteCarloCPU(
 
     //Derive average from the total sum and discount by riskfree rate
     callValue.Expected = (float)(exp(-R * T) * sum / (double)pathN);
-    //Standart deviation
+    //Standard deviation
     double stdDev = sqrt(((double)pathN * sum2 - sum * sum)/ ((double)pathN * (double)(pathN - 1)));
     //Confidence width; in 95% of all cases theoretical value lies within these borders
     callValue.Confidence = (float)(exp(-R * T) * 1.96 * stdDev / sqrt((double)pathN));

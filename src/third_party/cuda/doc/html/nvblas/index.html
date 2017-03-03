@@ -48,7 +48,7 @@
       <div id="site-content">
          <nav id="site-nav">
             <div class="category closed"><a href="../index.html" title="The root of the site.">CUDA Toolkit
-                  v7.0</a></div>
+                  v8.0</a></div>
             <div class="category"><a href="index.html" title="NVBLAS">NVBLAS</a></div>
             <ul>
                <li>
@@ -64,50 +64,56 @@
                   <div class="section-link"><a href="#symbols-interception">4.&nbsp;BLAS symbols interception</a></div>
                </li>
                <li>
-                  <div class="section-link"><a href="#security-precaution">5.&nbsp;Security precaution</a></div>
+                  <div class="section-link"><a href="#device-memory-support">5.&nbsp;Device Memory Support</a></div>
                </li>
                <li>
-                  <div class="section-link"><a href="#configuration-file">6.&nbsp;Configuration</a></div>
+                  <div class="section-link"><a href="#security-precaution">6.&nbsp;Security precaution</a></div>
+               </li>
+               <li>
+                  <div class="section-link"><a href="#configuration-file">7.&nbsp;Configuration</a></div>
                   <ul>
                      <li>
-                        <div class="section-link"><a href="#NVBLAS_CONFIG_FILE">6.1.&nbsp;NVBLAS_CONFIG_FILE environment variable</a></div>
+                        <div class="section-link"><a href="#NVBLAS_CONFIG_FILE">7.1.&nbsp;NVBLAS_CONFIG_FILE environment variable</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#configuration_keywords">6.2.&nbsp;Configuration keywords</a></div>
+                        <div class="section-link"><a href="#configuration_keywords">7.2.&nbsp;Configuration keywords</a></div>
                         <ul>
                            <li>
-                              <div class="section-link"><a href="#nvblas_logfile">6.2.1.&nbsp;NVBLAS_LOGFILE</a></div>
+                              <div class="section-link"><a href="#nvblas_logfile">7.2.1.&nbsp;NVBLAS_LOGFILE</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#nvblas_cpu_blas_lib">6.2.2.&nbsp;NVBLAS_CPU_BLAS_LIB</a></div>
+                              <div class="section-link"><a href="#nvblas_trace_log_enabled">7.2.2.&nbsp;NVBLAS_TRACE_LOG_ENABLED</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#nvblas_gpu_list">6.2.3.&nbsp;NVBLAS_GPU_LIST</a></div>
+                              <div class="section-link"><a href="#nvblas_cpu_blas_lib">7.2.3.&nbsp;NVBLAS_CPU_BLAS_LIB</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#nvblas_tile_dim">6.2.4.&nbsp;NVBLAS_TILE_DIM</a></div>
+                              <div class="section-link"><a href="#nvblas_gpu_list">7.2.4.&nbsp;NVBLAS_GPU_LIST</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#nvblas_gpu_disabled">6.2.5.&nbsp;NVBLAS_GPU_DISABLED_&lt;BLAS_FUNC_NAME&gt;</a></div>
+                              <div class="section-link"><a href="#nvblas_tile_dim">7.2.5.&nbsp;NVBLAS_TILE_DIM</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#nvblas_cpu_ratio">6.2.6.&nbsp;NVBLAS_CPU_RATIO_&lt;BLAS_FUNC_NAME&gt;</a></div>
+                              <div class="section-link"><a href="#nvblas_gpu_disabled">7.2.6.&nbsp;NVBLAS_GPU_DISABLED_&lt;BLAS_FUNC_NAME&gt;</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#nvblas_autopin_mem_enabled">6.2.7.&nbsp;NVBLAS_AUTOPIN_MEM_ENABLED</a></div>
+                              <div class="section-link"><a href="#nvblas_cpu_ratio">7.2.7.&nbsp;NVBLAS_CPU_RATIO_&lt;BLAS_FUNC_NAME&gt;</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#configuration_example">6.2.8.&nbsp;Config file Example</a></div>
+                              <div class="section-link"><a href="#nvblas_autopin_mem_enabled">7.2.8.&nbsp;NVBLAS_AUTOPIN_MEM_ENABLED</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="#configuration_example">7.2.9.&nbsp;Config file Example</a></div>
                            </li>
                         </ul>
                      </li>
                   </ul>
                </li>
                <li>
-                  <div class="section-link"><a href="#Installation">7.&nbsp;Installation</a></div>
+                  <div class="section-link"><a href="#Installation">8.&nbsp;Installation</a></div>
                </li>
                <li>
-                  <div class="section-link"><a href="#Usage">8.&nbsp;Usage</a></div>
+                  <div class="section-link"><a href="#Usage">9.&nbsp;Usage</a></div>
                </li>
             </ul>
          </nav>
@@ -123,10 +129,10 @@
                   (<a href="../../pdf/NVBLAS_Library.pdf">PDF</a>)
                   -
                   
-                  v7.0
+                  v8.0
                   (<a href="https://developer.nvidia.com/cuda-toolkit-archive">older</a>)
                   -
-                  Last updated March 5, 2015
+                  Last updated January 12, 2017
                   -
                   <a href="mailto:cudatools@nvidia.com?subject=CUDA Toolkit Documentation Feedback: NVBLAS">Send Feedback</a>
                   -
@@ -313,8 +319,21 @@
                      </p>
                   </div>
                </div>
+               <div class="topic concept nested0" xml:lang="en-us" id="device-memory-support"><a name="device-memory-support" shape="rect">
+                     <!-- --></a><h2 class="title topictitle1"><a href="#device-memory-support" name="device-memory-support" shape="rect">5.&nbsp;Device Memory Support</a></h2>
+                  <div class="body conbody">
+                     <p class="p"> Starting with Release 8.0, data can be located on any GPU device, even on GPU devices that are not configured to be part
+                        of the computation.
+                        When any of the data is located on a GPU, the computation will be exclusively done on GPU whatever the size of the problem.
+                        Also, this feature has to be used with caution : the user has to be sure that the BLAS call will be indeed intercepted by
+                        NVBLAS, 
+                        otherwise it will result on a crash when the CPU Blas tries to execute it. 
+                        
+                     </p>
+                  </div>
+               </div>
                <div class="topic concept nested0" xml:lang="en-us" id="security-precaution"><a name="security-precaution" shape="rect">
-                     <!-- --></a><h2 class="title topictitle1"><a href="#security-precaution" name="security-precaution" shape="rect">5.&nbsp;Security precaution</a></h2>
+                     <!-- --></a><h2 class="title topictitle1"><a href="#security-precaution" name="security-precaution" shape="rect">6.&nbsp;Security precaution</a></h2>
                   <div class="body conbody">
                      <p class="p"> Because the NVBLAS Library relies on a symbols interception mechanism, it is essential to make sure it has not been compromised.
                         
@@ -325,7 +344,7 @@
                   </div>
                </div>
                <div class="topic concept nested0" xml:lang="en-us" id="configuration-file"><a name="configuration-file" shape="rect">
-                     <!-- --></a><h2 class="title topictitle1"><a href="#configuration-file" name="configuration-file" shape="rect">6.&nbsp;Configuration</a></h2>
+                     <!-- --></a><h2 class="title topictitle1"><a href="#configuration-file" name="configuration-file" shape="rect">7.&nbsp;Configuration</a></h2>
                   <div class="body conbody">
                      <p class="p">Because NVBLAS is a drop-in replacement of BLAS, it must be configured through an ASCII text file that describes how 
                         many and which GPUs can participate in the intercepted BLAS calls. 
@@ -336,7 +355,7 @@
                      </p>
                   </div>
                   <div class="topic concept nested1" xml:lang="en-us" id="NVBLAS_CONFIG_FILE"><a name="NVBLAS_CONFIG_FILE" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#NVBLAS_CONFIG_FILE" name="NVBLAS_CONFIG_FILE" shape="rect">6.1.&nbsp;NVBLAS_CONFIG_FILE environment variable</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#NVBLAS_CONFIG_FILE" name="NVBLAS_CONFIG_FILE" shape="rect">7.1.&nbsp;NVBLAS_CONFIG_FILE environment variable</a></h3>
                      <div class="body conbody">
                         <p class="p">
                            The location and name of the configuration file must be defined by the environment variable <samp class="ph codeph">NVBLAS_CONFIG_FILE</samp>. 
@@ -347,7 +366,7 @@
                      </div>
                   </div>
                   <div class="topic concept nested1" xml:lang="en-us" id="configuration_keywords"><a name="configuration_keywords" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#configuration_keywords" name="configuration_keywords" shape="rect">6.2.&nbsp;Configuration keywords</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#configuration_keywords" name="configuration_keywords" shape="rect">7.2.&nbsp;Configuration keywords</a></h3>
                      <div class="body conbody">
                         <p class="p">
                            The configuration keywords syntax is described in the following sub-sections.
@@ -355,7 +374,7 @@
                         </p>
                      </div>
                      <div class="topic concept nested2" xml:lang="en-us" id="nvblas_logfile"><a name="nvblas_logfile" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#nvblas_logfile" name="nvblas_logfile" shape="rect">6.2.1.&nbsp;NVBLAS_LOGFILE</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#nvblas_logfile" name="nvblas_logfile" shape="rect">7.2.1.&nbsp;NVBLAS_LOGFILE</a></h3>
                         <div class="body conbody">
                            <p class="p">This keyword defines the file where NVBLAS should print status and error messages. By default, if not defined, the standard
                               error output file (e.g stderr) will be used.
@@ -364,8 +383,17 @@
                            </p>
                         </div>
                      </div>
+                     <div class="topic concept nested2" xml:lang="en-us" id="nvblas_trace_log_enabled"><a name="nvblas_trace_log_enabled" shape="rect">
+                           <!-- --></a><h3 class="title topictitle2"><a href="#nvblas_trace_log_enabled" name="nvblas_trace_log_enabled" shape="rect">7.2.2.&nbsp;NVBLAS_TRACE_LOG_ENABLED</a></h3>
+                        <div class="body conbody">
+                           <p class="p">When this keyword is defined, every intercepted BLAS calls will be logged into the NVBLAS_LOGFILE. 
+                              This feature, even though intrusive, can be useful for debugging purpose.
+                              
+                           </p>
+                        </div>
+                     </div>
                      <div class="topic concept nested2" xml:lang="en-us" id="nvblas_cpu_blas_lib"><a name="nvblas_cpu_blas_lib" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#nvblas_cpu_blas_lib" name="nvblas_cpu_blas_lib" shape="rect">6.2.2.&nbsp;NVBLAS_CPU_BLAS_LIB</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#nvblas_cpu_blas_lib" name="nvblas_cpu_blas_lib" shape="rect">7.2.3.&nbsp;NVBLAS_CPU_BLAS_LIB</a></h3>
                         <div class="body conbody">
                            <p class="p">This keyword defines the CPU BLAS dynamic library file (e.g .so file on Linux or .dll on Windows) that NVBLAS should open
                               to find the CPU BLAS symbols definitions.
@@ -387,7 +415,7 @@
                         </div>
                      </div>
                      <div class="topic concept nested2" xml:lang="en-us" id="nvblas_gpu_list"><a name="nvblas_gpu_list" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#nvblas_gpu_list" name="nvblas_gpu_list" shape="rect">6.2.3.&nbsp;NVBLAS_GPU_LIST</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#nvblas_gpu_list" name="nvblas_gpu_list" shape="rect">7.2.4.&nbsp;NVBLAS_GPU_LIST</a></h3>
                         <div class="body conbody">
                            <div class="p">This keyword defines the list of GPUs that should participate in the computation of the intercepted BLAS calls.
                               If not defined, only GPU device 0 is used, since that is normally the most compute-capable GPU installed in the system. 
@@ -399,11 +427,11 @@
                                  <table cellpadding="4" cellspacing="0" summary="" class="table" frame="border" border="1" rules="all">
                                     <thead class="thead" align="left">
                                        <tr class="row">
-                                          <th class="entry" valign="top" width="15.015256142604786%" id="d54e451" rowspan="1" colspan="1">
+                                          <th class="entry" valign="top" width="15.015256142604786%" id="d54e476" rowspan="1" colspan="1">
                                              Keyword
                                              
                                           </th>
-                                          <th class="entry" valign="top" width="84.98474385739522%" id="d54e454" rowspan="1" colspan="1">
+                                          <th class="entry" valign="top" width="84.98474385739522%" id="d54e479" rowspan="1" colspan="1">
                                              Meaning
                                              
                                           </th>
@@ -411,18 +439,18 @@
                                     </thead>
                                     <tbody class="tbody">
                                        <tr class="row">
-                                          <td class="entry" valign="top" width="15.015256142604786%" headers="d54e451" rowspan="1" colspan="1">
+                                          <td class="entry" valign="top" width="15.015256142604786%" headers="d54e476" rowspan="1" colspan="1">
                                              <p class="p">ALL</p>
                                           </td>
-                                          <td class="entry" valign="top" width="84.98474385739522%" headers="d54e454" rowspan="1" colspan="1">
+                                          <td class="entry" valign="top" width="84.98474385739522%" headers="d54e479" rowspan="1" colspan="1">
                                              <p class="p">All compute-capable GPUs detected on the system will be used by NVBLAS</p>
                                           </td>
                                        </tr>
                                        <tr class="row">
-                                          <td class="entry" valign="top" width="15.015256142604786%" headers="d54e451" rowspan="1" colspan="1">
+                                          <td class="entry" valign="top" width="15.015256142604786%" headers="d54e476" rowspan="1" colspan="1">
                                              <p class="p">ALL0</p>
                                           </td>
-                                          <td class="entry" valign="top" width="84.98474385739522%" headers="d54e454" rowspan="1" colspan="1">
+                                          <td class="entry" valign="top" width="84.98474385739522%" headers="d54e479" rowspan="1" colspan="1">
                                              <p class="p">GPU device 0, AND all others GPUs detected that have the same compute-capabilities as device 0 will be used by NVBLAS</p>
                                           </td>
                                        </tr>
@@ -438,7 +466,7 @@
                         </div>
                      </div>
                      <div class="topic concept nested2" xml:lang="en-us" id="nvblas_tile_dim"><a name="nvblas_tile_dim" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#nvblas_tile_dim" name="nvblas_tile_dim" shape="rect">6.2.4.&nbsp;NVBLAS_TILE_DIM</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#nvblas_tile_dim" name="nvblas_tile_dim" shape="rect">7.2.5.&nbsp;NVBLAS_TILE_DIM</a></h3>
                         <div class="body conbody">
                            <p class="p">This keyword defines the tile dimension that should be used to divide the matrices involved in the computation. 
                               This definition maps directly to a call of the cublasXt API routine <samp class="ph codeph">cublasXtSetBlockDim</samp>.
@@ -448,7 +476,7 @@
                         </div>
                      </div>
                      <div class="topic concept nested2" xml:lang="en-us" id="nvblas_gpu_disabled"><a name="nvblas_gpu_disabled" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#nvblas_gpu_disabled" name="nvblas_gpu_disabled" shape="rect">6.2.5.&nbsp;NVBLAS_GPU_DISABLED_&lt;BLAS_FUNC_NAME&gt;</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#nvblas_gpu_disabled" name="nvblas_gpu_disabled" shape="rect">7.2.6.&nbsp;NVBLAS_GPU_DISABLED_&lt;BLAS_FUNC_NAME&gt;</a></h3>
                         <div class="body conbody">
                            <p class="p">This keyword, appended with the name of a BLAS routine disables NVBLAS from running a specified routine on the GPU. This feature
                               is intended mainly for debugging purposes.
@@ -458,7 +486,7 @@
                         </div>
                      </div>
                      <div class="topic concept nested2" xml:lang="en-us" id="nvblas_cpu_ratio"><a name="nvblas_cpu_ratio" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#nvblas_cpu_ratio" name="nvblas_cpu_ratio" shape="rect">6.2.6.&nbsp;NVBLAS_CPU_RATIO_&lt;BLAS_FUNC_NAME&gt;</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#nvblas_cpu_ratio" name="nvblas_cpu_ratio" shape="rect">7.2.7.&nbsp;NVBLAS_CPU_RATIO_&lt;BLAS_FUNC_NAME&gt;</a></h3>
                         <div class="body conbody">
                            <p class="p">This keyword, appended with the name of ta BLAS routine defines the ratio of the 
                               workload that should remain on the CPU in the event that the NVBLAS decides to offload work for that routine on the GPU. 
@@ -470,18 +498,25 @@
                         </div>
                      </div>
                      <div class="topic concept nested2" xml:lang="en-us" id="nvblas_autopin_mem_enabled"><a name="nvblas_autopin_mem_enabled" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#nvblas_autopin_mem_enabled" name="nvblas_autopin_mem_enabled" shape="rect">6.2.7.&nbsp;NVBLAS_AUTOPIN_MEM_ENABLED</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#nvblas_autopin_mem_enabled" name="nvblas_autopin_mem_enabled" shape="rect">7.2.8.&nbsp;NVBLAS_AUTOPIN_MEM_ENABLED</a></h3>
                         <div class="body conbody">
                            <p class="p">This keyword enables the Pinning Memory mode. 
                               This functionality is directly mapped to the cublasXt API routine <samp class="ph codeph">cublasXtSetPinningMemMode</samp>. 
                               If this keyowrd is not present in the configuration file, the Pinning Memory mode will be set to CUBLASXT_PINNING_DISABLED.
-                              Please refer to the cuBLAS Documentation for details.
                               
                            </p>
+                           <div class="note note"><span class="notetitle">Note:</span> 
+                              There are some restrictions to use this feature as specified in the cuBLAS documentation of the underlying routine <samp class="ph codeph">cublasXtSetPinningMemMode</samp>.
+                              Specifically when NVBLAS is used in a multi-threaded applications, this option should not be used if there is a chance that
+                              matrices used by different threads overlaps 
+                              while calling NVBLAS.
+                              Please refer to the cuBLAS Documentation of the routine <samp class="ph codeph">cublasXtSetPinningMemMode</samp> for details.
+                              
+                           </div>
                         </div>
                      </div>
                      <div class="topic concept nested2" xml:lang="en-us" id="configuration_example"><a name="configuration_example" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#configuration_example" name="configuration_example" shape="rect">6.2.8.&nbsp;Config file Example</a></h3>
+                           <!-- --></a><h3 class="title topictitle2"><a href="#configuration_example" name="configuration_example" shape="rect">7.2.9.&nbsp;Config file Example</a></h3>
                         <div class="body conbody">
                            <p class="p">The example below shows a typical NVBLAS configuration file :</p><pre xml:space="preserve">
 # This is the configuration file to use NVBLAS Library
@@ -493,6 +528,9 @@
 
 # Specify which output log file (default is stderr)
 NVBLAS_LOGFILE  nvblas.log
+
+# Enable trace log of every intercepted BLAS calls
+NVBLAS_TRACE_LOG_ENABLED
 
 #Put here the CPU BLAS fallback Library of your choice
 #It is strongly advised to use full path to describe the location of the CPU Library
@@ -612,7 +650,7 @@ NVBLAS_AUTOPIN_MEM_ENABLED
                      <div class="body refbody">
                         <div class="section">
                            <h3 class="title sectiontitle">Copyright</h3>
-                           <p class="p">© 2007-<span class="ph">2015</span> NVIDIA Corporation. All rights reserved.
+                           <p class="p">© 2007-<span class="ph">2017</span> NVIDIA Corporation. All rights reserved.
                            </p>
                            <p class="p">This product includes software developed by the Syncro Soft SRL (http://www.sync.ro/).</p>
                         </div>
