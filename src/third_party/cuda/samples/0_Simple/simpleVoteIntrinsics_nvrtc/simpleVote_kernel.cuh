@@ -15,7 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Vote Any/All intrinsic kernel function tests are supported only by CUDA
 // capable devices that are CUDA hardware that has SM1.2 or later
-// Vote Functions (refer to section 4.4.5 in the CUDA Orogramming Guide)
+// Vote Functions (refer to section 4.4.5 in the CUDA Programming Guide)
 ////////////////////////////////////////////////////////////////////////////////
 
 // Kernel #1 tests the across-the-warp vote(any) intrinsic.

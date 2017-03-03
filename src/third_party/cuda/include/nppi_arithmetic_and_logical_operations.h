@@ -1,4 +1,4 @@
- /* Copyright 2009-2014 NVIDIA Corporation.  All rights reserved. 
+ /* Copyright 2009-2015 NVIDIA Corporation.  All rights reserved. 
   * 
   * NOTICE TO LICENSEE: 
   * 
@@ -65,6 +65,9 @@ extern "C" {
  * @defgroup image_arithmetic_and_logical_operations Arithmetic and Logical Operations
  * @ingroup nppi
  * @{
+ *
+ * These functions can be found in either the nppi or nppial libraries. Linking to only the sub-libraries that you use can significantly
+ * save link time, application load time, and CUDA runtime startup time when using dynamic libraries.
  */
 
 /** 
@@ -3385,7 +3388,7 @@ nppiAdd_8u_C3RSfs(const Npp8u * pSrc1, int nSrc1Step, const Npp8u * pSrc2, int n
                         Npp8u * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 8-bit unsigned char channel in place image addition, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 8-bit unsigned char channel in place image addition, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -3505,7 +3508,7 @@ nppiAdd_16u_C3RSfs(const Npp16u * pSrc1, int nSrc1Step, const Npp16u * pSrc2, in
                          Npp16u * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 16-bit unsigned short channel in place image addition, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 16-bit unsigned short channel in place image addition, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -3625,7 +3628,7 @@ nppiAdd_16s_C3RSfs(const Npp16s * pSrc1, int nSrc1Step, const Npp16s * pSrc2, in
                          Npp16s * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 16-bit signed short channel in place image addition, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 16-bit signed short channel in place image addition, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -3745,7 +3748,7 @@ nppiAdd_16sc_C3RSfs(const Npp16sc * pSrc1, int nSrc1Step, const Npp16sc * pSrc2,
                           Npp16sc * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 16-bit signed short complex number (16-bit real, 16-bit imaginary) channel in place image addition, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 16-bit signed short complex number (16-bit real, 16-bit imaginary) channel in place image addition, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -3853,7 +3856,7 @@ nppiAdd_32s_C3RSfs(const Npp32s * pSrc1, int nSrc1Step, const Npp32s * pSrc2, in
                          Npp32s * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 32-bit signed integer channel in place image addition, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 32-bit signed integer channel in place image addition, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -3913,7 +3916,7 @@ nppiAdd_32sc_C3RSfs(const Npp32sc * pSrc1, int nSrc1Step, const Npp32sc * pSrc2,
                           Npp32sc * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 32-bit signed integer complex number (32-bit real, 32-bit imaginary) channel in place image addition, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 32-bit signed integer complex number (32-bit real, 32-bit imaginary) channel in place image addition, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -4000,7 +4003,7 @@ nppiAdd_32f_C3R(const Npp32f * pSrc1, int nSrc1Step, const Npp32f * pSrc2, int n
                       Npp32f * pDst,  int nDstStep,  NppiSize oSizeROI);
 
 /** 
- * One 32-bit floating point channel in place image addition.
+ * Three 32-bit floating point channel in place image addition.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -4112,7 +4115,7 @@ nppiAdd_32fc_C3R(const Npp32fc * pSrc1, int nSrc1Step, const Npp32fc * pSrc2, in
                        Npp32fc * pDst,  int nDstStep,  NppiSize oSizeROI);
 
 /** 
- * One 32-bit floating point complex number (32-bit real, 32-bit imaginary) channel in place image addition.
+ * Three 32-bit floating point complex number (32-bit real, 32-bit imaginary) channel in place image addition.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -4538,7 +4541,7 @@ nppiMul_8u_C3RSfs(const Npp8u * pSrc1, int nSrc1Step, const Npp8u * pSrc2, int n
                         Npp8u * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 8-bit unsigned char channel in place image multiplication, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 8-bit unsigned char channel in place image multiplication, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -4658,7 +4661,7 @@ nppiMul_16u_C3RSfs(const Npp16u * pSrc1, int nSrc1Step, const Npp16u * pSrc2, in
                          Npp16u * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 16-bit unsigned short channel in place image multiplication, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 16-bit unsigned short channel in place image multiplication, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -4778,7 +4781,7 @@ nppiMul_16s_C3RSfs(const Npp16s * pSrc1, int nSrc1Step, const Npp16s * pSrc2, in
                          Npp16s * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 16-bit signed short channel in place image multiplication, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 16-bit signed short channel in place image multiplication, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -4898,7 +4901,7 @@ nppiMul_16sc_C3RSfs(const Npp16sc * pSrc1, int nSrc1Step, const Npp16sc * pSrc2,
                           Npp16sc * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 16-bit signed short complex number (16-bit real, 16-bit imaginary) channel in place image multiplication, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 16-bit signed short complex number (16-bit real, 16-bit imaginary) channel in place image multiplication, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -5006,7 +5009,7 @@ nppiMul_32s_C3RSfs(const Npp32s * pSrc1, int nSrc1Step, const Npp32s * pSrc2, in
                          Npp32s * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 32-bit signed integer channel in place image multiplication, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 32-bit signed integer channel in place image multiplication, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -5066,7 +5069,7 @@ nppiMul_32sc_C3RSfs(const Npp32sc * pSrc1, int nSrc1Step, const Npp32sc * pSrc2,
                           Npp32sc * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 32-bit signed integer complex number (32-bit real, 32-bit imaginary) channel in place image multiplication, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 32-bit signed integer complex number (32-bit real, 32-bit imaginary) channel in place image multiplication, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -5153,7 +5156,7 @@ nppiMul_32f_C3R(const Npp32f * pSrc1, int nSrc1Step, const Npp32f * pSrc2, int n
                       Npp32f * pDst,  int nDstStep,  NppiSize oSizeROI);
 
 /** 
- * One 32-bit floating point channel in place image multiplication.
+ * Three 32-bit floating point channel in place image multiplication.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -5265,7 +5268,7 @@ nppiMul_32fc_C3R(const Npp32fc * pSrc1, int nSrc1Step, const Npp32fc * pSrc2, in
                        Npp32fc * pDst,  int nDstStep,  NppiSize oSizeROI);
 
 /** 
- * One 32-bit floating point complex number (32-bit real, 32-bit imaginary) channel in place image multiplication.
+ * Three 32-bit floating point complex number (32-bit real, 32-bit imaginary) channel in place image multiplication.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -5388,7 +5391,7 @@ nppiMulScale_8u_C3R(const Npp8u * pSrc1, int nSrc1Step, const Npp8u * pSrc2, int
                           Npp8u * pDst,  int nDstStep,  NppiSize oSizeROI);
 
 /** 
- * One 8-bit unsigned char channel in place image multiplication then scale by maximum value for pixel bit width.
+ * Three 8-bit unsigned char channel in place image multiplication then scale by maximum value for pixel bit width.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -5500,7 +5503,7 @@ nppiMulScale_16u_C3R(const Npp16u * pSrc1, int nSrc1Step, const Npp16u * pSrc2, 
                            Npp16u * pDst,  int nDstStep,  NppiSize oSizeROI);
 
 /** 
- * One 16-bit unsigned short channel in place image multiplication then scale by maximum value for pixel bit width.
+ * Three 16-bit unsigned short channel in place image multiplication then scale by maximum value for pixel bit width.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -5625,7 +5628,7 @@ nppiSub_8u_C3RSfs(const Npp8u * pSrc1, int nSrc1Step, const Npp8u * pSrc2, int n
                         Npp8u * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 8-bit unsigned char channel in place image subtraction, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 8-bit unsigned char channel in place image subtraction, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -5745,7 +5748,7 @@ nppiSub_16u_C3RSfs(const Npp16u * pSrc1, int nSrc1Step, const Npp16u * pSrc2, in
                          Npp16u * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 16-bit unsigned short channel in place image subtraction, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 16-bit unsigned short channel in place image subtraction, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -5865,7 +5868,7 @@ nppiSub_16s_C3RSfs(const Npp16s * pSrc1, int nSrc1Step, const Npp16s * pSrc2, in
                          Npp16s * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 16-bit signed short channel in place image subtraction, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 16-bit signed short channel in place image subtraction, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -5985,7 +5988,7 @@ nppiSub_16sc_C3RSfs(const Npp16sc * pSrc1, int nSrc1Step, const Npp16sc * pSrc2,
                           Npp16sc * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 16-bit signed short complex number (16-bit real, 16-bit imaginary) channel in place image subtraction, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 16-bit signed short complex number (16-bit real, 16-bit imaginary) channel in place image subtraction, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -6093,7 +6096,7 @@ nppiSub_32s_C3RSfs(const Npp32s * pSrc1, int nSrc1Step, const Npp32s * pSrc2, in
                          Npp32s * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 32-bit signed integer channel in place image subtraction, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 32-bit signed integer channel in place image subtraction, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -6183,7 +6186,7 @@ nppiSub_32sc_C3RSfs(const Npp32sc * pSrc1, int nSrc1Step, const Npp32sc * pSrc2,
                           Npp32sc * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 32-bit signed integer complex number (32-bit real, 32-bit imaginary) channel in place image subtraction, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 32-bit signed integer complex number (32-bit real, 32-bit imaginary) channel in place image subtraction, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -6270,7 +6273,7 @@ nppiSub_32f_C3R(const Npp32f * pSrc1, int nSrc1Step, const Npp32f * pSrc2, int n
                       Npp32f * pDst,  int nDstStep,  NppiSize oSizeROI);
 
 /** 
- * One 32-bit floating point channel in place image subtraction.
+ * Three 32-bit floating point channel in place image subtraction.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -6382,7 +6385,7 @@ nppiSub_32fc_C3R(const Npp32fc * pSrc1, int nSrc1Step, const Npp32fc * pSrc2, in
                        Npp32fc * pDst,  int nDstStep,  NppiSize oSizeROI);
 
 /** 
- * One 32-bit floating point complex number (32-bit real, 32-bit imaginary) channel in place image subtraction.
+ * Three 32-bit floating point complex number (32-bit real, 32-bit imaginary) channel in place image subtraction.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -6507,7 +6510,7 @@ nppiDiv_8u_C3RSfs(const Npp8u * pSrc1, int nSrc1Step, const Npp8u * pSrc2, int n
                         Npp8u * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 8-bit unsigned char channel in place image division, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 8-bit unsigned char channel in place image division, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -6627,7 +6630,7 @@ nppiDiv_16u_C3RSfs(const Npp16u * pSrc1, int nSrc1Step, const Npp16u * pSrc2, in
                          Npp16u * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 16-bit unsigned short channel in place image division, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 16-bit unsigned short channel in place image division, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -6747,7 +6750,7 @@ nppiDiv_16s_C3RSfs(const Npp16s * pSrc1, int nSrc1Step, const Npp16s * pSrc2, in
                          Npp16s * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 16-bit signed short channel in place image division, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 16-bit signed short channel in place image division, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -6867,7 +6870,7 @@ nppiDiv_16sc_C3RSfs(const Npp16sc * pSrc1, int nSrc1Step, const Npp16sc * pSrc2,
                           Npp16sc * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 16-bit signed short complex number (16-bit real, 16-bit imaginary) channel in place image division, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 16-bit signed short complex number (16-bit real, 16-bit imaginary) channel in place image division, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -6975,7 +6978,7 @@ nppiDiv_32s_C3RSfs(const Npp32s * pSrc1, int nSrc1Step, const Npp32s * pSrc2, in
                          Npp32s * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 32-bit signed integer channel in place image division, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 32-bit signed integer channel in place image division, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -7035,7 +7038,7 @@ nppiDiv_32sc_C3RSfs(const Npp32sc * pSrc1, int nSrc1Step, const Npp32sc * pSrc2,
                           Npp32sc * pDst,  int nDstStep,  NppiSize oSizeROI,   int nScaleFactor);
 
 /** 
- * One 32-bit signed integer complex number (32-bit real, 32-bit imaginary) channel in place image division, scale by 2^(-nScaleFactor), then clamp to saturated value.
+ * Three 32-bit signed integer complex number (32-bit real, 32-bit imaginary) channel in place image division, scale by 2^(-nScaleFactor), then clamp to saturated value.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -7122,7 +7125,7 @@ nppiDiv_32f_C3R(const Npp32f * pSrc1, int nSrc1Step, const Npp32f * pSrc2, int n
                       Npp32f * pDst,  int nDstStep,  NppiSize oSizeROI);
 
 /** 
- * One 32-bit floating point channel in place image division.
+ * Three 32-bit floating point channel in place image division.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.
@@ -7234,7 +7237,7 @@ nppiDiv_32fc_C3R(const Npp32fc * pSrc1, int nSrc1Step, const Npp32fc * pSrc2, in
                        Npp32fc * pDst,  int nDstStep,  NppiSize oSizeROI);
 
 /** 
- * One 32-bit floating point complex number (32-bit real, 32-bit imaginary) channel in place image division.
+ * Three 32-bit floating point complex number (32-bit real, 32-bit imaginary) channel in place image division.
  * \param pSrc \ref source_image_pointer.
  * \param nSrcStep \ref source_image_line_step.
  * \param pSrcDst \ref in_place_image_pointer.

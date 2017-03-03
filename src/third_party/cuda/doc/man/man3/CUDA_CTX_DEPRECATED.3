@@ -1,0 +1,93 @@
+.TH "Context Management [DEPRECATED]" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Context Management [DEPRECATED] \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCUresult\fP \fBcuCtxAttach\fP (\fBCUcontext\fP *pctx, unsigned int flags)"
+.br
+.RI "\fIIncrement a context's usage-count. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuCtxDetach\fP (\fBCUcontext\fP ctx)"
+.br
+.RI "\fIDecrement a context's usage-count. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief deprecated context management functions of the low-level CUDA driver API (\fBcuda.h\fP)
+.PP
+This section describes the deprecated context management functions of the low-level CUDA driver application programming interface. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBCUresult\fP cuCtxAttach (\fBCUcontext\fP * pctx, unsigned int flags)"
+.PP
+\fBDeprecated\fP
+.RS 4
+.RE
+.PP
+Note that this function is deprecated and should not be used.
+.PP
+Increments the usage count of the context and passes back a context handle in \fC*pctx\fP that must be passed to \fBcuCtxDetach()\fP when the application is done with the context. \fBcuCtxAttach()\fP fails if there is no context current to the thread.
+.PP
+Currently, the \fCflags\fP parameter must be 0.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpctx\fP - Returned context handle of the current context 
+.br
+\fIflags\fP - Context attach flags (must be 0)
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuCtxCreate\fP, \fBcuCtxDestroy\fP, \fBcuCtxDetach\fP, \fBcuCtxGetApiVersion\fP, \fBcuCtxGetCacheConfig\fP, \fBcuCtxGetDevice\fP, \fBcuCtxGetFlags\fP, \fBcuCtxGetLimit\fP, \fBcuCtxPopCurrent\fP, \fBcuCtxPushCurrent\fP, \fBcuCtxSetCacheConfig\fP, \fBcuCtxSetLimit\fP, \fBcuCtxSynchronize\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuCtxDetach (\fBCUcontext\fP ctx)"
+.PP
+\fBDeprecated\fP
+.RS 4
+.RE
+.PP
+Note that this function is deprecated and should not be used.
+.PP
+Decrements the usage count of the context \fCctx\fP, and destroys the context if the usage count goes to 0. The context must be a handle that was passed back by \fBcuCtxCreate()\fP or \fBcuCtxAttach()\fP, and must be current to the calling thread.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIctx\fP - Context to destroy
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuCtxCreate\fP, \fBcuCtxDestroy\fP, \fBcuCtxGetApiVersion\fP, \fBcuCtxGetCacheConfig\fP, \fBcuCtxGetDevice\fP, \fBcuCtxGetFlags\fP, \fBcuCtxGetLimit\fP, \fBcuCtxPopCurrent\fP, \fBcuCtxPushCurrent\fP, \fBcuCtxSetCacheConfig\fP, \fBcuCtxSetLimit\fP, \fBcuCtxSynchronize\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

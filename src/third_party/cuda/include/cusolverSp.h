@@ -47,24 +47,15 @@
  * Users Notice.
  */
 
-#ifndef CUSOLVERAPI
-#ifdef _WIN32
-#define CUSOLVERAPI __stdcall
-#else
-#define CUSOLVERAPI 
-#endif
-#endif
-
-#if !defined(PEGASUS_H_)
-#define PEGASUS_H_
+#if !defined(CUSOLVERSP_H_)
+#define CUSOLVERSP_H_
 
 #include "cusparse.h"
+#include "cusolver_common.h"
 
 #if defined(__cplusplus)
 extern "C" {
 #endif /* __cplusplus */
-
-#include "cusolver_common.h"
 
 struct cusolverSpContext;
 typedef struct cusolverSpContext *cusolverSpHandle_t;
@@ -72,12 +63,10 @@ typedef struct cusolverSpContext *cusolverSpHandle_t;
 struct csrqrInfo;
 typedef struct csrqrInfo *csrqrInfo_t;
 
-
 cusolverStatus_t CUSOLVERAPI cusolverSpCreate(cusolverSpHandle_t *handle);
 cusolverStatus_t CUSOLVERAPI cusolverSpDestroy(cusolverSpHandle_t handle);
 cusolverStatus_t CUSOLVERAPI cusolverSpSetStream (cusolverSpHandle_t handle, cudaStream_t streamId);
 cusolverStatus_t CUSOLVERAPI cusolverSpGetStream(cusolverSpHandle_t handle, cudaStream_t *streamId);
-
 
 cusolverStatus_t CUSOLVERAPI cusolverSpXcsrissymHost(
     cusolverSpHandle_t handle,
@@ -684,6 +673,33 @@ cusolverStatus_t CUSOLVERAPI cusolverSpXcsrsymrcmHost(
     const int *csrColIndA,
     int *p);
 
+/* --------- CPU symmdq 
+ *   Symmetric minimum degree algorithm based on quotient graph
+ *
+ */
+cusolverStatus_t CUSOLVERAPI cusolverSpXcsrsymmdqHost(
+    cusolverSpHandle_t handle,
+    int n,
+    int nnzA,
+    const cusparseMatDescr_t descrA,
+    const int *csrRowPtrA,
+    const int *csrColIndA,
+    int *p);
+
+/* --------- CPU symmdq 
+ *   Symmetric Approximate minimum degree algorithm based on quotient graph
+ *
+ */
+cusolverStatus_t CUSOLVERAPI cusolverSpXcsrsymamdHost(
+    cusolverSpHandle_t handle,
+    int n,
+    int nnzA,
+    const cusparseMatDescr_t descrA,
+    const int *csrRowPtrA,
+    const int *csrColIndA,
+    int *p);
+
+
 /* --------- CPU permuation
  *   P*A*Q^T        
  *
@@ -860,7 +876,7 @@ cusolverStatus_t CUSOLVERAPI cusolverSpZcsrqrsvBatched(
 }
 #endif /* __cplusplus */
 
-#endif // define PEGASUS_H_
+#endif // define CUSOLVERSP_H_
 
 
 

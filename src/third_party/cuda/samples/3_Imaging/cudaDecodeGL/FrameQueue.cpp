@@ -164,7 +164,7 @@ FrameQueue::endDecode()
 // Spins until frame becomes available or decoding
 // gets canceled.
 // If the requested frame is available the method returns true.
-// If decoding was interupted before the requested frame becomes
+// If decoding was interrupted before the requested frame becomes
 // available, the method returns false.
 bool
 FrameQueue::waitUntilFrameAvailable(int nPictureIndex)

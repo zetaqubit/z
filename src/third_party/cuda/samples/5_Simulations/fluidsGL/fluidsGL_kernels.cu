@@ -17,13 +17,9 @@
 #include <helper_cuda.h>    // Helper functions for CUDA Error handling
 
 // OpenGL Graphics includes
-#include <GL/glew.h>
-#if defined(__APPLE__) || defined(MACOSX)
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#include <GLUT/glut.h>
-#else
-#include <GL/freeglut.h>
-#endif
+#define HELPERGL_EXTERN_GL_FUNC_IMPLEMENTATION
+#include <helper_gl.h>
+
 
 // FluidsGL CUDA kernel definitions
 #include "fluidsGL_kernels.cuh"
@@ -298,7 +294,7 @@ advectParticles_k(cData *part, cData *v, int dx, int dy,
 }
 
 
-// These are the external function calls necessary for launching fluid simuation
+// These are the external function calls necessary for launching fluid simulation
 extern "C"
 void addForces(cData *v, int dx, int dy, int spx, int spy, float fx, float fy, int r)
 {

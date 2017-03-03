@@ -161,7 +161,7 @@ extern "C" void closeMonteCarloGPU(TOptionPlan *plan)
         const double pathN = plan->pathN;
         //Derive average from the total sum and discount by riskfree rate
         plan->callValue[i].Expected = (float)(exp(-RT) * sum / pathN);
-        //Standart deviation
+        //Standard deviation
         double stdDev = sqrt((pathN * sum2 - sum * sum)/ (pathN * (pathN - 1)));
         //Confidence width; in 95% of all cases theoretical value lies within these borders
         plan->callValue[i].Confidence = (float)(exp(-RT) * 1.96 * stdDev / sqrt(pathN));

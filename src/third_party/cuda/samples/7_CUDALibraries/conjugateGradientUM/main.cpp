@@ -10,7 +10,7 @@
  */
 
 /*
- * This sample implements a conjugate graident solver on GPU
+ * This sample implements a conjugate gradient solver on GPU
  * using CUBLAS and CUSPARSE
  *
  */
@@ -27,7 +27,7 @@
 
 // Utilities and system includes
 #include <helper_functions.h>  // helper for shared functions common to CUDA Samples
-#include <helper_cuda.h>       // helper function CUDA error checking and intialization
+#include <helper_cuda.h>       // helper function CUDA error checking and initialization
 
 const char *sSDKname     = "conjugateGradientUM";
 
@@ -95,13 +95,6 @@ int main(int argc, char **argv)
     if (!deviceProp.managedMemory) { 
         // This samples requires being run on a device that supports Unified Memory
         fprintf(stderr, "Unified Memory not supported on this device\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_WAIVED);
     }
 
@@ -236,8 +229,6 @@ int main(int argc, char **argv)
     cudaFree(r);
     cudaFree(p);
     cudaFree(Ax);
-
-    cudaDeviceReset();
 
     printf("Test Summary:  Error amount = %f, result = %s\n", err, (k <= max_iter) ? "SUCCESS" : "FAILURE");
     exit((k <= max_iter) ? EXIT_SUCCESS : EXIT_FAILURE);

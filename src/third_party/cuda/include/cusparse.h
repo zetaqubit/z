@@ -61,6 +61,8 @@
 
 #include "driver_types.h"
 #include "cuComplex.h"   /* import complex data type */
+#include "cuda_fp16.h"
+#include "library_types.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -193,12 +195,24 @@ typedef enum {
     CUSPARSE_SIDE_RIGHT=1
 } cusparseSideMode_t;
 
+typedef enum {
+    CUSPARSE_COLOR_ALG0 = 0, // default
+    CUSPARSE_COLOR_ALG1 = 1
+} cusparseColorAlg_t;
+
+typedef enum {
+    CUSPARSE_ALG0 = 0, //default, naive
+    CUSPARSE_ALG1 = 1  //merge path
+} cusparseAlgMode_t;
 
 /* CUSPARSE initialization and managment routines */
 cusparseStatus_t CUSPARSEAPI cusparseCreate(cusparseHandle_t *handle);
 cusparseStatus_t CUSPARSEAPI cusparseDestroy(cusparseHandle_t handle);
 cusparseStatus_t CUSPARSEAPI cusparseGetVersion(cusparseHandle_t handle, int *version);
+cusparseStatus_t CUSPARSEAPI cusparseGetProperty(libraryPropertyType type, int *value);
 cusparseStatus_t CUSPARSEAPI cusparseSetStream(cusparseHandle_t handle, cudaStream_t streamId); 
+cusparseStatus_t CUSPARSEAPI cusparseGetStream(cusparseHandle_t handle, cudaStream_t *streamId);
+
 
 /* CUSPARSE type creation, destruction, set and get routines */
 cusparseStatus_t CUSPARSEAPI cusparseGetPointerMode(cusparseHandle_t handle, cusparsePointerMode_t *mode);
@@ -212,6 +226,8 @@ cusparseStatus_t CUSPARSEAPI cusparseSetPointerMode(cusparseHandle_t handle, cus
 */                                   
 cusparseStatus_t CUSPARSEAPI cusparseCreateMatDescr(cusparseMatDescr_t *descrA);
 cusparseStatus_t CUSPARSEAPI cusparseDestroyMatDescr (cusparseMatDescr_t descrA);
+
+cusparseStatus_t CUSPARSEAPI cusparseCopyMatDescr(cusparseMatDescr_t dest, const cusparseMatDescr_t src);
 
 cusparseStatus_t CUSPARSEAPI cusparseSetMatType(cusparseMatDescr_t descrA, cusparseMatrixType_t type);
 cusparseMatrixType_t CUSPARSEAPI cusparseGetMatType(const cusparseMatDescr_t descrA);
@@ -271,6 +287,8 @@ cusparseStatus_t CUSPARSEAPI cusparseDestroyCsru2csrInfo(csru2csrInfo_t info);
 cusparseStatus_t CUSPARSEAPI cusparseCreateColorInfo(cusparseColorInfo_t *info);
 cusparseStatus_t CUSPARSEAPI cusparseDestroyColorInfo(cusparseColorInfo_t info);
 
+cusparseStatus_t CUSPARSEAPI cusparseSetColorAlgs(cusparseColorInfo_t info, cusparseColorAlg_t alg);
+cusparseStatus_t CUSPARSEAPI cusparseGetColorAlgs(cusparseColorInfo_t info, cusparseColorAlg_t *alg);
 
 /* --- Sparse Level 1 routines --- */
 
@@ -473,6 +491,95 @@ cusparseStatus_t CUSPARSEAPI cusparseDroti(cusparseHandle_t handle,
 
 /* --- Sparse Level 2 routines --- */
 
+cusparseStatus_t  CUSPARSEAPI cusparseSgemvi(cusparseHandle_t handle,
+                                    cusparseOperation_t transA,
+                                    int m,
+                                    int n,
+                                    const float *alpha, /* host or device pointer */
+                                    const float *A,
+                                    int lda,
+                                    int nnz,
+                                    const float *xVal,
+                                    const int *xInd,
+                                    const float *beta, /* host or device pointer */
+                                    float *y,
+                                    cusparseIndexBase_t   idxBase,
+                                    void *pBuffer);
+
+cusparseStatus_t CUSPARSEAPI cusparseSgemvi_bufferSize( cusparseHandle_t handle,
+    cusparseOperation_t transA,
+    int m,
+    int n,
+    int nnz,
+    int *pBufferSize);
+
+cusparseStatus_t  CUSPARSEAPI cusparseDgemvi(cusparseHandle_t handle,
+                                    cusparseOperation_t transA,
+                                    int m,
+                                    int n,
+                                    const double *alpha, /* host or device pointer */
+                                    const double *A,
+                                    int lda,
+                                    int nnz,
+                                    const double *xVal,
+                                    const int *xInd,
+                                    const double *beta, /* host or device pointer */
+                                    double *y,
+                                    cusparseIndexBase_t   idxBase,
+                                    void *pBuffer);
+
+cusparseStatus_t CUSPARSEAPI cusparseDgemvi_bufferSize( cusparseHandle_t handle,
+    cusparseOperation_t transA,
+    int m,
+    int n,
+    int nnz,
+    int *pBufferSize);
+
+cusparseStatus_t  CUSPARSEAPI cusparseCgemvi(cusparseHandle_t handle,
+                                    cusparseOperation_t transA,
+                                    int m,
+                                    int n,
+                                    const cuComplex *alpha, /* host or device pointer */
+                                    const cuComplex *A,
+                                    int lda,
+                                    int nnz,
+                                    const cuComplex *xVal,
+                                    const int *xInd,
+                                    const cuComplex *beta, /* host or device pointer */
+                                    cuComplex *y,
+                                    cusparseIndexBase_t   idxBase,
+                                    void *pBuffer);
+
+cusparseStatus_t CUSPARSEAPI cusparseCgemvi_bufferSize( cusparseHandle_t handle,
+    cusparseOperation_t transA,
+    int m,
+    int n,
+    int nnz,
+    int *pBufferSize);
+
+cusparseStatus_t  CUSPARSEAPI cusparseZgemvi(cusparseHandle_t handle,
+                                    cusparseOperation_t transA,
+                                    int m,
+                                    int n,
+                                    const cuDoubleComplex *alpha, /* host or device pointer */
+                                    const cuDoubleComplex *A,
+                                    int lda,
+                                    int nnz,
+                                    const cuDoubleComplex *xVal,
+                                    const int *xInd,
+                                    const cuDoubleComplex *beta, /* host or device pointer */
+                                    cuDoubleComplex *y,
+                                    cusparseIndexBase_t   idxBase,
+                                    void *pBuffer);
+
+cusparseStatus_t CUSPARSEAPI cusparseZgemvi_bufferSize( cusparseHandle_t handle,
+    cusparseOperation_t transA,
+    int m,
+    int n,
+    int nnz,
+    int *pBufferSize);
+
+
 /* Description: Matrix-vector multiplication  y = alpha * op(A) * x  + beta * y, 
    where A is a sparse matrix in CSR storage format, x and y are dense vectors. */ 
 cusparseStatus_t CUSPARSEAPI cusparseScsrmv(cusparseHandle_t handle,
@@ -529,7 +636,112 @@ cusparseStatus_t CUSPARSEAPI cusparseZcsrmv(cusparseHandle_t handle,
                                             const int *csrSortedColIndA, 
                                             const cuDoubleComplex *x, 
                                             const cuDoubleComplex *beta, 
-                                            cuDoubleComplex *y);   
+                                            cuDoubleComplex *y);  
+
+//Returns number of bytes
+cusparseStatus_t CUSPARSEAPI cusparseCsrmvEx_bufferSize(cusparseHandle_t handle, 
+                                                        cusparseAlgMode_t alg,
+                                                        cusparseOperation_t transA, 
+                                                        int m, 
+                                                        int n, 
+                                                        int nnz,
+                                                        const void *alpha,
+                                                        cudaDataType alphatype,
+                                                        const cusparseMatDescr_t descrA,
+                                                        const void *csrValA,
+                                                        cudaDataType csrValAtype,
+                                                        const int *csrRowPtrA,
+                                                        const int *csrColIndA,
+                                                        const void *x,
+                                                        cudaDataType xtype,
+                                                        const void *beta,
+                                                        cudaDataType betatype,
+                                                        void *y,
+                                                        cudaDataType ytype,
+                                                        cudaDataType executiontype,
+                                                        size_t *bufferSizeInBytes);
+
+cusparseStatus_t CUSPARSEAPI cusparseCsrmvEx(cusparseHandle_t handle, 
+                                             cusparseAlgMode_t alg,
+                                             cusparseOperation_t transA, 
+                                             int m, 
+                                             int n, 
+                                             int nnz,
+                                             const void *alpha,
+                                             cudaDataType alphatype,
+                                             const cusparseMatDescr_t descrA,
+                                             const void *csrValA,
+                                             cudaDataType csrValAtype,
+                                             const int *csrRowPtrA,
+                                             const int *csrColIndA,
+                                             const void *x,
+                                             cudaDataType xtype,
+                                             const void *beta,
+                                             cudaDataType betatype,
+                                             void *y,
+                                             cudaDataType ytype,
+                                             cudaDataType executiontype,
+                                             void* buffer);
+
+/* Description: Matrix-vector multiplication  y = alpha * op(A) * x  + beta * y, 
+   where A is a sparse matrix in CSR storage format, x and y are dense vectors
+   using a Merge Path load-balancing implementation. */ 
+   cusparseStatus_t CUSPARSEAPI cusparseScsrmv_mp(cusparseHandle_t handle,
+                                            cusparseOperation_t transA, 
+                                            int m, 
+                                            int n, 
+                                            int nnz,
+                                            const float *alpha,
+                                            const cusparseMatDescr_t descrA, 
+                                            const float *csrSortedValA, 
+                                            const int *csrSortedRowPtrA, 
+                                            const int *csrSortedColIndA, 
+                                            const float *x, 
+                                            const float *beta, 
+                                            float *y);
+    
+cusparseStatus_t CUSPARSEAPI cusparseDcsrmv_mp(cusparseHandle_t handle,
+                                            cusparseOperation_t transA, 
+                                            int m, 
+                                            int n, 
+                                            int nnz,
+                                            const double *alpha,
+                                            const cusparseMatDescr_t descrA, 
+                                            const double *csrSortedValA, 
+                                            const int *csrSortedRowPtrA, 
+                                            const int *csrSortedColIndA, 
+                                            const double *x, 
+                                            const double *beta,  
+                                            double *y);
+
+cusparseStatus_t CUSPARSEAPI cusparseCcsrmv_mp(cusparseHandle_t handle,
+                                            cusparseOperation_t transA, 
+                                            int m, 
+                                            int n,
+                                            int nnz,
+                                            const cuComplex *alpha,
+                                            const cusparseMatDescr_t descrA, 
+                                            const cuComplex *csrSortedValA, 
+                                            const int *csrSortedRowPtrA, 
+                                            const int *csrSortedColIndA, 
+                                            const cuComplex *x, 
+                                            const cuComplex *beta, 
+                                            cuComplex *y);
+
+cusparseStatus_t CUSPARSEAPI cusparseZcsrmv_mp(cusparseHandle_t handle,
+                                            cusparseOperation_t transA, 
+                                            int m, 
+                                            int n, 
+                                            int nnz,
+                                            const cuDoubleComplex *alpha,
+                                            const cusparseMatDescr_t descrA, 
+                                            const cuDoubleComplex *csrSortedValA, 
+                                            const int *csrSortedRowPtrA, 
+                                            const int *csrSortedColIndA, 
+                                            const cuDoubleComplex *x, 
+                                            const cuDoubleComplex *beta, 
+                                            cuDoubleComplex *y);  
+
 
 /* Description: Matrix-vector multiplication  y = alpha * op(A) * x  + beta * y, 
    where A is a sparse matrix in HYB storage format, x and y are dense vectors. */    
@@ -719,6 +931,18 @@ cusparseStatus_t CUSPARSEAPI cusparseZbsrxmv(cusparseHandle_t handle,
 /* Description: Solution of triangular linear system op(A) * x = alpha * f, 
    where A is a sparse matrix in CSR storage format, rhs f and solution x 
    are dense vectors. This routine implements algorithm 1 for the solve. */     
+cusparseStatus_t CUSPARSEAPI cusparseCsrsv_analysisEx(cusparseHandle_t handle, 
+                                                     cusparseOperation_t transA, 
+                                                     int m, 
+                                                     int nnz,
+                                                     const cusparseMatDescr_t descrA, 
+                                                     const void *csrSortedValA,
+                                                     cudaDataType csrSortedValAtype,
+                                                     const int *csrSortedRowPtrA, 
+                                                     const int *csrSortedColIndA, 
+                                                     cusparseSolveAnalysisInfo_t info,
+                                                     cudaDataType executiontype);
+
 cusparseStatus_t CUSPARSEAPI cusparseScsrsv_analysis(cusparseHandle_t handle, 
                                                      cusparseOperation_t transA, 
                                                      int m, 
@@ -759,7 +983,23 @@ cusparseStatus_t CUSPARSEAPI cusparseZcsrsv_analysis(cusparseHandle_t handle,
                                                      const int *csrSortedColIndA, 
                                                      cusparseSolveAnalysisInfo_t info); 
 
-
+cusparseStatus_t CUSPARSEAPI cusparseCsrsv_solveEx(cusparseHandle_t handle, 
+                                                   cusparseOperation_t transA, 
+                                                   int m,
+                                                   const void *alpha, 
+                                                   cudaDataType alphatype,
+                                                   const cusparseMatDescr_t descrA, 
+                                                   const void *csrSortedValA, 
+                                                   cudaDataType csrSortedValAtype,
+                                                   const int *csrSortedRowPtrA, 
+                                                   const int *csrSortedColIndA, 
+                                                   cusparseSolveAnalysisInfo_t info, 
+                                                   const void *f, 
+                                                   cudaDataType ftype,
+                                                   void *x,
+                                                   cudaDataType xtype,
+                                                   cudaDataType executiontype);
+  
 cusparseStatus_t CUSPARSEAPI cusparseScsrsv_solve(cusparseHandle_t handle, 
                                                   cusparseOperation_t transA, 
                                                   int m,
@@ -1549,6 +1789,71 @@ cusparseStatus_t CUSPARSEAPI cusparseZbsrmm(cusparseHandle_t handle,
                                             cuDoubleComplex *C,
                                             int ldc);
 
+
+/* Description: dense - sparse matrix multiplication C = alpha * A * B  + beta * C, 
+   where A is column-major dense matrix, B is a sparse matrix in CSC format, 
+   and C is column-major dense matrix. */
+cusparseStatus_t  CUSPARSEAPI cusparseSgemmi(cusparseHandle_t handle,
+                                             int m,
+                                             int n,
+					     int k,
+					     int nnz, 
+                                             const float *alpha, /* host or device pointer */
+                                             const float *A,
+                                             int lda,
+                                             const float *cscValB,
+					     const int *cscColPtrB, 
+					     const int *cscRowIndB, 
+                                             const float *beta, /* host or device pointer */
+                                             float *C,
+                                             int ldc);
+
+cusparseStatus_t  CUSPARSEAPI cusparseDgemmi(cusparseHandle_t handle,
+                                             int m,
+                                             int n,
+					     int k,
+					     int nnz, 
+                                             const double *alpha, /* host or device pointer */
+                                             const double *A,
+                                             int lda,
+                                             const double *cscValB,
+					     const int *cscColPtrB, 
+					     const int *cscRowIndB, 
+                                             const double *beta, /* host or device pointer */
+                                             double *C,
+                                             int ldc);
+
+cusparseStatus_t  CUSPARSEAPI cusparseCgemmi(cusparseHandle_t handle,
+                                             int m,
+                                             int n,
+					     int k,
+					     int nnz, 
+                                             const cuComplex *alpha, /* host or device pointer */
+                                             const cuComplex *A,
+                                             int lda,
+                                             const cuComplex *cscValB,
+					     const int *cscColPtrB, 
+					     const int *cscRowIndB, 
+                                             const cuComplex *beta, /* host or device pointer */
+                                             cuComplex *C,
+                                             int ldc);
+
+cusparseStatus_t  CUSPARSEAPI cusparseZgemmi(cusparseHandle_t handle,
+                                             int m,
+                                             int n,
+					     int k,
+					     int nnz, 
+                                             const cuDoubleComplex *alpha, /* host or device pointer */
+                                             const cuDoubleComplex *A,
+                                             int lda,
+                                             const cuDoubleComplex *cscValB,
+					     const int *cscColPtrB, 
+					     const int *cscRowIndB, 
+                                             const cuDoubleComplex *beta, /* host or device pointer */
+                                             cuDoubleComplex *C,
+                                             int ldc);
+
+
 /* Description: Solution of triangular linear system op(A) * X = alpha * F, 
    with multiple right-hand-sides, where A is a sparse matrix in CSR storage 
    format, rhs F and solution X are dense tall matrices. 
@@ -1940,6 +2245,19 @@ cusparseStatus_t CUSPARSEAPI cusparseZbsrsm2_solve(cusparseHandle_t handle,
    of the matrix A stored in CSR format based on the information in the opaque 
    structure info that was obtained from the analysis phase (csrsv_analysis). 
    This routine implements algorithm 1 for this problem. */
+cusparseStatus_t CUSPARSEAPI cusparseCsrilu0Ex(cusparseHandle_t handle, 
+                                              cusparseOperation_t trans, 
+                                              int m, 
+                                              const cusparseMatDescr_t descrA, 
+                                              void *csrSortedValA_ValM, 
+                                              cudaDataType csrSortedValA_ValMtype,
+                                              /* matrix A values are updated inplace 
+                                                 to be the preconditioner M values */
+                                              const int *csrSortedRowPtrA, 
+                                              const int *csrSortedColIndA,
+                                              cusparseSolveAnalysisInfo_t info,
+                                              cudaDataType executiontype);
+
 cusparseStatus_t CUSPARSEAPI cusparseScsrilu0(cusparseHandle_t handle, 
                                               cusparseOperation_t trans, 
                                               int m, 
@@ -3527,6 +3845,104 @@ cusparseStatus_t CUSPARSEAPI cusparseZnnz(cusparseHandle_t handle,
                                           int lda, 
                                           int *nnzPerRowCol, 
                                           int *nnzTotalDevHostPtr);
+
+/* --- Sparse Format Conversion --- */
+
+/* Description: This routine finds the total number of non-zero elements and 
+   the number of non-zero elements per row in a noncompressed csr matrix A. */
+cusparseStatus_t CUSPARSEAPI cusparseSnnz_compress(cusparseHandle_t handle, 
+                                          int m, 
+                                          const cusparseMatDescr_t descr,
+                                          const float *values, 
+                                          const int *rowPtr, 
+                                          int *nnzPerRow, 
+                                          int *nnzTotal,
+                                          float tol);
+
+cusparseStatus_t CUSPARSEAPI cusparseDnnz_compress(cusparseHandle_t handle, 
+                                          int m, 
+                                          const cusparseMatDescr_t descr,
+                                          const double *values, 
+                                          const int *rowPtr, 
+                                          int *nnzPerRow, 
+                                          int *nnzTotal,
+                                          double tol);
+
+cusparseStatus_t CUSPARSEAPI cusparseCnnz_compress(cusparseHandle_t handle, 
+                                          int m, 
+                                          const cusparseMatDescr_t descr,
+                                          const cuComplex *values, 
+                                          const int *rowPtr, 
+                                          int *nnzPerRow, 
+                                          int *nnzTotal,
+                                          cuComplex tol);
+
+cusparseStatus_t CUSPARSEAPI cusparseZnnz_compress(cusparseHandle_t handle, 
+                                          int m, 
+                                          const cusparseMatDescr_t descr,
+                                          const cuDoubleComplex *values, 
+                                          const int *rowPtr, 
+                                          int *nnzPerRow, 
+                                          int *nnzTotal,
+                                          cuDoubleComplex tol);
+/* Description: This routine takes as input a csr form where the values may have 0 elements
+   and compresses it to return a csr form with no zeros. */
+
+cusparseStatus_t CUSPARSEAPI cusparseScsr2csr_compress(cusparseHandle_t handle,
+                                                      int m, 
+                                                      int n,
+                                                      const cusparseMatDescr_t descra,
+                                                      const float *inVal,
+                                                      const int *inColInd,
+                                                      const int * inRowPtr, 
+                                                      int inNnz,
+                                                      int *nnzPerRow, 
+                                                      float *outVal,
+                                                      int *outColInd,
+                                                      int *outRowPtr,
+                                                      float tol);        
+
+cusparseStatus_t CUSPARSEAPI cusparseDcsr2csr_compress(cusparseHandle_t handle,
+                                                      int m, //number of rows
+                                                      int n,
+                                                      const cusparseMatDescr_t descra,
+                                                      const double *inVal, //csr values array-the elements which are below a certain tolerance will be remvoed
+                                                      const int *inColInd,
+                                                      const int * inRowPtr,  //corresponding input noncompressed row pointer
+                                                      int inNnz,
+                                                      int *nnzPerRow, //output: returns number of nonzeros per row 
+                                                      double *outVal,
+                                                      int *outColInd,
+                                                      int *outRowPtr,
+                                                      double tol);
+
+cusparseStatus_t CUSPARSEAPI cusparseCcsr2csr_compress(cusparseHandle_t handle,
+                                                        int m, //number of rows
+                                                        int n,
+                                                        const cusparseMatDescr_t descra,
+                                                        const cuComplex *inVal, //csr values array-the elements which are below a certain tolerance will be remvoed
+                                                        const int *inColInd,
+                                                        const int * inRowPtr,  //corresponding input noncompressed row pointer
+                                                        int inNnz,
+                                                        int *nnzPerRow, //output: returns number of nonzeros per row 
+                                                        cuComplex *outVal,
+                                                        int *outColInd,
+                                                        int *outRowPtr,
+                                                        cuComplex tol);                       
+
+cusparseStatus_t CUSPARSEAPI cusparseZcsr2csr_compress(cusparseHandle_t handle,
+                                                      int m, //number of rows
+                                                      int n,
+                                                      const cusparseMatDescr_t descra,
+                                                      const cuDoubleComplex *inVal, //csr values array-the elements which are below a certain tolerance will be remvoed
+                                                      const int *inColInd,
+                                                      const int * inRowPtr,  //corresponding input noncompressed row pointer
+                                                      int inNnz,
+                                                      int *nnzPerRow, //output: returns number of nonzeros per row 
+                                                      cuDoubleComplex *outVal,
+                                                      int *outColInd,
+                                                      int *outRowPtr,
+                                                      cuDoubleComplex tol);                        
                                                                                                         
 /* Description: This routine converts a dense matrix to a sparse matrix 
    in the CSR storage format, using the information computed by the 
@@ -3729,6 +4145,22 @@ cusparseStatus_t CUSPARSEAPI cusparseXcsr2coo(cusparseHandle_t handle,
 /* Description: This routine converts a matrix from CSR to CSC sparse 
    storage format. The resulting matrix can be re-interpreted as a 
    transpose of the original matrix in CSR storage format. */
+cusparseStatus_t CUSPARSEAPI cusparseCsr2cscEx(cusparseHandle_t handle,
+                                              int m, 
+                                              int n, 
+                                              int nnz,
+                                              const void  *csrSortedVal, 
+                                              cudaDataType csrSortedValtype,
+                                              const int *csrSortedRowPtr, 
+                                              const int *csrSortedColInd, 
+                                              void *cscSortedVal, 
+                                              cudaDataType cscSortedValtype,
+                                              int *cscSortedRowInd, 
+                                              int *cscSortedColPtr, 
+                                              cusparseAction_t copyValues, 
+                                              cusparseIndexBase_t idxBase,
+                                              cudaDataType executiontype);
+    
 cusparseStatus_t CUSPARSEAPI cusparseScsr2csc(cusparseHandle_t handle,
                                               int m, 
                                               int n, 

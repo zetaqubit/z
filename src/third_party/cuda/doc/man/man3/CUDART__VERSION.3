@@ -1,0 +1,67 @@
+.TH "Version Management" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Version Management \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaDriverGetVersion\fP (int *driverVersion)"
+.br
+.RI "\fIReturns the CUDA driver version. \fP"
+.ti -1c
+.RI "__cudart_builtin__ \fBcudaError_t\fP \fBcudaRuntimeGetVersion\fP (int *runtimeVersion)"
+.br
+.RI "\fIReturns the CUDA Runtime version. \fP"
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "\fBcudaError_t\fP cudaDriverGetVersion (int * driverVersion)"
+.PP
+Returns in \fC*driverVersion\fP the version number of the installed CUDA driver. If no driver is installed, then 0 is returned as the driver version (via \fCdriverVersion\fP). This function automatically returns \fBcudaErrorInvalidValue\fP if the \fCdriverVersion\fP argument is NULL.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdriverVersion\fP - Returns the CUDA driver version.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaRuntimeGetVersion\fP 
+.RE
+.PP
+
+.SS "__cudart_builtin__ \fBcudaError_t\fP cudaRuntimeGetVersion (int * runtimeVersion)"
+.PP
+Returns in \fC*runtimeVersion\fP the version number of the installed CUDA Runtime. This function automatically returns \fBcudaErrorInvalidValue\fP if the \fCruntimeVersion\fP argument is NULL.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIruntimeVersion\fP - Returns the CUDA Runtime version.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaDriverGetVersion\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

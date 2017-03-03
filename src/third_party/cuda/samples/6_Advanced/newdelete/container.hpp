@@ -38,7 +38,7 @@ public:
 //
 // Vector class derived from Container class using linear memory as data storage
 // NOTE: This education purpose implementation has restricted functionality. 
-//       Eor example, concurrent push and pop operations will not work correctly.
+//       For example, concurrent push and pop operations will not work correctly.
 //
 ////////////////////////////////////////////////////////////////////////////
 

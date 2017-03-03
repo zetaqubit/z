@@ -29,7 +29,7 @@ static int GeneratePolynomials(int buffer[QRNG_DIMENSIONS], bool primitive)
     //generate all polynomials to buffer
     for (n = 1, buffer[0] = 0x2, p2 = 0, l = 0; n < QRNG_DIMENSIONS; ++n)
     {
-        //search for the next irreducable polynomial
+        //search for the next irreducible polynomial
         for (p1 = buffer[n - 1] + 1; ; ++p1)
         {
             //find degree of polynomial p1
@@ -47,14 +47,14 @@ static int GeneratePolynomials(int buffer[QRNG_DIMENSIONS], bool primitive)
                     for (; (p2 & (1 << e_p2)) == 0; --e_p2) {}
                 }// compute new degree of p2
 
-                // division without remainder!!! p1 is not irreducable
+                // division without remainder!!! p1 is not irreducible
                 if (p2 == 0)
                 {
                     break;
                 }
             }
 
-            //all divisions were with remainder - p1 is irreducable
+            //all divisions were with remainder - p1 is irreducible
             if (p2 != 0)
             {
                 e_p2 = 0;
@@ -109,7 +109,7 @@ static void GenerateCJ()
     int *polynomials;
     int n, p1, l, e_p1;
 
-    // Niederreiter (in contrast to Sobol) allows to use not primitive, but just irreducable polynomials
+    // Niederreiter (in contrast to Sobol) allows to use not primitive, but just irreducible polynomials
     l = GeneratePolynomials(buffer, false);
 
     // convert all polynomials from buffer to polynomials table
@@ -133,7 +133,7 @@ static void GenerateCJ()
 
     polynomials[l] = -1;
 
-    // irreducable polynomial p
+    // irreducible polynomial p
     int *p = polynomials, e, d;
 
     // polynomial b
@@ -151,13 +151,13 @@ static void GenerateCJ()
     // cycle over monic irreducible polynomials
     for (d = 0; p[0] != -1; p += e + 2)
     {
-        // allocate memory for cj array for dimention (ip + 1)
+        // allocate memory for cj array for dimension (ip + 1)
         for (i = 0; i < 63; ++i)
         {
             cjn[i][d] = 0;
         }
 
-        // determine the power of irreducable polynomial
+        // determine the power of irreducible polynomial
         for (e = 0; p[e + 1] != -1; ++e) {}
 
         // polynomial b in the beginning is just '1'

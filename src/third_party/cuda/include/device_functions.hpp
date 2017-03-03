@@ -1,5 +1,5 @@
 /*
- * Copyright 1993-2014 NVIDIA Corporation.  All rights reserved.
+ * Copyright 1993-2016 NVIDIA Corporation.  All rights reserved.
  *
  * NOTICE TO LICENSEE:
  *
@@ -61,7 +61,10 @@
 #if defined(__CUDACC_RTC__)
 #define __DEVICE_FUNCTIONS_DECL__ __host__ __device__
 #define __DEVICE_FUNCTIONS_STATIC_DECL__ __host__ __device__
-#else /* !__CUDACC_RTC__ */
+#elif defined(__CUDACC_INTEGRATED__)
+#define __DEVICE_FUNCTIONS_DECL__   __host__ __device__  __cudart_builtin__
+#define __DEVICE_FUNCTIONS_STATIC_DECL__   __host__ __device__ __cudart_builtin__
+#else
 #define __DEVICE_FUNCTIONS_DECL__ __device__
 #define __DEVICE_FUNCTIONS_STATIC_DECL__ static __inline__ __device__
 #endif /* __CUDACC_RTC__ */
@@ -69,6 +72,7 @@
 #include "builtin_types.h"
 #include "device_types.h"
 #include "host_defines.h"
+
 
 /*******************************************************************************
 *                                                                              *
@@ -126,6 +130,15 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ float int_as_float(int a)
   return __int_as_float(a);
 }
 
+__DEVICE_FUNCTIONS_STATIC_DECL__ unsigned int float_as_uint(float a)
+{
+  return __float_as_uint(a);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ float uint_as_float(unsigned int a)
+{
+  return __uint_as_float(a);
+}
 __DEVICE_FUNCTIONS_STATIC_DECL__ float saturate(float a)
 {
   return __saturatef(a);
@@ -223,7 +236,10 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ float uint2float(unsigned int a, enum cudaRound
 #if defined(__CUDACC_RTC__)
 #define __DEVICE_FUNCTIONS_DECL__ __host__ __device__
 #define __DEVICE_FUNCTIONS_STATIC_DECL__ __host__ __device__
-#else /* !__CUDACC_RTC__ */
+#elif defined(__CUDACC_INTEGRATED__)
+#define __DEVICE_FUNCTIONS_DECL__ __host__ __device__ __cudart_builtin__
+#define __DEVICE_FUNCTIONS_STATIC_DECL__ __host__ __device__  __cudart_builtin__
+#else
 #define __DEVICE_FUNCTIONS_DECL__ __device__
 #define __DEVICE_FUNCTIONS_STATIC_DECL__ static __forceinline__ 
 #endif /* __CUDACC_RTC__ */
@@ -304,11 +320,11 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ int __any(int a)
 }
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
-#if defined(__CUDACC_RTC__)
+#if defined(__CUDACC_RTC__) || defined(__CUDACC_INTEGRATED__)
 unsigned int
-#else /* !__CUDACC_RTC__ */
+#else /* !(__CUDACC_RTC__ || __CUDACC_INTEGRATED__) */
 int
-#endif /* __CUDACC_RTC__ */
+#endif /* __CUDACC_RTC__ || __CUDACC_INTEGRATED__ */
 __ballot(int a)
 {
   int result;
@@ -325,20 +341,20 @@ __ballot(int a)
 * MISCELLANEOUS FUNCTIONS                                                      *
 *                                                                              *
 *******************************************************************************/
-#if defined(__CUDACC_RTC__)
+#if defined(__CUDACC_RTC__) || defined(__CUDACC_INTEGRATED__)
 __DEVICE_FUNCTIONS_STATIC_DECL__ void __brkpt(int)
-#else /* !__CUDACC_RTC__ */
+#else /* !(__CUDACC_RTC__ || __CUDACC_INTEGRATED__) */
 __DEVICE_FUNCTIONS_STATIC_DECL__ void __brkpt()
-#endif /* __CUDACC_RTC__ */
+#endif /* __CUDACC_RTC__ || __CUDACC_INTEGRATED__ */
 {
   asm __volatile__ ("brkpt;");
 }
 
-#if defined(__CUDACC_RTC__)
-__DEVICE_FUNCTIONS_STATIC_DECL__ clock_t clock()
-#else /* !__CUDACC_RTC__ */
+#if defined(__CUDACC_RTC__) || defined(__CUDACC_INTEGRATED__)
+__DEVICE_FUNCTIONS_STATIC_DECL__ clock_t clock() __THROW
+#else /* !(__CUDACC_RTC__ || __CUDACC_INTEGRATED__) */
 __DEVICE_FUNCTIONS_STATIC_DECL__ int clock()
-#endif /* __CUDACC_RTC__ */
+#endif /* __CUDACC_RTC__ || __CUDACC_INTEGRATED__ */
 {
   int r;
   asm __volatile__ ("mov.u32 \t%0, %%clock;" : "=r"(r));
@@ -387,18 +403,27 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ void __trap(void)
   asm __volatile__ ("trap;");
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ void* memcpy(void *dest, const void *src, size_t n)
+__DEVICE_FUNCTIONS_STATIC_DECL__ void* memcpy(void *dest, const void *src, size_t n) __THROW
 {
-  __nvvm_memcpy((unsigned char *)dest, (unsigned char *)src, n, 
+#if defined(__CUDACC_INTEGRATED__)
+  return __builtin_memcpy(dest, src, n);
+#else /* !defined(__CUDACC_INTEGRATED__) */
+  __nvvm_memcpy((unsigned char *)dest, (unsigned char *)src, n,
                 /*alignment=*/ 1);
   return dest;
+#endif /* defined(__CUDACC_INTEGRATED__) */  
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ void* memset(void *dest, int c, size_t n)
+__DEVICE_FUNCTIONS_STATIC_DECL__ void* memset(void *dest, int c, size_t n) __THROW
 {
-  __nvvm_memset((unsigned char *)dest, (unsigned char)c, n, 
+#if defined(__CUDACC_INTEGRATED__)
+  return __builtin_memset(dest, c, n);
+#else /* !defined(__CUDACC_INTEGRATED__) */
+  __nvvm_memset((unsigned char *)dest, (unsigned char)c, n,
                 /*alignment=*/1);
   return dest;
+#endif /* defined(__CUDACC_INTEGRATED__) */
+  
 }
 
 /*******************************************************************************
@@ -416,20 +441,20 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ int __clzll(long long x)
   return __nv_clzll(x);
 }
 
-#if defined(__CUDACC_RTC__)
+#if defined(__CUDACC_RTC__) || defined(__CUDACC_INTEGRATED__)
 __DEVICE_FUNCTIONS_STATIC_DECL__ int __popc(unsigned int x)
-#else /* !__CUDACC_RTC__ */
+#else /* !(__CUDACC_RTC__ ||  __CUDACC_INTEGRATED__) */
 __DEVICE_FUNCTIONS_STATIC_DECL__ int __popc(int x)
-#endif /* __CUDACC_RTC__ */
+#endif /* __CUDACC_RTC__ || __CUDACC_INTEGRATED__ */
 {
   return __nv_popc(x);
 }
 
-#if defined(__CUDACC_RTC__)
+#if defined(__CUDACC_RTC__) || defined(__CUDACC_INTEGRATED__)
 __DEVICE_FUNCTIONS_STATIC_DECL__ int __popcll(unsigned long long x)
-#else /* !__CUDACC_RTC__ */
+#else /* !(__CUDACC_RTC__ ||  __CUDACC_INTEGRATED__) */
 __DEVICE_FUNCTIONS_STATIC_DECL__ int __popcll(long long x)
-#endif /* __CUDACC_RTC__ */
+#endif /* __CUDACC_RTC__ || __CUDACC_INTEGRATED__ */
 {
   return __nv_popcll(x);
 }
@@ -529,11 +554,11 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ unsigned long long __brevll(unsigned long long 
   return __nv_brevll(x);
 }
     
-#if defined(__CUDACC_RTC__)
+#if defined(__CUDACC_RTC__) || defined(__CUDACC_INTEGRATED__)
 __DEVICE_FUNCTIONS_STATIC_DECL__ unsigned int __sad(int x, int y, unsigned int z)
-#else /* !__CUDACC_RTC__ */
+#else /* !(__CUDACC_RTC__ || __CUDACC_INTEGRATED__) */
 __DEVICE_FUNCTIONS_STATIC_DECL__ int __sad(int x, int y, int z)
-#endif /* __CUDACC_RTC__ */
+#endif /* __CUDACC_RTC__ || __CUDACC_INTEGRATED__ */
 {
   return __nv_sad(x, y, z);
 }
@@ -545,12 +570,12 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ unsigned int __usad(unsigned int x,
   return __nv_usad(x, y, z);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ int abs(int x)
+__DEVICE_FUNCTIONS_STATIC_DECL__ int abs(int x) __THROW
 {
   return __nv_abs(x);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ long labs(long x)
+__DEVICE_FUNCTIONS_STATIC_DECL__ long labs(long x) __THROW
 {
 #if defined(__LP64__)
   return __nv_llabs((long long) x);
@@ -559,7 +584,7 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ long labs(long x)
 #endif /* __LP64__ */
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ long long llabs(long long x)
+__DEVICE_FUNCTIONS_STATIC_DECL__ long long llabs(long long x) __THROW
 {
   return __nv_llabs(x);
 }
@@ -569,37 +594,32 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ long long llabs(long long x)
 * FP MATH FUNCTIONS                                                            *
 *                                                                              *
 *******************************************************************************/
-__DEVICE_FUNCTIONS_STATIC_DECL__ float floorf(float f)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float floorf(float f) __THROW
 {
   return __nv_floorf(f);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ double floor(double f)
+__DEVICE_FUNCTIONS_STATIC_DECL__ double floor(double f) __THROW
 {
   return __nv_floor(f);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float fabsf(float f)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float fabsf(float f) __THROW
 {
   return __nv_fabsf(f);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ double fabs(double f)
+__DEVICE_FUNCTIONS_STATIC_DECL__ double fabs(double f) __THROW
 {
   return __nv_fabs(f);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ double __rcp64h(double d)
-{
-  return __nv_rcp64h(d);
-}
-
-__DEVICE_FUNCTIONS_STATIC_DECL__ float fminf(float x, float y)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float fminf(float x, float y) __THROW
 {
   return __nv_fminf(x, y);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float fmaxf(float x, float y)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float fmaxf(float x, float y) __THROW
 {
   return __nv_fmaxf(x, y);
 }
@@ -609,12 +629,12 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ float rsqrtf(float x)
   return __nv_rsqrtf(x);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ double fmin(double x, double y)
+__DEVICE_FUNCTIONS_STATIC_DECL__ double fmin(double x, double y) __THROW
 {
   return __nv_fmin(x, y);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ double fmax(double x, double y)
+__DEVICE_FUNCTIONS_STATIC_DECL__ double fmax(double x, double y) __THROW
 {
   return __nv_fmax(x, y);
 }
@@ -624,27 +644,27 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ double rsqrt(double x)
   return __nv_rsqrt(x);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ double ceil(double x)
+__DEVICE_FUNCTIONS_STATIC_DECL__ double ceil(double x) __THROW
 {
   return __nv_ceil(x);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ double trunc(double x)
+__DEVICE_FUNCTIONS_STATIC_DECL__ double trunc(double x) __THROW
 {
   return __nv_trunc(x);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float exp2f(float x)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float exp2f(float x)  __THROW
 {
   return __nv_exp2f(x);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float truncf(float x)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float truncf(float x) __THROW
 {
   return __nv_truncf(x);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float ceilf(float x)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float ceilf(float x) __THROW
 {
   return __nv_ceilf(x);
 }
@@ -884,12 +904,12 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ double __dsqrt_ru(double x)
   return __nv_dsqrt_ru(x);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float sqrtf(float x)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float sqrtf(float x) __THROW
 {
   return __nv_sqrtf(x);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ double sqrt(double x)
+__DEVICE_FUNCTIONS_STATIC_DECL__ double sqrt(double x) __THROW
 {
   return __nv_sqrt(x);
 }
@@ -1361,6 +1381,16 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ int __float_as_int(float x)
 {
   return __nv_float_as_int(x);
 }
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __uint_as_float(unsigned int x)
+{
+  return __nv_uint_as_float(x);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ unsigned int __float_as_uint(float x)
+{
+  return __nv_float_as_uint(x);
+}
     
 __DEVICE_FUNCTIONS_STATIC_DECL__ double __longlong_as_double(long long x)
 {
@@ -1378,17 +1408,17 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ long long  __double_as_longlong (double x)
 *                                                                              *
 *******************************************************************************/
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __sinf(float a)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __sinf(float a) __THROW
 {
   return __nv_fast_sinf(a);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __cosf(float a)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __cosf(float a) __THROW
 {
   return __nv_fast_cosf(a);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __log2f(float a)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __log2f(float a) __THROW
 {
   return __nv_fast_log2f(a);
 }
@@ -1399,48 +1429,48 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ float __log2f(float a)
 *                                                                              *
 *******************************************************************************/
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __tanf(float a)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __tanf(float a) __THROW
 {
   return __nv_fast_tanf(a);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ void __sincosf(float a, float *sptr, float *cptr)
+__DEVICE_FUNCTIONS_STATIC_DECL__ void __sincosf(float a, float *sptr, float *cptr) __THROW
 {
   __nv_fast_sincosf(a, sptr, cptr);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __expf(float a)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __expf(float a) __THROW
 {
   return __nv_fast_expf(a);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __exp10f(float a)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __exp10f(float a) __THROW
 {
   return __nv_fast_exp10f(a);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __log10f(float a)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __log10f(float a) __THROW
 {
   return __nv_fast_log10f(a);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __logf(float a)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __logf(float a) __THROW
 {
   return __nv_fast_logf(a);
 }
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __powf(float a, float b)
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __powf(float a, float b) __THROW
 {
   return __nv_fast_powf(a, b);
 }
 
 __DEVICE_FUNCTIONS_STATIC_DECL__ float fdividef(float a, float b)
 {
-#if defined(__USE_FAST_MATH__) && !defined(__CUDA_PREC_DIV)
-  return __nv_fast_fdividef(a, b);
-#else /* __USE_FAST_MATH__ && !__CUDA_PREC_DIV */
-  return a / b;
-#endif /* __USE_FAST_MATH__ && !__CUDA_PREC_DIV */
+  if (__USE_FAST_MATH__ && !__CUDA_PREC_DIV) {
+    return __nv_fast_fdividef(a, b);
+  } else {
+    return a / b;
+  }
 }
 
 __DEVICE_FUNCTIONS_STATIC_DECL__ double fdivide(double a, double b)
@@ -1514,11 +1544,39 @@ int __iAtomicAdd(int *p, int val)
   return __nvvm_atom_add_gen_i((volatile int *)p, val);
 }
 
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicAdd_block(int *p, int val)
+{
+  return __nvvm_atom_cta_add_gen_i((volatile int *)p, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicAdd_system(int *p, int val)
+{
+  return __nvvm_atom_sys_add_gen_i((volatile int *)p, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicAdd(unsigned int *p, unsigned int val)
 {
   return __nvvm_atom_add_gen_i((volatile int *)p, (int)val);
 }
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicAdd_block(unsigned int *p, unsigned int val)
+{
+  return __nvvm_atom_cta_add_gen_i((volatile int *)p, (int)val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicAdd_system(unsigned int *p, unsigned int val)
+{
+  return __nvvm_atom_sys_add_gen_i((volatile int *)p, (int)val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned long long __ullAtomicAdd(unsigned long long *p, unsigned long long val)
@@ -1526,20 +1584,57 @@ unsigned long long __ullAtomicAdd(unsigned long long *p, unsigned long long val)
   return __nvvm_atom_add_gen_ll((volatile long long *)p, (long long)val);
 }
 
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicAdd_block(unsigned long long *p, unsigned long long val)
+{
+  return __nvvm_atom_cta_add_gen_ll((volatile long long *)p, (long long)val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicAdd_system(unsigned long long *p, unsigned long long val)
+{
+  return __nvvm_atom_sys_add_gen_ll((volatile long long *)p, (long long)val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 float __fAtomicAdd(float *p, float val)
 {
   return __nvvm_atom_add_gen_f((volatile float *)p, val);
 }
 
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+float __fAtomicAdd_block(float *p, float val)
+{
+  return __nvvm_atom_cta_add_gen_f((volatile float *)p, val);
+}
 
-#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+float __fAtomicAdd_system(float *p, float val)
+{
+  return __nvvm_atom_sys_add_gen_f((volatile float *)p, val);
+}
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 double __dAtomicAdd(double *p, double val)
 {
   return __nvvm_atom_add_gen_d((volatile double *)p, val);
 }
-#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+double __dAtomicAdd_block(double *p, double val)
+{
+  return __nvvm_atom_cta_add_gen_d((volatile double *)p, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+double __dAtomicAdd_system(double *p, double val)
+{
+  return __nvvm_atom_sys_add_gen_d((volatile double *)p, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
 
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
@@ -1548,11 +1643,39 @@ int __iAtomicExch(int *p, int val)
   return __nvvm_atom_xchg_gen_i((volatile int *)p, val);
 }
 
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicExch_block(int *p, int val)
+{
+  return __nvvm_atom_cta_xchg_gen_i((volatile int *)p, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicExch_system(int *p, int val)
+{
+  return __nvvm_atom_sys_xchg_gen_i((volatile int *)p, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicExch(unsigned int *p, unsigned int val)
 {
   return __nvvm_atom_xchg_gen_i((volatile int *)p, (int)val);
 }
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicExch_block(unsigned int *p, unsigned int val)
+{
+  return __nvvm_atom_cta_xchg_gen_i((volatile int *)p, (int)val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicExch_system(unsigned int *p, unsigned int val)
+{
+  return __nvvm_atom_sys_xchg_gen_i((volatile int *)p, (int)val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned long long __ullAtomicExch(unsigned long long *p,
@@ -1561,6 +1684,20 @@ unsigned long long __ullAtomicExch(unsigned long long *p,
   return __nvvm_atom_xchg_gen_ll((volatile long long *)p, (long long)val);
 }
 
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicExch_block(unsigned long long *p, unsigned long long val)
+{
+  return __nvvm_atom_cta_xchg_gen_ll((volatile long long *)p, (long long)val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicExch_system(unsigned long long *p, unsigned long long val)
+{
+  return __nvvm_atom_sys_xchg_gen_ll((volatile long long *)p, (long long)val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 float __fAtomicExch(float *p, float val)
 {
@@ -1568,19 +1705,63 @@ float __fAtomicExch(float *p, float val)
   return __int_as_float(old);
 }
 
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+float __fAtomicExch_block(float *p, float val)
+{
+  int old = __nvvm_atom_cta_xchg_gen_i((volatile int *)p, __float_as_int(val));
+  return __int_as_float(old);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+float __fAtomicExch_system(float *p, float val)
+{
+  int old = __nvvm_atom_sys_xchg_gen_i((volatile int *)p, __float_as_int(val));
+  return __int_as_float(old);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 int __iAtomicMin(int *p, int val)
 {
   return __nvvm_atom_min_gen_i((volatile int *)p, val);
 }
 
-#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicMin_block(int *p, int val)
+{
+  return __nvvm_atom_cta_min_gen_i((volatile int *)p, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicMin_system(int *p, int val)
+{
+  return __nvvm_atom_sys_min_gen_i((volatile int *)p, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 long long __illAtomicMin(long long *p, long long val)
 {
   return __nvvm_atom_min_gen_ll((volatile long long *)p, val);
 }
-#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 320 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long __illAtomicMin_block(long long *p, long long val)
+{
+  return __nvvm_atom_cta_min_gen_ll((volatile long long *)p, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long __illAtomicMin_system(long long *p, long long val)
+{
+  return __nvvm_atom_sys_min_gen_ll((volatile long long *)p, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicMin(unsigned int *p, unsigned int val)
@@ -1588,13 +1769,41 @@ unsigned int __uAtomicMin(unsigned int *p, unsigned int val)
   return __nvvm_atom_min_gen_ui((volatile unsigned int *)p, val);
 }
 
-#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicMin_block(unsigned int *p, unsigned int val)
+{
+  return __nvvm_atom_cta_min_gen_ui((volatile unsigned int *)p, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicMin_system(unsigned int *p, unsigned int val)
+{
+  return __nvvm_atom_sys_min_gen_ui((volatile unsigned int *)p, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned long long __ullAtomicMin(unsigned long long *p, unsigned long long val)
 {
   return __nvvm_atom_min_gen_ull((volatile unsigned long long *)p, val);
 }
-#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 320 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicMin_block(unsigned long long *p, unsigned long long val)
+{
+  return __nvvm_atom_cta_min_gen_ull((volatile unsigned long long *)p, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicMin_system(unsigned long long *p, unsigned long long val)
+{
+  return __nvvm_atom_sys_min_gen_ull((volatile unsigned long long *)p, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 int __iAtomicMax(int *p, int val)
@@ -1602,13 +1811,41 @@ int __iAtomicMax(int *p, int val)
   return __nvvm_atom_max_gen_i((volatile int *)p, val);
 }
 
-#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicMax_block(int *p, int val)
+{
+  return __nvvm_atom_cta_max_gen_i((volatile int *)p, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicMax_system(int *p, int val)
+{
+  return __nvvm_atom_sys_max_gen_i((volatile int *)p, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 long long __illAtomicMax(long long *p, long long val)
 {
   return __nvvm_atom_max_gen_ll((volatile long long *)p, val);
 }
-#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 320 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long __illAtomicMax_block(long long *p, long long val)
+{
+  return __nvvm_atom_cta_max_gen_ll((volatile long long *)p, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long __illAtomicMax_system(long long *p, long long val)
+{
+  return __nvvm_atom_sys_max_gen_ll((volatile long long *)p, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicMax(unsigned int *p, unsigned int val)
@@ -1616,13 +1853,41 @@ unsigned int __uAtomicMax(unsigned int *p, unsigned int val)
   return __nvvm_atom_max_gen_ui((unsigned int *)p, val);
 }
 
-#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicMax_block(unsigned int *p, unsigned int val)
+{
+  return __nvvm_atom_cta_max_gen_ui((volatile unsigned int *)p, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicMax_system(unsigned int *p, unsigned int val)
+{
+  return __nvvm_atom_sys_max_gen_ui((volatile unsigned int *)p, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned long long __ullAtomicMax(unsigned long long *p, unsigned long long val)
 {
   return __nvvm_atom_max_gen_ull((volatile unsigned long long *)p, val);
 }
-#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 320 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicMax_block(unsigned long long *p, unsigned long long val)
+{
+  return __nvvm_atom_cta_max_gen_ull((volatile unsigned long long *)p, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicMax_system(unsigned long long *p, unsigned long long val)
+{
+  return __nvvm_atom_sys_max_gen_ull((volatile unsigned long long *)p, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicInc(unsigned int *p, unsigned int val)
@@ -1630,17 +1895,59 @@ unsigned int __uAtomicInc(unsigned int *p, unsigned int val)
   return __nvvm_atom_inc_gen_ui((unsigned int *)p, val);
 }
 
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicInc_block(unsigned int *p, unsigned int val)
+{
+  return __nvvm_atom_cta_inc_gen_ui((volatile unsigned int *)p, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicInc_system(unsigned int *p, unsigned int val)
+{
+  return __nvvm_atom_sys_inc_gen_ui((volatile unsigned int *)p, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicDec(unsigned int *p, unsigned int val)
 {
   return __nvvm_atom_dec_gen_ui((unsigned int *)p, val);
 }
 
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicDec_block(unsigned int *p, unsigned int val)
+{
+  return __nvvm_atom_cta_dec_gen_ui((volatile unsigned int *)p, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicDec_system(unsigned int *p, unsigned int val)
+{
+  return __nvvm_atom_sys_dec_gen_ui((volatile unsigned int *)p, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 int __iAtomicCAS(int *p, int compare, int val)
 {
   return __nvvm_atom_cas_gen_i((int *)p, compare, val);
 }
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicCAS_block(int *p, int compare, int val)
+{
+  return __nvvm_atom_cta_cas_gen_i((int *)p, compare, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicCAS_system(int *p, int compare, int val)
+{
+  return __nvvm_atom_sys_cas_gen_i((int *)p, compare, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicCAS(unsigned int *p, unsigned int compare,
@@ -1650,6 +1957,26 @@ unsigned int __uAtomicCAS(unsigned int *p, unsigned int compare,
                                              (int)compare,
                                              (int)val);
 }
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicCAS_block(unsigned int *p, unsigned int compare,
+                                unsigned int val)
+{
+  return (unsigned int)__nvvm_atom_cta_cas_gen_i((volatile int *)p,
+                                                 (int)compare,
+                                                 (int)val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicCAS_system(unsigned int *p, unsigned int compare,
+                                 unsigned int val)
+{
+  return (unsigned int)__nvvm_atom_sys_cas_gen_i((volatile int *)p,
+                                                 (int)compare,
+                                                 (int)val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned long long int __ullAtomicCAS(unsigned long long int *p,
@@ -1662,19 +1989,71 @@ unsigned long long int __ullAtomicCAS(unsigned long long int *p,
                                                    (long long int)val);
 }
 
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long int __ullAtomicCAS_block(unsigned long long int *p,
+                                            unsigned long long int compare,
+                                            unsigned long long int val)
+{
+  return
+    (unsigned long long int)__nvvm_atom_cta_cas_gen_ll((volatile long long int *)p,
+                                                       (long long int)compare,
+                                                       (long long int)val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long int __ullAtomicCAS_system(unsigned long long int *p,
+                                             unsigned long long int compare,
+                                             unsigned long long int val)
+{
+  return
+    (unsigned long long int)__nvvm_atom_sys_cas_gen_ll((volatile long long int *)p,
+                                                       (long long int)compare,
+                                                       (long long int)val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 int __iAtomicAnd(int *p, int val)
 {
   return __nvvm_atom_and_gen_i((volatile int *)p, val);
 }
 
-#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicAnd_block(int *p, int val)
+{
+  return __nvvm_atom_cta_and_gen_i((volatile int *)p, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicAnd_system(int *p, int val)
+{
+  return __nvvm_atom_sys_and_gen_i((volatile int *)p, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 long long int __llAtomicAnd(long long int *p, long long int val)
 {
   return __nvvm_atom_and_gen_ll((volatile long long int *)p, (long long)val);
 }
-#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 320 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long int __llAtomicAnd_block(long long int *p, long long int val)
+{
+  return __nvvm_atom_cta_and_gen_ll((volatile long long int *)p, (long long)val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long int __llAtomicAnd_system(long long int *p, long long int val)
+{
+  return __nvvm_atom_sys_and_gen_ll((volatile long long int *)p, (long long)val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicAnd(unsigned int *p, unsigned int val)
@@ -1682,14 +2061,42 @@ unsigned int __uAtomicAnd(unsigned int *p, unsigned int val)
   return (unsigned int)__nvvm_atom_and_gen_i((volatile int *)p, (int)val);
 }
 
-#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicAnd_block(unsigned int *p, unsigned int val)
+{
+  return (unsigned int)__nvvm_atom_cta_and_gen_i((volatile int *)p, (int)val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicAnd_system(unsigned int *p, unsigned int val)
+{
+  return (unsigned int)__nvvm_atom_sys_and_gen_i((volatile int *)p, (int)val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned long long int __ullAtomicAnd(unsigned long long int *p,
                                       unsigned long long int val)
 {
   return __nvvm_atom_and_gen_ll((volatile long long int *)p, (long long)val);
 }
-#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 320 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicAnd_block(unsigned long long *p, unsigned long long val)
+{
+  return __nvvm_atom_cta_and_gen_ll((volatile long long *)p, (long long)val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicAnd_system(unsigned long long *p, unsigned long long val)
+{
+  return __nvvm_atom_sys_and_gen_ll((volatile long long *)p, (long long)val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 int __iAtomicOr(int *p, int val)
@@ -1697,13 +2104,41 @@ int __iAtomicOr(int *p, int val)
   return __nvvm_atom_or_gen_i((volatile int *)p, val);
 }
 
-#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicOr_block(int *p, int val)
+{
+  return __nvvm_atom_cta_or_gen_i((volatile int *)p, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicOr_system(int *p, int val)
+{
+  return __nvvm_atom_sys_or_gen_i((volatile int *)p, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 long long int __llAtomicOr(long long int *p, long long int val)
 {
   return __nvvm_atom_or_gen_ll((volatile long long int *)p, (long long)val);
 }
-#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 320 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long int __llAtomicOr_block(long long int *p, long long int val)
+{
+  return __nvvm_atom_cta_or_gen_ll((volatile long long int *)p, (long long)val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long int __llAtomicOr_system(long long int *p, long long int val)
+{
+  return __nvvm_atom_sys_or_gen_ll((volatile long long int *)p, (long long)val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicOr(unsigned int *p, unsigned int val)
@@ -1711,14 +2146,42 @@ unsigned int __uAtomicOr(unsigned int *p, unsigned int val)
   return (unsigned int)__nvvm_atom_or_gen_i((volatile int *)p, (int)val);
 }
 
-#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicOr_block(unsigned int *p, unsigned int val)
+{
+  return (unsigned int)__nvvm_atom_cta_or_gen_i((volatile int *)p, (int)val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicOr_system(unsigned int *p, unsigned int val)
+{
+  return (unsigned int)__nvvm_atom_sys_or_gen_i((volatile int *)p, (int)val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned long long int __ullAtomicOr(unsigned long long int *p,
                                      unsigned long long int val)
 {
   return __nvvm_atom_or_gen_ll((volatile long long int *)p, (long long)val);
 }
-#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 320 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicOr_block(unsigned long long *p, unsigned long long val)
+{
+  return __nvvm_atom_cta_or_gen_ll((volatile long long *)p, (long long)val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicOr_system(unsigned long long *p, unsigned long long val)
+{
+  return __nvvm_atom_sys_or_gen_ll((volatile long long *)p, (long long)val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 int __iAtomicXor(int *p, int val)
@@ -1726,13 +2189,41 @@ int __iAtomicXor(int *p, int val)
   return __nvvm_atom_xor_gen_i((volatile int *)p, val);
 }
 
-#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicXor_block(int *p, int val)
+{
+  return __nvvm_atom_cta_xor_gen_i((volatile int *)p, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicXor_system(int *p, int val)
+{
+  return __nvvm_atom_sys_xor_gen_i((volatile int *)p, val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 long long int __llAtomicXor(long long int *p, long long int val)
 {
   return __nvvm_atom_xor_gen_ll((volatile long long int *)p, (long long)val);
 }
-#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 320 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long int __llAtomicXor_block(long long int *p, long long int val)
+{
+  return __nvvm_atom_cta_xor_gen_ll((volatile long long int *)p, (long long)val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long int __llAtomicXor_system(long long int *p, long long int val)
+{
+  return __nvvm_atom_sys_xor_gen_ll((volatile long long int *)p, (long long)val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicXor(unsigned int *p, unsigned int val)
@@ -1740,14 +2231,42 @@ unsigned int __uAtomicXor(unsigned int *p, unsigned int val)
   return (unsigned int)__nvvm_atom_xor_gen_i((volatile int *)p, (int)val);
 }
 
-#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicXor_block(unsigned int *p, unsigned int val)
+{
+  return (unsigned int)__nvvm_atom_cta_xor_gen_i((volatile int *)p, (int)val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicXor_system(unsigned int *p, unsigned int val)
+{
+  return (unsigned int)__nvvm_atom_sys_xor_gen_i((volatile int *)p, (int)val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned long long int __ullAtomicXor(unsigned long long int *p,
                                       unsigned long long int val)
 {
   return __nvvm_atom_xor_gen_ll((volatile long long int *)p, (long long)val);
 }
-#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 320 */
+
+#if (!defined(__CUDACC_RTC__) && !defined(__CUDACC_INTEGRATED__)) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicXor_block(unsigned long long *p, unsigned long long val)
+{
+  return __nvvm_atom_cta_xor_gen_ll((volatile long long *)p, (long long)val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicXor_system(unsigned long long *p, unsigned long long val)
+{
+  return __nvvm_atom_sys_xor_gen_ll((volatile long long *)p, (long long)val);
+}
+#endif /* (!__CUDACC_RTC__ && !__CUDACC_INTEGRATED__) || __CUDA_ARCH__ >= 600 */
 
 /*******************************************************************************
  *                                                                             *
@@ -3595,6 +4114,201 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ unsigned int __vsads4(unsigned int a, unsigned 
  *                             END SIMD functions                              *
  *                                                                             *
  *******************************************************************************/
+#if defined(__CUDACC_INTEGRATED__) 
+__DEVICE_FUNCTIONS_STATIC_DECL__  int  __nvvm_atom_add_gen_i(volatile int *ptr,
+                                                             int val)
+{
+  return __sync_fetch_and_add_4(ptr, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ long long __nvvm_atom_add_gen_ll(
+                                                        volatile long long *ptr,
+                                                        long long val)
+{
+  return __sync_fetch_and_add_8(ptr, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ int __nvvm_atom_and_gen_i(volatile int *ptr,
+                                                           int val)
+{
+  return __sync_fetch_and_and_4(ptr, val);
+}
+
+#if __CUDA_ARCH__ >= 320
+__DEVICE_FUNCTIONS_STATIC_DECL__ long long __nvvm_atom_and_gen_ll(
+                                                       volatile long long *ptr,
+                                                       long long val)
+{
+  return __sync_fetch_and_and_8(ptr, val);
+}
+#endif  /*  __CUDA_ARCH__ >= 320 */
+
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ int __nvvm_atom_cas_gen_i(volatile int *ptr,
+                                                           int v1, int v2)
+{
+  return __sync_val_compare_and_swap_4(ptr, v1, v2);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ long long __nvvm_atom_cas_gen_ll(
+                                                      volatile long long *ptr,
+                                                      long long v1, long long v2)
+{
+  return __sync_val_compare_and_swap_8(ptr, v1, v2);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ int __nvvm_atom_max_gen_i(volatile int *ptr,
+                                                           int val)
+{
+  return __sync_fetch_and_max(ptr, val);
+}
+
+
+#if __CUDA_ARCH__ >= 320
+__DEVICE_FUNCTIONS_STATIC_DECL__ long long __nvvm_atom_max_gen_ll(
+                                                      volatile long long *ptr,
+                                                      long long val)
+{
+  long long result;
+
+  /* no suitable builtins available. Use inline ASM for now */
+  asm __volatile__ ("atom.max.s64  %0, [%1], %2;"
+                    : "=l"(result)
+                    : "l"(ptr), "l"(val)
+                   );
+  return result;
+}
+#endif  /* #if __CUDA_ARCH__ >= 320 */
+
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ unsigned __nvvm_atom_max_gen_ui(
+                                                        volatile unsigned *ptr,
+                                                        unsigned val)
+{
+  return __sync_fetch_and_umax(ptr, val);
+}
+
+
+#if __CUDA_ARCH__ >= 320
+__DEVICE_FUNCTIONS_STATIC_DECL__ unsigned long long __nvvm_atom_max_gen_ull(
+                                              volatile unsigned long long *ptr,
+                                              unsigned long long val)
+{
+  unsigned long long result;
+
+  /* no suitable builtins available. Use inline ASM for now */
+  asm __volatile__ ("atom.max.u64  %0, [%1], %2;"
+                    : "=l"(result)
+                    : "l"(ptr), "l"(val)
+                   );
+  return result;
+}
+#endif  /* #if __CUDA_ARCH__ >= 320 */
+
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ int __nvvm_atom_min_gen_i(volatile int *ptr,
+                                                           int val)
+{
+  return __sync_fetch_and_min(ptr, val);
+}
+
+#if __CUDA_ARCH__ >= 320
+__DEVICE_FUNCTIONS_STATIC_DECL__ long long __nvvm_atom_min_gen_ll(
+                                                      volatile long long * ptr,
+                                                      long long val)
+{
+  long long result;
+
+  /* no suitable builtins available. Use inline ASM for now */
+  asm __volatile__ ("atom.min.s64  %0, [%1], %2;"
+                    : "=l"(result)
+                    : "l"(ptr), "l"(val)
+                   );
+  return result;
+
+}
+#endif  /* #if __CUDA_ARCH__ >= 320 */
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ unsigned __nvvm_atom_min_gen_ui(
+                                                     volatile unsigned int *ptr,
+                                                     unsigned int val)
+{
+ return __sync_fetch_and_umin(ptr, val);
+}
+
+#if __CUDA_ARCH__ >= 320
+__DEVICE_FUNCTIONS_STATIC_DECL__ unsigned long long __nvvm_atom_min_gen_ull(
+                                              volatile unsigned long long *ptr,
+                                              unsigned long long val)
+{
+  unsigned long long result;
+
+  /* no suitable builtins available. Use inline ASM for now */
+  asm __volatile__ ("atom.min.u64  %0, [%1], %2;"
+                    : "=l"(result)
+                    : "l"(ptr), "l"(val)
+                   );
+  return result;
+}
+#endif  /* #if __CUDA_ARCH__ >= 320 */
+
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ int __nvvm_atom_or_gen_i(volatile int *ptr,
+                                                          int val)
+{
+  return __sync_fetch_and_or_4(ptr, val);
+}
+
+#if __CUDA_ARCH__ >= 320
+__DEVICE_FUNCTIONS_STATIC_DECL__ long long __nvvm_atom_or_gen_ll(
+                                                       volatile long long *ptr,
+                                                       long long val)
+{
+  return __sync_fetch_and_or_8(ptr, val);
+}
+#endif  /* #if __CUDA_ARCH__ >= 320 */
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ int __nvvm_atom_xchg_gen_i(volatile int *ptr,
+                                                            int val)
+{
+  return __sync_swap_4(ptr, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ long long __nvvm_atom_xchg_gen_ll(
+                                                      volatile long long *ptr,
+                                                      long long val)
+{
+  return __sync_swap_8(ptr, val);
+}
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ int __nvvm_atom_xor_gen_i(volatile int *ptr,
+                                                           int val)
+{
+  return __sync_fetch_and_xor_4(ptr, val);
+}
+
+#if __CUDA_ARCH__ >= 320
+__DEVICE_FUNCTIONS_STATIC_DECL__ long long __nvvm_atom_xor_gen_ll(
+                                                       volatile long long *ptr,
+                                                       long long val)
+{
+  return __sync_fetch_and_xor_8(ptr, val);
+}
+#endif  /* #if __CUDA_ARCH__ >= 320 */
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ void * _Znwm(size_t in) { return malloc(in); }
+__DEVICE_FUNCTIONS_STATIC_DECL__ void * _Znwj(size_t in) { return malloc(in); }
+__DEVICE_FUNCTIONS_STATIC_DECL__ void * _Znwy(size_t in) { return malloc(in); }
+__DEVICE_FUNCTIONS_STATIC_DECL__ void * _Znam(size_t in) { return malloc(in); }
+__DEVICE_FUNCTIONS_STATIC_DECL__ void * _Znaj(size_t in) { return malloc(in); }
+__DEVICE_FUNCTIONS_STATIC_DECL__ void * _Znay(size_t in) { return malloc(in); }
+__DEVICE_FUNCTIONS_STATIC_DECL__ void  _ZdlPv(void *in) { free(in); }
+__DEVICE_FUNCTIONS_STATIC_DECL__ void  _ZdaPv(void *in) { free(in); }
+
+
+#endif  /* defined(__CUDACC_INTEGRATED__) */
+
+
 #if defined(__cplusplus)
 }
 #endif /* __cplusplus */

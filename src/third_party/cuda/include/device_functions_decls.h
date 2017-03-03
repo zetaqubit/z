@@ -52,9 +52,16 @@
 
 #if defined(__CUDACC_RTC__)
 #define __DEVICE_FUNCTIONS_DECLS__ __host__ __device__
-#else /* !__CUDACC_RTC__ */
+#elif defined(__CUDACC_INTEGRATED__)
+#define __DEVICE_FUNCTIONS_DECLS__  __host__ __device__ __cudart_builtin__
+#else
 #define __DEVICE_FUNCTIONS_DECLS__
 #endif /* __CUDACC_RTC__ */
+
+#if !defined(__CUDACC_INTEGRATED__)
+#undef __THROW
+#define __THROW
+#endif /* !defined(__CUDACC_INTEGRATED__) */
 
 #if defined(__cplusplus)
 extern "C" {
@@ -71,7 +78,7 @@ extern "C" {
  * \note_accuracy_single_intrinsic
  * \note Input and output in the denormal range is flushed to sign preserving 0.0.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_sinf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_sinf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -84,7 +91,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fast_sinf(float x);
  * \note_accuracy_single_intrinsic
  * \note Input and output in the denormal range is flushed to sign preserving 0.0.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_cosf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_cosf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -111,7 +118,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fast_cosf(float x);
  * \note_accuracy_single_intrinsic
  * \note Input and output in the denormal range is flushed to sign preserving 0.0.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_log2f(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_log2f(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -126,7 +133,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fast_log2f(float x);
  * by __nv_cosf(). Denormal input and output are flushed to sign-preserving 
  * 0.0 at each step of the computation.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_tanf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_tanf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -142,7 +149,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fast_tanf(float x);
  * \note_accuracy_single_intrinsic
  * \note Denorm input/output is flushed to sign preserving 0.0.
  */
-__DEVICE_FUNCTIONS_DECLS__ void __nv_fast_sincosf(float x, float *sptr, float *cptr);
+__DEVICE_FUNCTIONS_DECLS__ void __nv_fast_sincosf(float x, float *sptr, float *cptr) __THROW; 
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -193,7 +200,7 @@ __DEVICE_FUNCTIONS_DECLS__ void __nv_fast_sincosf(float x, float *sptr, float *c
  * \note_accuracy_single_intrinsic
  * \note Most input and output values around denormal range are flushed to sign preserving 0.0.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_expf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_expf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -226,7 +233,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fast_expf(float x);
  * \note_accuracy_single_intrinsic
  * \note Most input and output values around denormal range are flushed to sign preserving 0.0.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_exp10f(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_exp10f(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -255,7 +262,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fast_exp10f(float x);
  * \note_accuracy_single_intrinsic
  * \note Most input and output values around denormal range are flushed to sign preserving 0.0.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_log10f(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_log10f(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -300,7 +307,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fast_log10f(float x);
  * \note_accuracy_single_intrinsic
  * \note Most input and output values around denormal range are flushed to sign preserving 0.0.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_logf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_logf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -344,7 +351,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fast_logf(float x);
  * \note_accuracy_single_intrinsic
  * \note Most input and output values around denormal range are flushed to sign preserving 0.0.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_powf(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_powf(float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -357,7 +364,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fast_powf(float x, float y);
  * \return Returns a signed integer value representing the signed 
  * average value of the two inputs.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_hadd(int x, int y);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_hadd(int x, int y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -371,7 +378,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_hadd(int x, int y);
  * \return Returns a signed integer value representing the signed 
  * rounded average value of the two inputs.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_rhadd(int x, int y);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_rhadd(int x, int y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -384,7 +391,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_rhadd(int x, int y);
  * \return Returns an unsigned integer value representing the unsigned 
  * average value of the two inputs.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_uhadd(unsigned int x, unsigned int y);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_uhadd(unsigned int x, unsigned int y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -398,7 +405,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_uhadd(unsigned int x, unsigned int 
  * \return Returns an unsigned integer value representing the unsigned 
  * rounded average value of the two inputs.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_urhadd(unsigned int x, unsigned int y);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_urhadd(unsigned int x, unsigned int y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -411,7 +418,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_urhadd(unsigned int x, unsigned int
  * \note_accuracy_single
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fsub_rn (float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fsub_rn (float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -424,7 +431,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fsub_rn (float x, float y);
  * \note_accuracy_single
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fsub_rz (float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fsub_rz (float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -437,7 +444,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fsub_rz (float x, float y);
  * \note_accuracy_single
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fsub_rd (float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fsub_rd (float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -450,7 +457,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fsub_rd (float x, float y);
  * \note_accuracy_single
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fsub_ru (float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fsub_ru (float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -490,7 +497,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fsub_ru (float x, float y);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_frsqrt_rn (float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_frsqrt_rn (float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -502,7 +509,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_frsqrt_rn (float x);
  * \return Returns a value between 0 and 32 inclusive representing the position of the first bit set.
  * - __nv_ffs(0) returns 0.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_ffs(int x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_ffs(int x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -514,7 +521,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_ffs(int x);
  * \return Returns a value between 0 and 64 inclusive representing the position of the first bit set.
  * - __nv_ffsll(0) returns 0.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_ffsll(long long int x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_ffsll(long long int x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -526,7 +533,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_ffsll(long long int x);
  * \return 
  * Returns rounded integer value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_rintf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_rintf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -539,7 +546,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_rintf(float x);
  * \return 
  * Returns rounded integer value.
  */
-__DEVICE_FUNCTIONS_DECLS__ long long int __nv_llrintf(float x);
+__DEVICE_FUNCTIONS_DECLS__ long long int __nv_llrintf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -589,7 +596,7 @@ __DEVICE_FUNCTIONS_DECLS__ long long int __nv_llrintf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_nearbyintf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_nearbyintf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -602,7 +609,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_nearbyintf(float x);
  * Returns a nonzero value if and only if \p x is negative.  Reports
  * the sign bit of all values including infinities, zeros, and NaNs.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_signbitf(float x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_signbitf(float x) __THROW;
 
 /** \ingroup CUDA_MATH_SINGLE
  * \brief Create value with given magnitude, copying sign of second value.
@@ -612,7 +619,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_signbitf(float x);
  * \return
  * Returns a value with the magnitude of \p x and the sign of \p y.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_copysignf(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_copysignf(float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -623,7 +630,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_copysignf(float x, float y);
  * \return
  * Returns a non-zero value if and only if \p x is a finite value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_finitef(float x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_finitef(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -636,7 +643,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_finitef(float x);
  * \return
  * Returns a nonzero value if and only if \p x is a infinite value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_isinff(float x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_isinff(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -648,7 +655,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_isinff(float x);
  * \return
  * Returns a nonzero value if and only if \p x is a NaN value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_isnanf(float x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_isnanf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -681,7 +688,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_isnanf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_nextafterf(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_nextafterf(float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -694,7 +701,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_nextafterf(float x, float y);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_nanf(const signed char *tagp);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_nanf(const signed char *tagp) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -736,7 +743,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_nanf(const signed char *tagp);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_sinf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_sinf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -770,7 +777,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_sinf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_cosf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_cosf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -786,7 +793,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_cosf(float x);
  * See ::__nv_sinf() and ::__nv_cosf().
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ void __nv_sincosf(float x, float *sptr, float *cptr);
+__DEVICE_FUNCTIONS_DECLS__ void __nv_sincosf(float x, float *sptr, float *cptr) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -847,7 +854,7 @@ __DEVICE_FUNCTIONS_DECLS__ void __nv_sincosf(float x, float *sptr, float *cptr);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_sinpif(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_sinpif(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -900,7 +907,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_sinpif(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_cospif(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_cospif(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -931,7 +938,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_cospif(float x);
  * See ::__nv_sinpif() and ::__nv_cospif().
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ void __nv_sincospif(float x, float *sptr, float *cptr);
+__DEVICE_FUNCTIONS_DECLS__ void __nv_sincospif(float x, float *sptr, float *cptr) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -973,7 +980,7 @@ __DEVICE_FUNCTIONS_DECLS__ void __nv_sincospif(float x, float *sptr, float *cptr
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_tanf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_tanf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1025,7 +1032,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_tanf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_log2f(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_log2f(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1065,7 +1072,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_log2f(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_expf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_expf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1087,7 +1094,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_expf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_exp10f(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_exp10f(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1119,7 +1126,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_exp10f(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_coshf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_coshf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1150,7 +1157,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_coshf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_sinhf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_sinhf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1181,7 +1188,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_sinhf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_tanhf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_tanhf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1215,7 +1222,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_tanhf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_atan2f(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_atan2f(float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1247,7 +1254,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_atan2f(float x, float y);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_atanf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_atanf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1280,7 +1287,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_atanf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_asinf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_asinf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1304,7 +1311,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_asinf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_acosf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_acosf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1376,7 +1383,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_acosf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_logf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_logf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1428,7 +1435,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_logf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_log10f(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_log10f(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1522,7 +1529,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_log10f(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_log1pf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_log1pf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1557,7 +1564,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_log1pf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_acoshf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_acoshf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1570,7 +1577,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_acoshf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_asinhf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_asinhf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1621,7 +1628,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_asinhf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_atanhf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_atanhf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1663,7 +1670,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_atanhf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_expm1f(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_expm1f(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1704,7 +1711,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_expm1f(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_hypotf(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_hypotf(float x, float y) __THROW;
 
 
 /**
@@ -1750,8 +1757,105 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_hypotf(float x, float y);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_rhypotf(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_rhypotf(float x, float y) __THROW;
 
+/**
+ * \ingroup CUDA_MATH_SINGLE
+ * \brief Calculate the reciprocal of square root of the sum of squares of any number of coordinates.
+ *
+ * Calculates one over the length of vector \p p, dimension of which is passed as an agument, in euclidean space without undue overflow or underflow.
+ *
+ * \return Returns one over the length of the vector
+ * \latexonly $\frac{1}{\sqrt{\sum_{i=1}^{dim} p_i^2}$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mfrac>
+ *     <m:mrow>
+ *       <m:mi>1</m:mi>
+ *     </m:mrow>
+ *     <m:mrow>
+ *       <m:msqrt>
+ *         <m:msup>
+ *           <m:mi>p.1</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.2</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+ ... +</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.dim</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *       </m:msqrt>
+ *     </m:mrow>
+ *   </m:mfrac>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly. 
+ * If the square root would overflow, returns 0.
+ * If the square root would underflow, returns
+ * \latexonly $+\infty$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mo>+</m:mo>
+ *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly.
+ *
+ * \note_accuracy_single
+ */
+
+__DEVICE_FUNCTIONS_DECLS__ float __nv_rnormf(int dim, float const * a) __THROW;
+
+/**
+ * \ingroup CUDA_MATH_SINGLE
+ * \brief Calculate the square root of the sum of squares of any number of coordinates.
+ *
+ * Calculate the length of a vector p, dimension of which is passed as an argument \p without undue overflow or underflow.
+ *
+ * \return Returns the length of the dim-D vector 
+ * \latexonly $\sqrt{\sum_{i=1}^{dim} p_i^2}$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:msqrt>
+ *     <m:msup>
+ *       <m:mi>p.1</m:mi>
+ *       <m:mn>2</m:mn>
+ *     </m:msup>
+ *     <m:mo>+</m:mo>
+ *     <m:msup>
+ *       <m:mi>p.2</m:mi>
+ *       <m:mn>2</m:mn>
+ *     </m:msup>
+ *     <m:mo>+ ... +</m:mo>
+ *     <m:msup>
+ *       <m:mi>p.dim</m:mi>
+ *       <m:mn>2</m:mn>
+ *     </m:msup>
+ *   </m:msqrt>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly. 
+ * If the correct value would overflow, returns 
+ * \latexonly $+\infty$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mo>+</m:mo>
+ *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly.
+ * If the correct value would underflow, returns 0.
+ * If two of the input arguments is 0, returns remaining argument
+ *
+ * \note_accuracy_single
+ */
+
+__DEVICE_FUNCTIONS_DECLS__ float __nv_normf(int dim, float const * a) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1796,7 +1900,8 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_rhypotf(float x, float y);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_norm3df(float a, float b, float c);
+
+__DEVICE_FUNCTIONS_DECLS__ float __nv_norm3df(float a, float b, float c) __THROW;
 
 
 /**
@@ -1846,7 +1951,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_norm3df(float a, float b, float c);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_rnorm3df(float a, float b, float c);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_rnorm3df(float a, float b, float c) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1896,7 +2001,62 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_rnorm3df(float a, float b, float c);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_norm4df(float a, float b, float c, float d);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_norm4df(float a, float b, float c, float d) __THROW;
+
+/**
+ * \ingroup CUDA_MATH_SINGLE
+ * \brief Calculate the reciprocal square root of the sum of squares of four coordinates of argument.
+ *
+ * Calculate the reciprocal length of four dimensional vector \p p in euclidean space undue overflow or underflow.
+ *
+ * \return Returns inverted length of the 3D vector 
+ * \latexonly $\frac{1}{\sqrt{p.x^2+p.y^2+p.z^2+o.t^2}}$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mfrac>
+ *     <m:mi>1</m:mi>
+ *     <m:mi>
+ *       <m:msqrt>
+ *         <m:msup>
+ *           <m:mi>p.x</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.y</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.z</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *	   <m:mo>+</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.t</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup> 
+ *       </m:msqrt>
+ *     </m:mi>
+ *   </m:mfrac>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly. 
+ * If the correct value would overflow, returns 
+ * \latexonly $+\infty$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mo>+</m:mo>
+ *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly.
+ * If the correct value would underflow, returns 0.
+ *
+ * \note_accuracy_single
+ */
+
+__DEVICE_FUNCTIONS_DECLS__ float __nv_rnorm4df(float a, float b, float c, float d) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -1979,7 +2139,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_norm4df(float a, float b, float c, float d
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_cbrtf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_cbrtf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2029,7 +2189,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_cbrtf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_rcbrtf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_rcbrtf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2068,7 +2228,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_rcbrtf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_j0f(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_j0f(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2126,7 +2286,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_j0f(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_j1f(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_j1f(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2175,7 +2335,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_j1f(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_y0f(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_y0f(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2224,7 +2384,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_y0f(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_y1f(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_y1f(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2274,7 +2434,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_y1f(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_ynf(int n, float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_ynf(int n, float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2314,7 +2474,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_ynf(int n, float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_jnf(int n, float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_jnf(int n, float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2341,7 +2501,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_jnf(int n, float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_cyl_bessel_i0f(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_cyl_bessel_i0f(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2368,7 +2528,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_cyl_bessel_i0f(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_cyl_bessel_i1f(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_cyl_bessel_i1f(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2447,7 +2607,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_cyl_bessel_i1f(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_erff(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_erff(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2505,7 +2665,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_erff(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_erfinvf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_erfinvf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2540,7 +2700,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_erfinvf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_erfcf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_erfcf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2616,7 +2776,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_erfcf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_erfcxf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_erfcxf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2673,7 +2833,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_erfcxf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_erfcinvf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_erfcinvf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2732,7 +2892,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_erfcinvf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_normcdfinvf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_normcdfinvf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2776,7 +2936,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_normcdfinvf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_normcdff(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_normcdff(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2901,7 +3061,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_normcdff(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_lgammaf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_lgammaf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -2958,7 +3118,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_lgammaf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_ldexpf(float x, int y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_ldexpf(float x, int y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -3031,7 +3191,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_ldexpf(float x, int y);
  * </m:math>
  * </d4p_MathML>\endxmlonly.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_scalbnf(float x, int y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_scalbnf(float x, int y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -3107,7 +3267,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_scalbnf(float x, int y);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_frexpf(float x, int *b);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_frexpf(float x, int *b) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -3164,7 +3324,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_frexpf(float x, int *b);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_modff(float x, float *b);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_modff(float x, float *b) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -3224,7 +3384,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_modff(float x, float *b);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fmodf(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fmodf(float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -3310,7 +3470,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fmodf(float x, float y);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_remainderf(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_remainderf(float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -3361,7 +3521,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_remainderf(float x, float y);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_remquof(float x, float y, int* quo);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_remquof(float x, float y, int* quo) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -3516,7 +3676,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_remquof(float x, float y, int* quo);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf(float x, float y, float z);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf(float x, float y, float z) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -3825,7 +3985,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf(float x, float y, float z);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_powif(float x, int y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_powif(float x, int y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -4134,7 +4294,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_powif(float x, int y);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_powi(double x, int y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_powi(double x, int y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -4443,7 +4603,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_powi(double x, int y);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_powf(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_powf(float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -4549,7 +4709,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_powf(float x, float y);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_tgammaf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_tgammaf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -4563,7 +4723,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_tgammaf(float x);
  *
  * \note_slow_round See ::rint().
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_roundf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_roundf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -4578,7 +4738,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_roundf(float x);
  *
  * \note_slow_round See ::llrint().
  */
-__DEVICE_FUNCTIONS_DECLS__ long long int __nv_llroundf(float x);
+__DEVICE_FUNCTIONS_DECLS__ long long int __nv_llroundf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -4601,7 +4761,7 @@ __DEVICE_FUNCTIONS_DECLS__ long long int __nv_llroundf(float x);
  * \endxmlonly \p y.
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fdimf(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fdimf(float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -4628,7 +4788,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fdimf(float x, float y);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_ilogbf(float x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_ilogbf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -4680,7 +4840,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_ilogbf(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_logbf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_logbf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -4692,7 +4852,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_logbf(float x);
  * \return 
  * Returns rounded integer value.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_rint(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_rint(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -4705,7 +4865,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_rint(double x);
  * \return 
  * Returns rounded integer value.
  */
-__DEVICE_FUNCTIONS_DECLS__ long long int __nv_llrint(double x);
+__DEVICE_FUNCTIONS_DECLS__ long long int __nv_llrint(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -4755,7 +4915,7 @@ __DEVICE_FUNCTIONS_DECLS__ long long int __nv_llrint(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_nearbyint(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_nearbyint(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -4768,7 +4928,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_nearbyint(double x);
  * Returns a nonzero value if and only if \p x is negative.  Reports
  * the sign bit of all values including infinities, zeros, and NaNs.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_signbitd(double x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_signbitd(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -4781,7 +4941,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_signbitd(double x);
  * \return
  * Returns a nonzero value if and only if \p x is a finite value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_isfinited(double x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_isfinited(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -4794,7 +4954,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_isfinited(double x);
  * \return
  * Returns a nonzero value if and only if \p x is a infinite value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_isinfd(double x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_isinfd(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_SINGLE
@@ -4806,7 +4966,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_isinfd(double x);
  * \return
  * Returns a nonzero value if and only if \p x is a NaN value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_isnand(double x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_isnand(double x) __THROW;
 
 /** \ingroup CUDA_MATH_DOUBLE
  * \brief Create value with given magnitude, copying sign of second value.
@@ -4816,7 +4976,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_isnand(double x);
  * \return
  * Returns a value with the magnitude of \p x and the sign of \p y.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_copysign(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_copysign(double x, double y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -4832,7 +4992,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_copysign(double x, double y);
  * See ::__nv_sin() and ::__nv_cos().
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ void __nv_sincos(double x, double *sptr, double *cptr);
+__DEVICE_FUNCTIONS_DECLS__ void __nv_sincos(double x, double *sptr, double *cptr) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -4863,7 +5023,7 @@ __DEVICE_FUNCTIONS_DECLS__ void __nv_sincos(double x, double *sptr, double *cptr
  * See ::__nv_sinpi() and ::__nv_cospi().
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ void __nv_sincospi(double x, double *sptr, double *cptr);
+__DEVICE_FUNCTIONS_DECLS__ void __nv_sincospi(double x, double *sptr, double *cptr) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -4905,7 +5065,7 @@ __DEVICE_FUNCTIONS_DECLS__ void __nv_sincospi(double x, double *sptr, double *cp
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_sin(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_sin(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -4939,7 +5099,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_sin(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_cos(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_cos(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5000,7 +5160,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_cos(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_sinpi(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_sinpi(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5053,7 +5213,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_sinpi(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_cospi(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_cospi(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5095,7 +5255,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_cospi(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_tan(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_tan(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5167,7 +5327,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_tan(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_log(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_log(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5219,7 +5379,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_log(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_log2(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_log2(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5271,7 +5431,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_log2(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_log10(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_log10(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5365,7 +5525,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_log10(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_log1p(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_log1p(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5405,7 +5565,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_log1p(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_exp(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_exp(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5427,7 +5587,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_exp(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_exp2(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_exp2(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5449,7 +5609,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_exp2(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_exp10(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_exp10(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5491,7 +5651,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_exp10(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_expm1(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_expm1(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5523,7 +5683,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_expm1(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_cosh(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_cosh(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5554,7 +5714,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_cosh(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_sinh(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_sinh(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5585,7 +5745,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_sinh(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_tanh(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_tanh(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5619,7 +5779,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_tanh(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_atan2(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_atan2(double x, double y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5651,7 +5811,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_atan2(double x, double y);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_atan(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_atan(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5684,7 +5844,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_atan(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_asin(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_asin(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5708,7 +5868,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_asin(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_acos(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_acos(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5743,7 +5903,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_acos(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_acosh(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_acosh(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5756,7 +5916,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_acosh(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_asinh(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_asinh(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5807,7 +5967,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_asinh(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_atanh(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_atanh(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -5848,7 +6008,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_atanh(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_hypot(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_hypot(double x, double y) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the reciprocal square root of the sum of squares of two arguments.
@@ -5892,7 +6052,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_hypot(double x, double y);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_rhypot(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_rhypot(double x, double y) __THROW;
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the square root of the sum of squares of three coordinates of argument.
@@ -5935,7 +6095,8 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_rhypot(double x, double y);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_norm3d(double a, double b, double c);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_norm3d(double a, double b, double c) __THROW;
+
 /**
  * \ingroup CUDA_MATH_DOUBLE
  * \brief Calculate the reciprocal square root of the sum of squares of three coordinates of argument.
@@ -5984,7 +6145,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_norm3d(double a, double b, double c);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_rnorm3d(double a, double b, double c);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_rnorm3d(double a, double b, double c) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -6033,7 +6194,105 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_rnorm3d(double a, double b, double c);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_norm4d(double a, double b, double c, double d);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_norm4d(double a, double b, double c, double d) __THROW;
+
+/**
+ * \ingroup CUDA_MATH_DOUBLE
+ * \brief Calculate the square root of the sum of squares of any number of coordinates.
+ *
+ * Calculate the length of a vector p, dimension of which is passed as an argument \p without undue overflow or underflow.
+ *
+ * \return Returns the length of the dim-D vector 
+ * \latexonly $\sqrt{\sum_{i=1}^{dim} p_i^2}$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:msqrt>
+ *     <m:msup>
+ *       <m:mi>p.1</m:mi>
+ *       <m:mn>2</m:mn>
+ *     </m:msup>
+ *     <m:mo>+</m:mo>
+ *     <m:msup>
+ *       <m:mi>p.2</m:mi>
+ *       <m:mn>2</m:mn>
+ *     </m:msup>
+ *     <m:mo>+ ... +</m:mo>
+ *     <m:msup>
+ *       <m:mi>p.dim</m:mi>
+ *       <m:mn>2</m:mn>
+ *     </m:msup>
+ *   </m:msqrt>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly. 
+ * If the correct value would overflow, returns 
+ * \latexonly $+\infty$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mo>+</m:mo>
+ *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly.
+ * If the correct value would underflow, returns 0.
+ * If two of the input arguments is 0, returns remaining argument
+ *
+ * \note_accuracy_double
+ */
+
+__DEVICE_FUNCTIONS_DECLS__ double __nv_norm(int dim, double const * a) __THROW;
+
+/**
+ * \ingroup CUDA_MATH_DOUBLE
+ * \brief Calculate the reciprocal of square root of the sum of squares of any number of coordinates.
+ *
+ * Calculates one over the length of vector \p p, dimension of which is passed as an agument, in euclidean space without undue overflow or underflow.
+ *
+ * \return Returns one over the length of the vector
+ * \latexonly $\frac{1}{\sqrt{\sum_{i=1}^{dim} p_i^2}$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mfrac>
+ *     <m:mrow>
+ *       <m:mi>1</m:mi>
+ *     </m:mrow>
+ *     <m:mrow>
+ *       <m:msqrt>
+ *         <m:msup>
+ *           <m:mi>p.1</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.2</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+ ... +</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.dim</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *       </m:msqrt>
+ *     </m:mrow>
+ *   </m:mfrac>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly. 
+ * If the square root would overflow, returns 0.
+ * If the square root would underflow, returns
+ * \latexonly $+\infty$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mo>+</m:mo>
+ *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly.
+ *
+ * \note_accuracy_double
+ */
+
+__DEVICE_FUNCTIONS_DECLS__ double __nv_rnorm(int dim, double const * a) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -6116,7 +6375,62 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_norm4d(double a, double b, double c, doub
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_cbrt(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_cbrt(double x) __THROW;
+
+/**
+ * \ingroup CUDA_MATH_DOUBLE
+ * \brief Calculate the reciprocal square root of the sum of squares of four coordinates of argument.
+ *
+ * Calculate reciprocal of the length of four dimensional vector \p p in euclidean space undue overflow or underflow.
+ *
+ * \return Returns inverted length of the 3D vector
+ * \latexonly $\sqrt{p.x^2+p.y^2+p.z^2+p.t^2}$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mfrac>
+ *     <m:mi>1</m:mi>
+ *     <m:mi>
+ *       <m:msqrt>
+ *         <m:msup>
+ *           <m:mi>p.x</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.y</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *         <m:mo>+</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.z</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *	   <m:mo>+</m:mo>
+ *         <m:msup>
+ *           <m:mi>p.t</m:mi>
+ *           <m:mn>2</m:mn>
+ *         </m:msup>
+ *       </m:msqrt>
+ *     </m:mi>
+ *   </m:mfrac>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly. 
+ * If the correct value would overflow, returns 
+ * \latexonly $+\infty$ \endlatexonly
+ * \xmlonly
+ * <d4p_MathML outputclass="xmlonly">
+ * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+ *   <m:mo>+</m:mo>
+ *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+ * </m:math>
+ * </d4p_MathML>\endxmlonly.
+ * If the correct value would underflow, returns 0.
+ * If two of the input arguments is 0, returns remaining argument
+ *
+ * \note_accuracy_double
+ */
+__DEVICE_FUNCTIONS_DECLS__ double __nv_rnorm4d(double a, double b, double c, double d) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -6166,7 +6480,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_cbrt(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_rcbrt(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_rcbrt(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -6475,7 +6789,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_rcbrt(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_pow(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_pow(double x, double y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -6514,7 +6828,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_pow(double x, double y);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_j0(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_j0(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -6572,7 +6886,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_j0(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_j1(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_j1(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -6621,7 +6935,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_j1(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_y0(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_y0(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -6670,7 +6984,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_y0(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_y1(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_y1(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -6720,7 +7034,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_y1(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_yn(int n, double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_yn(int n, double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -6760,7 +7074,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_yn(int n, double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_jn(int n, double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_jn(int n, double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -6787,7 +7101,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_jn(int n, double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_cyl_bessel_i0(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_cyl_bessel_i0(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -6814,7 +7128,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_cyl_bessel_i0(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_cyl_bessel_i1(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_cyl_bessel_i1(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -6893,7 +7207,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_cyl_bessel_i1(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_erf(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_erf(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -6951,7 +7265,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_erf(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_erfinv(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_erfinv(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7008,7 +7322,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_erfinv(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_erfcinv(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_erfcinv(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7067,7 +7381,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_erfcinv(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_normcdfinv(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_normcdfinv(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7102,7 +7416,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_normcdfinv(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_erfc(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_erfc(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7178,7 +7492,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_erfc(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_erfcx(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_erfcx(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7222,7 +7536,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_erfcx(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_normcdf(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_normcdf(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7328,7 +7642,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_normcdf(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_tgamma(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_tgamma(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7453,7 +7767,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_tgamma(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_lgamma(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_lgamma(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7510,7 +7824,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_lgamma(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_ldexp(double x, int y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_ldexp(double x, int y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7583,7 +7897,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_ldexp(double x, int y);
  * </m:math>
  * </d4p_MathML>\endxmlonly.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_scalbn(double x, int y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_scalbn(double x, int y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7659,7 +7973,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_scalbn(double x, int y);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_frexp(double x, int *b);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_frexp(double x, int *b) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7716,7 +8030,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_frexp(double x, int *b);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_modf(double x, double *b);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_modf(double x, double *b) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7776,7 +8090,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_modf(double x, double *b);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_fmod(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_fmod(double x, double y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7862,7 +8176,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_fmod(double x, double y);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_remainder(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_remainder(double x, double y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7913,7 +8227,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_remainder(double x, double y);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_remquo(double x, double y, int *c);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_remquo(double x, double y, int *c) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7946,7 +8260,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_remquo(double x, double y, int *c);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_nextafter(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_nextafter(double x, double y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7959,7 +8273,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_nextafter(double x, double y);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_nan(const signed char *tagp);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_nan(const signed char *tagp) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7973,7 +8287,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_nan(const signed char *tagp);
  *
  * \note_slow_round See ::rint().
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_round(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_round(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -7988,7 +8302,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_round(double x);
  *
  * \note_slow_round See ::llrint().
  */
-__DEVICE_FUNCTIONS_DECLS__ long long int __nv_llround(double x);
+__DEVICE_FUNCTIONS_DECLS__ long long int __nv_llround(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8011,7 +8325,7 @@ __DEVICE_FUNCTIONS_DECLS__ long long int __nv_llround(double x);
  * \endxmlonly \p y.
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_fdim(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_fdim(double x, double y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8038,7 +8352,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_fdim(double x, double y);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_ilogb(double x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_ilogb(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8090,7 +8404,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_ilogb(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_logb(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_logb(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8245,7 +8559,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_logb(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_fma(double x, double y, double z);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_fma(double x, double y, double z) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -8255,7 +8569,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_fma(double x, double y, double z);
  *
  * \return Returns a value between 0 and 32 inclusive representing the number of zero bits.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_clz(int x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_clz(int x) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
  * \brief Count the number of consecutive high-order zero bits in a 64 bit integer.
@@ -8264,7 +8578,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_clz(int x);
  *
  * \return Returns a value between 0 and 64 inclusive representing the number of zero bits.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_clzll(long long x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_clzll(long long x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -8274,7 +8588,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_clzll(long long x);
  *
  * \return Returns a value between 0 and 32 inclusive representing the number of set bits.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_popc(int x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_popc(int x) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
  * \brief Count the number of bits that are set to 1 in a 64 bit integer.
@@ -8283,7 +8597,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_popc(int x);
  *
  * \return Returns a value between 0 and 64 inclusive representing the number of set bits.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_popcll(long long x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_popcll(long long x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -8308,7 +8622,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_popcll(long long x);
  * <tt>result[n] := input[selector[n]]</tt>
  * where <tt>result[n]</tt> is the nth byte of r.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_byte_perm(unsigned int x, unsigned int y, unsigned int z);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_byte_perm(unsigned int x, unsigned int y, unsigned int z) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -8319,7 +8633,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_byte_perm(unsigned int x, unsigned 
  * \return
  * Returns the minimum value of the two 32-bit signed integers \p x and \p y.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_min(int x, int y);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_min(int x, int y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
  * \brief Determine the minimum value of two 32-bit unsigned integers.
@@ -8329,7 +8643,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_min(int x, int y);
  * \return
  * Returns the minimum value of the two 32-bit unsigned integers \p x and \p y.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_umin(unsigned int x, unsigned int y);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_umin(unsigned int x, unsigned int y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
  * \brief Determine the minimum value of two 64-bit signed integers.
@@ -8339,7 +8653,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_umin(unsigned int x, unsigned int y
  * \return
  * Returns the minimum value of the two 64-bit signed integers \p x and \p y.
  */
-__DEVICE_FUNCTIONS_DECLS__ long long __nv_llmin(long long x, long long y);
+__DEVICE_FUNCTIONS_DECLS__ long long __nv_llmin(long long x, long long y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
  * \brief Determine the minimum value of two 64-bit unsigned integers.
@@ -8349,7 +8663,7 @@ __DEVICE_FUNCTIONS_DECLS__ long long __nv_llmin(long long x, long long y);
  * \return
  * Returns the minimum value of the two 64-bit unsigned integers \p x and \p y.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_ullmin(unsigned long long x, unsigned long long y);
+__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_ullmin(unsigned long long x, unsigned long long y) __THROW;
     
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -8360,7 +8674,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_ullmin(unsigned long long x, 
  * \return
  * Returns the maximum value of the two 32-bit signed integers \p x and \p y.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_max(int x, int y);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_max(int x, int y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
  * \brief Determine the maximum value of two 32-bit unsigned integers.
@@ -8370,7 +8684,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_max(int x, int y);
  * \return
  * Returns the maximum value of the two 32-bit unsigned integers \p x and \p y.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_umax(unsigned int x, unsigned int y);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_umax(unsigned int x, unsigned int y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
  * \brief Determine the maximum value of two 64-bit signed integers.
@@ -8380,7 +8694,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_umax(unsigned int x, unsigned int y
  * \return
  * Returns the maximum value of the two 64-bit signed integers \p x and \p y.
  */
-__DEVICE_FUNCTIONS_DECLS__ long long __nv_llmax(long long x, long long y);
+__DEVICE_FUNCTIONS_DECLS__ long long __nv_llmax(long long x, long long y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
  * \brief Determine the maximum value of two 64-bit unsigned integers.
@@ -8390,7 +8704,7 @@ __DEVICE_FUNCTIONS_DECLS__ long long __nv_llmax(long long x, long long y);
  * \return
  * Returns the maximum value of the two 64-bit unsigned integers \p x and \p y.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_ullmax(unsigned long long x, unsigned long long y);
+__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_ullmax(unsigned long long x, unsigned long long y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -8401,7 +8715,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_ullmax(unsigned long long x, 
  *
  * \return Returns the most significant 32 bits of the product \p x * \p y.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_mulhi(int x, int y);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_mulhi(int x, int y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
  * \brief Calculate the most significant 32 bits of the product of the two 32 bit unsigned integers.
@@ -8411,7 +8725,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_mulhi(int x, int y);
  *
  * \return Returns the most significant 32 bits of the product \p x * \p y.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_umulhi(unsigned int x, unsigned int y);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_umulhi(unsigned int x, unsigned int y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
  * \brief Calculate the most significant 64 bits of the product of the two 64 bit integers.
@@ -8421,7 +8735,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_umulhi(unsigned int x, unsigned int
  *
  * \return Returns the most significant 64 bits of the product \p x * \p y.
  */
-__DEVICE_FUNCTIONS_DECLS__ long long __nv_mul64hi(long long x, long long y);
+__DEVICE_FUNCTIONS_DECLS__ long long __nv_mul64hi(long long x, long long y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
  * \brief Calculate the most significant 64 bits of the product of the two 64 unsigned bit integers.
@@ -8431,7 +8745,7 @@ __DEVICE_FUNCTIONS_DECLS__ long long __nv_mul64hi(long long x, long long y);
  *
  * \return Returns the most significant 64 bits of the product \p x * \p y.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_umul64hi(unsigned long long x, unsigned long long y);
+__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_umul64hi(unsigned long long x, unsigned long long y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -8442,7 +8756,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_umul64hi(unsigned long long x
  *
  * \return Returns the least significant 32 bits of the product \p x * \p y.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_mul24(int x, int y);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_mul24(int x, int y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
  * \brief Calculate the least significant 32 bits of the product of the least significant 24 bits of two unsigned integers.
@@ -8452,7 +8766,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_mul24(int x, int y);
  *
  * \return Returns the least significant 32 bits of the product \p x * \p y.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_umul24(unsigned int x, unsigned int y);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_umul24(unsigned int x, unsigned int y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -8462,7 +8776,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_umul24(unsigned int x, unsigned int
  *
  * \return Returns the bit-reversed value of \p x. i.e. bit N of the return value corresponds to bit 31-N of \p x.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_brev(unsigned int x);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_brev(unsigned int x) __THROW;
     
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -8472,7 +8786,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_brev(unsigned int x);
  *
  * \return Returns the bit-reversed value of \p x. i.e. bit N of the return value corresponds to bit 63-N of \p x.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_brevll(unsigned long long x);
+__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_brevll(unsigned long long x) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
  * \brief Calculate 
@@ -8541,7 +8855,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_brevll(unsigned long long x);
  * </m:math>
  * </d4p_MathML>\endxmlonly.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_sad(int x, int y, int z);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_sad(int x, int y, int z) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -8610,7 +8924,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_sad(int x, int y, int z);
  * </m:math>
  * </d4p_MathML>\endxmlonly.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_usad(unsigned int x, unsigned int y, unsigned int z);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_usad(unsigned int x, unsigned int y, unsigned int z) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
  * \brief Determine the absolute value of a 32-bit signed integer.
@@ -8620,7 +8934,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_usad(unsigned int x, unsigned int y
  * \return
  * Returns the absolute value of the 32-bit signed integer \p x.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_abs(int x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_abs(int x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_INT
@@ -8631,7 +8945,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_abs(int x);
  * \return
  * Returns the absolute value of the 64-bit signed integer \p x.
  */
-__DEVICE_FUNCTIONS_DECLS__ long long __nv_llabs(long long x);
+__DEVICE_FUNCTIONS_DECLS__ long long __nv_llabs(long long x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8683,7 +8997,7 @@ __DEVICE_FUNCTIONS_DECLS__ long long __nv_llabs(long long x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_floorf(float f);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_floorf(float f) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8735,7 +9049,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_floorf(float f);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_floor(double f);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_floor(double f) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8777,7 +9091,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_floor(double f);
  * ) returns 0.
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fabsf(float f);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fabsf(float f) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8819,10 +9133,10 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fabsf(float f);
  * ) returns 0.
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_fabs(double f);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_fabs(double f) __THROW;
 
 /** DOCUMENTATION MISSING */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_rcp64h(double d);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_rcp64h(double d) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8839,7 +9153,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_rcp64h(double d);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fminf(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fminf(float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8856,7 +9170,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fminf(float x, float y);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaxf(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaxf(float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8926,7 +9240,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fmaxf(float x, float y);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_rsqrtf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_rsqrtf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8943,7 +9257,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_rsqrtf(float x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_fmin(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_fmin(double x, double y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -8960,7 +9274,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_fmin(double x, double y);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_fmax(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_fmax(double x, double y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -9030,7 +9344,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_fmax(double x, double y);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_rsqrt(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_rsqrt(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -9090,7 +9404,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_rsqrt(double x);
  * </m:math>
  * </d4p_MathML>\endxmlonly.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_ceil(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_ceil(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -9102,7 +9416,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_ceil(double x);
  * \return 
  * Returns truncated integer value.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_trunc(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_trunc(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -9124,7 +9438,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_trunc(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_exp2f(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_exp2f(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -9136,7 +9450,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_exp2f(float x);
  * \return 
  * Returns truncated integer value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_truncf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_truncf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -9196,7 +9510,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_truncf(float x);
  * </m:math>
  * </d4p_MathML>\endxmlonly.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_ceilf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_ceilf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -9220,7 +9534,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_ceilf(float x);
  * </d4p_MathML>\endxmlonly.
  * - __nv_saturatef(NaN) returns 0.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_saturatef(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_saturatef(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -9374,7 +9688,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_saturatef(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_rn(float x, float y, float z);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_rn(float x, float y, float z) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
  * \brief Compute 
@@ -9527,7 +9841,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_rn(float x, float y, float z);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_rz(float x, float y, float z);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_rz(float x, float y, float z) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
  * \brief Compute 
@@ -9680,7 +9994,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_rz(float x, float y, float z);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_rd(float x, float y, float z);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_rd(float x, float y, float z) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
  * \brief Compute 
@@ -9833,16 +10147,16 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_rd(float x, float y, float z);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_ru(float x, float y, float z);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_ru(float x, float y, float z) __THROW;
 
 /** DOCUMENTATION MISSING */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_ieee_rn(float x, float y, float z);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_ieee_rn(float x, float y, float z) __THROW;
 /** DOCUMENTATION MISSING */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_ieee_rz(float x, float y, float z);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_ieee_rz(float x, float y, float z) __THROW;
 /** DOCUMENTATION MISSING */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_ieee_rd(float x, float y, float z);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_ieee_rd(float x, float y, float z) __THROW;
 /** DOCUMENTATION MISSING */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_ieee_ru(float x, float y, float z);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_ieee_ru(float x, float y, float z) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
@@ -10000,7 +10314,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fmaf_ieee_ru(float x, float y, float z);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_fma_rn(double x, double y, double z);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_fma_rn(double x, double y, double z) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Compute 
@@ -10157,7 +10471,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_fma_rn(double x, double y, double z);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_fma_rz(double x, double y, double z);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_fma_rz(double x, double y, double z) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Compute 
@@ -10314,7 +10628,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_fma_rz(double x, double y, double z);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_fma_rd(double x, double y, double z);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_fma_rd(double x, double y, double z) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Compute 
@@ -10471,7 +10785,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_fma_rd(double x, double y, double z);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_fma_ru(double x, double y, double z);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_fma_ru(double x, double y, double z) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -10547,7 +10861,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_fma_ru(double x, double y, double z);
  *
  * \note_accuracy_single_intrinsic
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_fdividef(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fast_fdividef(float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -10559,7 +10873,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fast_fdividef(float x, float y);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fdiv_rn(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fdiv_rn(float x, float y) __THROW;
 /**      
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
  * \brief Divide two floating point values in round-towards-zero mode.
@@ -10570,7 +10884,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fdiv_rn(float x, float y);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fdiv_rz(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fdiv_rz(float x, float y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
  * \brief Divide two floating point values in round-down mode.
@@ -10581,7 +10895,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fdiv_rz(float x, float y);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fdiv_rd(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fdiv_rd(float x, float y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
  * \brief Divide two floating point values in round-up mode.
@@ -10592,7 +10906,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fdiv_rd(float x, float y);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fdiv_ru(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fdiv_ru(float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -10626,7 +10940,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fdiv_ru(float x, float y);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_frcp_rn(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_frcp_rn(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
  * \brief Compute 
@@ -10659,7 +10973,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_frcp_rn(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_frcp_rz(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_frcp_rz(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
  * \brief Compute 
@@ -10692,7 +11006,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_frcp_rz(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_frcp_rd(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_frcp_rd(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
  * \brief Compute 
@@ -10725,7 +11039,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_frcp_rd(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_frcp_ru(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_frcp_ru(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -10757,7 +11071,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_frcp_ru(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fsqrt_rn(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fsqrt_rn(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
  * \brief Compute 
@@ -10788,7 +11102,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fsqrt_rn(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fsqrt_rz(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fsqrt_rz(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
  * \brief Compute 
@@ -10819,7 +11133,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fsqrt_rz(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fsqrt_rd(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fsqrt_rd(float x) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
  * \brief Compute 
@@ -10850,7 +11164,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fsqrt_rd(float x);
  *
  * \note_accuracy_single
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fsqrt_ru(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fsqrt_ru(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
@@ -10863,7 +11177,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fsqrt_ru(float x);
  * \note_accuracy_double
  * \note_requires_fermi
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_ddiv_rn(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_ddiv_rn(double x, double y) __THROW;
 /**      
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Divide two floating point values in round-towards-zero mode.
@@ -10875,7 +11189,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_ddiv_rn(double x, double y);
  * \note_accuracy_double
  * \note_requires_fermi
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_ddiv_rz(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_ddiv_rz(double x, double y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Divide two floating point values in round-down mode.
@@ -10887,7 +11201,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_ddiv_rz(double x, double y);
  * \note_accuracy_double
  * \note_requires_fermi
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_ddiv_rd(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_ddiv_rd(double x, double y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Divide two floating point values in round-up mode.
@@ -10899,7 +11213,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_ddiv_rd(double x, double y);
  * \note_accuracy_double
  * \note_requires_fermi
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_ddiv_ru(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_ddiv_ru(double x, double y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
@@ -10934,7 +11248,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_ddiv_ru(double x, double y);
  * \note_accuracy_double
  * \note_requires_fermi
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_drcp_rn(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_drcp_rn(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Compute 
@@ -10968,7 +11282,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_drcp_rn(double x);
  * \note_accuracy_double
  * \note_requires_fermi
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_drcp_rz(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_drcp_rz(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Compute 
@@ -11002,7 +11316,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_drcp_rz(double x);
  * \note_accuracy_double
  * \note_requires_fermi
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_drcp_rd(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_drcp_rd(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Compute 
@@ -11036,7 +11350,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_drcp_rd(double x);
  * \note_accuracy_double
  * \note_requires_fermi
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_drcp_ru(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_drcp_ru(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
@@ -11069,7 +11383,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_drcp_ru(double x);
  * \note_accuracy_double
  * \note_requires_fermi
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_dsqrt_rn(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_dsqrt_rn(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
@@ -11102,7 +11416,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_dsqrt_rn(double x);
  * \note_accuracy_double
  * \note_requires_fermi
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_dsqrt_rz(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_dsqrt_rz(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Compute 
@@ -11134,7 +11448,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_dsqrt_rz(double x);
  * \note_accuracy_double
  * \note_requires_fermi
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_dsqrt_rd(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_dsqrt_rd(double x) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Compute 
@@ -11166,7 +11480,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_dsqrt_rd(double x);
  * \note_accuracy_double
  * \note_requires_fermi
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_dsqrt_ru(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_dsqrt_ru(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -11236,7 +11550,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_dsqrt_ru(double x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_sqrtf(float x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_sqrtf(float x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_DOUBLE
@@ -11306,7 +11620,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_sqrtf(float x);
  *
  * \note_accuracy_double
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_sqrt(double x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_sqrt(double x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
@@ -11319,7 +11633,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_sqrt(double x);
  * \note_accuracy_double
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_dadd_rn(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_dadd_rn(double x, double y) __THROW;
 /**      
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Add two floating point values in round-towards-zero mode.
@@ -11331,7 +11645,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_dadd_rn(double x, double y);
  * \note_accuracy_double
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_dadd_rz(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_dadd_rz(double x, double y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Add two floating point values in round-down mode.
@@ -11343,7 +11657,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_dadd_rz(double x, double y);
  * \note_accuracy_double
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_dadd_rd(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_dadd_rd(double x, double y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Add two floating point values in round-up mode.
@@ -11355,7 +11669,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_dadd_rd(double x, double y);
  * \note_accuracy_double
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_dadd_ru(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_dadd_ru(double x, double y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
@@ -11368,7 +11682,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_dadd_ru(double x, double y);
  * \note_accuracy_double
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_dmul_rn(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_dmul_rn(double x, double y) __THROW;
 /**      
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Multiply two floating point values in round-towards-zero mode.
@@ -11380,7 +11694,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_dmul_rn(double x, double y);
  * \note_accuracy_double
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_dmul_rz(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_dmul_rz(double x, double y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Multiply two floating point values in round-down mode.
@@ -11392,7 +11706,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_dmul_rz(double x, double y);
  * \note_accuracy_double
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_dmul_rd(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_dmul_rd(double x, double y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_DOUBLE
  * \brief Multiply two floating point values in round-up mode.
@@ -11404,7 +11718,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_dmul_rd(double x, double y);
  * \note_accuracy_double
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_dmul_ru(double x, double y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_dmul_ru(double x, double y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -11417,7 +11731,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_dmul_ru(double x, double y);
  * \note_accuracy_single
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fadd_rd(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fadd_rd(float x, float y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
  * \brief Add two floating point values in round-up mode.
@@ -11429,7 +11743,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fadd_rd(float x, float y);
  * \note_accuracy_single
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fadd_ru(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fadd_ru(float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -11442,7 +11756,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fadd_ru(float x, float y);
  * \note_accuracy_single
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fmul_rd(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fmul_rd(float x, float y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
  * \brief Multiply two floating point values in round-up mode.
@@ -11454,7 +11768,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fmul_rd(float x, float y);
  * \note_accuracy_single
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fmul_ru(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fmul_ru(float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -11467,7 +11781,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fmul_ru(float x, float y);
  * \note_accuracy_single
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fadd_rn(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fadd_rn(float x, float y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
  * \brief Add two floating point values in round-towards-zero mode.
@@ -11479,7 +11793,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fadd_rn(float x, float y);
  * \note_accuracy_single
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fadd_rz(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fadd_rz(float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
@@ -11492,7 +11806,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fadd_rz(float x, float y);
  * \note_accuracy_single
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fmul_rn(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fmul_rn(float x, float y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_SINGLE
  * \brief Multiply two floating point values in round-towards-zero mode.
@@ -11504,7 +11818,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fmul_rn(float x, float y);
  * \note_accuracy_single
  * \note_nofma
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_fmul_rz(float x, float y);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_fmul_rz(float x, float y) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -11514,7 +11828,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_fmul_rz(float x, float y);
  * floating point value in round-to-nearest-even mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_double2float_rn(double d);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_double2float_rn(double d) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a double to a float in round-towards-zero mode.
@@ -11523,7 +11837,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_double2float_rn(double d);
  * floating point value in round-towards-zero mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_double2float_rz(double d);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_double2float_rz(double d) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a double to a float in round-down mode.
@@ -11532,7 +11846,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_double2float_rz(double d);
  * floating point value in round-down (to negative infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_double2float_rd(double d);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_double2float_rd(double d) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a double to a float in round-up mode.
@@ -11541,7 +11855,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_double2float_rd(double d);
  * floating point value in round-up (to positive infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_double2float_ru(double d);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_double2float_ru(double d) __THROW;
     
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -11551,7 +11865,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_double2float_ru(double d);
  * signed integer value in round-to-nearest-even mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_double2int_rn(double d);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_double2int_rn(double d) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a double to a signed int in round-towards-zero mode.
@@ -11560,7 +11874,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_double2int_rn(double d);
  * signed integer value in round-towards-zero mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_double2int_rz(double d);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_double2int_rz(double d) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a double to a signed int in round-down mode.
@@ -11569,7 +11883,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_double2int_rz(double d);
  * signed integer value in round-down (to negative infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_double2int_rd(double d);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_double2int_rd(double d) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a double to a signed int in round-up mode.
@@ -11578,7 +11892,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_double2int_rd(double d);
  * signed integer value in round-up (to positive infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_double2int_ru(double d);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_double2int_ru(double d) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -11588,7 +11902,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_double2int_ru(double d);
  * unsigned integer value in round-to-nearest-even mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_double2uint_rn(double d);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_double2uint_rn(double d) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a double to an unsigned int in round-towards-zero mode.
@@ -11597,7 +11911,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_double2uint_rn(double d);
  * unsigned integer value in round-towards-zero mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_double2uint_rz(double d);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_double2uint_rz(double d) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a double to an unsigned int in round-down mode.
@@ -11606,7 +11920,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_double2uint_rz(double d);
  * unsigned integer value in round-down (to negative infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_double2uint_rd(double d);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_double2uint_rd(double d) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a double to an unsigned int in round-up mode.
@@ -11615,7 +11929,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_double2uint_rd(double d);
  * unsigned integer value in round-up (to positive infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_double2uint_ru(double d);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_double2uint_ru(double d) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -11624,7 +11938,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_double2uint_ru(double d);
  * Convert the signed integer value \p x to a double-precision floating point value.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_int2double_rn(int i);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_int2double_rn(int i) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -11633,7 +11947,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_int2double_rn(int i);
  * Convert the unsigned integer value \p x to a double-precision floating point value.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_uint2double_rn(unsigned int i);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_uint2double_rn(unsigned int i) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -11643,7 +11957,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_uint2double_rn(unsigned int i);
  * in round-to-nearest-even mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_float2int_rn(float in);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_float2int_rn(float in) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a float to a signed integer in round-towards-zero mode.
@@ -11652,7 +11966,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_float2int_rn(float in);
  * in round-towards-zero mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_float2int_rz(float in);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_float2int_rz(float in) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a float to a signed integer in round-down mode.
@@ -11661,7 +11975,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_float2int_rz(float in);
  * in round-down (to negative infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_float2int_rd(float in);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_float2int_rd(float in) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a float to a signed integer in round-up mode.
@@ -11670,7 +11984,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_float2int_rd(float in);
  * in round-up (to positive infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_float2int_ru(float in);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_float2int_ru(float in) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a float to an unsigned integer in round-to-nearest-even mode.
@@ -11679,7 +11993,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_float2int_ru(float in);
  * in round-to-nearest-even mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_float2uint_rn(float in);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_float2uint_rn(float in) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a float to an unsigned integer in round-towards-zero mode.
@@ -11688,7 +12002,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_float2uint_rn(float in);
  * in round-towards-zero mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_float2uint_rz(float in);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_float2uint_rz(float in) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a float to an unsigned integer in round-down mode.
@@ -11697,7 +12011,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_float2uint_rz(float in);
  * in round-down (to negative infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_float2uint_rd(float in);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_float2uint_rd(float in) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a float to an unsigned integer in round-up mode.
@@ -11706,7 +12020,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_float2uint_rd(float in);
  * in round-up (to positive infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_float2uint_ru(float in);
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_float2uint_ru(float in) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -11716,7 +12030,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_float2uint_ru(float in);
  * in round-to-nearest-even mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_int2float_rn(int in);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_int2float_rn(int in) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a signed integer to a float in round-towards-zero mode.
@@ -11725,7 +12039,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_int2float_rn(int in);
  * in round-towards-zero mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_int2float_rz(int in);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_int2float_rz(int in) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a signed integer to a float in round-down mode.
@@ -11734,7 +12048,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_int2float_rz(int in);
  * in round-down (to negative infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_int2float_rd(int in);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_int2float_rd(int in) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a signed integer to a float in round-up mode.
@@ -11743,7 +12057,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_int2float_rd(int in);
  * in round-up (to positive infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_int2float_ru(int in);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_int2float_ru(int in) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -11753,7 +12067,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_int2float_ru(int in);
  * in round-to-nearest-even mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_uint2float_rn(unsigned int in);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_uint2float_rn(unsigned int in) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert an unsigned integer to a float in round-towards-zero mode.
@@ -11762,7 +12076,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_uint2float_rn(unsigned int in);
  * in round-towards-zero mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_uint2float_rz(unsigned int in);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_uint2float_rz(unsigned int in) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert an unsigned integer to a float in round-down mode.
@@ -11771,7 +12085,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_uint2float_rz(unsigned int in);
  * in round-down (to negative infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_uint2float_rd(unsigned int in);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_uint2float_rd(unsigned int in) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert an unsigned integer to a float in round-up mode.
@@ -11780,7 +12094,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_uint2float_rd(unsigned int in);
  * in round-up (to positive infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_uint2float_ru(unsigned int in);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_uint2float_ru(unsigned int in) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -11791,7 +12105,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_uint2float_ru(unsigned int in);
  * as the low 32 bits of the same double-precision floating point value.
  * \return Returns reinterpreted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_hiloint2double(int x, int y);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_hiloint2double(int x, int y) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Reinterpret low 32 bits in a double as a signed integer.
@@ -11800,7 +12114,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_hiloint2double(int x, int y);
  * as a signed integer.
  * \return Returns reinterpreted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_double2loint(double d);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_double2loint(double d) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Reinterpret high 32 bits in a double as a signed integer.
@@ -11809,7 +12123,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_double2loint(double d);
  * as a signed integer.
  * \return Returns reinterpreted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_double2hiint(double d);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_double2hiint(double d) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -11819,7 +12133,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_double2hiint(double d);
  * in round-to-nearest-even mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ long long __nv_float2ll_rn(float f);
+__DEVICE_FUNCTIONS_DECLS__ long long __nv_float2ll_rn(float f) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a float to a signed 64-bit integer in round-towards-zero mode.
@@ -11828,7 +12142,7 @@ __DEVICE_FUNCTIONS_DECLS__ long long __nv_float2ll_rn(float f);
  * in round-towards-zero mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ long long __nv_float2ll_rz(float f);
+__DEVICE_FUNCTIONS_DECLS__ long long __nv_float2ll_rz(float f) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a float to a signed 64-bit integer in round-down mode.
@@ -11837,7 +12151,7 @@ __DEVICE_FUNCTIONS_DECLS__ long long __nv_float2ll_rz(float f);
  * in round-down (to negative infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ long long __nv_float2ll_rd(float f);
+__DEVICE_FUNCTIONS_DECLS__ long long __nv_float2ll_rd(float f) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a float to a signed 64-bit integer in round-up mode.
@@ -11846,7 +12160,7 @@ __DEVICE_FUNCTIONS_DECLS__ long long __nv_float2ll_rd(float f);
  * in round-up (to positive infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ long long __nv_float2ll_ru(float f);
+__DEVICE_FUNCTIONS_DECLS__ long long __nv_float2ll_ru(float f) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a float to an unsigned 64-bit integer in round-to-nearest-even mode.
@@ -11855,7 +12169,7 @@ __DEVICE_FUNCTIONS_DECLS__ long long __nv_float2ll_ru(float f);
  * in round-to-nearest-even mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_float2ull_rn(float f);
+__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_float2ull_rn(float f) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a float to an unsigned 64-bit integer in round-towards-zero mode.
@@ -11864,7 +12178,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_float2ull_rn(float f);
  * in round-towards_zero mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_float2ull_rz(float f);
+__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_float2ull_rz(float f) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a float to an unsigned 64-bit integer in round-down mode.
@@ -11873,7 +12187,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_float2ull_rz(float f);
  * in round-down (to negative infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_float2ull_rd(float f);
+__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_float2ull_rd(float f) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a float to an unsigned 64-bit integer in round-up mode.
@@ -11882,7 +12196,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_float2ull_rd(float f);
  * in round-up (to positive infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_float2ull_ru(float f);
+__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_float2ull_ru(float f) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -11892,7 +12206,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_float2ull_ru(float f);
  * signed 64-bit integer value in round-to-nearest-even mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ long long __nv_double2ll_rn(double f);
+__DEVICE_FUNCTIONS_DECLS__ long long __nv_double2ll_rn(double f) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a double to a signed 64-bit int in round-towards-zero mode.
@@ -11901,7 +12215,7 @@ __DEVICE_FUNCTIONS_DECLS__ long long __nv_double2ll_rn(double f);
  * signed 64-bit integer value in round-towards-zero mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ long long __nv_double2ll_rz(double f);
+__DEVICE_FUNCTIONS_DECLS__ long long __nv_double2ll_rz(double f) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a double to a signed 64-bit int in round-down mode.
@@ -11910,7 +12224,7 @@ __DEVICE_FUNCTIONS_DECLS__ long long __nv_double2ll_rz(double f);
  * signed 64-bit integer value in round-down (to negative infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ long long __nv_double2ll_rd(double f);
+__DEVICE_FUNCTIONS_DECLS__ long long __nv_double2ll_rd(double f) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a double to a signed 64-bit int in round-up mode.
@@ -11919,7 +12233,7 @@ __DEVICE_FUNCTIONS_DECLS__ long long __nv_double2ll_rd(double f);
  * signed 64-bit integer value in round-up (to positive infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ long long __nv_double2ll_ru(double f);
+__DEVICE_FUNCTIONS_DECLS__ long long __nv_double2ll_ru(double f) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -11929,7 +12243,7 @@ __DEVICE_FUNCTIONS_DECLS__ long long __nv_double2ll_ru(double f);
  * unsigned 64-bit integer value in round-to-nearest-even mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_double2ull_rn(double f);
+__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_double2ull_rn(double f) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a double to an unsigned 64-bit int in round-towards-zero mode.
@@ -11938,7 +12252,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_double2ull_rn(double f);
  * unsigned 64-bit integer value in round-towards-zero mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_double2ull_rz(double f);
+__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_double2ull_rz(double f) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a double to an unsigned 64-bit int in round-down mode.
@@ -11947,7 +12261,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_double2ull_rz(double f);
  * unsigned 64-bit integer value in round-down (to negative infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_double2ull_rd(double f);
+__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_double2ull_rd(double f) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a double to an unsigned 64-bit int in round-up mode.
@@ -11956,7 +12270,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_double2ull_rd(double f);
  * unsigned 64-bit integer value in round-up (to positive infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_double2ull_ru(double f);
+__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_double2ull_ru(double f) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -11966,7 +12280,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned long long __nv_double2ull_ru(double f);
  * in round-to-nearest-even mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_ll2float_rn(long long l);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_ll2float_rn(long long l) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a signed integer to a float in round-towards-zero mode.
@@ -11975,7 +12289,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_ll2float_rn(long long l);
  * in round-towards-zero mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_ll2float_rz(long long l);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_ll2float_rz(long long l) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a signed integer to a float in round-down mode.
@@ -11984,7 +12298,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_ll2float_rz(long long l);
  * in round-down (to negative infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_ll2float_rd(long long l);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_ll2float_rd(long long l) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a signed integer to a float in round-up mode.
@@ -11993,7 +12307,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_ll2float_rd(long long l);
  * in round-up (to positive infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_ll2float_ru(long long l);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_ll2float_ru(long long l) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -12003,7 +12317,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_ll2float_ru(long long l);
  * in round-to-nearest-even mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_ull2float_rn(unsigned long long l);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_ull2float_rn(unsigned long long l) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert an unsigned integer to a float in round-towards-zero mode.
@@ -12012,7 +12326,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_ull2float_rn(unsigned long long l);
  * in round-towards-zero mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_ull2float_rz(unsigned long long l);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_ull2float_rz(unsigned long long l) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert an unsigned integer to a float in round-down mode.
@@ -12021,7 +12335,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_ull2float_rz(unsigned long long l);
  * in round-down (to negative infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_ull2float_rd(unsigned long long l);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_ull2float_rd(unsigned long long l) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert an unsigned integer to a float in round-up mode.
@@ -12030,7 +12344,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_ull2float_rd(unsigned long long l);
  * in round-up (to positive infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_ull2float_ru(unsigned long long l);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_ull2float_ru(unsigned long long l) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -12040,7 +12354,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_ull2float_ru(unsigned long long l);
  * point value in round-to-nearest-even mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_ll2double_rn(long long l);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_ll2double_rn(long long l) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a signed 64-bit int to a double in round-towards-zero mode.
@@ -12049,7 +12363,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_ll2double_rn(long long l);
  * point value in round-towards-zero mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_ll2double_rz(long long l);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_ll2double_rz(long long l) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a signed 64-bit int to a double in round-down mode.
@@ -12058,7 +12372,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_ll2double_rz(long long l);
  * point value in round-down (to negative infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_ll2double_rd(long long l);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_ll2double_rd(long long l) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a signed 64-bit int to a double in round-up mode.
@@ -12067,7 +12381,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_ll2double_rd(long long l);
  * point value in round-up (to positive infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_ll2double_ru(long long l);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_ll2double_ru(long long l) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -12077,7 +12391,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_ll2double_ru(long long l);
  * point value in round-to-nearest-even mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_ull2double_rn(unsigned long long l);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_ull2double_rn(unsigned long long l) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert an unsigned 64-bit int to a double in round-towards-zero mode.
@@ -12086,7 +12400,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_ull2double_rn(unsigned long long l);
  * point value in round-towards-zero mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_ull2double_rz(unsigned long long l);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_ull2double_rz(unsigned long long l) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert an unsigned 64-bit int to a double in round-down mode.
@@ -12095,7 +12409,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_ull2double_rz(unsigned long long l);
  * point value in round-down (to negative infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_ull2double_rd(unsigned long long l);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_ull2double_rd(unsigned long long l) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert an unsigned 64-bit int to a double in round-up mode.
@@ -12104,7 +12418,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_ull2double_rd(unsigned long long l);
  * point value in round-up (to positive infinity) mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_ull2double_ru(unsigned long long l);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_ull2double_ru(unsigned long long l) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -12114,7 +12428,7 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_ull2double_ru(unsigned long long l);
  * represented in <tt>unsigned short</tt> format, in round-to-nearest-even mode.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ unsigned short __nv_float2half_rn(float f);
+__DEVICE_FUNCTIONS_DECLS__ unsigned short __nv_float2half_rn(float f) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Convert a half-precision float to a single-precision float in round-to-nearest-even mode.
@@ -12123,7 +12437,7 @@ __DEVICE_FUNCTIONS_DECLS__ unsigned short __nv_float2half_rn(float f);
  * <tt>unsigned short</tt> format to a single-precision floating point value.
  * \return Returns converted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_half2float(unsigned short h);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_half2float(unsigned short h) __THROW;
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
  * \brief Reinterpret bits in an integer as a float.
@@ -12132,7 +12446,7 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_half2float(unsigned short h);
  * floating point value.
  * \return Returns reinterpreted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ float __nv_int_as_float(int x);
+__DEVICE_FUNCTIONS_DECLS__ float __nv_int_as_float(int x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -12142,7 +12456,27 @@ __DEVICE_FUNCTIONS_DECLS__ float __nv_int_as_float(int x);
  * as a signed integer.
  * \return Returns reinterpreted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ int __nv_float_as_int(float x);
+__DEVICE_FUNCTIONS_DECLS__ int __nv_float_as_int(float x) __THROW;
+    
+/**
+ * \ingroup CUDA_MATH_INTRINSIC_CAST
+ * \brief Reinterpret bits in an unsigned integer as a float.
+ *
+ * Reinterpret the bits in the unsigned integer value \p x as a single-precision
+ * floating point value.
+ * \return Returns reinterpreted value.
+ */
+__DEVICE_FUNCTIONS_DECLS__ float __nv_uint_as_float(unsigned int x) __THROW;
+
+/**
+ * \ingroup CUDA_MATH_INTRINSIC_CAST
+ * \brief Reinterpret bits in a float as a unsigned integer.
+ *
+ * Reinterpret the bits in the single-precision floating point value \p x
+ * as a unsigned integer.
+ * \return Returns reinterpreted value.
+ */
+__DEVICE_FUNCTIONS_DECLS__ unsigned int __nv_float_as_uint(float x) __THROW;
     
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -12152,7 +12486,7 @@ __DEVICE_FUNCTIONS_DECLS__ int __nv_float_as_int(float x);
  * a double-precision floating point value.
  * \return Returns reinterpreted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ double __nv_longlong_as_double(long long x);
+__DEVICE_FUNCTIONS_DECLS__ double __nv_longlong_as_double(long long x) __THROW;
 
 /**
  * \ingroup CUDA_MATH_INTRINSIC_CAST
@@ -12162,7 +12496,41 @@ __DEVICE_FUNCTIONS_DECLS__ double __nv_longlong_as_double(long long x);
  * as a signed 64-bit integer.
  * \return Returns reinterpreted value.
  */
-__DEVICE_FUNCTIONS_DECLS__ long long  __nv_double_as_longlong (double x);
+__DEVICE_FUNCTIONS_DECLS__ long long  __nv_double_as_longlong (double x) __THROW;
+
+#if defined(__CUDACC_INTEGRATED__)
+__DEVICE_FUNCTIONS_DECLS__ void __syncthreads(void) __asm("llvm.cuda.syncthreads");
+__DEVICE_FUNCTIONS_DECLS__ float  __nvvm_atom_add_gen_f(volatile float *, float) __asm("llvm.nvvm.atomic.load.add.f32.p0f32");
+__DEVICE_FUNCTIONS_DECLS__ int    __nvvm_atom_add_gen_d(volatile int *, double) __asm("llvm.nvvm.atomic.load.add.f64.p0f64");
+__DEVICE_FUNCTIONS_DECLS__ int    __nvvm_atom_add_gen_i(volatile int *, int);
+__DEVICE_FUNCTIONS_DECLS__ long long __nvvm_atom_add_gen_ll(volatile long long *, long long);
+__DEVICE_FUNCTIONS_DECLS__ int __nvvm_atom_and_gen_i(volatile int *, int);
+__DEVICE_FUNCTIONS_DECLS__ long long __nvvm_atom_and_gen_ll(volatile long long *, long long);
+__DEVICE_FUNCTIONS_DECLS__ int __nvvm_atom_cas_gen_i(volatile int *, int, int);
+__DEVICE_FUNCTIONS_DECLS__ long long __nvvm_atom_cas_gen_ll(volatile long long *, long long, long long);
+__DEVICE_FUNCTIONS_DECLS__ unsigned __nvvm_atom_dec_gen_ui(volatile unsigned *, unsigned) __asm("llvm.nvvm.atomic.load.dec.32.p0i32");
+__DEVICE_FUNCTIONS_DECLS__ unsigned __nvvm_atom_inc_gen_ui(volatile unsigned *, unsigned) __asm("llvm.nvvm.atomic.load.inc.32.p0i32");
+__DEVICE_FUNCTIONS_DECLS__ int __nvvm_atom_max_gen_i(volatile int *, int);
+__DEVICE_FUNCTIONS_DECLS__ long long __nvvm_atom_max_gen_ll(volatile long long *, long long);
+__DEVICE_FUNCTIONS_DECLS__ unsigned __nvvm_atom_max_gen_ui(volatile unsigned *, unsigned);
+__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nvvm_atom_max_gen_ull(volatile unsigned long long *, unsigned long long);
+__DEVICE_FUNCTIONS_DECLS__ int __nvvm_atom_min_gen_i(volatile int *, int);
+__DEVICE_FUNCTIONS_DECLS__ long long __nvvm_atom_min_gen_ll(volatile long long *, long long);
+__DEVICE_FUNCTIONS_DECLS__ unsigned  __nvvm_atom_min_gen_ui(volatile unsigned *, unsigned);
+__DEVICE_FUNCTIONS_DECLS__ unsigned long long __nvvm_atom_min_gen_ull(volatile unsigned long long *, unsigned long long);
+__DEVICE_FUNCTIONS_DECLS__ int __nvvm_atom_or_gen_i(volatile int *, int);
+__DEVICE_FUNCTIONS_DECLS__ long long __nvvm_atom_or_gen_ll(volatile long long *, long long);
+__DEVICE_FUNCTIONS_DECLS__ int __nvvm_atom_xchg_gen_i(volatile int *, int);
+__DEVICE_FUNCTIONS_DECLS__ long long __nvvm_atom_xchg_gen_ll(volatile long long *, long long);
+__DEVICE_FUNCTIONS_DECLS__ int __nvvm_atom_xor_gen_i(volatile int *, int);
+__DEVICE_FUNCTIONS_DECLS__ long long __nvvm_atom_xor_gen_ll(volatile long long *, long long);
+__DEVICE_FUNCTIONS_DECLS__ int __nvvm_bar0_and(int) __asm("llvm.nvvm.barrier0.and");
+__DEVICE_FUNCTIONS_DECLS__ int __nvvm_bar0_or(int) __asm("llvm.nvvm.barrier0.or");
+__DEVICE_FUNCTIONS_DECLS__ int __nvvm_bar0_popc(int) __asm("llvm.nvvm.barrier0.popc");
+__DEVICE_FUNCTIONS_DECLS__ void __nvvm_membar_cta(void) __asm("llvm.nvvm.membar.cta");
+__DEVICE_FUNCTIONS_DECLS__ void __nvvm_membar_gl(void) __asm("llvm.nvvm.membar.gl");
+__DEVICE_FUNCTIONS_DECLS__ void __nvvm_membar_sys(void) __asm("llvm.nvvm.membar.sys");
+#endif  /* defined(__CUDACC_INTEGRATED__) */
 
 #if defined(__cplusplus)
 }

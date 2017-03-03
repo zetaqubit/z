@@ -10,7 +10,7 @@
  */
 
 // OpenGL Graphics includes
-#include <GL/glew.h>
+#include <helper_gl.h>
 #if defined(__APPLE__) || defined(MACOSX)
   #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   #include <GLUT/glut.h>
@@ -251,12 +251,6 @@ void cleanup(void)
 
     sdkDeleteTimer(&timer);
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 }
 
 void initializeData(char *file)
@@ -287,12 +281,6 @@ void initializeData(char *file)
     }
     else
     {
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 
@@ -317,12 +305,6 @@ void initializeData(char *file)
         {
             printf("Buffer object (%d) has incorrect size (%d).\n", (unsigned)pbo_buffer, (unsigned)bsize);
 
-            // cudaDeviceReset causes the driver to clean up all state. While
-            // not mandatory in normal operation, it is good practice.  It is also
-            // needed to ensure correct operation when the application is being
-            // profiled. Calling cudaDeviceReset causes all profile data to be
-            // flushed before the application exits
-            cudaDeviceReset();
             exit(EXIT_FAILURE);
         }
 
@@ -367,9 +349,8 @@ void initGL(int *argc, char **argv)
     glutInitWindowSize(wWidth, wHeight);
     glutCreateWindow("CUDA Edge Detection");
 
-    glewInit();
-
-    if (!glewIsSupported("GL_VERSION_1_5 GL_ARB_vertex_buffer_object GL_ARB_pixel_buffer_object"))
+    if (!isGLVersionSupported(1,5) ||
+        !areGLExtensionsSupported("GL_ARB_vertex_buffer_object GL_ARB_pixel_buffer_object"))
     {
         fprintf(stderr, "Error: failed to get minimal extensions for demo\n");
         fprintf(stderr, "This sample requires:\n");
@@ -496,7 +477,7 @@ int main(int argc, char **argv)
 
     loadDefaultImage(argv[0]);
 
-    // If code is not printing the USage, then we execute this path.
+    // If code is not printing the usage, then we execute this path.
     printf("I: display Image (no filtering)\n");
     printf("T: display Sobel Edge Detection (Using Texture)\n");
     printf("S: display Sobel Edge Detection (Using SMEM+Texture)\n");

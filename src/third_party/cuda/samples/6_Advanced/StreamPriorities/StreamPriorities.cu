@@ -70,13 +70,6 @@ int main(int argc, char **argv)
     if ((device_prop.major << 4) + device_prop.minor < 0x35)
     {
         fprintf(stderr, "%s requires Compute Capability of SM 3.5 or higher to run.\nexiting...\n", argv[0]);
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_WAIVED);
     }
 

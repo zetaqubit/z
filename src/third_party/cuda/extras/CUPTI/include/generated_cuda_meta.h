@@ -651,6 +651,37 @@ typedef struct cuPointerGetAttribute_params_st {
     CUdeviceptr ptr;
 } cuPointerGetAttribute_params;
 
+typedef struct cuMemPrefetchAsync_ptsz_params_st {
+    CUdeviceptr devPtr;
+    size_t count;
+    CUdevice dstDevice;
+    CUstream hStream;
+} cuMemPrefetchAsync_ptsz_params;
+
+typedef struct cuMemAdvise_params_st {
+    CUdeviceptr devPtr;
+    size_t count;
+    CUmem_advise advice;
+    CUdevice device;
+} cuMemAdvise_params;
+
+typedef struct cuMemRangeGetAttribute_params_st {
+    void *data;
+    size_t dataSize;
+    CUmem_range_attribute attribute;
+    CUdeviceptr devPtr;
+    size_t count;
+} cuMemRangeGetAttribute_params;
+
+typedef struct cuMemRangeGetAttributes_params_st {
+    void **data;
+    size_t *dataSizes;
+    CUmem_range_attribute *attributes;
+    size_t numAttributes;
+    CUdeviceptr devPtr;
+    size_t count;
+} cuMemRangeGetAttributes_params;
+
 typedef struct cuPointerSetAttribute_params_st {
     const void *value;
     CUpointer_attribute attribute;
@@ -744,6 +775,27 @@ typedef struct cuEventElapsedTime_params_st {
     CUevent hStart;
     CUevent hEnd;
 } cuEventElapsedTime_params;
+
+typedef struct cuStreamWaitValue32_ptsz_params_st {
+    CUstream stream;
+    CUdeviceptr addr;
+    cuuint32_t value;
+    unsigned int flags;
+} cuStreamWaitValue32_ptsz_params;
+
+typedef struct cuStreamWriteValue32_ptsz_params_st {
+    CUstream stream;
+    CUdeviceptr addr;
+    cuuint32_t value;
+    unsigned int flags;
+} cuStreamWriteValue32_ptsz_params;
+
+typedef struct cuStreamBatchMemOp_ptsz_params_st {
+    CUstream stream;
+    unsigned int count;
+    CUstreamBatchMemOpParams *paramArray;
+    unsigned int flags;
+} cuStreamBatchMemOp_ptsz_params;
 
 typedef struct cuFuncGetAttribute_params_st {
     int *pi;
@@ -932,6 +984,11 @@ typedef struct cuTexRefSetMaxAnisotropy_params_st {
     unsigned int maxAniso;
 } cuTexRefSetMaxAnisotropy_params;
 
+typedef struct cuTexRefSetBorderColor_params_st {
+    CUtexref hTexRef;
+    float *pBorderColor;
+} cuTexRefSetBorderColor_params;
+
 typedef struct cuTexRefSetFlags_params_st {
     CUtexref hTexRef;
     unsigned int Flags;
@@ -989,6 +1046,11 @@ typedef struct cuTexRefGetMaxAnisotropy_params_st {
     int *pmaxAniso;
     CUtexref hTexRef;
 } cuTexRefGetMaxAnisotropy_params;
+
+typedef struct cuTexRefGetBorderColor_params_st {
+    float *pBorderColor;
+    CUtexref hTexRef;
+} cuTexRefGetBorderColor_params;
 
 typedef struct cuTexRefGetFlags_params_st {
     unsigned int *pFlags;
@@ -1059,6 +1121,13 @@ typedef struct cuDeviceCanAccessPeer_params_st {
     CUdevice dev;
     CUdevice peerDev;
 } cuDeviceCanAccessPeer_params;
+
+typedef struct cuDeviceGetP2PAttribute_params_st {
+    int *value;
+    CUdevice_P2PAttribute attrib;
+    CUdevice srcDevice;
+    CUdevice dstDevice;
+} cuDeviceGetP2PAttribute_params;
 
 typedef struct cuCtxEnablePeerAccess_params_st {
     CUcontext peerContext;
@@ -1745,3 +1814,31 @@ typedef struct cuGraphicsUnmapResources_params_st {
     CUgraphicsResource *resources;
     CUstream hStream;
 } cuGraphicsUnmapResources_params;
+
+typedef struct cuMemPrefetchAsync_params_st {
+    CUdeviceptr devPtr;
+    size_t count;
+    CUdevice dstDevice;
+    CUstream hStream;
+} cuMemPrefetchAsync_params;
+
+typedef struct cuStreamWriteValue32_params_st {
+    CUstream stream;
+    CUdeviceptr addr;
+    cuuint32_t value;
+    unsigned int flags;
+} cuStreamWriteValue32_params;
+
+typedef struct cuStreamWaitValue32_params_st {
+    CUstream stream;
+    CUdeviceptr addr;
+    cuuint32_t value;
+    unsigned int flags;
+} cuStreamWaitValue32_params;
+
+typedef struct cuStreamBatchMemOp_params_st {
+    CUstream stream;
+    unsigned int count;
+    CUstreamBatchMemOpParams *paramArray;
+    unsigned int flags;
+} cuStreamBatchMemOp_params;

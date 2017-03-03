@@ -34,7 +34,7 @@
 ################################################################################
 
 # Location of the CUDA Toolkit
-CUDA_PATH ?= "/opt/cuda"
+CUDA_PATH ?= "/home/z/Downloads/cuda_8.0.61"
 
 ##############################
 # start deprecated interface #
@@ -74,10 +74,16 @@ endif
 # architecture
 HOST_ARCH   := $(shell uname -m)
 TARGET_ARCH ?= $(HOST_ARCH)
-ifneq (,$(filter $(TARGET_ARCH),x86_64 aarch64 ppc64le))
-    TARGET_SIZE := 64
-else ifeq ($(TARGET_ARCH),armv7l)
-    TARGET_SIZE := 32
+ifneq (,$(filter $(TARGET_ARCH),x86_64 aarch64 ppc64le armv7l))
+    ifneq ($(TARGET_ARCH),$(HOST_ARCH))
+        ifneq (,$(filter $(TARGET_ARCH),x86_64 aarch64 ppc64le))
+            TARGET_SIZE := 64
+        else ifneq (,$(filter $(TARGET_ARCH),armv7l))
+            TARGET_SIZE := 32
+        endif
+    else
+        TARGET_SIZE := $(shell getconf LONG_BIT)
+    endif
 else
     $(error ERROR - unsupported value $(TARGET_ARCH) for TARGET_ARCH!)
 endif
@@ -85,6 +91,11 @@ ifneq ($(TARGET_ARCH),$(HOST_ARCH))
     ifeq (,$(filter $(HOST_ARCH)-$(TARGET_ARCH),aarch64-armv7l x86_64-armv7l x86_64-aarch64 x86_64-ppc64le))
         $(error ERROR - cross compiling from $(HOST_ARCH) to $(TARGET_ARCH) is not supported!)
     endif
+endif
+
+# When on native aarch64 system with userspace of 32-bit, change TARGET_ARCH to armv7l
+ifeq ($(HOST_ARCH)-$(TARGET_ARCH)-$(TARGET_SIZE),aarch64-aarch64-32)
+    TARGET_ARCH = armv7l
 endif
 
 # operating system
@@ -119,6 +130,16 @@ else ifneq ($(TARGET_ARCH),$(HOST_ARCH))
     else ifeq ($(TARGET_ARCH),aarch64)
         ifeq ($(TARGET_OS), linux)
             HOST_COMPILER ?= aarch64-linux-gnu-g++
+        else ifeq ($(TARGET_OS),qnx)
+            ifeq ($(QNX_HOST),)
+                $(error ERROR - QNX_HOST must be passed to the QNX host toolchain)
+            endif
+            ifeq ($(QNX_TARGET),)
+                $(error ERROR - QNX_TARGET must be passed to the QNX target toolchain)
+            endif
+            export QNX_HOST
+            export QNX_TARGET
+            HOST_COMPILER ?= $(QNX_HOST)/usr/bin/aarch64-unknown-nto-qnx7.0.0-g++
         else ifeq ($(TARGET_OS), android)
             HOST_COMPILER ?= aarch64-linux-android-g++
         endif
@@ -175,6 +196,10 @@ ALL_CCFLAGS += $(EXTRA_NVCCFLAGS)
 ALL_CCFLAGS += $(addprefix -Xcompiler ,$(CCFLAGS))
 ALL_CCFLAGS += $(addprefix -Xcompiler ,$(EXTRA_CCFLAGS))
 
+UBUNTU = $(shell lsb_release -i -s 2>/dev/null | grep -i ubuntu)
+
+SAMPLE_ENABLED := 1
+
 ALL_LDFLAGS :=
 ALL_LDFLAGS += $(ALL_CCFLAGS)
 ALL_LDFLAGS += $(addprefix -Xlinker ,$(LDFLAGS))
@@ -185,10 +210,6 @@ INCLUDES  := -I../../common/inc
 LIBRARIES :=
 
 ################################################################################
-
-UBUNTU = $(shell lsb_release -i -s 2>/dev/null | grep -i ubuntu)
-
-SAMPLE_ENABLED := 1
 
 PTX_FILE := matrixMul_kernel${TARGET_SIZE}.ptx
 
@@ -212,7 +233,7 @@ endif
 endif
 
 ifeq ($(TARGET_OS),darwin)
-  ALL_LDFLAGS += -Xlinker -framework -Xlinker CUDA
+  ALL_LDFLAGS += -Xcompiler -F/Library/Frameworks -Xlinker -framework -Xlinker CUDA
 else
   CUDA_SEARCH_PATH ?=
   ifneq ($(TARGET_ARCH),$(HOST_ARCH))
@@ -224,10 +245,16 @@ else
       endif
       CUDA_SEARCH_PATH += $(CUDA_PATH)/targets/armv7-linux-gnueabihf/lib/stubs
       CUDA_SEARCH_PATH += /usr/arm-linux-gnueabihf/lib
+    else ifeq ($(TARGET_ARCH)-$(TARGET_OS),aarch64-linux)
+      CUDA_SEARCH_PATH += $(CUDA_PATH)/targets/aarch64-linux/lib/stubs
     else ifeq ($(TARGET_ARCH)-$(TARGET_OS),armv7l-android)
       CUDA_SEARCH_PATH += $(CUDA_PATH)/targets/armv7-linux-androideabi/lib/stubs
     else ifeq ($(TARGET_ARCH)-$(TARGET_OS),aarch64-android)
       CUDA_SEARCH_PATH += $(CUDA_PATH)/targets/aarch64-linux-androideabi/lib/stubs
+    else ifeq ($(TARGET_ARCH)-$(TARGET_OS),armv7l-qnx)
+      CUDA_SEARCH_PATH += $(CUDA_PATH)/targets/ARMv7-linux-QNX/lib/stubs
+    else ifeq ($(TARGET_ARCH)-$(TARGET_OS),aarch64-qnx)
+      CUDA_SEARCH_PATH += $(CUDA_PATH)/targets/aarch64-qnx/lib/stubs
     else ifeq ($(TARGET_ARCH)-$(TARGET_OS),ppc64le-linux)
       CUDA_SEARCH_PATH += $(CUDA_PATH)/targets/ppc64le-linux/lib/stubs
     endif
@@ -249,9 +276,11 @@ else
 
     ifeq ($(TARGET_ARCH),aarch64)
       CUDA_SEARCH_PATH += /usr/lib
+      CUDA_SEARCH_PATH += $(CUDA_PATH)/targets/aarch64-linux/lib/stubs
     endif
 
     ifeq ($(TARGET_ARCH),ppc64le)
+      CUDA_SEARCH_PATH += $(CUDA_PATH)/targets/ppc64le-linux/lib/stubs
       CUDA_SEARCH_PATH += /usr/lib/powerpc64le-linux-gnu
     endif
   endif

@@ -58,7 +58,7 @@ computeGerschgorin(float *d, float *s, unsigned int n, float &lg, float &ug)
     // increase interval to avoid side effects of fp arithmetic
     float bnorm = max(fabsf(ug), fabsf(lg));
 
-    // these values depend on the implmentation of floating count that is
+    // these values depend on the implementation of floating count that is
     // employed in the following
     float psi_0 = 11 * FLT_EPSILON * bnorm;
     float psi_n = 11 * FLT_EPSILON * bnorm;

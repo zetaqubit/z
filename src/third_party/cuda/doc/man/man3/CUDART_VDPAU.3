@@ -1,0 +1,167 @@
+.TH "VDPAU Interoperability" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+VDPAU Interoperability \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaGraphicsVDPAURegisterOutputSurface\fP (struct cudaGraphicsResource **resource, VdpOutputSurface vdpSurface, unsigned int flags)"
+.br
+.RI "\fIRegister a VdpOutputSurface object. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaGraphicsVDPAURegisterVideoSurface\fP (struct cudaGraphicsResource **resource, VdpVideoSurface vdpSurface, unsigned int flags)"
+.br
+.RI "\fIRegister a VdpVideoSurface object. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaVDPAUGetDevice\fP (int *device, VdpDevice vdpDevice, VdpGetProcAddress *vdpGetProcAddress)"
+.br
+.RI "\fIGets the CUDA device associated with a VdpDevice. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaVDPAUSetVDPAUDevice\fP (int device, VdpDevice vdpDevice, VdpGetProcAddress *vdpGetProcAddress)"
+.br
+.RI "\fISets a CUDA device to use VDPAU interoperability. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+This section describes the VDPAU interoperability functions of the CUDA runtime application programming interface. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBcudaError_t\fP cudaGraphicsVDPAURegisterOutputSurface (struct cudaGraphicsResource ** resource, VdpOutputSurface vdpSurface, unsigned int flags)"
+.PP
+Registers the VdpOutputSurface specified by \fCvdpSurface\fP for access by CUDA. A handle to the registered object is returned as \fCresource\fP. The surface's intended usage is specified using \fCflags\fP, as follows:
+.PP
+.IP "\(bu" 2
+\fBcudaGraphicsMapFlagsNone\fP: Specifies no hints about how this resource will be used. It is therefore assumed that this resource will be read from and written to by CUDA. This is the default value.
+.IP "\(bu" 2
+\fBcudaGraphicsMapFlagsReadOnly\fP: Specifies that CUDA will not write to this resource.
+.IP "\(bu" 2
+\fBcudaGraphicsMapFlagsWriteDiscard\fP: Specifies that CUDA will not read from this resource and will write over the entire contents of the resource, so none of the data previously stored in the resource will be preserved.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIresource\fP - Pointer to the returned object handle 
+.br
+\fIvdpSurface\fP - VDPAU object to be registered 
+.br
+\fIflags\fP - Map flags
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidDevice\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidResourceHandle\fP, \fBcudaErrorUnknown\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaVDPAUSetVDPAUDevice\fP, \fBcudaGraphicsUnregisterResource\fP, \fBcudaGraphicsSubResourceGetMappedArray\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaGraphicsVDPAURegisterVideoSurface (struct cudaGraphicsResource ** resource, VdpVideoSurface vdpSurface, unsigned int flags)"
+.PP
+Registers the VdpVideoSurface specified by \fCvdpSurface\fP for access by CUDA. A handle to the registered object is returned as \fCresource\fP. The surface's intended usage is specified using \fCflags\fP, as follows:
+.PP
+.IP "\(bu" 2
+\fBcudaGraphicsMapFlagsNone\fP: Specifies no hints about how this resource will be used. It is therefore assumed that this resource will be read from and written to by CUDA. This is the default value.
+.IP "\(bu" 2
+\fBcudaGraphicsMapFlagsReadOnly\fP: Specifies that CUDA will not write to this resource.
+.IP "\(bu" 2
+\fBcudaGraphicsMapFlagsWriteDiscard\fP: Specifies that CUDA will not read from this resource and will write over the entire contents of the resource, so none of the data previously stored in the resource will be preserved.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIresource\fP - Pointer to the returned object handle 
+.br
+\fIvdpSurface\fP - VDPAU object to be registered 
+.br
+\fIflags\fP - Map flags
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidDevice\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidResourceHandle\fP, \fBcudaErrorUnknown\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaVDPAUSetVDPAUDevice\fP, \fBcudaGraphicsUnregisterResource\fP, \fBcudaGraphicsSubResourceGetMappedArray\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaVDPAUGetDevice (int * device, VdpDevice vdpDevice, VdpGetProcAddress * vdpGetProcAddress)"
+.PP
+Returns the CUDA device associated with a VdpDevice, if applicable.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevice\fP - Returns the device associated with vdpDevice, or -1 if the device associated with vdpDevice is not a compute device. 
+.br
+\fIvdpDevice\fP - A VdpDevice handle 
+.br
+\fIvdpGetProcAddress\fP - VDPAU's VdpGetProcAddress function pointer
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaVDPAUSetVDPAUDevice\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaVDPAUSetVDPAUDevice (int device, VdpDevice vdpDevice, VdpGetProcAddress * vdpGetProcAddress)"
+.PP
+Records \fCvdpDevice\fP as the VdpDevice for VDPAU interoperability with the CUDA device \fCdevice\fP and sets \fCdevice\fP as the current device for the calling host thread.
+.PP
+If \fCdevice\fP has already been initialized then this call will fail with the error \fBcudaErrorSetOnActiveProcess\fP. In this case it is necessary to reset \fCdevice\fP using \fBcudaDeviceReset()\fP before VDPAU interoperability on \fCdevice\fP may be enabled.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevice\fP - Device to use for VDPAU interoperability 
+.br
+\fIvdpDevice\fP - The VdpDevice to interoperate with 
+.br
+\fIvdpGetProcAddress\fP - VDPAU's VdpGetProcAddress function pointer
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidDevice\fP, \fBcudaErrorSetOnActiveProcess\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaGraphicsVDPAURegisterVideoSurface\fP, \fBcudaGraphicsVDPAURegisterOutputSurface\fP, \fBcudaDeviceReset\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

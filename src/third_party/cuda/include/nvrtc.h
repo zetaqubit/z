@@ -81,7 +81,11 @@ typedef enum {
   NVRTC_ERROR_INVALID_PROGRAM = 4,
   NVRTC_ERROR_INVALID_OPTION = 5,
   NVRTC_ERROR_COMPILATION = 6,
-  NVRTC_ERROR_BUILTIN_OPERATION_FAILURE = 7
+  NVRTC_ERROR_BUILTIN_OPERATION_FAILURE = 7,
+  NVRTC_ERROR_NO_NAME_EXPRESSIONS_AFTER_COMPILATION = 8,
+  NVRTC_ERROR_NO_LOWERED_NAMES_BEFORE_COMPILATION = 9,
+  NVRTC_ERROR_NAME_EXPRESSION_NOT_VALID = 10,
+  NVRTC_ERROR_INTERNAL_ERROR = 11
 } nvrtcResult;
 
 
@@ -177,8 +181,8 @@ nvrtcResult nvrtcCreateProgram(nvrtcProgram *prog,
                                const char *src,
                                const char *name,
                                int numHeaders,
-                               const char **headers,
-                               const char **includeNames);
+                               const char * const *headers,
+                               const char * const *includeNames);
 
 
 /**
@@ -202,7 +206,7 @@ nvrtcResult nvrtcDestroyProgram(nvrtcProgram *prog);
  * It supports compile options listed in \ref options.
  */
 nvrtcResult nvrtcCompileProgram(nvrtcProgram prog,
-                                int numOptions, const char **options);
+                                int numOptions, const char * const *options);
 
 
 /**
@@ -278,6 +282,54 @@ nvrtcResult nvrtcGetProgramLogSize(nvrtcProgram prog, size_t *logSizeRet);
  * \see     ::nvrtcGetProgramLogSize
  */
 nvrtcResult nvrtcGetProgramLog(nvrtcProgram prog, char *log);
+
+
+/**
+ * \ingroup compilation
+ * \brief   nvrtcAddNameExpression notes the given name expression
+ *          denoting a __global__ function or function template
+ *          instantiation.
+ *
+ * The identical name expression string must be provided on a subsequent
+ * call to nvrtcGetLoweredName to extract the lowered name.
+ * \param   [in]  prog CUDA Runtime Compilation program.
+ * \param   [in] name_expression constant expression denoting a __global__
+ *               function or function template instantiation.
+ * \return
+ *   - \link #nvrtcResult NVRTC_SUCCESS \endlink
+ *   - \link #nvrtcResult NVRTC_ERROR_NO_NAME_EXPRESSIONS_AFTER_COMPILATION \endlink
+ *
+ * \see     ::nvrtcGetLoweredName
+ */
+nvrtcResult nvrtcAddNameExpression(nvrtcProgram prog,
+                                   const char * const name_expression);
+
+/**
+ * \ingroup compilation
+ * \brief   nvrtcGetLoweredName extracts the lowered (mangled) name
+ *          for a __global__ function or function template instantiation,
+ *          and updates *lowered_name to point to it. The memory containing
+ *          the name is released when the NVRTC program is destroyed by 
+ *          nvrtcDestroyProgram.
+ *          The identical name expression must have been previously
+ *          provided to nvrtcAddNameExpression.
+ *
+ * \param   [in]  prog CUDA Runtime Compilation program.
+ * \param   [in] name_expression constant expression denoting a __global__
+ *               function or function template instantiation.
+ * \param   [out] lowered_name initialized by the function to point to a
+ *               C string containing the lowered (mangled)
+ *               name corresponding to the provided name expression.
+ * \return
+ *   - \link #nvrtcResult NVRTC_SUCCESS \endlink
+ *   - \link #nvrtcResult NVRTC_ERROR_NO_LOWERED_NAMES_BEFORE_COMPILATION \endlink
+ *   - \link #nvrtcResult NVRTC_ERROR_NAME_EXPRESSION_NOT_VALID \endlink
+ *
+ * \see     ::nvrtcAddNameExpression
+ */
+nvrtcResult nvrtcGetLoweredName(nvrtcProgram prog,
+                                const char *const name_expression,
+                                const char** lowered_name);
 
 
 /**
@@ -425,5 +477,78 @@ nvrtcResult nvrtcGetProgramLog(nvrtcProgram prog, char *log);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+
+/* The utility function 'nvrtcGetTypeName' is not available by default. Define
+   the macro 'NVRTC_GET_TYPE_NAME' to a non-zero value to make it available.
+*/
+   
+#if NVRTC_GET_TYPE_NAME || __DOXYGEN_ONLY__
+
+#if NVRTC_USE_CXXABI || __clang__ || __GNUC__ || __DOXYGEN_ONLY__
+#include <cxxabi.h>
+#include <cstdlib>
+
+#elif defined(_WIN32)
+#include <Windows.h>
+#include <DbgHelp.h>
+#endif /* NVRTC_USE_CXXABI || __clang__ || __GNUC__ */
+
+
+#include <string>
+#include <typeinfo>
+
+
+/*************************************************************************//**
+ *
+ * \defgroup hosthelper Host Helper
+ *
+ * NVRTC defines the following functions for easier interaction with host code.
+ *
+ ****************************************************************************/
+
+/**
+ * \ingroup hosthelper
+ * \brief   nvrtcGetTypeName stores the source level name of the template type argument
+ *          T in the given std::string location.
+ *
+ * This function is only provided when the macro NVRTC_GET_TYPE_NAME is
+ * defined with a non-zero value. It uses abi::__cxa_demangle or UnDecorateSymbolName
+ * function calls to extract the type name, when using gcc/clang or cl.exe compilers,
+ * respectively. If the name extraction fails, it will return NVRTC_INTERNAL_ERROR,
+ * otherwise *result is initialized with the extracted name.
+ * 
+ * \param   [in] result: pointer to std::string in which to store the type name.
+ * \return
+ *  - \link #nvrtcResult NVRTC_SUCCESS \endlink
+ *  - \link #nvrtcResult NVRTC_ERROR_INTERNAL_ERROR \endlink
+ *
+ */
+
+template <typename T>
+nvrtcResult nvrtcGetTypeName(std::string *result)
+{
+  const char *name = typeid(T).name();
+  
+#if USE_CXXABI || __clang__ || __GNUC__
+  int status;
+  char *undecorated_name = abi::__cxa_demangle(name, 0, 0, &status);
+  if (status == 0) {
+    *result = undecorated_name;
+    free(undecorated_name);
+    return NVRTC_SUCCESS;
+  }
+#elif defined(_WIN32)
+  char undecorated_name[4096];
+  if(UnDecorateSymbolName(name, undecorated_name,
+                          sizeof(undecorated_name) / sizeof(*undecorated_name),
+                          UNDNAME_COMPLETE) ) {
+    *result = undecorated_name;
+    return NVRTC_SUCCESS;
+  }
+#endif  /* USE_CXXABI || __clang__ || __GNUC__ */
+  return NVRTC_ERROR_INTERNAL_ERROR;
+}
+#endif  /* NVRTC_GET_TYPE_NAME */
 
 #endif /* __NVRTC_H__ */

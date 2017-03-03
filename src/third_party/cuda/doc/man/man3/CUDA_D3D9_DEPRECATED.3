@@ -1,0 +1,522 @@
+.TH "Direct3D 9 Interoperability [DEPRECATED]" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Direct3D 9 Interoperability [DEPRECATED] \- 
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBCUd3d9map_flags\fP "
+.br
+.ti -1c
+.RI "enum \fBCUd3d9register_flags\fP "
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCUresult\fP \fBcuD3D9MapResources\fP (unsigned int count, IDirect3DResource9 **ppResource)"
+.br
+.RI "\fIMap Direct3D resources for access by CUDA. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuD3D9RegisterResource\fP (IDirect3DResource9 *pResource, unsigned int Flags)"
+.br
+.RI "\fIRegister a Direct3D resource for access by CUDA. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuD3D9ResourceGetMappedArray\fP (\fBCUarray\fP *pArray, IDirect3DResource9 *pResource, unsigned int Face, unsigned int Level)"
+.br
+.RI "\fIGet an array through which to access a subresource of a Direct3D resource which has been mapped for access by CUDA. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuD3D9ResourceGetMappedPitch\fP (size_t *pPitch, size_t *pPitchSlice, IDirect3DResource9 *pResource, unsigned int Face, unsigned int Level)"
+.br
+.RI "\fIGet the pitch of a subresource of a Direct3D resource which has been mapped for access by CUDA. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuD3D9ResourceGetMappedPointer\fP (\fBCUdeviceptr\fP *pDevPtr, IDirect3DResource9 *pResource, unsigned int Face, unsigned int Level)"
+.br
+.RI "\fIGet the pointer through which to access a subresource of a Direct3D resource which has been mapped for access by CUDA. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuD3D9ResourceGetMappedSize\fP (size_t *pSize, IDirect3DResource9 *pResource, unsigned int Face, unsigned int Level)"
+.br
+.RI "\fIGet the size of a subresource of a Direct3D resource which has been mapped for access by CUDA. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuD3D9ResourceGetSurfaceDimensions\fP (size_t *pWidth, size_t *pHeight, size_t *pDepth, IDirect3DResource9 *pResource, unsigned int Face, unsigned int Level)"
+.br
+.RI "\fIGet the dimensions of a registered surface. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuD3D9ResourceSetMapFlags\fP (IDirect3DResource9 *pResource, unsigned int Flags)"
+.br
+.RI "\fISet usage flags for mapping a Direct3D resource. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuD3D9UnmapResources\fP (unsigned int count, IDirect3DResource9 **ppResource)"
+.br
+.RI "\fIUnmaps Direct3D resources. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuD3D9UnregisterResource\fP (IDirect3DResource9 *pResource)"
+.br
+.RI "\fIUnregister a Direct3D resource. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief deprecated Direct3D 9 interoperability functions of the low-level CUDA driver API (\fBcudaD3D9.h\fP)
+.PP
+This section describes deprecated Direct3D 9 interoperability functionality. 
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBCUd3d9map_flags\fP"
+.PP
+Flags to map or unmap a resource 
+.SS "enum \fBCUd3d9register_flags\fP"
+.PP
+Flags to register a resource 
+.SH "Function Documentation"
+.PP 
+.SS "\fBCUresult\fP cuD3D9MapResources (unsigned int count, IDirect3DResource9 ** ppResource)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 3.0.
+.RE
+.PP
+Maps the \fCcount\fP Direct3D resources in \fCppResource\fP for access by CUDA.
+.PP
+The resources in \fCppResource\fP may be accessed in CUDA kernels until they are unmapped. Direct3D should not access any resources while they are mapped by CUDA. If an application does so the results are undefined.
+.PP
+This function provides the synchronization guarantee that any Direct3D calls issued before \fBcuD3D9MapResources()\fP will complete before any CUDA kernels issued after \fBcuD3D9MapResources()\fP begin.
+.PP
+If any of \fCppResource\fP have not been registered for use with CUDA or if \fCppResource\fP contains any duplicate entries, then \fBCUDA_ERROR_INVALID_HANDLE\fP is returned. If any of \fCppResource\fP are presently mapped for access by CUDA, then \fBCUDA_ERROR_ALREADY_MAPPED\fP is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcount\fP - Number of resources in ppResource 
+.br
+\fIppResource\fP - Resources to map for CUDA usage
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_ALREADY_MAPPED\fP, \fBCUDA_ERROR_UNKNOWN\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuGraphicsMapResources\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuD3D9RegisterResource (IDirect3DResource9 * pResource, unsigned int Flags)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 3.0.
+.RE
+.PP
+Registers the Direct3D resource \fCpResource\fP for access by CUDA.
+.PP
+If this call is successful, then the application will be able to map and unmap this resource until it is unregistered through \fBcuD3D9UnregisterResource()\fP. Also on success, this call will increase the internal reference count on \fCpResource\fP. This reference count will be decremented when this resource is unregistered through \fBcuD3D9UnregisterResource()\fP.
+.PP
+This call is potentially high-overhead and should not be called every frame in interactive applications.
+.PP
+The type of \fCpResource\fP must be one of the following.
+.PP
+.IP "\(bu" 2
+IDirect3DVertexBuffer9: Cannot be used with \fCFlags\fP set to CU_D3D9_REGISTER_FLAGS_ARRAY.
+.IP "\(bu" 2
+IDirect3DIndexBuffer9: Cannot be used with \fCFlags\fP set to CU_D3D9_REGISTER_FLAGS_ARRAY.
+.IP "\(bu" 2
+IDirect3DSurface9: Only stand-alone objects of type IDirect3DSurface9 may be explicitly shared. In particular, individual mipmap levels and faces of cube maps may not be registered directly. To access individual surfaces associated with a texture, one must register the base texture object. For restrictions on the \fCFlags\fP parameter, see type IDirect3DBaseTexture9.
+.IP "\(bu" 2
+IDirect3DBaseTexture9: When a texture is registered, all surfaces associated with the all mipmap levels of all faces of the texture will be accessible to CUDA.
+.PP
+.PP
+The \fCFlags\fP argument specifies the mechanism through which CUDA will access the Direct3D resource. The following values are allowed.
+.PP
+.IP "\(bu" 2
+CU_D3D9_REGISTER_FLAGS_NONE: Specifies that CUDA will access this resource through a \fBCUdeviceptr\fP. The pointer, size, and (for textures), pitch for each subresource of this allocation may be queried through \fBcuD3D9ResourceGetMappedPointer()\fP, \fBcuD3D9ResourceGetMappedSize()\fP, and \fBcuD3D9ResourceGetMappedPitch()\fP respectively. This option is valid for all resource types.
+.IP "\(bu" 2
+CU_D3D9_REGISTER_FLAGS_ARRAY: Specifies that CUDA will access this resource through a \fBCUarray\fP queried on a sub-resource basis through \fBcuD3D9ResourceGetMappedArray()\fP. This option is only valid for resources of type IDirect3DSurface9 and subtypes of IDirect3DBaseTexture9.
+.PP
+.PP
+Not all Direct3D resources of the above types may be used for interoperability with CUDA. The following are some limitations.
+.PP
+.IP "\(bu" 2
+The primary rendertarget may not be registered with CUDA.
+.IP "\(bu" 2
+Resources allocated as shared may not be registered with CUDA.
+.IP "\(bu" 2
+Any resources allocated in D3DPOOL_SYSTEMMEM or D3DPOOL_MANAGED may not be registered with CUDA.
+.IP "\(bu" 2
+Textures which are not of a format which is 1, 2, or 4 channels of 8, 16, or 32-bit integer or floating-point data cannot be shared.
+.IP "\(bu" 2
+Surfaces of depth or stencil formats cannot be shared.
+.PP
+.PP
+If Direct3D interoperability is not initialized on this context, then \fBCUDA_ERROR_INVALID_CONTEXT\fP is returned. If \fCpResource\fP is of incorrect type (e.g. is a non-stand-alone IDirect3DSurface9) or is already registered, then \fBCUDA_ERROR_INVALID_HANDLE\fP is returned. If \fCpResource\fP cannot be registered then \fBCUDA_ERROR_UNKNOWN\fP is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpResource\fP - Resource to register for CUDA access 
+.br
+\fIFlags\fP - Flags for resource registration
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_OUT_OF_MEMORY\fP, \fBCUDA_ERROR_UNKNOWN\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuGraphicsD3D9RegisterResource\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuD3D9ResourceGetMappedArray (\fBCUarray\fP * pArray, IDirect3DResource9 * pResource, unsigned int Face, unsigned int Level)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 3.0.
+.RE
+.PP
+Returns in \fC*pArray\fP an array through which the subresource of the mapped Direct3D resource \fCpResource\fP which corresponds to \fCFace\fP and \fCLevel\fP may be accessed. The value set in \fCpArray\fP may change every time that \fCpResource\fP is mapped.
+.PP
+If \fCpResource\fP is not registered then \fBCUDA_ERROR_INVALID_HANDLE\fP is returned. If \fCpResource\fP was not registered with usage flags CU_D3D9_REGISTER_FLAGS_ARRAY then \fBCUDA_ERROR_INVALID_HANDLE\fP is returned. If \fCpResource\fP is not mapped then \fBCUDA_ERROR_NOT_MAPPED\fP is returned.
+.PP
+For usage requirements of \fCFace\fP and \fCLevel\fP parameters, see \fBcuD3D9ResourceGetMappedPointer()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpArray\fP - Returned array corresponding to subresource 
+.br
+\fIpResource\fP - Mapped resource to access 
+.br
+\fIFace\fP - Face of resource to access 
+.br
+\fILevel\fP - Level of resource to access
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_NOT_MAPPED\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuGraphicsSubResourceGetMappedArray\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuD3D9ResourceGetMappedPitch (size_t * pPitch, size_t * pPitchSlice, IDirect3DResource9 * pResource, unsigned int Face, unsigned int Level)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 3.0.
+.RE
+.PP
+Returns in \fC*pPitch\fP and \fC*pPitchSlice\fP the pitch and Z-slice pitch of the subresource of the mapped Direct3D resource \fCpResource\fP, which corresponds to \fCFace\fP and \fCLevel\fP. The values set in \fCpPitch\fP and \fCpPitchSlice\fP may change every time that \fCpResource\fP is mapped.
+.PP
+The pitch and Z-slice pitch values may be used to compute the location of a sample on a surface as follows.
+.PP
+For a 2D surface, the byte offset of the sample at position \fBx\fP, \fBy\fP from the base pointer of the surface is:
+.PP
+\fBy\fP * \fBpitch\fP + (\fBbytes per pixel\fP) * \fBx\fP 
+.PP
+For a 3D surface, the byte offset of the sample at position \fBx\fP, \fBy\fP, \fBz\fP from the base pointer of the surface is:
+.PP
+\fBz*\fP \fBslicePitch\fP + \fBy\fP * \fBpitch\fP + (\fBbytes per pixel\fP) * \fBx\fP 
+.PP
+Both parameters \fCpPitch\fP and \fCpPitchSlice\fP are optional and may be set to NULL.
+.PP
+If \fCpResource\fP is not of type IDirect3DBaseTexture9 or one of its sub-types or if \fCpResource\fP has not been registered for use with CUDA, then cudaErrorInvalidResourceHandle is returned. If \fCpResource\fP was not registered with usage flags CU_D3D9_REGISTER_FLAGS_NONE, then \fBCUDA_ERROR_INVALID_HANDLE\fP is returned. If \fCpResource\fP is not mapped for access by CUDA then \fBCUDA_ERROR_NOT_MAPPED\fP is returned.
+.PP
+For usage requirements of \fCFace\fP and \fCLevel\fP parameters, see \fBcuD3D9ResourceGetMappedPointer()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpPitch\fP - Returned pitch of subresource 
+.br
+\fIpPitchSlice\fP - Returned Z-slice pitch of subresource 
+.br
+\fIpResource\fP - Mapped resource to access 
+.br
+\fIFace\fP - Face of resource to access 
+.br
+\fILevel\fP - Level of resource to access
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_NOT_MAPPED\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuGraphicsSubResourceGetMappedArray\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuD3D9ResourceGetMappedPointer (\fBCUdeviceptr\fP * pDevPtr, IDirect3DResource9 * pResource, unsigned int Face, unsigned int Level)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 3.0.
+.RE
+.PP
+Returns in \fC*pDevPtr\fP the base pointer of the subresource of the mapped Direct3D resource \fCpResource\fP, which corresponds to \fCFace\fP and \fCLevel\fP. The value set in \fCpDevPtr\fP may change every time that \fCpResource\fP is mapped.
+.PP
+If \fCpResource\fP is not registered, then \fBCUDA_ERROR_INVALID_HANDLE\fP is returned. If \fCpResource\fP was not registered with usage flags CU_D3D9_REGISTER_FLAGS_NONE, then \fBCUDA_ERROR_INVALID_HANDLE\fP is returned. If \fCpResource\fP is not mapped, then \fBCUDA_ERROR_NOT_MAPPED\fP is returned.
+.PP
+If \fCpResource\fP is of type IDirect3DCubeTexture9, then \fCFace\fP must one of the values enumerated by type D3DCUBEMAP_FACES. For all other types \fCFace\fP must be 0. If \fCFace\fP is invalid, then \fBCUDA_ERROR_INVALID_VALUE\fP is returned.
+.PP
+If \fCpResource\fP is of type IDirect3DBaseTexture9, then \fCLevel\fP must correspond to a valid mipmap level. At present only mipmap level 0 is supported. For all other types \fCLevel\fP must be 0. If \fCLevel\fP is invalid, then \fBCUDA_ERROR_INVALID_VALUE\fP is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpDevPtr\fP - Returned pointer corresponding to subresource 
+.br
+\fIpResource\fP - Mapped resource to access 
+.br
+\fIFace\fP - Face of resource to access 
+.br
+\fILevel\fP - Level of resource to access
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_NOT_MAPPED\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuGraphicsResourceGetMappedPointer\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuD3D9ResourceGetMappedSize (size_t * pSize, IDirect3DResource9 * pResource, unsigned int Face, unsigned int Level)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 3.0.
+.RE
+.PP
+Returns in \fC*pSize\fP the size of the subresource of the mapped Direct3D resource \fCpResource\fP, which corresponds to \fCFace\fP and \fCLevel\fP. The value set in \fCpSize\fP may change every time that \fCpResource\fP is mapped.
+.PP
+If \fCpResource\fP has not been registered for use with CUDA, then \fBCUDA_ERROR_INVALID_HANDLE\fP is returned. If \fCpResource\fP was not registered with usage flags CU_D3D9_REGISTER_FLAGS_NONE, then \fBCUDA_ERROR_INVALID_HANDLE\fP is returned. If \fCpResource\fP is not mapped for access by CUDA, then \fBCUDA_ERROR_NOT_MAPPED\fP is returned.
+.PP
+For usage requirements of \fCFace\fP and \fCLevel\fP parameters, see \fBcuD3D9ResourceGetMappedPointer\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpSize\fP - Returned size of subresource 
+.br
+\fIpResource\fP - Mapped resource to access 
+.br
+\fIFace\fP - Face of resource to access 
+.br
+\fILevel\fP - Level of resource to access
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_NOT_MAPPED\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuGraphicsResourceGetMappedPointer\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuD3D9ResourceGetSurfaceDimensions (size_t * pWidth, size_t * pHeight, size_t * pDepth, IDirect3DResource9 * pResource, unsigned int Face, unsigned int Level)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 3.0.
+.RE
+.PP
+Returns in \fC*pWidth\fP, \fC*pHeight\fP, and \fC*pDepth\fP the dimensions of the subresource of the mapped Direct3D resource \fCpResource\fP, which corresponds to \fCFace\fP and \fCLevel\fP.
+.PP
+Because anti-aliased surfaces may have multiple samples per pixel, it is possible that the dimensions of a resource will be an integer factor larger than the dimensions reported by the Direct3D runtime.
+.PP
+The parameters \fCpWidth\fP, \fCpHeight\fP, and \fCpDepth\fP are optional. For 2D surfaces, the value returned in \fC*pDepth\fP will be 0.
+.PP
+If \fCpResource\fP is not of type IDirect3DBaseTexture9 or IDirect3DSurface9 or if \fCpResource\fP has not been registered for use with CUDA, then \fBCUDA_ERROR_INVALID_HANDLE\fP is returned.
+.PP
+For usage requirements of \fCFace\fP and \fCLevel\fP parameters, see \fBcuD3D9ResourceGetMappedPointer()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpWidth\fP - Returned width of surface 
+.br
+\fIpHeight\fP - Returned height of surface 
+.br
+\fIpDepth\fP - Returned depth of surface 
+.br
+\fIpResource\fP - Registered resource to access 
+.br
+\fIFace\fP - Face of resource to access 
+.br
+\fILevel\fP - Level of resource to access
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuGraphicsSubResourceGetMappedArray\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuD3D9ResourceSetMapFlags (IDirect3DResource9 * pResource, unsigned int Flags)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of Cuda 3.0.
+.RE
+.PP
+Set \fCFlags\fP for mapping the Direct3D resource \fCpResource\fP.
+.PP
+Changes to \fCFlags\fP will take effect the next time \fCpResource\fP is mapped. The \fCFlags\fP argument may be any of the following:
+.IP "\(bu" 2
+CU_D3D9_MAPRESOURCE_FLAGS_NONE: Specifies no hints about how this resource will be used. It is therefore assumed that this resource will be read from and written to by CUDA kernels. This is the default value.
+.IP "\(bu" 2
+CU_D3D9_MAPRESOURCE_FLAGS_READONLY: Specifies that CUDA kernels which access this resource will not write to this resource.
+.IP "\(bu" 2
+CU_D3D9_MAPRESOURCE_FLAGS_WRITEDISCARD: Specifies that CUDA kernels which access this resource will not read from this resource and will write over the entire contents of the resource, so none of the data previously stored in the resource will be preserved.
+.PP
+.PP
+If \fCpResource\fP has not been registered for use with CUDA, then \fBCUDA_ERROR_INVALID_HANDLE\fP is returned. If \fCpResource\fP is presently mapped for access by CUDA, then \fBCUDA_ERROR_ALREADY_MAPPED\fP is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpResource\fP - Registered resource to set flags for 
+.br
+\fIFlags\fP - Parameters for resource mapping
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_ALREADY_MAPPED\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuGraphicsResourceSetMapFlags\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuD3D9UnmapResources (unsigned int count, IDirect3DResource9 ** ppResource)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 3.0.
+.RE
+.PP
+Unmaps the \fCcount\fP Direct3D resources in \fCppResource\fP.
+.PP
+This function provides the synchronization guarantee that any CUDA kernels issued before \fBcuD3D9UnmapResources()\fP will complete before any Direct3D calls issued after \fBcuD3D9UnmapResources()\fP begin.
+.PP
+If any of \fCppResource\fP have not been registered for use with CUDA or if \fCppResource\fP contains any duplicate entries, then \fBCUDA_ERROR_INVALID_HANDLE\fP is returned. If any of \fCppResource\fP are not presently mapped for access by CUDA, then \fBCUDA_ERROR_NOT_MAPPED\fP is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIcount\fP - Number of resources to unmap for CUDA 
+.br
+\fIppResource\fP - Resources to unmap for CUDA
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_NOT_MAPPED\fP, \fBCUDA_ERROR_UNKNOWN\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuGraphicsUnmapResources\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuD3D9UnregisterResource (IDirect3DResource9 * pResource)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 3.0.
+.RE
+.PP
+Unregisters the Direct3D resource \fCpResource\fP so it is not accessible by CUDA unless registered again.
+.PP
+If \fCpResource\fP is not registered, then \fBCUDA_ERROR_INVALID_HANDLE\fP is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpResource\fP - Resource to unregister
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_UNKNOWN\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuGraphicsUnregisterResource\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

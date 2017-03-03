@@ -59,12 +59,23 @@
 #if defined(__CUDACC_RTC__) || defined(__cplusplus) && defined(__CUDACC__)
 
 #if defined(__CUDACC_RTC__)
-#define __DEVICE_FUNCTIONS_DECL__ __host__ __device__
-#define __DEVICE_FUNCTIONS_STATIC_DECL__ __host__ __device__
-#else /* !__CUDACC_RTC__ */
-#define __DEVICE_FUNCTIONS_DECL__ __device__
-#define __DEVICE_FUNCTIONS_STATIC_DECL__ static __inline__ __device__
+#define __DEVICE_FUNCTIONS_DECL__ __host__ __device__ __cudart_builtin__
+#define __DEVICE_FUNCTIONS_STATIC_DECL__ __host__ __device__ __cudart_builtin__
+#elif defined(__CUDACC_INTEGRATED__)
+#define __DEVICE_FUNCTIONS_DECL__  __host__ __device__  __cudart_builtin__
+#define __DEVICE_FUNCTIONS_STATIC_DECL__ __host__ __device__ __cudart_builtin__
+#else
+#define __DEVICE_FUNCTIONS_DECL__ __device__ __cudart_builtin__
+#define __DEVICE_FUNCTIONS_STATIC_DECL__ static __inline__ __device__ __cudart_builtin__
 #endif /* __CUDACC_RTC__ */
+
+#if defined(_WIN32)
+#define __DEPRECATED__(msg) __declspec(deprecated(msg))
+#elif (defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 5 && !defined(__clang__))))
+#define __DEPRECATED__(msg) __attribute((deprecated))
+#else
+#define __DEPRECATED__(msg) __attribute((deprecated(msg)))
+#endif
 
 #include "builtin_types.h"
 #include "device_types.h"
@@ -136,6 +147,24 @@ __DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  __int_as_flo
  * \return Returns reinterpreted value.
  */
 __DEVICE_FUNCTIONS_DECL__ __device_builtin__ int                    __float_as_int(float x);
+/**
+ * \ingroup CUDA_MATH_INTRINSIC_CAST
+ * \brief Reinterpret bits in an unsigned integer as a float.
+ *
+ * Reinterpret the bits in the unsigned integer value \p x as a single-precision
+ * floating point value.
+ * \return Returns reinterpreted value.
+ */
+__DEVICE_FUNCTIONS_DECL__ __device_builtin__ float                  __uint_as_float(unsigned int x);
+/**
+ * \ingroup CUDA_MATH_INTRINSIC_CAST
+ * \brief Reinterpret bits in a float as a unsigned integer.
+ *
+ * Reinterpret the bits in the single-precision floating point value \p x
+ * as a unsigned integer.
+ * \return Returns reinterpreted value.
+ */
+__DEVICE_FUNCTIONS_DECL__ __device_builtin__ unsigned int           __float_as_uint(float x);
 __DEVICE_FUNCTIONS_DECL__ __device_builtin__ void                   __syncthreads(void);
 __DEVICE_FUNCTIONS_DECL__ __device_builtin__ void                   __prof_trigger(int);
 __DEVICE_FUNCTIONS_DECL__ __device_builtin__ void                   __threadfence(void);
@@ -2284,6 +2313,15 @@ __DEVICE_FUNCTIONS_DECL__ __device_builtin__ unsigned int           __pm3(void);
 
 /*******************************************************************************
  *                                                                             *
+ *                        FP16 SIMD functions                                  *
+ *                                                                             *
+ *******************************************************************************/
+
+ //  #include "fp16.h"
+
+
+/*******************************************************************************
+ *                                                                             *
  *                                SIMD functions                               *
  *                                                                             *
  *******************************************************************************/
@@ -3217,22 +3255,26 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ int float_as_int(float a);
 
 __DEVICE_FUNCTIONS_STATIC_DECL__ float int_as_float(int a);
 
+__DEVICE_FUNCTIONS_STATIC_DECL__ unsigned int float_as_uint(float a);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ float uint_as_float(unsigned int a);
+
 __DEVICE_FUNCTIONS_STATIC_DECL__ float saturate(float a);
 
 __DEVICE_FUNCTIONS_STATIC_DECL__ int mul24(int a, int b);
 
 __DEVICE_FUNCTIONS_STATIC_DECL__ unsigned int umul24(unsigned int a, unsigned int b);
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ void trap(void);
+__DEVICE_FUNCTIONS_STATIC_DECL__ __DEPRECATED__("Please use __trap() instead.") void trap(void);
 
 /* argument is optional, value of 0 means no value */
-__DEVICE_FUNCTIONS_STATIC_DECL__ void brkpt(int c = 0);
+__DEVICE_FUNCTIONS_STATIC_DECL__ __DEPRECATED__("Please use __brkpt() instead.") void brkpt(int c = 0);
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ void syncthreads(void);
+__DEVICE_FUNCTIONS_STATIC_DECL__ __DEPRECATED__("Please use __syncthreads() instead.") void syncthreads(void);
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ void prof_trigger(int e);
+__DEVICE_FUNCTIONS_STATIC_DECL__ __DEPRECATED__("Please use __prof_trigger() instead.") void prof_trigger(int e);
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ void threadfence(bool global = true);
+__DEVICE_FUNCTIONS_STATIC_DECL__ __DEPRECATED__("Please use __threadfence() instead.") void threadfence(bool global = true);
 
 __DEVICE_FUNCTIONS_STATIC_DECL__ int float2int(float a, enum cudaRoundMode mode = cudaRoundZero);
 
@@ -3242,6 +3284,7 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ float int2float(int a, enum cudaRoundMode mode 
 
 __DEVICE_FUNCTIONS_STATIC_DECL__ float uint2float(unsigned int a, enum cudaRoundMode mode = cudaRoundNearest);
 
+#undef __DEPRECATED__
 #undef __DEVICE_FUNCTIONS_DECL__
 #undef __DEVICE_FUNCTIONS_STATIC_DECL__
 
@@ -3251,10 +3294,19 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ float uint2float(unsigned int a, enum cudaRound
 #if defined(__CUDACC_RTC__)
 #define __DEVICE_FUNCTIONS_DECL__ __host__ __device__
 #define __DEVICE_FUNCTIONS_STATIC_DECL__ __host__ __device__
-#else /* !__CUDACC_RTC__ */
+#elif defined(__CUDACC_INTEGRATED__)
+#define __DEVICE_FUNCTIONS_DECL__ __host__ __device__ __cudart_builtin__
+#define __DEVICE_FUNCTIONS_STATIC_DECL__ __host__ __device__ __cudart_builtin__
+#else
 #define __DEVICE_FUNCTIONS_DECL__ __device__
 #define __DEVICE_FUNCTIONS_STATIC_DECL__ static __forceinline__ 
 #endif /* __CUDACC_RTC__ */
+
+#if !defined(__CUDACC_INTEGRATED__)
+#undef __THROW
+#define __THROW
+#endif /* !defined(__CUDACC_INTEGRATED__) */
+
 
 #if defined(__cplusplus)
 extern "C" {
@@ -3292,11 +3344,11 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ int __all(int a);
 __DEVICE_FUNCTIONS_STATIC_DECL__ int __any(int a);
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
-#if defined(__CUDACC_RTC__)
+#if defined(__CUDACC_RTC__) || defined(__CUDACC_INTEGRATED__)
 unsigned int
-#else /* !__CUDACC_RTC__ */
+#else /* !(__CUDACC_RTC__ || __CUDACC_INTEGRATED__) */
 int
-#endif /* __CUDACC_RTC__ */
+#endif /* __CUDACC_RTC__ || __CUDACC_INTEGRATED__*/
 __ballot(int a);
 
 /*******************************************************************************
@@ -3304,19 +3356,19 @@ __ballot(int a);
 * MISCELLANEOUS FUNCTIONS                                                      *
 *                                                                              *
 *******************************************************************************/
-#if defined(__CUDACC_RTC__)
+#if defined(__CUDACC_RTC__) || defined(__CUDACC_INTEGRATED__)
 __DEVICE_FUNCTIONS_STATIC_DECL__ void __brkpt(int);
-#else /* !__CUDACC_RTC__ */
+#else /* !(__CUDACC_RTC__ || __CUDACC_INTEGRATED__)*/
 __DEVICE_FUNCTIONS_STATIC_DECL__ void __brkpt();
-#endif /* __CUDACC_RTC__ */
+#endif /* __CUDACC_RTC__ || __CUDACC_INTEGRATED__*/
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
-#if defined(__CUDACC_RTC__)
+#if defined(__CUDACC_RTC__) || defined(__CUDACC_INTEGRATED__)
 clock_t
-#else /* !__CUDACC_RTC__ */
+#else /* !(__CUDACC_RTC__ || __CUDACC_INTEGRATED__)*/
 int
-#endif /* __CUDACC_RTC__ */
-clock();
+#endif /* __CUDACC_RTC__ || __CUDACC_INTEGRATED__*/
+clock() __THROW; 
 
 __DEVICE_FUNCTIONS_STATIC_DECL__ long long clock64();
     
@@ -3332,9 +3384,9 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ unsigned int __pm3(void);
 
 __DEVICE_FUNCTIONS_STATIC_DECL__ void __trap(void);
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ void* memcpy(void *dest, const void *src, size_t n);
+__DEVICE_FUNCTIONS_STATIC_DECL__ void* memcpy(void *dest, const void *src, size_t n) __THROW;
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ void* memset(void *dest, int c, size_t n);
+__DEVICE_FUNCTIONS_STATIC_DECL__ void* memset(void *dest, int c, size_t n) __THROW;
 
 /*******************************************************************************
 *                                                                              *
@@ -3345,17 +3397,17 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ int __clz(int x);
 
 __DEVICE_FUNCTIONS_STATIC_DECL__ int __clzll(long long x);
 
-#if defined(__CUDACC_RTC__)
+#if defined(__CUDACC_RTC__) || defined(__CUDACC_INTEGRATED__)
 __DEVICE_FUNCTIONS_STATIC_DECL__ int __popc(unsigned int x);
-#else /* !__CUDACC_RTC__ */
+#else /* !(__CUDACC_RTC__ || || __CUDACC_INTEGRATED__)*/
 __DEVICE_FUNCTIONS_STATIC_DECL__ int __popc(int x);
 #endif /* __CUDACC_RTC__ */
 
-#if defined(__CUDACC_RTC__)
+#if defined(__CUDACC_RTC__) || defined(__CUDACC_INTEGRATED__)
 __DEVICE_FUNCTIONS_STATIC_DECL__ int __popcll(unsigned long long x);
-#else /* !__CUDACC_RTC__ */
+#else /* !(__CUDACC_RTC__ || __CUDACC_INTEGRATED__)*/
 __DEVICE_FUNCTIONS_STATIC_DECL__ int __popcll(long long x);
-#endif /* __CUDACC_RTC__ */
+#endif /* __CUDACC_RTC__ || __CUDACC_INTEGRATED__*/
 
 __DEVICE_FUNCTIONS_STATIC_DECL__ unsigned int __byte_perm(unsigned int a,
                                                 unsigned int b,
@@ -3401,21 +3453,21 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ unsigned int __brev(unsigned int x);
     
 __DEVICE_FUNCTIONS_STATIC_DECL__ unsigned long long __brevll(unsigned long long x);
     
-#if defined(__CUDACC_RTC__)
+#if defined(__CUDACC_RTC__) || defined(__CUDACC_INTEGRATED__)
 __DEVICE_FUNCTIONS_STATIC_DECL__ unsigned int __sad(int x, int y, unsigned int z);
-#else /* !__CUDACC_RTC__ */
+#else /* !(__CUDACC_RTC__ || __CUDACC_INTEGRATED__)*/
 __DEVICE_FUNCTIONS_STATIC_DECL__ int __sad(int x, int y, int z);
-#endif /* __CUDACC_RTC__ */
+#endif /* __CUDACC_RTC__ || __CUDACC_INTEGRATED__*/
 
 __DEVICE_FUNCTIONS_STATIC_DECL__ unsigned int __usad(unsigned int x,
                                            unsigned int y,
                                            unsigned int z);
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ int abs(int x);
+__DEVICE_FUNCTIONS_STATIC_DECL__ int abs(int x) __THROW;
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ long labs(long x);
+__DEVICE_FUNCTIONS_STATIC_DECL__ long labs(long x) __THROW;
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ long long llabs(long long x);
+__DEVICE_FUNCTIONS_STATIC_DECL__ long long llabs(long long x) __THROW;
 
 /*******************************************************************************
 *                                                                              *
@@ -3429,8 +3481,6 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ double floor(double f);
 __DEVICE_FUNCTIONS_STATIC_DECL__ float fabsf(float f);
 
 __DEVICE_FUNCTIONS_STATIC_DECL__ double fabs(double f);
-
-__DEVICE_FUNCTIONS_STATIC_DECL__ double __rcp64h(double d);
 
 __DEVICE_FUNCTIONS_STATIC_DECL__ float fminf(float x, float y);
 
@@ -3791,6 +3841,10 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ float __half2float(unsigned short h);
 __DEVICE_FUNCTIONS_STATIC_DECL__ float __int_as_float(int x);
 
 __DEVICE_FUNCTIONS_STATIC_DECL__ int __float_as_int(float x);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __uint_as_float(unsigned int x);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__ unsigned int __float_as_uint(float x);
     
 __DEVICE_FUNCTIONS_STATIC_DECL__ double __longlong_as_double(long long x);
 
@@ -3802,11 +3856,11 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ long long  __double_as_longlong (double x);
 *                                                                              *
 *******************************************************************************/
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __sinf(float a);
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __sinf(float a) __THROW;
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __cosf(float a);
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __cosf(float a) __THROW;
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __log2f(float a);
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __log2f(float a) __THROW;
 
 /*******************************************************************************
 *                                                                              *
@@ -3814,19 +3868,19 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ float __log2f(float a);
 *                                                                              *
 *******************************************************************************/
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __tanf(float a);
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __tanf(float a) __THROW;
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ void __sincosf(float a, float *sptr, float *cptr);
+__DEVICE_FUNCTIONS_STATIC_DECL__ void __sincosf(float a, float *sptr, float *cptr) __THROW;
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __expf(float a);
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __expf(float a) __THROW;
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __exp10f(float a);
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __exp10f(float a) __THROW;
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __log10f(float a);
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __log10f(float a) __THROW;
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __logf(float a);
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __logf(float a) __THROW;
 
-__DEVICE_FUNCTIONS_STATIC_DECL__ float __powf(float a, float b);
+__DEVICE_FUNCTIONS_STATIC_DECL__ float __powf(float a, float b) __THROW;
 
 __DEVICE_FUNCTIONS_STATIC_DECL__ float fdividef(float a, float b);
 
@@ -3862,93 +3916,295 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ int __ffsll(long long int a);
 __DEVICE_FUNCTIONS_STATIC_DECL__
 int __iAtomicAdd(int *p, int val);
 
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicAdd_block(int *p, int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicAdd_system(int *p, int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicAdd(unsigned int *p, unsigned int val);
 
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicAdd_block(unsigned int *p, unsigned int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicAdd_system(unsigned int *p, unsigned int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned long long __ullAtomicAdd(unsigned long long *p, unsigned long long val);
+
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicAdd_block(unsigned long long *p, unsigned long long val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicAdd_system(unsigned long long *p, unsigned long long val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 float __fAtomicAdd(float *p, float val);
 
 #if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
 __DEVICE_FUNCTIONS_STATIC_DECL__
+float __fAtomicAdd_block(float *p, float val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+float __fAtomicAdd_system(float *p, float val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
 double __dAtomicAdd(double *p, double val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+double __dAtomicAdd_block(double *p, double val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+double __dAtomicAdd_system(double *p, double val);
 #endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 int __iAtomicExch(int *p, int val);
 
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicExch_block(int *p, int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicExch_system(int *p, int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicExch(unsigned int *p, unsigned int val);
+
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicExch_block(unsigned int *p, unsigned int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicExch_system(unsigned int *p, unsigned int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned long long __ullAtomicExch(unsigned long long *p,
                                    unsigned long long val);
 
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicExch_block(unsigned long long *p, unsigned long long val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicExch_system(unsigned long long *p, unsigned long long val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 float __fAtomicExch(float *p, float val);
 
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+float __fAtomicExch_block(float *p, float val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+float __fAtomicExch_system(float *p, float val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 int __iAtomicMin(int *p, int val);
+
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicMin_block(int *p, int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicMin_system(int *p, int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 #if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 long long __illAtomicMin(long long *p, long long val);
 #endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
 
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long __illAtomicMin_block(long long *p, long long val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long __illAtomicMin_system(long long *p, long long val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicMin(unsigned int *p, unsigned int val);
+
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicMin_block(unsigned int *p, unsigned int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicMin_system(unsigned int *p, unsigned int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 #if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned long long __ullAtomicMin(unsigned long long *p, unsigned long long val);
 #endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
 
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicMin_block(unsigned long long *p, unsigned long long val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicMin_system(unsigned long long *p, unsigned long long val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 int __iAtomicMax(int *p, int val);
+
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicMax_block(int *p, int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicMax_system(int *p, int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 #if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 long long __illAtomicMax(long long *p, long long val);
 #endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
 
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long __illAtomicMax_block(long long *p, long long val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long __illAtomicMax_system(long long *p, long long val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicMax(unsigned int *p, unsigned int val);
+
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicMax_block(unsigned int *p, unsigned int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicMax_system(unsigned int *p, unsigned int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 #if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned long long __ullAtomicMax(unsigned long long *p, unsigned long long val);
 #endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
 
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicMax_block(unsigned long long *p, unsigned long long val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicMax_system(unsigned long long *p, unsigned long long val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicInc(unsigned int *p, unsigned int val);
+
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicInc_block(unsigned int *p, unsigned int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicInc_system(unsigned int *p, unsigned int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicDec(unsigned int *p, unsigned int val);
 
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicDec_block(unsigned int *p, unsigned int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicDec_system(unsigned int *p, unsigned int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 int __iAtomicCAS(int *p, int compare, int val);
+
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicCAS_block(int *p, int compare, int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicCAS_system(int *p, int compare, int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicCAS(unsigned int *p, unsigned int compare,
                           unsigned int val);
+
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicCAS_block(unsigned int *p, unsigned int compare,
+                                unsigned int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicCAS_system(unsigned int *p, unsigned int compare,
+                                 unsigned int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned long long int __ullAtomicCAS(unsigned long long int *p,
                                       unsigned long long int compare,
                                       unsigned long long int val);
 
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long int __ullAtomicCAS_block(unsigned long long int *p,
+                                            unsigned long long int compare,
+                                            unsigned long long int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long int __ullAtomicCAS_system(unsigned long long int *p,
+                                             unsigned long long int compare,
+                                             unsigned long long int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 int __iAtomicAnd(int *p, int val);
+
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicAnd_block(int *p, int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicAnd_system(int *p, int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 #if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 long long int __llAtomicAnd(long long int *p, long long int val);
 #endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
 
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long __llAtomicAnd_block(long long *p, long long val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long __llAtomicAnd_system(long long *p, long long val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicAnd(unsigned int *p, unsigned int val);
+
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicAnd_block(unsigned int *p, unsigned int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicAnd_system(unsigned int *p, unsigned int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 #if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
@@ -3956,16 +4212,48 @@ unsigned long long int __ullAtomicAnd(unsigned long long int *p,
                                       unsigned long long int val);
 #endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
 
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicAnd_block(unsigned long long *p, unsigned long long val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicAnd_system(unsigned long long *p, unsigned long long val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 int __iAtomicOr(int *p, int val);
+
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicOr_block(int *p, int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicOr_system(int *p, int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 #if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 long long int __llAtomicOr(long long int *p, long long int val);
 #endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
 
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long __llAtomicOr_block(long long *p, long long val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long __llAtomicOr_system(long long *p, long long val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicOr(unsigned int *p, unsigned int val);
+
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicOr_block(unsigned int *p, unsigned int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicOr_system(unsigned int *p, unsigned int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 #if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
@@ -3973,22 +4261,62 @@ unsigned long long int __ullAtomicOr(unsigned long long int *p,
                                      unsigned long long int val);
 #endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
 
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicOr_block(unsigned long long *p, unsigned long long val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicOr_system(unsigned long long *p, unsigned long long val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 int __iAtomicXor(int *p, int val);
+
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicXor_block(int *p, int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+int __iAtomicXor_system(int *p, int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 #if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 long long int __llAtomicXor(long long int *p, long long int val);
 #endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
 
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long __llAtomicXor_block(long long *p, long long val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+long long __llAtomicXor_system(long long *p, long long val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
+
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned int __uAtomicXor(unsigned int *p, unsigned int val);
+
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicXor_block(unsigned int *p, unsigned int val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned int __uAtomicXor_system(unsigned int *p, unsigned int val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 #if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 320
 __DEVICE_FUNCTIONS_STATIC_DECL__
 unsigned long long int __ullAtomicXor(unsigned long long int *p,
                                       unsigned long long int val);
 #endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 320 */
+
+#if !defined(__CUDACC_RTC__) || __CUDA_ARCH__ >= 600
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicXor_block(unsigned long long *p, unsigned long long val);
+
+__DEVICE_FUNCTIONS_STATIC_DECL__
+unsigned long long __ullAtomicXor_system(unsigned long long *p, unsigned long long val);
+#endif /* !__CUDACC_RTC__ || __CUDA_ARCH__ >= 600 */
 
 /*******************************************************************************
  *                                                                             *
@@ -4179,19 +4507,21 @@ __DEVICE_FUNCTIONS_STATIC_DECL__ unsigned int __vsads4(unsigned int a, unsigned 
 *                                                                              *
 *******************************************************************************/
 
-#if !defined(__CUDACC_RTC__)
+#if !defined(__CUDACC_RTC__) && (!defined(__CUDACC_INTEGRATED__)  || defined(__CUDABE__))
 #include "device_functions.hpp"
-#endif /* !__CUDACC_RTC__ */
+#endif /* !defined(__CUDACC_RTC__) && (!defined(__CUDACC_INTEGRATED__)  || defined(__CUDABE__)) */
 
 #include "device_atomic_functions.h"
 #include "device_double_functions.h"
 #include "sm_20_atomic_functions.h"
 #include "sm_32_atomic_functions.h"
 #include "sm_35_atomic_functions.h"
+#include "sm_60_atomic_functions.h"
 #include "sm_20_intrinsics.h"
 #include "sm_30_intrinsics.h"
 #include "sm_32_intrinsics.h"
 #include "sm_35_intrinsics.h"
+#include "sm_61_intrinsics.h"
 #include "surface_functions.h"
 #include "texture_fetch_functions.h"
 #include "texture_indirect_functions.h"

@@ -103,47 +103,53 @@ int main(int argc, char **argv)
 #endif
         checkCudaErrors(cudaSetDevice(0));
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_WAIVED);
     }
 
 #if CUDART_VERSION >= 4000
     // Check possibility for peer access
     printf("\nChecking GPU(s) for support of peer to peer memory access...\n");
-    int can_access_peer_0_1, can_access_peer_1_0;
-    // In this case we just pick the first two that we can support
-    checkCudaErrors(cudaDeviceCanAccessPeer(&can_access_peer_0_1, gpuid[0], gpuid[1]));
-    checkCudaErrors(cudaDeviceCanAccessPeer(&can_access_peer_1_0, gpuid[1], gpuid[0]));
 
-    // Output results from P2P capabilities
-    printf("> Peer-to-Peer (P2P) access from %s (GPU%d) -> %s (GPU%d) : %s\n", prop[gpuid[0]].name, gpuid[0],
-           prop[gpuid[1]].name, gpuid[1] ,
-           can_access_peer_0_1 ? "Yes" : "No");
-    printf("> Peer-to-Peer (P2P) access from %s (GPU%d) -> %s (GPU%d) : %s\n", prop[gpuid[1]].name, gpuid[1],
-           prop[gpuid[0]].name, gpuid[0],
-           can_access_peer_1_0 ? "Yes" : "No");
+    int can_access_peer;
+    int p2pCapableGPUs[2]; // We take only 1 pair of P2P capable GPUs
+    p2pCapableGPUs[0] = p2pCapableGPUs[1] = -1;
 
-    if (can_access_peer_0_1 == 0 || can_access_peer_1_0 == 0)
+    // Show all the combinations of supported P2P GPUs
+    for (int i = 0; i < gpu_count; i++)
+    {
+        for (int j = 0; j < gpu_count; j++)
+        {
+            if (gpuid[i] == gpuid[j])
+            {
+                continue;
+            }
+            checkCudaErrors(cudaDeviceCanAccessPeer(&can_access_peer, gpuid[i], gpuid[j]));
+            printf("> Peer access from %s (GPU%d) -> %s (GPU%d) : %s\n", prop[gpuid[i]].name, gpuid[i],
+                           prop[gpuid[j]].name, gpuid[j] ,
+                           can_access_peer ? "Yes" : "No");
+            if (can_access_peer && p2pCapableGPUs[0] == -1)
+            {
+                    p2pCapableGPUs[0] = gpuid[i];
+                    p2pCapableGPUs[1] = gpuid[j];
+            }
+        }
+    }
+
+    if (p2pCapableGPUs[0] == -1 || p2pCapableGPUs[1] == -1)
     {
         printf("Two or more GPUs with SM 2.0 or higher capability are required for %s.\n", argv[0]);
-        printf("Peer to Peer access is not available between GPU%d <-> GPU%d, waiving test.\n", gpuid[0], gpuid[1]);
-        checkCudaErrors(cudaSetDevice(gpuid[0]));
+        printf("Peer to Peer access is not available amongst GPUs in the system, waiving test.\n");
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
-        checkCudaErrors(cudaSetDevice(gpuid[1]));
-        cudaDeviceReset();
+        for (int i=0; i < gpu_count; i++)
+        {
+            checkCudaErrors(cudaSetDevice(gpuid[i]));
+        }
         exit(EXIT_WAIVED);
     }
+
+    // Use first pair of p2p capable GPUs detected.
+    gpuid[0] = p2pCapableGPUs[0];
+    gpuid[1] = p2pCapableGPUs[1];
 
     // Enable peer access
     printf("Enabling peer access between GPU%d and GPU%d...\n", gpuid[0], gpuid[1]);
@@ -269,7 +275,7 @@ int main(int argc, char **argv)
     }
 
     // Disable peer access (also unregisters memory for non-UVA cases)
-    printf("Enabling peer access...\n");
+    printf("Disabling peer access...\n");
     checkCudaErrors(cudaSetDevice(gpuid[0]));
     checkCudaErrors(cudaDeviceDisablePeerAccess(gpuid[1]));
     checkCudaErrors(cudaSetDevice(gpuid[1]));
@@ -288,13 +294,6 @@ int main(int argc, char **argv)
     for (int i=0; i<gpu_n; i++)
     {
         checkCudaErrors(cudaSetDevice(i));
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
     }
 
     if (error_count != 0)

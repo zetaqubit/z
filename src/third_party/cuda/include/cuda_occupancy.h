@@ -493,7 +493,11 @@ struct cudaOccResult {
  */
 typedef enum cudaOccPartitionedGCSupport_enum {
     PARTITIONED_GC_NOT_SUPPORTED,  // Partitioned global caching is not supported
-    PARTITIONED_GC_SUPPORTED       // Partitioned global caching is supported
+    PARTITIONED_GC_SUPPORTED,      // Partitioned global caching is supported
+    PARTITIONED_GC_ALWAYS_ON       // This is only needed for Pascal. This, and
+                                   // all references / explanations for this,
+                                   // should be removed from the header before
+                                   // exporting to toolkit.
 } cudaOccPartitionedGCSupport;
 
 /**
@@ -503,8 +507,8 @@ typedef enum cudaOccPartitionedGCSupport_enum {
 /**
  * Max compute capability supported
  */
-#define __CUDA_OCC_MAJOR__ 5
-#define __CUDA_OCC_MINOR__ 2
+#define __CUDA_OCC_MAJOR__ 6
+#define __CUDA_OCC_MINOR__ 0
 
 //////////////////////////////////////////
 //    Mathematical Helper Functions     //
@@ -537,14 +541,12 @@ static __OCC_INLINE cudaOccError cudaOccSMemAllocationGranularity(int *limit, co
     int value;
 
     switch(properties->computeMajor) {
-        case 1:
-            value = 512;
-            break;
         case 2:
             value = 128;
             break;
         case 3:
         case 5:
+        case 6:
             value = 256;
             break;
         default:
@@ -564,11 +566,6 @@ static __OCC_INLINE cudaOccError cudaOccRegAllocationGranularity(int *limit, con
     int value;
 
     switch(properties->computeMajor) {
-        case 1:
-            // Tesla (architecture) allocates registers to CTAs
-            //
-            value = (properties->computeMinor <= 1) ? 256 : 512;
-            break;
         case 2:
             // Fermi+ allocates registers to warps
             //
@@ -590,6 +587,7 @@ static __OCC_INLINE cudaOccError cudaOccRegAllocationGranularity(int *limit, con
             break;
         case 3:
         case 5:
+        case 6:
             value = 256;
             break;
         default:
@@ -602,16 +600,6 @@ static __OCC_INLINE cudaOccError cudaOccRegAllocationGranularity(int *limit, con
 }
 
 /**
- * Granularity of warp allocation
- */
-static __OCC_INLINE cudaOccError cudaOccWarpAllocationGranularity(int *limit, const cudaOccDeviceProp *properties)
-{
-    *limit = (properties->computeMajor <= 1) ? 2 : 1;
-
-    return CUDA_OCC_SUCCESS;
-}
-
-/**
  * Number of sub-partitions
  */
 static __OCC_INLINE cudaOccError cudaOccSubPartitionsPerMultiprocessor(int *limit, const cudaOccDeviceProp *properties)
@@ -619,16 +607,14 @@ static __OCC_INLINE cudaOccError cudaOccSubPartitionsPerMultiprocessor(int *limi
     int value;
 
     switch(properties->computeMajor) {
-        case 1:
-            value = 1;
-            break;
         case 2:
             value = 2;
             break;
         case 3:
+        case 5:
             value = 4;
             break;
-        case 5:
+        case 6:
             value = 4;
             break;
         default:
@@ -648,7 +634,6 @@ static __OCC_INLINE cudaOccError cudaOccMaxBlocksPerMultiprocessor(int* limit, c
     int value;
 
     switch(properties->computeMajor) {
-        case 1:
         case 2:
             value = 8;
             break;
@@ -656,6 +641,9 @@ static __OCC_INLINE cudaOccError cudaOccMaxBlocksPerMultiprocessor(int* limit, c
             value = 16;
             break;
         case 5:
+            value = 32;
+            break;
+        case 6:
             value = 32;
             break;
         default:
@@ -723,9 +711,9 @@ static __OCC_INLINE cudaOccError cudaOccSMemPerMultiprocessor(size_t *limit, con
                     break;
             }
             break;
-        case 1:
         case 5:
-            // Tesla and Maxwell have dedicated shared memory.
+        case 6:
+            // Maxwell and Pascal have dedicated shared memory.
             //
             bytes = sharedMemPerMultiprocessorHigh;
             break;
@@ -745,8 +733,13 @@ static __OCC_INLINE cudaOccError cudaOccPartitionedGlobalCachingModeSupport(cuda
 {
     *limit = PARTITIONED_GC_NOT_SUPPORTED;
 
-    if (properties->computeMajor == 5 && properties->computeMinor == 2) {
+    if ((properties->computeMajor == 5 && (properties->computeMinor == 2 || properties->computeMinor == 3)) ||
+        properties->computeMajor == 6) {
         *limit = PARTITIONED_GC_SUPPORTED;
+    }
+
+    if (properties->computeMajor == 6 && properties->computeMinor == 0) {
+        *limit = PARTITIONED_GC_NOT_SUPPORTED;
     }
 
     return CUDA_OCC_SUCCESS;
@@ -829,6 +822,16 @@ static __OCC_INLINE cudaOccError cudaOccInputCheck(
 //    Occupancy calculation Functions        //
 ///////////////////////////////////////////////
 
+static __OCC_INLINE int cudaOccPartitionedGCForced(
+    const cudaOccDeviceProp *properties)
+{
+    cudaOccPartitionedGCSupport gcSupport;
+
+    cudaOccPartitionedGlobalCachingModeSupport(&gcSupport, properties);
+
+    return gcSupport == PARTITIONED_GC_ALWAYS_ON;
+}
+
 static __OCC_INLINE cudaOccPartitionedGCConfig cudaOccPartitionedGCExpected(
     const cudaOccDeviceProp     *properties,
     const cudaOccFuncAttributes *attributes)
@@ -844,32 +847,11 @@ static __OCC_INLINE cudaOccPartitionedGCConfig cudaOccPartitionedGCExpected(
         gcConfig = PARTITIONED_GC_OFF;
     }
 
-    return gcConfig;
-}
-
-static __OCC_INLINE cudaOccError cudaOccWarpsAllocatedPerCTA(
-    int                     *value,
-    const cudaOccDeviceProp *properties,
-    int                      blockSize)
-{
-    cudaOccError status = CUDA_OCC_SUCCESS;
-    int allocationGranulatrity;
-    int warpsPerCTA;
-    int warpsAllocatedPerCTA;
-
-    *value = 0;
-
-    status = cudaOccWarpAllocationGranularity(&allocationGranulatrity, properties);
-    if (status != CUDA_OCC_SUCCESS) {
-        return status;
+    if (cudaOccPartitionedGCForced(properties)) {
+        gcConfig = PARTITIONED_GC_ON;
     }
 
-    warpsPerCTA          = __occDivideRoundUp(blockSize, properties->warpSize);
-    warpsAllocatedPerCTA = __occRoundUp(warpsPerCTA, allocationGranulatrity);
-
-    *value = warpsAllocatedPerCTA;
-
-    return status;
+    return gcConfig;
 }
 
 // Warp limit
@@ -891,12 +873,7 @@ static __OCC_INLINE cudaOccError cudaOccMaxBlocksPerSMWarpsLimit(
     }
     else {
         maxWarpsPerSm = properties->maxThreadsPerMultiprocessor / properties->warpSize;
-
-        status = cudaOccWarpsAllocatedPerCTA(&warpsAllocatedPerCTA, properties, blockSize);
-        if (status != CUDA_OCC_SUCCESS) {
-            return status;
-        }
-
+        warpsAllocatedPerCTA = __occDivideRoundUp(blockSize, properties->warpSize);
         maxBlocks = 0;
 
         if (gcConfig != PARTITIONED_GC_OFF) {
@@ -1004,7 +981,6 @@ cudaOccError cudaOccMaxBlocksPerSMRegsLimit(
     cudaOccError status = CUDA_OCC_SUCCESS;
     int allocationGranularity;
     int warpsAllocatedPerCTA;
-    int regsPerCTA;
     int regsAllocatedPerCTA;
     int regsAssumedPerCTA;
     int regsPerWarp;
@@ -1028,94 +1004,74 @@ cudaOccError cudaOccMaxBlocksPerSMRegsLimit(
         return status;
     }
 
-    status = cudaOccWarpsAllocatedPerCTA(&warpsAllocatedPerCTA, properties, blockSize);
-    if (status != CUDA_OCC_SUCCESS) {
-        return status;
-    }
+    warpsAllocatedPerCTA = __occDivideRoundUp(blockSize, properties->warpSize);
 
-    if (properties->computeMajor > 1) {
-        // GPUs of compute capability 2.x and higher allocate registers to warps
-        //
-        // Number of regs per warp is regs per thread x warp size, rounded up to
-        // register allocation granularity
-        //
-        regsPerWarp          = attributes->numRegs * properties->warpSize;
-        regsAllocatedPerWarp = __occRoundUp(regsPerWarp, allocationGranularity);
-        regsAllocatedPerCTA  = regsAllocatedPerWarp * warpsAllocatedPerCTA;
+    // GPUs of compute capability 2.x and higher allocate registers to warps
+    //
+    // Number of regs per warp is regs per thread x warp size, rounded up to
+    // register allocation granularity
+    //
+    regsPerWarp          = attributes->numRegs * properties->warpSize;
+    regsAllocatedPerWarp = __occRoundUp(regsPerWarp, allocationGranularity);
+    regsAllocatedPerCTA  = regsAllocatedPerWarp * warpsAllocatedPerCTA;
 
-        // Hardware verifies if a launch fits the per-CTA register limit. For
-        // historical reasons, the verification logic assumes register
-        // allocations are made to all partitions simultaneously. Therefore, to
-        // simulate the hardware check, the warp allocation needs to be rounded
-        // up to the number of partitions.
-        //
-        regsAssumedPerCTA = regsAllocatedPerWarp * __occRoundUp(warpsAllocatedPerCTA, numSubPartitions);
+    // Hardware verifies if a launch fits the per-CTA register limit. For
+    // historical reasons, the verification logic assumes register
+    // allocations are made to all partitions simultaneously. Therefore, to
+    // simulate the hardware check, the warp allocation needs to be rounded
+    // up to the number of partitions.
+    //
+    regsAssumedPerCTA = regsAllocatedPerWarp * __occRoundUp(warpsAllocatedPerCTA, numSubPartitions);
 
-        if (properties->regsPerBlock < regsAssumedPerCTA ||   // Hardware check
-            properties->regsPerBlock < regsAllocatedPerCTA) { // Software check
-            maxBlocks = 0;
-        }
-        else {
-            if (regsAllocatedPerWarp > 0) {
-                // Registers are allocated in each sub-partition. The max number
-                // of warps that can fit on an SM is equal to the max number of
-                // warps per sub-partition x number of sub-partitions.
-                //
-                numRegsPerSubPartition  = properties->regsPerMultiprocessor / numSubPartitions;
-                numWarpsPerSubPartition = numRegsPerSubPartition / regsAllocatedPerWarp;
-
-                maxBlocks = 0;
-
-                if (*gcConfig != PARTITIONED_GC_OFF) {
-                    int numSubPartitionsPerSmPartition;
-                    int numWarpsPerSmPartition;
-                    int maxBlocksPerSmPartition;
-
-                    // If partitioned global caching is on, then a CTA can only
-                    // use a half SM, and thus a half of the registers available
-                    // per SM
-                    //
-                    numSubPartitionsPerSmPartition = numSubPartitions / 2;
-                    numWarpsPerSmPartition         = numWarpsPerSubPartition * numSubPartitionsPerSmPartition;
-                    maxBlocksPerSmPartition        = numWarpsPerSmPartition / warpsAllocatedPerCTA;
-                    maxBlocks                      = maxBlocksPerSmPartition * 2;
-                }
-
-                // Try again if partitioned global caching is not enabled, or if
-                // the CTA cannot fit on the SM with caching on. In the latter
-                // case, the device will automatically turn off caching, except
-                // if the device forces it. The user can also override this
-                // assumption with PARTITIONED_GC_ON_STRICT to calculate
-                // occupancy and launch configuration.
-                //
-                {
-                    int gcOff = (*gcConfig == PARTITIONED_GC_OFF);
-                    int zeroOccupancy = (maxBlocks == 0);
-                    int cachingForced = (*gcConfig == PARTITIONED_GC_ON_STRICT);
-                    
-                    if (gcOff || (zeroOccupancy && (!cachingForced))) {
-                        *gcConfig = PARTITIONED_GC_OFF;
-                        numWarpsPerSM = numWarpsPerSubPartition * numSubPartitions;
-                        maxBlocks     = numWarpsPerSM / warpsAllocatedPerCTA;
-                    }
-                }
-            }
-            else {
-                maxBlocks = INT_MAX;
-            }
-        }
+    if (properties->regsPerBlock < regsAssumedPerCTA ||   // Hardware check
+        properties->regsPerBlock < regsAllocatedPerCTA) { // Software check
+        maxBlocks = 0;
     }
     else {
-        // GPUs of compute capability 1.x allocate registers to CTAs
-        //
-        // Number of regs per block is regs per thread x warp size x number of
-        // warps, rounded up to allocation granularity
-        //
-        regsPerCTA = attributes->numRegs * properties->warpSize * warpsAllocatedPerCTA;
-        regsAllocatedPerCTA = __occRoundUp(regsPerCTA, allocationGranularity);
+        if (regsAllocatedPerWarp > 0) {
+            // Registers are allocated in each sub-partition. The max number
+            // of warps that can fit on an SM is equal to the max number of
+            // warps per sub-partition x number of sub-partitions.
+            //
+            numRegsPerSubPartition  = properties->regsPerMultiprocessor / numSubPartitions;
+            numWarpsPerSubPartition = numRegsPerSubPartition / regsAllocatedPerWarp;
 
-        if (regsAllocatedPerCTA > 0) {
-            maxBlocks = properties->regsPerMultiprocessor / regsAllocatedPerCTA;
+            maxBlocks = 0;
+
+            if (*gcConfig != PARTITIONED_GC_OFF) {
+                int numSubPartitionsPerSmPartition;
+                int numWarpsPerSmPartition;
+                int maxBlocksPerSmPartition;
+
+                // If partitioned global caching is on, then a CTA can only
+                // use a half SM, and thus a half of the registers available
+                // per SM
+                //
+                numSubPartitionsPerSmPartition = numSubPartitions / 2;
+                numWarpsPerSmPartition         = numWarpsPerSubPartition * numSubPartitionsPerSmPartition;
+                maxBlocksPerSmPartition        = numWarpsPerSmPartition / warpsAllocatedPerCTA;
+                maxBlocks                      = maxBlocksPerSmPartition * 2;
+            }
+
+            // Try again if partitioned global caching is not enabled, or if
+            // the CTA cannot fit on the SM with caching on. In the latter
+            // case, the device will automatically turn off caching, except
+            // if the device forces it. The user can also override this
+            // assumption with PARTITIONED_GC_ON_STRICT to calculate
+            // occupancy and launch configuration.
+            //
+            {
+                int gcOff = (*gcConfig == PARTITIONED_GC_OFF);
+                int zeroOccupancy = (maxBlocks == 0);
+                int cachingForced = (*gcConfig == PARTITIONED_GC_ON_STRICT ||
+                                     cudaOccPartitionedGCForced(properties));
+
+                if (gcOff || (zeroOccupancy && (!cachingForced))) {
+                    *gcConfig = PARTITIONED_GC_OFF;
+                    numWarpsPerSM = numWarpsPerSubPartition * numSubPartitions;
+                    maxBlocks     = numWarpsPerSM / warpsAllocatedPerCTA;
+                }
+            }
         }
         else {
             maxBlocks = INT_MAX;
@@ -1398,7 +1354,7 @@ cudaOccError cudaOccMaxPotentialOccupancyBlockSizeVariableSMem(
     int blockSizeLimitAligned;
     int occupancyInBlocks;
     int occupancyInThreads;
-    int dynamicSMemSize;
+    size_t dynamicSMemSize;
 
     ///////////////////////////
     // Check user input

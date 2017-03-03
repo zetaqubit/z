@@ -15,7 +15,6 @@
 #include <helper_cuda.h>
 #include <helper_functions.h>
 
-#include <cuda_runtime.h>
 #include "scan_common.h"
 
 int main(int argc, char **argv)
@@ -165,12 +164,6 @@ int main(int argc, char **argv)
 
     sdkDeleteTimer(&hTimer);
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     // pass or fail (cumulative... all tests in the loop)
     exit(globalFlag ? EXIT_SUCCESS : EXIT_FAILURE);
 }

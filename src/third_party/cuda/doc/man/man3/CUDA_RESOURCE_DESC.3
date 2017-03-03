@@ -1,0 +1,51 @@
+.TH "CUDA_RESOURCE_DESC" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+CUDA_RESOURCE_DESC \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "\fBCUresourcetype\fP \fBresType\fP"
+.br
+.ti -1c
+.RI "\fBCUmipmappedArray\fP \fBhMipmappedArray\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBnumChannels\fP"
+.br
+.ti -1c
+.RI "size_t \fBpitchInBytes\fP"
+.br
+.ti -1c
+.RI "size_t \fBsizeInBytes\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+CUDA Resource descriptor 
+.SH "Field Documentation"
+.PP 
+.SS "\fBCUmipmappedArray\fP \fBCUDA_RESOURCE_DESC::hMipmappedArray\fP"
+.PP
+CUDA mipmapped array 
+.SS "unsigned int \fBCUDA_RESOURCE_DESC::numChannels\fP"
+.PP
+Channels per array element 
+.SS "size_t \fBCUDA_RESOURCE_DESC::pitchInBytes\fP"
+.PP
+Pitch between two rows in bytes 
+.SS "\fBCUresourcetype\fP \fBCUDA_RESOURCE_DESC::resType\fP"
+.PP
+Resource type 
+.SS "size_t \fBCUDA_RESOURCE_DESC::sizeInBytes\fP"
+.PP
+Size in bytes 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

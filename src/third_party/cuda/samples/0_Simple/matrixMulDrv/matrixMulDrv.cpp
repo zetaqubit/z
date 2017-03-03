@@ -61,7 +61,7 @@ void randomInit(float *, int);
 extern "C"
 void computeGold(float *, const float *, const float *, unsigned int, unsigned int, unsigned int);
 
-static CUresult initCUDA(int argc, char **argv, CUfunction *pMatrixMul, int *block_size_out);
+static CUresult initCUDA(int argc, char **argv, CUfunction *pMatrixMul);
 
 //define input ptx file for different platforms
 #if defined(_WIN64) || defined(__LP64__)
@@ -109,9 +109,9 @@ runTest(int argc, char **argv)
 {
     // initialize CUDA
     CUfunction matrixMul = NULL;
-    int block_size = 0;
+    int block_size = 32;
 
-    CUresult error_id = initCUDA(argc, argv, &matrixMul, &block_size);
+    CUresult error_id = initCUDA(argc, argv, &matrixMul);
 
     if (error_id != CUDA_SUCCESS)
     {
@@ -352,7 +352,7 @@ findModulePath(const char *module_file, string &module_path, char **argv, string
 }
 
 static CUresult
-initCUDA(int argc, char **argv, CUfunction *pMatrixMul, int *block_size_out)
+initCUDA(int argc, char **argv, CUfunction *pMatrixMul)
 {
     CUfunction cuFunction = 0;
     CUresult status;
@@ -366,10 +366,6 @@ initCUDA(int argc, char **argv, CUfunction *pMatrixMul, int *block_size_out)
     checkCudaErrors(cuDeviceComputeCapability(&major, &minor, cuDevice));
     checkCudaErrors(cuDeviceGetName(deviceName, 256, cuDevice));
     printf("> GPU Device has SM %d.%d compute capability\n", major, minor);
-
-    // use a larger block size for Fermi and above
-    const int block_size = (major < 2) ? 16 : 32;
-    *block_size_out = block_size;
 
     checkCudaErrors(cuDeviceTotalMem(&totalGlobalMem, cuDevice));
     printf("  Total amount of global memory:     %llu bytes\n", (unsigned long long)totalGlobalMem);
@@ -437,26 +433,12 @@ initCUDA(int argc, char **argv, CUfunction *pMatrixMul, int *block_size_out)
 
     if (totalGlobalMem > (unsigned long long)4*1024*1024*1024L)
     {
-        if (block_size == 16)
-        {
-            status = cuModuleGetFunction(&cuFunction, cuModule, "matrixMul_bs16_64bit");
-        }
-        else
-        {
-            status = cuModuleGetFunction(&cuFunction, cuModule, "matrixMul_bs32_64bit");
-        }
+        status = cuModuleGetFunction(&cuFunction, cuModule, "matrixMul_bs32_64bit");
     }
     else
 #endif
     {
-        if (block_size == 16)
-        {
-            status = cuModuleGetFunction(&cuFunction, cuModule, "matrixMul_bs16_32bit");
-        }
-        else
-        {
-            status = cuModuleGetFunction(&cuFunction, cuModule, "matrixMul_bs32_32bit");
-        }
+        status = cuModuleGetFunction(&cuFunction, cuModule, "matrixMul_bs32_32bit");
     }
 
     if (CUDA_SUCCESS != status)
@@ -465,6 +447,7 @@ initCUDA(int argc, char **argv, CUfunction *pMatrixMul, int *block_size_out)
     }
 
     *pMatrixMul = cuFunction;
+
     return CUDA_SUCCESS;
 Error:
     cuCtxDestroy(cuContext);

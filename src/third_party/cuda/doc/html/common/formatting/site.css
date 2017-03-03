@@ -50,6 +50,7 @@ body.online #header #site-title { top:15px }
   float:right;
 }
 
+tr.gray { background-color: lightgray; }
 
 /* for the search result highlighting */
 .highlight { background:yellow; }

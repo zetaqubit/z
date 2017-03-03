@@ -108,12 +108,6 @@ int main(int argc, char **argv)
     {
         printf("%s: requires a minimum CUDA compute 1.1 capability\n", sSDKname);
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_SUCCESS);
     }
 
@@ -246,13 +240,6 @@ int main(int argc, char **argv)
     cudaFree(d_r);
     cudaFree(d_p);
     cudaFree(d_Ax);
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 
     printf("Test Summary:  Error amount = %f\n", err);
     exit((k <= max_iter) ? 0 : 1);

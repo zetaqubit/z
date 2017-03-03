@@ -50,6 +50,21 @@
 #if !defined(CUSOLVER_COMMON_H_)
 #define CUSOLVER_COMMON_H_
 
+#include "cuda_fp16.h"
+#include "library_types.h"
+
+#ifndef CUSOLVERAPI
+#ifdef _WIN32
+#define CUSOLVERAPI __stdcall
+#else
+#define CUSOLVERAPI 
+#endif
+#endif
+
+#if defined(__cplusplus)
+extern "C" {
+#endif /* __cplusplus */
+
 typedef enum{
     CUSOLVER_STATUS_SUCCESS=0,
     CUSOLVER_STATUS_NOT_INITIALIZED=1,
@@ -64,6 +79,26 @@ typedef enum{
     CUSOLVER_STATUS_ZERO_PIVOT=10,
     CUSOLVER_STATUS_INVALID_LICENSE=11
 } cusolverStatus_t;
+
+typedef enum {
+    CUSOLVER_EIG_TYPE_1=1,
+    CUSOLVER_EIG_TYPE_2=2,
+    CUSOLVER_EIG_TYPE_3=3
+} cusolverEigType_t ;
+
+typedef enum {
+    CUSOLVER_EIG_MODE_NOVECTOR=0,
+    CUSOLVER_EIG_MODE_VECTOR=1
+} cusolverEigMode_t ;
+
+
+cusolverStatus_t CUSOLVERAPI cusolverGetProperty(libraryPropertyType type, int *value);
+
+
+#if defined(__cplusplus)
+}
+#endif /* __cplusplus */
+
 
 #endif // CUSOLVER_COMMON_H_
 

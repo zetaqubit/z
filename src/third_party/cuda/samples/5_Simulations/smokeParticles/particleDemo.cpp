@@ -27,7 +27,7 @@
 #include <algorithm>
 #include <math.h>
 
-#include <GL/glew.h>
+#include <helper_gl.h>
 #if defined(__APPLE__) || defined(__MACOSX)
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #include <GLUT/glut.h>
@@ -417,7 +417,7 @@ void mouse(int button, int state, int x, int y)
     glutPostRedisplay();
 }
 
-// transfrom vector by matrix
+// transform vector by matrix
 void xform(vec3f &v, vec3f &r, float *m)
 {
     r.x = v.x*m[0] + v.y*m[4] + v.z*m[8] + m[12];
@@ -551,12 +551,6 @@ void key(unsigned char key, int /*x*/, int /*y*/)
 
         case '\033':
             cleanup();
-            // cudaDeviceReset causes the driver to clean up all state. While
-            // not mandatory in normal operation, it is good practice.  It is also
-            // needed to ensure correct operation when the application is being
-            // profiled. Calling cudaDeviceReset causes all profile data to be
-            // flushed before the application exits
-            cudaDeviceReset();
             exit(EXIT_SUCCESS);
             break;
 
@@ -851,15 +845,13 @@ void initGL(int *argc, char **argv)
     glutInitWindowSize(winWidth, winHeight);
     glutCreateWindow("CUDA Smoke Particles");
 
-    glewInit();
-
-    if (!glewIsSupported("GL_VERSION_2_0 GL_VERSION_1_5"))
+    if (!isGLVersionSupported(2,0))
     {
         fprintf(stderr, "The following required OpenGL extensions missing:\n\tGL_VERSION_2_0\n\tGL_VERSION_1_5\n");
         exit(EXIT_SUCCESS);
     }
 
-    if (!glewIsSupported("GL_ARB_multitexture GL_ARB_vertex_buffer_object GL_EXT_geometry_shader4"))
+    if (!areGLExtensionsSupported("GL_ARB_multitexture GL_ARB_vertex_buffer_object GL_EXT_geometry_shader4"))
     {
         fprintf(stderr, "The following required OpenGL extensions missing:\n\tGL_ARB_multitexture\n\tGL_ARB_vertex_buffer_object\n\tGL_EXT_geometry_shader4.\n");
         exit(EXIT_SUCCESS);
@@ -989,12 +981,6 @@ main(int argc, char **argv)
         glutMainLoop();
     }
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(g_TotalErrors > 0 ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 

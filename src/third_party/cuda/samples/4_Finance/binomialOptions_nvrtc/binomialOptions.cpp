@@ -23,7 +23,6 @@
 
 #include <cuda_runtime.h>
 #include <cuda.h>
-#include <cudaProfiler.h>
 
 #include <helper_functions.h>
 #include <helper_cuda.h>
@@ -202,8 +201,6 @@ int main(int argc, char **argv)
     printf("Shutting down...\n");
 
     sdkDeleteTimer(&hTimer);
-
-    cuProfilerStop();
 
     printf("\nNOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.\n\n");
 

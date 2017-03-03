@@ -631,13 +631,6 @@ int main(int argc, char **argv)
     //finalize
     printf("\nTest Summary...\n");
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
-
     if (!bTestResult)
     {
         printf("Test failed!\n");

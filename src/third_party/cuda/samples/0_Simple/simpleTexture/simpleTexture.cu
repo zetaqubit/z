@@ -124,7 +124,6 @@ int main(int argc, char **argv)
 
     runTest(argc, argv);
 
-    cudaDeviceReset();
     printf("%s completed, returned %s\n",
            sampleName,
            testResult ? "OK" : "ERROR!");

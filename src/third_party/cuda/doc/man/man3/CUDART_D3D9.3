@@ -1,0 +1,287 @@
+.TH "Direct3D 9 Interoperability" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Direct3D 9 Interoperability \- 
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBcudaD3D9DeviceList\fP { \fBcudaD3D9DeviceListAll\fP =  1, \fBcudaD3D9DeviceListCurrentFrame\fP =  2, \fBcudaD3D9DeviceListNextFrame\fP =  3 }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaD3D9GetDevice\fP (int *device, const char *pszAdapterName)"
+.br
+.RI "\fIGets the device number for an adapter. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaD3D9GetDevices\fP (unsigned int *pCudaDeviceCount, int *pCudaDevices, unsigned int cudaDeviceCount, IDirect3DDevice9 *pD3D9Device, enum \fBcudaD3D9DeviceList\fP deviceList)"
+.br
+.RI "\fIGets the CUDA devices corresponding to a Direct3D 9 device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaD3D9GetDirect3DDevice\fP (IDirect3DDevice9 **ppD3D9Device)"
+.br
+.RI "\fIGets the Direct3D device against which the current CUDA context was created. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaD3D9SetDirect3DDevice\fP (IDirect3DDevice9 *pD3D9Device, int device=-1)"
+.br
+.RI "\fISets the Direct3D 9 device to use for interoperability with a CUDA device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaGraphicsD3D9RegisterResource\fP (struct cudaGraphicsResource **resource, IDirect3DResource9 *pD3DResource, unsigned int flags)"
+.br
+.RI "\fIRegister a Direct3D 9 resource for access by CUDA. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+This section describes the Direct3D 9 interoperability functions of the CUDA runtime application programming interface. Note that mapping of Direct3D 9 resources is performed with the graphics API agnostic, resource mapping interface described in \fBGraphics Interopability\fP. 
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBcudaD3D9DeviceList\fP"
+.PP
+CUDA devices corresponding to a D3D9 device 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fIcudaD3D9DeviceListAll \fP\fP
+The CUDA devices for all GPUs used by a D3D9 device 
+.TP
+\fB\fIcudaD3D9DeviceListCurrentFrame \fP\fP
+The CUDA devices for the GPUs used by a D3D9 device in its currently rendering frame 
+.TP
+\fB\fIcudaD3D9DeviceListNextFrame \fP\fP
+The CUDA devices for the GPUs to be used by a D3D9 device in the next frame 
+.SH "Function Documentation"
+.PP 
+.SS "\fBcudaError_t\fP cudaD3D9GetDevice (int * device, const char * pszAdapterName)"
+.PP
+Returns in \fC*device\fP the CUDA-compatible device corresponding to the adapter name \fCpszAdapterName\fP obtained from EnumDisplayDevices or IDirect3D9::GetAdapterIdentifier(). If no device on the adapter with name \fCpszAdapterName\fP is CUDA-compatible then the call will fail.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevice\fP - Returns the device corresponding to pszAdapterName 
+.br
+\fIpszAdapterName\fP - D3D9 adapter to get device for
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorUnknown\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaD3D9SetDirect3DDevice\fP, \fBcudaGraphicsD3D9RegisterResource\fP, 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaD3D9GetDevices (unsigned int * pCudaDeviceCount, int * pCudaDevices, unsigned int cudaDeviceCount, IDirect3DDevice9 * pD3D9Device, enum \fBcudaD3D9DeviceList\fP deviceList)"
+.PP
+Returns in \fC*pCudaDeviceCount\fP the number of CUDA-compatible devices corresponding to the Direct3D 9 device \fCpD3D9Device\fP. Also returns in \fC*pCudaDevices\fP at most \fCcudaDeviceCount\fP of the the CUDA-compatible devices corresponding to the Direct3D 9 device \fCpD3D9Device\fP.
+.PP
+If any of the GPUs being used to render \fCpDevice\fP are not CUDA capable then the call will return \fBcudaErrorNoDevice\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpCudaDeviceCount\fP - Returned number of CUDA devices corresponding to \fCpD3D9Device\fP 
+.br
+\fIpCudaDevices\fP - Returned CUDA devices corresponding to \fCpD3D9Device\fP 
+.br
+\fIcudaDeviceCount\fP - The size of the output device array \fCpCudaDevices\fP 
+.br
+\fIpD3D9Device\fP - Direct3D 9 device to query for CUDA devices 
+.br
+\fIdeviceList\fP - The set of devices to return. This set may be \fBcudaD3D9DeviceListAll\fP for all devices, \fBcudaD3D9DeviceListCurrentFrame\fP for the devices used to render the current frame (in SLI), or \fBcudaD3D9DeviceListNextFrame\fP for the devices used to render the next frame (in SLI).
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorNoDevice\fP, \fBcudaErrorUnknown\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaGraphicsUnregisterResource\fP, \fBcudaGraphicsMapResources\fP, \fBcudaGraphicsSubResourceGetMappedArray\fP, \fBcudaGraphicsResourceGetMappedPointer\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaD3D9GetDirect3DDevice (IDirect3DDevice9 ** ppD3D9Device)"
+.PP
+Returns in \fC*ppD3D9Device\fP the Direct3D device against which this CUDA context was created in \fBcudaD3D9SetDirect3DDevice()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIppD3D9Device\fP - Returns the Direct3D device for this thread
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidGraphicsContext\fP, \fBcudaErrorUnknown\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaD3D9SetDirect3DDevice\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaD3D9SetDirect3DDevice (IDirect3DDevice9 * pD3D9Device, int device = \fC-1\fP)"
+.PP
+Records \fCpD3D9Device\fP as the Direct3D 9 device to use for Direct3D 9 interoperability with the CUDA device \fCdevice\fP and sets \fCdevice\fP as the current device for the calling host thread.
+.PP
+If \fCdevice\fP has already been initialized then this call will fail with the error \fBcudaErrorSetOnActiveProcess\fP. In this case it is necessary to reset \fCdevice\fP using \fBcudaDeviceReset()\fP before Direct3D 9 interoperability on \fCdevice\fP may be enabled.
+.PP
+Successfully initializing CUDA interoperability with \fCpD3D9Device\fP will increase the internal reference count on \fCpD3D9Device\fP. This reference count will be decremented when \fCdevice\fP is reset using \fBcudaDeviceReset()\fP.
+.PP
+Note that this function is never required for correct functionality. Use of this function will result in accelerated interoperability only when the operating system is Windows Vista or Windows 7, and the device \fCpD3DDdevice\fP is not an IDirect3DDevice9Ex. In all other cirumstances, this function is not necessary.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpD3D9Device\fP - Direct3D device to use for this thread 
+.br
+\fIdevice\fP - The CUDA device to use. This device must be among the devices returned when querying \fBcudaD3D9DeviceListAll\fP from \fBcudaD3D9GetDevices\fP, may be set to -1 to automatically select an appropriate CUDA device.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorSetOnActiveProcess\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaD3D9GetDevice\fP, \fBcudaGraphicsD3D9RegisterResource\fP, \fBcudaDeviceReset\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaGraphicsD3D9RegisterResource (struct cudaGraphicsResource ** resource, IDirect3DResource9 * pD3DResource, unsigned int flags)"
+.PP
+Registers the Direct3D 9 resource \fCpD3DResource\fP for access by CUDA.
+.PP
+If this call is successful then the application will be able to map and unmap this resource until it is unregistered through \fBcudaGraphicsUnregisterResource()\fP. Also on success, this call will increase the internal reference count on \fCpD3DResource\fP. This reference count will be decremented when this resource is unregistered through \fBcudaGraphicsUnregisterResource()\fP.
+.PP
+This call potentially has a high-overhead and should not be called every frame in interactive applications.
+.PP
+The type of \fCpD3DResource\fP must be one of the following.
+.PP
+.IP "\(bu" 2
+IDirect3DVertexBuffer9: may be accessed through a device pointer
+.IP "\(bu" 2
+IDirect3DIndexBuffer9: may be accessed through a device pointer
+.IP "\(bu" 2
+IDirect3DSurface9: may be accessed through an array. Only stand-alone objects of type IDirect3DSurface9 may be explicitly shared. In particular, individual mipmap levels and faces of cube maps may not be registered directly. To access individual surfaces associated with a texture, one must register the base texture object.
+.IP "\(bu" 2
+IDirect3DBaseTexture9: individual surfaces on this texture may be accessed through an array.
+.PP
+.PP
+The \fCflags\fP argument may be used to specify additional parameters at register time. The valid values for this parameter are
+.PP
+.IP "\(bu" 2
+\fBcudaGraphicsRegisterFlagsNone\fP: Specifies no hints about how this resource will be used.
+.IP "\(bu" 2
+\fBcudaGraphicsRegisterFlagsSurfaceLoadStore\fP: Specifies that CUDA will bind this resource to a surface reference.
+.IP "\(bu" 2
+\fBcudaGraphicsRegisterFlagsTextureGather\fP: Specifies that CUDA will perform texture gather operations on this resource.
+.PP
+.PP
+Not all Direct3D resources of the above types may be used for interoperability with CUDA. The following are some limitations.
+.PP
+.IP "\(bu" 2
+The primary rendertarget may not be registered with CUDA.
+.IP "\(bu" 2
+Resources allocated as shared may not be registered with CUDA.
+.IP "\(bu" 2
+Textures which are not of a format which is 1, 2, or 4 channels of 8, 16, or 32-bit integer or floating-point data cannot be shared.
+.IP "\(bu" 2
+Surfaces of depth or stencil formats cannot be shared.
+.PP
+.PP
+A complete list of supported formats is as follows:
+.IP "\(bu" 2
+D3DFMT_L8
+.IP "\(bu" 2
+D3DFMT_L16
+.IP "\(bu" 2
+D3DFMT_A8R8G8B8
+.IP "\(bu" 2
+D3DFMT_X8R8G8B8
+.IP "\(bu" 2
+D3DFMT_G16R16
+.IP "\(bu" 2
+D3DFMT_A8B8G8R8
+.IP "\(bu" 2
+D3DFMT_A8
+.IP "\(bu" 2
+D3DFMT_A8L8
+.IP "\(bu" 2
+D3DFMT_Q8W8V8U8
+.IP "\(bu" 2
+D3DFMT_V16U16
+.IP "\(bu" 2
+D3DFMT_A16B16G16R16F
+.IP "\(bu" 2
+D3DFMT_A16B16G16R16
+.IP "\(bu" 2
+D3DFMT_R32F
+.IP "\(bu" 2
+D3DFMT_G16R16F
+.IP "\(bu" 2
+D3DFMT_A32B32G32R32F
+.IP "\(bu" 2
+D3DFMT_G32R32F
+.IP "\(bu" 2
+D3DFMT_R16F
+.PP
+.PP
+If \fCpD3DResource\fP is of incorrect type or is already registered, then \fBcudaErrorInvalidResourceHandle\fP is returned. If \fCpD3DResource\fP cannot be registered, then \fBcudaErrorUnknown\fP is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIresource\fP - Pointer to returned resource handle 
+.br
+\fIpD3DResource\fP - Direct3D resource to register 
+.br
+\fIflags\fP - Parameters for resource registration
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidDevice\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidResourceHandle\fP, \fBcudaErrorUnknown\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaD3D9SetDirect3DDevice\fP, \fBcudaGraphicsUnregisterResource\fP, \fBcudaGraphicsMapResources\fP, \fBcudaGraphicsSubResourceGetMappedArray\fP, \fBcudaGraphicsResourceGetMappedPointer\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

@@ -65,10 +65,12 @@
 *                                                                              *
 *******************************************************************************/
 
-#if !defined(__CUDA_INTERNAL_COMPILATION__) && !defined(__CUDACC_RTC__)
+#if !defined(__CUDA_INTERNAL_COMPILATION__)
 
+#if !defined(__CUDACC_RTC__)
 #include <limits.h>
 #include <stddef.h>
+#endif /* !defined(__CUDACC_RTC__) */
 
 #define cudaHostAllocDefault                0x00  /**< Default page-locked allocation flag */
 #define cudaHostAllocPortable               0x01  /**< Pinned memory accessible by all CUDA contexts */
@@ -78,6 +80,7 @@
 #define cudaHostRegisterDefault             0x00  /**< Default host memory registration flag */
 #define cudaHostRegisterPortable            0x01  /**< Pinned memory accessible by all CUDA contexts */
 #define cudaHostRegisterMapped              0x02  /**< Map registered memory into device space */
+#define cudaHostRegisterIoMemory            0x04  /**< Memory-mapped I/O space */
 
 #define cudaPeerAccessDefault               0x00  /**< Default peer addressing enable flag */
 
@@ -136,7 +139,10 @@
 #define cudaOccupancyDefault                0x00  /**< Default behavior */
 #define cudaOccupancyDisableCachingOverride 0x01  /**< Assume global caching is enabled and cannot be automatically turned off */
 
-#endif /* !__CUDA_INTERNAL_COMPILATION__ && !__CUDACC_RTC__ */
+#define cudaCpuDeviceId                     ((int)-1) /**< Device id that represents the CPU */
+#define cudaInvalidDeviceId                 ((int)-2) /**< Device id that represents an invalid device */
+
+#endif /* !__CUDA_INTERNAL_COMPILATION__ */
 
 /*******************************************************************************
 *                                                                              *
@@ -197,9 +203,10 @@ enum __device_builtin__ cudaError
      * This indicates that the device kernel took too long to execute. This can
      * only occur if timeouts are enabled - see the device property
      * \ref ::cudaDeviceProp::kernelExecTimeoutEnabled "kernelExecTimeoutEnabled"
-     * for more information. The device cannot be used until ::cudaThreadExit()
-     * is called. All existing device memory allocations are invalid and must be
-     * reconstructed if the program is to continue using CUDA.
+     * for more information.
+     * This leaves the process in an inconsistent state and any further CUDA work
+     * will return the same error. To continue using CUDA, the process must be terminated
+     * and relaunched.
      */
     cudaErrorLaunchTimeout                =      6,
   
@@ -658,26 +665,26 @@ enum __device_builtin__ cudaError
     /**
      * Device encountered an error in the call stack during kernel execution,
      * possibly due to stack corruption or exceeding the stack size limit.
-     * The context cannot be used, so it must be destroyed (and a new one should be created).
-     * All existing device memory allocations from this context are invalid
-     * and must be reconstructed if the program is to continue using CUDA.
+     * This leaves the process in an inconsistent state and any further CUDA work
+     * will return the same error. To continue using CUDA, the process must be terminated
+     * and relaunched.
      */
     cudaErrorHardwareStackError           =     72,
 
     /**
      * The device encountered an illegal instruction during kernel execution
-     * The context cannot be used, so it must be destroyed (and a new one should be created).
-     * All existing device memory allocations from this context are invalid
-     * and must be reconstructed if the program is to continue using CUDA.
+     * This leaves the process in an inconsistent state and any further CUDA work
+     * will return the same error. To continue using CUDA, the process must be terminated
+     * and relaunched.
      */
     cudaErrorIllegalInstruction           =     73,
 
     /**
      * The device encountered a load or store instruction
      * on a memory address which is not aligned.
-     * The context cannot be used, so it must be destroyed (and a new one should be created).
-     * All existing device memory allocations from this context are invalid
-     * and must be reconstructed if the program is to continue using CUDA.
+     * This leaves the process in an inconsistent state and any further CUDA work
+     * will return the same error. To continue using CUDA, the process must be terminated
+     * and relaunched.
      */
     cudaErrorMisalignedAddress            =     74,
 
@@ -686,25 +693,25 @@ enum __device_builtin__ cudaError
      * which can only operate on memory locations in certain address spaces
      * (global, shared, or local), but was supplied a memory address not
      * belonging to an allowed address space.
-     * The context cannot be used, so it must be destroyed (and a new one should be created).
-     * All existing device memory allocations from this context are invalid
-     * and must be reconstructed if the program is to continue using CUDA.
+     * This leaves the process in an inconsistent state and any further CUDA work
+     * will return the same error. To continue using CUDA, the process must be terminated
+     * and relaunched.
      */
     cudaErrorInvalidAddressSpace          =     75,
 
     /**
      * The device encountered an invalid program counter.
-     * The context cannot be used, so it must be destroyed (and a new one should be created).
-     * All existing device memory allocations from this context are invalid
-     * and must be reconstructed if the program is to continue using CUDA.
+     * This leaves the process in an inconsistent state and any further CUDA work
+     * will return the same error. To continue using CUDA, the process must be terminated
+     * and relaunched.
      */
     cudaErrorInvalidPc                    =     76,
 
     /**
      * The device encountered a load or store instruction on an invalid memory address.
-     * The context cannot be used, so it must be destroyed (and a new one should be created).
-     * All existing device memory allocations from this context are invalid
-     * and must be reconstructed if the program is to continue using CUDA.
+     * This leaves the process in an inconsistent state and any further CUDA work
+     * will return the same error. To continue using CUDA, the process must be terminated
+     * and relaunched.
      */
     cudaErrorIllegalAddress               =     77,
 
@@ -719,6 +726,11 @@ enum __device_builtin__ cudaError
      */
     cudaErrorInvalidGraphicsContext       =     79,
 
+    /**
+     * This indicates that an uncorrectable NVLink error was detected during the
+     * execution.
+     */
+    cudaErrorNvlinkUncorrectable          =     80,
 
     /**
      * This indicates an internal startup failure in the CUDA runtime.
@@ -799,7 +811,7 @@ enum __device_builtin__ cudaMemcpyKind
     cudaMemcpyHostToDevice        =   1,      /**< Host   -> Device */
     cudaMemcpyDeviceToHost        =   2,      /**< Device -> Host */
     cudaMemcpyDeviceToDevice      =   3,      /**< Device -> Device */
-    cudaMemcpyDefault             =   4       /**< Default based unified virtual address space */
+    cudaMemcpyDefault             =   4       /**< Direction of the transfer is inferred from the pointer values. Requires unified virtual addressing */
 };
 
 /**
@@ -1152,6 +1164,30 @@ enum __device_builtin__ cudaLimit
 };
 
 /**
+ * CUDA Memory Advise values
+ */
+enum __device_builtin__ cudaMemoryAdvise
+{
+    cudaMemAdviseSetReadMostly          = 1, /**< Data will mostly be read and only occassionally be written to */
+    cudaMemAdviseUnsetReadMostly        = 2, /**< Undo the effect of ::cudaMemAdviseSetReadMostly */
+    cudaMemAdviseSetPreferredLocation   = 3, /**< Set the preferred location for the data as the specified device */
+    cudaMemAdviseUnsetPreferredLocation = 4, /**< Clear the preferred location for the data */
+    cudaMemAdviseSetAccessedBy          = 5, /**< Data will be accessed by the specified device, so prevent page faults as much as possible */
+    cudaMemAdviseUnsetAccessedBy        = 6  /**< Let the Unified Memory subsystem decide on the page faulting policy for the specified device */
+};
+
+/**
+ * CUDA range attributes
+ */
+enum __device_builtin__ cudaMemRangeAttribute
+{
+    cudaMemRangeAttributeReadMostly           = 1, /**< Whether the range will mostly be read and only occassionally be written to */
+    cudaMemRangeAttributePreferredLocation    = 2, /**< The preferred location of the range */
+    cudaMemRangeAttributeAccessedBy           = 3, /**< Memory range has ::cudaMemAdviseSetAccessedBy set for specified device */
+    cudaMemRangeAttributeLastPrefetchLocation = 4  /**< The last location to which the range was prefetched */
+};
+
+/**
  * CUDA Profiler Output modes
  */
 enum __device_builtin__ cudaOutputMode
@@ -1248,9 +1284,24 @@ enum __device_builtin__ cudaDeviceAttr
     cudaDevAttrMaxRegistersPerMultiprocessor  = 82, /**< Maximum number of 32-bit registers available per multiprocessor */
     cudaDevAttrManagedMemory                  = 83, /**< Device can allocate managed memory on this system */
     cudaDevAttrIsMultiGpuBoard                = 84, /**< Device is on a multi-GPU board */
-    cudaDevAttrMultiGpuBoardGroupID           = 85  /**< Unique identifier for a group of devices on the same multi-GPU board */
+    cudaDevAttrMultiGpuBoardGroupID           = 85, /**< Unique identifier for a group of devices on the same multi-GPU board */
+    cudaDevAttrHostNativeAtomicSupported      = 86, /**< Link between the device and the host supports native atomic operations */
+    cudaDevAttrSingleToDoublePrecisionPerfRatio = 87, /**< Ratio of single precision performance (in floating-point operations per second) to double precision performance */
+    cudaDevAttrPageableMemoryAccess           = 88, /**< Device supports coherently accessing pageable memory without calling cudaHostRegister on it */
+    cudaDevAttrConcurrentManagedAccess        = 89, /**< Device can coherently access managed memory concurrently with the CPU */
+    cudaDevAttrComputePreemptionSupported     = 90, /**< Device supports Compute Preemption */
+    cudaDevAttrCanUseHostPointerForRegisteredMem = 91 /**< Device can access host registered memory at the same virtual address as the CPU */
 };
 
+/**
+ * CUDA device P2P attributes
+ */
+
+enum __device_builtin__ cudaDeviceP2PAttr {
+    cudaDevP2PAttrPerformanceRank              = 1, /**< A relative value indicating the performance of the link between two devices */
+    cudaDevP2PAttrAccessSupported              = 2, /**< Peer access is enabled */
+    cudaDevP2PAttrNativeAtomicSupported        = 3  /**< Native atomic operation over the link supported */
+};
 /**
  * CUDA device properties
  */
@@ -1318,6 +1369,10 @@ struct __device_builtin__ cudaDeviceProp
     int    managedMemory;              /**< Device supports allocating managed memory on this system */
     int    isMultiGpuBoard;            /**< Device is on a multi-GPU board */
     int    multiGpuBoardGroupID;       /**< Unique identifier for a group of devices on the same multi-GPU board */
+    int    hostNativeAtomicSupported;  /**< Link between the device and the host supports native atomic operations */
+    int    singleToDoublePrecisionPerfRatio; /**< Ratio of single precision performance (in floating-point operations per second) to double precision performance */
+    int    pageableMemoryAccess;       /**< Device supports coherently accessing pageable memory without calling cudaHostRegister on it */
+    int    concurrentManagedAccess;    /**< Device can coherently access managed memory concurrently with the CPU */
 };
 
 #define cudaDevicePropDontCare                             \
@@ -1384,6 +1439,10 @@ struct __device_builtin__ cudaDeviceProp
           0,         /* int    managedMemory            */ \
           0,         /* int    isMultiGpuBoard          */ \
           0,         /* int    multiGpuBoardGroupID     */ \
+          0,         /* int    hostNativeAtomicSupported */ \
+          0,         /* int    singleToDoublePrecisionPerfRatio */ \
+          0,         /* int    pageableMemoryAccess     */ \
+          0,         /* int    concurrentManagedAccess  */ \
         } /**< Empty device properties */
 
 /**

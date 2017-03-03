@@ -48,7 +48,7 @@
       <div id="site-content">
          <nav id="site-nav">
             <div class="category closed"><a href="../index.html" title="The root of the site.">CUDA Toolkit
-                  v7.0</a></div>
+                  v8.0</a></div>
             <div class="category"><a href="index.html" title="GPUDirect RDMA">GPUDirect RDMA</a></div>
             <ul>
                <li>
@@ -148,10 +148,10 @@
                   (<a href="../../pdf/GPUDirect_RDMA.pdf">PDF</a>)
                   -
                   
-                  v7.0
+                  v8.0
                   (<a href="https://developer.nvidia.com/cuda-toolkit-archive">older</a>)
                   -
-                  Last updated March 5, 2015
+                  Last updated January 12, 2017
                   -
                   <a href="mailto:cudatools@nvidia.com?subject=CUDA Toolkit Documentation Feedback: GPUDirect RDMA">Send Feedback</a>
                   -
@@ -757,7 +757,7 @@ cuPointerGetAttribute(&amp;return_data, CU_POINTER_ATTRIBUTE_P2P_TOKENS, ptr0);
                               	
                            </p>
                            <p class="p">
-                              		An example situation would be Read-after-Write dependency betewen a <samp class="ph codeph">cudaMemcpyDtoD()</samp> and subsequent GPUDirect RDMA read operation on the destination of the copy. As an optimization the device-to-device memory
+                              		An example situation would be Read-after-Write dependency betewen a <samp class="ph codeph">cuMemcpyDtoD()</samp> and subsequent GPUDirect RDMA read operation on the destination of the copy. As an optimization the device-to-device memory
                               copy typically returns asynchronously to the calling thread after queuing the copy to the GPU scheduler. However, in this
                               circumstance that will lead to incosistent data read via the BAR mapping, so this optimization is disabled an the copy completed
                               before the CUDA API returns.
@@ -1483,7 +1483,7 @@ typedef struct CUDA_POINTER_ATTRIBUTE_P2P_TOKENS_st {
                      <div class="body refbody">
                         <div class="section">
                            <h3 class="title sectiontitle">Copyright</h3>
-                           <p class="p">© <span class="ph">2007</span>-<span class="ph">2015</span> NVIDIA
+                           <p class="p">© <span class="ph">2007</span>-<span class="ph">2017</span> NVIDIA
                               Corporation. All rights reserved.
                            </p>
                            <p class="p">This product includes software developed by the Syncro Soft SRL (http://www.sync.ro/).</p>

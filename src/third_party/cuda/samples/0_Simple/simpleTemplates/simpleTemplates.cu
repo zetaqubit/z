@@ -99,12 +99,6 @@ main(int argc, char **argv)
 
     printf("\n[simpleTemplates] -> Test Results: %d Failures\n", g_TotalFailures);
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(g_TotalFailures == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
@@ -205,7 +199,7 @@ runTest(int argc, char **argv, int len)
     // allocate host memory
     T *h_idata = (T *) malloc(mem_size);
 
-    // initalize the memory
+    // initialize the memory
     for (unsigned int i = 0; i < num_threads; ++i)
     {
         h_idata[i] = (T) i;
@@ -257,7 +251,7 @@ runTest(int argc, char **argv, int len)
     else
     {
         // custom output handling when no regression test running
-        // in this case check if the result is equivalent to the expected soluion
+        // in this case check if the result is equivalent to the expected solution
         bool res = comparator.compare(reference, h_odata, num_threads);
         printf("Compare %s\n\n", (1 == res) ? "OK" : "MISMATCH");
         g_TotalFailures += (1 != res);
@@ -269,11 +263,4 @@ runTest(int argc, char **argv, int len)
     free(reference);
     checkCudaErrors(cudaFree(d_idata));
     checkCudaErrors(cudaFree(d_odata));
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits   
-    cudaDeviceReset();
 }

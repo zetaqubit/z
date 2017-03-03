@@ -9,8 +9,8 @@
  *
  */
 
-#include <GL/glew.h>
 
+#include <helper_gl.h>
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 #include <GL/wglew.h>
 #endif
@@ -435,6 +435,10 @@ class NBodyDemo
                     }
                 }
             }
+            if (passed)
+            {
+                printf("  OK\n");
+            }
             return passed;
         }
 
@@ -565,22 +569,8 @@ void initGL(int *argc, char **argv)
         glutFullScreen();
     }
 
-    GLenum err = glewInit();
-
-    if (GLEW_OK != err)
-    {
-        printf("GLEW Error: %s\n", glewGetErrorString(err));
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
-        exit(EXIT_FAILURE);
-    }
-    else if (!glewIsSupported("GL_VERSION_2_0 "
-                              "GL_VERSION_1_5 "
+    else if (!isGLVersionSupported(2,0) ||
+             !areGLExtensionsSupported (
                               "GL_ARB_multitexture "
                               "GL_ARB_vertex_buffer_object"))
     {
@@ -921,13 +911,6 @@ void key(unsigned char key, int /*x*/, int /*y*/)
         case 'q':
         case 'Q':
             finalize();
-
-            // cudaDeviceReset causes the driver to clean up all state. While
-            // not mandatory in normal operation, it is good practice.  It is also
-            // needed to ensure correct operation when the application is being
-            // profiled. Calling cudaDeviceReset causes all profile data to be
-            // flushed before the application exits
-            cudaDeviceReset();
             exit(EXIT_SUCCESS);
             break;
 
@@ -1074,7 +1057,7 @@ main(int argc, char **argv)
         return 0;
     }
 
-    printf("Run \"nbody -benchmark [-numbodies=<numBodies>]\" to measure perfomance.\n");
+    printf("Run \"nbody -benchmark [-numbodies=<numBodies>]\" to measure performance.\n");
     showHelp();
 
     printf("NOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.\n\n");
@@ -1128,7 +1111,7 @@ main(int argc, char **argv)
     if (numDevsAvailable < numDevsRequested)
     {
         printf("Error: only %d Devices available, %d requested.  Exiting.\n", numDevsAvailable, numDevsRequested);
-        exit(EXIT_SUCCESS);
+        exit(EXIT_FAILURE);
     }
 
     printf("> %s mode\n", bFullscreen ? "Fullscreen" : "Windowed");
@@ -1196,13 +1179,6 @@ main(int argc, char **argv)
         if (numDevsRequested > 1)
         {
             printf("MultiGPU n-body requires CUDA 4.0 or later\n");
-
-            // cudaDeviceReset causes the driver to clean up all state. While
-            // not mandatory in normal operation, it is good practice.  It is also
-            // needed to ensure correct operation when the application is being
-            // profiled. Calling cudaDeviceReset causes all profile data to be
-            // flushed before the application exits
-            cudaDeviceReset();
             exit(EXIT_SUCCESS);
         }
 
@@ -1237,13 +1213,6 @@ main(int argc, char **argv)
                     if (!props.canMapHostMemory)
                     {
                         fprintf(stderr, "Device %d cannot map host memory!\n", devID);
-
-                        // cudaDeviceReset causes the driver to clean up all state. While
-                        // not mandatory in normal operation, it is good practice.  It is also
-                        // needed to ensure correct operation when the application is being
-                        // profiled. Calling cudaDeviceReset causes all profile data to be
-                        // flushed before the application exits
-                        cudaDeviceReset();
                         exit(EXIT_SUCCESS);
                     }
 
@@ -1255,13 +1224,6 @@ main(int argc, char **argv)
                     checkCudaErrors(cudaSetDeviceFlags(cudaDeviceMapHost));
 #else
                     fprintf(stderr, "This CUDART version does not support <cudaDeviceProp.canMapHostMemory> field\n");
-
-                    // cudaDeviceReset causes the driver to clean up all state. While
-                    // not mandatory in normal operation, it is good practice.  It is also
-                    // needed to ensure correct operation when the application is being
-                    // profiled. Calling cudaDeviceReset causes all profile data to be
-                    // flushed before the application exits
-                    cudaDeviceReset();
                     exit(EXIT_SUCCESS);
 #endif
                 }
@@ -1280,13 +1242,6 @@ main(int argc, char **argv)
         if (fp64 && !bSupportDouble)
         {
             fprintf(stderr, "One or more of the requested devices does not support double precision floating-point\n");
-
-            // cudaDeviceReset causes the driver to clean up all state. While
-            // not mandatory in normal operation, it is good practice.  It is also
-            // needed to ensure correct operation when the application is being
-            // profiled. Calling cudaDeviceReset causes all profile data to be
-            // flushed before the application exits
-            cudaDeviceReset();
             exit(EXIT_SUCCESS);
         }
     }
@@ -1483,12 +1438,5 @@ main(int argc, char **argv)
     }
 
     finalize();
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(bTestResults ? EXIT_SUCCESS : EXIT_FAILURE);
 }

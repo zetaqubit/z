@@ -1,0 +1,135 @@
+.TH "Profiler Control" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Profiler Control \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaProfilerInitialize\fP (const char *configFile, const char *outputFile, \fBcudaOutputMode_t\fP outputMode)"
+.br
+.RI "\fIInitialize the CUDA profiler. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaProfilerStart\fP (void)"
+.br
+.RI "\fIEnable profiling. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaProfilerStop\fP (void)"
+.br
+.RI "\fIDisable profiling. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief profiler control functions of the CUDA runtime API (cuda_profiler_api.h)
+.PP
+This section describes the profiler control functions of the CUDA runtime application programming interface. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBcudaError_t\fP cudaProfilerInitialize (const char * configFile, const char * outputFile, \fBcudaOutputMode_t\fP outputMode)"
+.PP
+Using this API user can initialize the CUDA profiler by specifying the configuration file, output file and output file format. This API is generally used to profile different set of counters by looping the kernel launch. The \fCconfigFile\fP parameter can be used to select profiling options including profiler counters. Refer to the 'Compute Command Line Profiler User Guide' for supported profiler options and counters.
+.PP
+Limitation: The CUDA profiler cannot be initialized with this API if another profiling tool is already active, as indicated by the \fBcudaErrorProfilerDisabled\fP return code.
+.PP
+Typical usage of the profiling APIs is as follows:
+.PP
+for each set of counters/options
+.br
+ {
+.br
+ \fBcudaProfilerInitialize()\fP; //Initialize profiling,set the counters/options in the config file 
+.br
+ ...
+.br
+ \fBcudaProfilerStart()\fP; 
+.br
+ // code to be profiled 
+.br
+ \fBcudaProfilerStop()\fP;
+.br
+ ...
+.br
+ \fBcudaProfilerStart()\fP; 
+.br
+ // code to be profiled 
+.br
+ \fBcudaProfilerStop()\fP;
+.br
+ ...
+.br
+ }
+.br
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconfigFile\fP - Name of the config file that lists the counters/options for profiling. 
+.br
+\fIoutputFile\fP - Name of the outputFile where the profiling results will be stored. 
+.br
+\fIoutputMode\fP - outputMode, can be \fBcudaKeyValuePair\fP OR \fBcudaCSV\fP.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorProfilerDisabled\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaProfilerStart\fP, \fBcudaProfilerStop\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaProfilerStart (void)"
+.PP
+Enables profile collection by the active profiling tool for the current context. If profiling is already enabled, then \fBcudaProfilerStart()\fP has no effect.
+.PP
+cudaProfilerStart and cudaProfilerStop APIs are used to programmatically control the profiling granularity by allowing profiling to be done only on selective pieces of code.
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaProfilerInitialize\fP, \fBcudaProfilerStop\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaProfilerStop (void)"
+.PP
+Disables profile collection by the active profiling tool for the current context. If profiling is already disabled, then \fBcudaProfilerStop()\fP has no effect.
+.PP
+cudaProfilerStart and cudaProfilerStop APIs are used to programmatically control the profiling granularity by allowing profiling to be done only on selective pieces of code.
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaProfilerInitialize\fP, \fBcudaProfilerStart\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

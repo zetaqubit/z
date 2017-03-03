@@ -1,0 +1,81 @@
+.TH "CUdevprop" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+CUdevprop \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "int \fBclockRate\fP"
+.br
+.ti -1c
+.RI "int \fBmaxGridSize\fP [3]"
+.br
+.ti -1c
+.RI "int \fBmaxThreadsDim\fP [3]"
+.br
+.ti -1c
+.RI "int \fBmaxThreadsPerBlock\fP"
+.br
+.ti -1c
+.RI "int \fBmemPitch\fP"
+.br
+.ti -1c
+.RI "int \fBregsPerBlock\fP"
+.br
+.ti -1c
+.RI "int \fBsharedMemPerBlock\fP"
+.br
+.ti -1c
+.RI "int \fBSIMDWidth\fP"
+.br
+.ti -1c
+.RI "int \fBtextureAlign\fP"
+.br
+.ti -1c
+.RI "int \fBtotalConstantMemory\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Legacy device properties 
+.SH "Field Documentation"
+.PP 
+.SS "int \fBCUdevprop::clockRate\fP"
+.PP
+Clock frequency in kilohertz 
+.SS "int \fBCUdevprop::maxGridSize\fP[3]"
+.PP
+Maximum size of each dimension of a grid 
+.SS "int \fBCUdevprop::maxThreadsDim\fP[3]"
+.PP
+Maximum size of each dimension of a block 
+.SS "int \fBCUdevprop::maxThreadsPerBlock\fP"
+.PP
+Maximum number of threads per block 
+.SS "int \fBCUdevprop::memPitch\fP"
+.PP
+Maximum pitch in bytes allowed by memory copies 
+.SS "int \fBCUdevprop::regsPerBlock\fP"
+.PP
+32-bit registers available per block 
+.SS "int \fBCUdevprop::sharedMemPerBlock\fP"
+.PP
+Shared memory available per block in bytes 
+.SS "int \fBCUdevprop::SIMDWidth\fP"
+.PP
+Warp size in threads 
+.SS "int \fBCUdevprop::textureAlign\fP"
+.PP
+Alignment requirement for textures 
+.SS "int \fBCUdevprop::totalConstantMemory\fP"
+.PP
+Constant memory available on device in bytes 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

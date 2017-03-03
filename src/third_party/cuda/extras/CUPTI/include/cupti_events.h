@@ -110,6 +110,7 @@ typedef enum {
   CUPTI_DEVICE_ATTR_DEVICE_CLASS_TESLA              = 0,
   CUPTI_DEVICE_ATTR_DEVICE_CLASS_QUADRO             = 1,
   CUPTI_DEVICE_ATTR_DEVICE_CLASS_GEFORCE            = 2,
+  CUPTI_DEVICE_ATTR_DEVICE_CLASS_TEGRA              = 3,
 } CUpti_DeviceAttributeDeviceClass;
 
 /**
@@ -177,6 +178,37 @@ typedef enum {
    * Get number of L2 units. Value is a uint64_t.
    */
   CUPTI_DEVICE_ATTR_MAX_L2_UNITS                           = 13,
+  /**
+   * Get the maximum shared memory for the CU_FUNC_CACHE_PREFER_SHARED
+   * preference. Value is a uint64_t.
+   */
+  CUPTI_DEVICE_ATTR_MAX_SHARED_MEMORY_CACHE_CONFIG_PREFER_SHARED = 14,
+  /**
+   * Get the maximum shared memory for the CU_FUNC_CACHE_PREFER_L1
+   * preference. Value is a uint64_t.
+   */
+  CUPTI_DEVICE_ATTR_MAX_SHARED_MEMORY_CACHE_CONFIG_PREFER_L1 = 15,
+  /**
+   * Get the maximum shared memory for the CU_FUNC_CACHE_PREFER_EQUAL
+   * preference. Value is a uint64_t.
+   */
+  CUPTI_DEVICE_ATTR_MAX_SHARED_MEMORY_CACHE_CONFIG_PREFER_EQUAL = 16,
+  /**
+   * Get the peak half precision flop per cycle. Value is a uint64_t.
+   */
+  CUPTI_DEVICE_ATTR_FLOP_HP_PER_CYCLE                       = 17,
+  /**
+   * Check if Nvlink is connected to device. Returns 1, if at least one
+   * Nvlink is connected to the device, returns 0 otherwise.
+   * Value is a uint32_t.
+   */
+  CUPTI_DEVICE_ATTR_NVLINK_PRESENT                          = 18,
+    /**
+   * Check if Nvlink is present between GPU and CPU. Returns Bandwidth,
+   * in Bytes/sec, if Nvlink is present, returns 0 otherwise.
+   * Value is a uint64_t.
+   */
+  CUPTI_DEVICE_ATTR_GPU_CPU_NVLINK_BW                       = 19,
   CUPTI_DEVICE_ATTR_FORCE_INT                               = 0x7fffffff,
 } CUpti_DeviceAttribute;
 
@@ -235,6 +267,10 @@ typedef enum {
    * Event is collected using software instrumentation.
    */
   CUPTI_EVENT_COLLECTION_METHOD_INSTRUMENTED        = 2,
+  /**
+   * Event is collected using NvLink throughput counter method.
+   */
+  CUPTI_EVENT_COLLECTION_METHOD_NVLINK_TC           = 3,
   CUPTI_EVENT_COLLECTION_METHOD_FORCE_INT           = 0x7fffffff
 } CUpti_EventCollectionMethod;
 
@@ -1040,7 +1076,7 @@ CUptiResult CUPTIAPI cuptiEventGroupReadEvent(CUpti_EventGroup eventGroup,
  * The data format returned in \p eventValueBuffer is:
  *    - domain instance 0: event0 event1 ... eventN
  *    - domain instance 1: event0 event1 ... eventN
- *    - ... 
+ *    - ...
  *    - domain instance M: event0 event1 ... eventN
  *
  * The event order in \p eventValueBuffer is returned in \p
@@ -1222,6 +1258,32 @@ CUptiResult CUPTIAPI cuptiEnableKernelReplayMode(CUcontext context);
  */
 CUptiResult CUPTIAPI cuptiDisableKernelReplayMode(CUcontext context);
 
+/**
+ * \brief Function type for getting updates on kernel replay.
+ *
+ * \param kernelName The mangled kernel name
+ * \param numReplaysDone Number of replays done so far
+ * \param customData Pointer of any custom data passed in when subscribing
+ */
+typedef void (CUPTIAPI *CUpti_KernelReplayUpdateFunc)(
+    const char *kernelName,
+    int numReplaysDone,
+    void *customData);
+
+/**
+ * \brief Subscribe to kernel replay updates.
+ *
+ * When subscribed, the function pointer passed in will be called each time a
+ * kernel run is finished during kernel replay. Previously subscribed function
+ * pointer will be replaced. Pass in NULL as the function pointer unsubscribes
+ * the update.
+ *
+ * \param updateFunc The update function pointer
+ * \param customData Pointer to any custom data
+ * \retval CUPTI_SUCCESS
+ */
+CUptiResult CUPTIAPI cuptiKernelReplaySubscribeUpdate(CUpti_KernelReplayUpdateFunc updateFunc, void *customData);
+
 /** @} */ /* END CUPTI_EVENT_API */
 
 #if defined(__cplusplus)
@@ -1229,3 +1291,5 @@ CUptiResult CUPTIAPI cuptiDisableKernelReplayMode(CUcontext context);
 #endif
 
 #endif /*_CUPTI_EVENTS_H_*/
+
+

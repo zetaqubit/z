@@ -71,6 +71,9 @@ extern "C" {
  *
  * @{
  *
+ * These functions can be found in either the nppi or nppicom libraries. Linking to only the sub-libraries that you use can significantly
+ * save link time, application load time, and CUDA runtime startup time when using dynamic libraries.
+ *
  */
 
 /** @defgroup image_quantization Quantization Functions

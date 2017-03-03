@@ -124,7 +124,7 @@ QUALIFIERS float __cr_rsqrt(float a)
 #ifdef __CUDA_ARCH__
     asm ("rsqrt.approx.f32.ftz %0, %1;" : "=f"(a) : "f"(a));
 #else
-    a = 1.0f / sqrt (a);
+    a = 1.0f / sqrtf (a);
 #endif
     return a;
 }
@@ -135,7 +135,7 @@ QUALIFIERS float __cr_exp (float a)
     a = a * 1.4426950408889634074;
     asm ("ex2.approx.f32.ftz %0, %1;" : "=f"(a) : "f"(a));
 #else
-    a = exp (a);
+    a = expf (a);
 #endif
     return a;
 }
@@ -146,7 +146,7 @@ QUALIFIERS float __cr_log (float a)
     asm ("lg2.approx.f32.ftz %0, %1;" : "=f"(a) : "f"(a));
     a = a * 0.69314718055994530942;
 #else
-    a = log (a);
+    a = logf (a);
 #endif
     return a;
 }
@@ -431,7 +431,7 @@ template <typename T>
 QUALIFIERS unsigned int curand_poisson_knuth(T *state, float lambda)
 {
   unsigned int k = 0;
-  float p=exp(lambda);
+  float p = expf(lambda);
   do{
       k++;
       p *= curand_uniform(state);
@@ -444,7 +444,7 @@ template <typename T>
 QUALIFIERS uint4 curand_poisson_knuth4(T *state, float lambda)
 {
   uint4 k = {0,0,0,0};
-  float exp_lambda = exp(lambda);
+  float exp_lambda = expf(lambda);
   float4 p={ exp_lambda,exp_lambda,exp_lambda,exp_lambda };
   do{
       k.x++;
@@ -625,7 +625,7 @@ QUALIFIERS unsigned int curand_poisson_gammainc(T state, float lambda){
     while (true) {
         y = curand_uniform (state);
         x = __cr_pgammaincinv (lambda, y);
-        x = floor (x);
+        x = floorf (x);
         z = curand_uniform (state);
         v = (__cr_pgammainc (lambda, x + 1.0f) - __cr_pgammainc (lambda, x)) * 1.3f;
         z = z*v;
@@ -645,7 +645,7 @@ QUALIFIERS uint4 curand_poisson_gammainc4(T state, float lambda){
     while (true) {
         y = curand_uniform(state);
         x = __cr_pgammaincinv (lambda, y);
-        x = floor (x);
+        x = floorf (x);
         z = curand_uniform (state);
         v = (__cr_pgammainc (lambda, x + 1.0f) - __cr_pgammainc (lambda, x)) * 1.3f;
         z = z*v;
@@ -658,7 +658,7 @@ QUALIFIERS uint4 curand_poisson_gammainc4(T state, float lambda){
     while (true) {
         y = curand_uniform(state);
         x = __cr_pgammaincinv (lambda, y);
-        x = floor (x);
+        x = floorf (x);
         z = curand_uniform (state);
         v = (__cr_pgammainc (lambda, x + 1.0f) - __cr_pgammainc (lambda, x)) * 1.3f;
         z = z*v;
@@ -671,7 +671,7 @@ QUALIFIERS uint4 curand_poisson_gammainc4(T state, float lambda){
     while (true) {
         y = curand_uniform(state);
         x = __cr_pgammaincinv (lambda, y);
-        x = floor (x);
+        x = floorf (x);
         z = curand_uniform (state);
         v = (__cr_pgammainc (lambda, x + 1.0f) - __cr_pgammainc (lambda, x)) * 1.3f;
         z = z*v;
@@ -684,7 +684,7 @@ QUALIFIERS uint4 curand_poisson_gammainc4(T state, float lambda){
     while (true) {
         y = curand_uniform(state);
         x = __cr_pgammaincinv (lambda, y);
-        x = floor (x);
+        x = floorf (x);
         z = curand_uniform (state);
         v = (__cr_pgammainc (lambda, x + 1.0f) - __cr_pgammainc (lambda, x)) * 1.3f;
         z = z*v;

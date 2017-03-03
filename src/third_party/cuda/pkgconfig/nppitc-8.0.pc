@@ -1,0 +1,9 @@
+cudaroot=/home/z/Downloads/cuda_8.0.61
+libdir=${cudaroot}/lib64/stubs
+includedir=${cudaroot}/include
+
+Name: nppitc
+Description: NVIDIA Performance Primitives - Image Processing - Threshold and Compare
+Version: 8.0
+Libs: -L${libdir} -lnppitc
+Cflags: -I${includedir} 

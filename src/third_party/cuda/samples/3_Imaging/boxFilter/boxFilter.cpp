@@ -26,7 +26,7 @@
 */
 
 // OpenGL Graphics includes
-#include <GL/glew.h>
+#include <helper_gl.h>
 #if defined(__APPLE__) || defined(__MACOSX)
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   #include <GLUT/glut.h>
@@ -175,10 +175,10 @@ void display()
         glClear(GL_COLOR_BUFFER_BIT);
 
         // load texture from pbo
-        glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
         glBindTexture(GL_TEXTURE_2D, texid);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-        glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
 
         // fragment program is required to display floating point texture
         glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, shader);
@@ -330,16 +330,9 @@ void cleanup()
 
     cudaGraphicsUnregisterResource(cuda_pbo_resource);
 
-    glDeleteBuffersARB(1, &pbo);
+    glDeleteBuffers(1, &pbo);
     glDeleteTextures(1, &texid);
     glDeleteProgramsARB(1, &shader);
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 }
 
 // shader for displaying floating-point texture
@@ -373,11 +366,11 @@ GLuint compileASMShader(GLenum program_type, const char *code)
 void initGLResources()
 {
     // create pixel buffer object
-    glGenBuffersARB(1, &pbo);
-    glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
-    glBufferDataARB(GL_PIXEL_UNPACK_BUFFER_ARB, width*height*sizeof(GLubyte)*4, h_img, GL_STREAM_DRAW_ARB);
+    glGenBuffers(1, &pbo);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER_ARB, width*height*sizeof(GLubyte)*4, h_img, GL_STREAM_DRAW_ARB);
 
-    glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
 
     checkCudaErrors(cudaGraphicsGLRegisterBuffer(&cuda_pbo_resource, pbo,
                                                  cudaGraphicsMapFlagsWriteDiscard));
@@ -407,13 +400,12 @@ void initGL(int *argc, char **argv)
     glutReshapeFunc(reshape);
     glutTimerFunc(REFRESH_DELAY, timerEvent, 0);
 
-    glewInit();
-
-    if (!glewIsSupported("GL_VERSION_1_5 GL_ARB_vertex_buffer_object GL_ARB_pixel_buffer_object"))
+    if (!isGLVersionSupported(2,0) ||
+        !areGLExtensionsSupported("GL_ARB_vertex_buffer_object GL_ARB_pixel_buffer_object"))
     {
         printf("Error: failed to get minimal extensions for demo\n");
         printf("This sample requires:\n");
-        printf("  OpenGL version 1.5\n");
+        printf("  OpenGL version 2.0\n");
         printf("  GL_ARB_vertex_buffer_object\n");
         printf("  GL_ARB_pixel_buffer_object\n");
         exit(EXIT_FAILURE);
@@ -580,7 +572,7 @@ int findCapableDevice(int argc, char **argv)
 
     if (deviceCount==0)
     {
-        fprintf(stderr,"There are no CUDA capabile devices.\n");
+        fprintf(stderr,"There are no CUDA capable devices.\n");
         exit(EXIT_SUCCESS);
     }
     else
@@ -714,12 +706,6 @@ main(int argc, char **argv)
         }
         else
         {
-            // cudaDeviceReset causes the driver to clean up all state. While
-            // not mandatory in normal operation, it is good practice.  It is also
-            // needed to ensure correct operation when the application is being
-            // profiled. Calling cudaDeviceReset causes all profile data to be
-            // flushed before the application exits
-            cudaDeviceReset();
             exit(EXIT_SUCCESS);
         }
 

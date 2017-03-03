@@ -1,0 +1,758 @@
+.TH "Texture Reference Management" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Texture Reference Management \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefGetAddress\fP (\fBCUdeviceptr\fP *pdptr, \fBCUtexref\fP hTexRef)"
+.br
+.RI "\fIGets the address associated with a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefGetAddressMode\fP (\fBCUaddress_mode\fP *pam, \fBCUtexref\fP hTexRef, int dim)"
+.br
+.RI "\fIGets the addressing mode used by a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefGetArray\fP (\fBCUarray\fP *phArray, \fBCUtexref\fP hTexRef)"
+.br
+.RI "\fIGets the array bound to a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefGetBorderColor\fP (float *pBorderColor, \fBCUtexref\fP hTexRef)"
+.br
+.RI "\fIGets the border color used by a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefGetFilterMode\fP (\fBCUfilter_mode\fP *pfm, \fBCUtexref\fP hTexRef)"
+.br
+.RI "\fIGets the filter-mode used by a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefGetFlags\fP (unsigned int *pFlags, \fBCUtexref\fP hTexRef)"
+.br
+.RI "\fIGets the flags used by a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefGetFormat\fP (\fBCUarray_format\fP *pFormat, int *pNumChannels, \fBCUtexref\fP hTexRef)"
+.br
+.RI "\fIGets the format used by a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefGetMaxAnisotropy\fP (int *pmaxAniso, \fBCUtexref\fP hTexRef)"
+.br
+.RI "\fIGets the maximum anisotropy for a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefGetMipmapFilterMode\fP (\fBCUfilter_mode\fP *pfm, \fBCUtexref\fP hTexRef)"
+.br
+.RI "\fIGets the mipmap filtering mode for a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefGetMipmapLevelBias\fP (float *pbias, \fBCUtexref\fP hTexRef)"
+.br
+.RI "\fIGets the mipmap level bias for a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefGetMipmapLevelClamp\fP (float *pminMipmapLevelClamp, float *pmaxMipmapLevelClamp, \fBCUtexref\fP hTexRef)"
+.br
+.RI "\fIGets the min/max mipmap level clamps for a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefGetMipmappedArray\fP (\fBCUmipmappedArray\fP *phMipmappedArray, \fBCUtexref\fP hTexRef)"
+.br
+.RI "\fIGets the mipmapped array bound to a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefSetAddress\fP (size_t *ByteOffset, \fBCUtexref\fP hTexRef, \fBCUdeviceptr\fP dptr, size_t bytes)"
+.br
+.RI "\fIBinds an address as a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefSetAddress2D\fP (\fBCUtexref\fP hTexRef, const \fBCUDA_ARRAY_DESCRIPTOR\fP *desc, \fBCUdeviceptr\fP dptr, size_t Pitch)"
+.br
+.RI "\fIBinds an address as a 2D texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefSetAddressMode\fP (\fBCUtexref\fP hTexRef, int dim, \fBCUaddress_mode\fP am)"
+.br
+.RI "\fISets the addressing mode for a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefSetArray\fP (\fBCUtexref\fP hTexRef, \fBCUarray\fP hArray, unsigned int Flags)"
+.br
+.RI "\fIBinds an array as a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefSetBorderColor\fP (\fBCUtexref\fP hTexRef, float *pBorderColor)"
+.br
+.RI "\fISets the border color for a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefSetFilterMode\fP (\fBCUtexref\fP hTexRef, \fBCUfilter_mode\fP fm)"
+.br
+.RI "\fISets the filtering mode for a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefSetFlags\fP (\fBCUtexref\fP hTexRef, unsigned int Flags)"
+.br
+.RI "\fISets the flags for a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefSetFormat\fP (\fBCUtexref\fP hTexRef, \fBCUarray_format\fP fmt, int NumPackedComponents)"
+.br
+.RI "\fISets the format for a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefSetMaxAnisotropy\fP (\fBCUtexref\fP hTexRef, unsigned int maxAniso)"
+.br
+.RI "\fISets the maximum anisotropy for a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefSetMipmapFilterMode\fP (\fBCUtexref\fP hTexRef, \fBCUfilter_mode\fP fm)"
+.br
+.RI "\fISets the mipmap filtering mode for a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefSetMipmapLevelBias\fP (\fBCUtexref\fP hTexRef, float bias)"
+.br
+.RI "\fISets the mipmap level bias for a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefSetMipmapLevelClamp\fP (\fBCUtexref\fP hTexRef, float minMipmapLevelClamp, float maxMipmapLevelClamp)"
+.br
+.RI "\fISets the mipmap min/max mipmap level clamps for a texture reference. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexRefSetMipmappedArray\fP (\fBCUtexref\fP hTexRef, \fBCUmipmappedArray\fP hMipmappedArray, unsigned int Flags)"
+.br
+.RI "\fIBinds a mipmapped array to a texture reference. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief texture reference management functions of the low-level CUDA driver API (\fBcuda.h\fP)
+.PP
+This section describes the texture reference management functions of the low-level CUDA driver application programming interface. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBCUresult\fP cuTexRefGetAddress (\fBCUdeviceptr\fP * pdptr, \fBCUtexref\fP hTexRef)"
+.PP
+Returns in \fC*pdptr\fP the base address bound to the texture reference \fChTexRef\fP, or returns \fBCUDA_ERROR_INVALID_VALUE\fP if the texture reference is not bound to any device memory range.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpdptr\fP - Returned device address 
+.br
+\fIhTexRef\fP - Texture reference
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFilterMode\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefGetAddressMode (\fBCUaddress_mode\fP * pam, \fBCUtexref\fP hTexRef, int dim)"
+.PP
+Returns in \fC*pam\fP the addressing mode corresponding to the dimension \fCdim\fP of the texture reference \fChTexRef\fP. Currently, the only valid value for \fCdim\fP are 0 and 1.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpam\fP - Returned addressing mode 
+.br
+\fIhTexRef\fP - Texture reference 
+.br
+\fIdim\fP - Dimension
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFilterMode\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefGetArray (\fBCUarray\fP * phArray, \fBCUtexref\fP hTexRef)"
+.PP
+Returns in \fC*phArray\fP the CUDA array bound to the texture reference \fChTexRef\fP, or returns \fBCUDA_ERROR_INVALID_VALUE\fP if the texture reference is not bound to any CUDA array.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIphArray\fP - Returned array 
+.br
+\fIhTexRef\fP - Texture reference
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFilterMode\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefGetBorderColor (float * pBorderColor, \fBCUtexref\fP hTexRef)"
+.PP
+Returns in \fCpBorderColor\fP, values of the RGBA color used by the texture reference \fChTexRef\fP. The color value is of type float and holds color components in the following sequence: pBorderColor[0] holds 'R' component pBorderColor[1] holds 'G' component pBorderColor[2] holds 'B' component pBorderColor[3] holds 'A' component
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhTexRef\fP - Texture reference 
+.br
+\fIpBorderColor\fP - Returned Type and Value of RGBA color
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetBorderColor\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefGetFilterMode (\fBCUfilter_mode\fP * pfm, \fBCUtexref\fP hTexRef)"
+.PP
+Returns in \fC*pfm\fP the filtering mode of the texture reference \fChTexRef\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpfm\fP - Returned filtering mode 
+.br
+\fIhTexRef\fP - Texture reference
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFilterMode\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefGetFlags (unsigned int * pFlags, \fBCUtexref\fP hTexRef)"
+.PP
+Returns in \fC*pFlags\fP the flags of the texture reference \fChTexRef\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpFlags\fP - Returned flags 
+.br
+\fIhTexRef\fP - Texture reference
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFilterMode\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefGetFormat (\fBCUarray_format\fP * pFormat, int * pNumChannels, \fBCUtexref\fP hTexRef)"
+.PP
+Returns in \fC*pFormat\fP and \fC*pNumChannels\fP the format and number of components of the CUDA array bound to the texture reference \fChTexRef\fP. If \fCpFormat\fP or \fCpNumChannels\fP is NULL, it will be ignored.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpFormat\fP - Returned format 
+.br
+\fIpNumChannels\fP - Returned number of components 
+.br
+\fIhTexRef\fP - Texture reference
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFilterMode\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefGetMaxAnisotropy (int * pmaxAniso, \fBCUtexref\fP hTexRef)"
+.PP
+Returns the maximum anisotropy in \fCpmaxAniso\fP that's used when reading memory through the texture reference \fChTexRef\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpmaxAniso\fP - Returned maximum anisotropy 
+.br
+\fIhTexRef\fP - Texture reference
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefGetMipmapFilterMode (\fBCUfilter_mode\fP * pfm, \fBCUtexref\fP hTexRef)"
+.PP
+Returns the mipmap filtering mode in \fCpfm\fP that's used when reading memory through the texture reference \fChTexRef\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpfm\fP - Returned mipmap filtering mode 
+.br
+\fIhTexRef\fP - Texture reference
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefGetMipmapLevelBias (float * pbias, \fBCUtexref\fP hTexRef)"
+.PP
+Returns the mipmap level bias in \fCpBias\fP that's added to the specified mipmap level when reading memory through the texture reference \fChTexRef\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpbias\fP - Returned mipmap level bias 
+.br
+\fIhTexRef\fP - Texture reference
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefGetMipmapLevelClamp (float * pminMipmapLevelClamp, float * pmaxMipmapLevelClamp, \fBCUtexref\fP hTexRef)"
+.PP
+Returns the min/max mipmap level clamps in \fCpminMipmapLevelClamp\fP and \fCpmaxMipmapLevelClamp\fP that's used when reading memory through the texture reference \fChTexRef\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpminMipmapLevelClamp\fP - Returned mipmap min level clamp 
+.br
+\fIpmaxMipmapLevelClamp\fP - Returned mipmap max level clamp 
+.br
+\fIhTexRef\fP - Texture reference
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefGetMipmappedArray (\fBCUmipmappedArray\fP * phMipmappedArray, \fBCUtexref\fP hTexRef)"
+.PP
+Returns in \fC*phMipmappedArray\fP the CUDA mipmapped array bound to the texture reference \fChTexRef\fP, or returns \fBCUDA_ERROR_INVALID_VALUE\fP if the texture reference is not bound to any CUDA mipmapped array.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIphMipmappedArray\fP - Returned mipmapped array 
+.br
+\fIhTexRef\fP - Texture reference
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFilterMode\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefSetAddress (size_t * ByteOffset, \fBCUtexref\fP hTexRef, \fBCUdeviceptr\fP dptr, size_t bytes)"
+.PP
+Binds a linear address range to the texture reference \fChTexRef\fP. Any previous address or CUDA array state associated with the texture reference is superseded by this function. Any memory previously bound to \fChTexRef\fP is unbound.
+.PP
+Since the hardware enforces an alignment requirement on texture base addresses, \fBcuTexRefSetAddress()\fP passes back a byte offset in \fC*ByteOffset\fP that must be applied to texture fetches in order to read from the desired memory. This offset must be divided by the texel size and passed to kernels that read from the texture so they can be applied to the tex1Dfetch() function.
+.PP
+If the device memory pointer was returned from \fBcuMemAlloc()\fP, the offset is guaranteed to be 0 and NULL may be passed as the \fCByteOffset\fP parameter.
+.PP
+The total number of elements (or texels) in the linear address range cannot exceed \fBCU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_LINEAR_WIDTH\fP. The number of elements is computed as (\fCbytes\fP / bytesPerElement), where bytesPerElement is determined from the data format and number of components set using \fBcuTexRefSetFormat()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIByteOffset\fP - Returned byte offset 
+.br
+\fIhTexRef\fP - Texture reference to bind 
+.br
+\fIdptr\fP - Device pointer to bind 
+.br
+\fIbytes\fP - Size of memory to bind in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFilterMode\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefSetAddress2D (\fBCUtexref\fP hTexRef, const \fBCUDA_ARRAY_DESCRIPTOR\fP * desc, \fBCUdeviceptr\fP dptr, size_t Pitch)"
+.PP
+Binds a linear address range to the texture reference \fChTexRef\fP. Any previous address or CUDA array state associated with the texture reference is superseded by this function. Any memory previously bound to \fChTexRef\fP is unbound.
+.PP
+Using a tex2D() function inside a kernel requires a call to either \fBcuTexRefSetArray()\fP to bind the corresponding texture reference to an array, or \fBcuTexRefSetAddress2D()\fP to bind the texture reference to linear memory.
+.PP
+Function calls to \fBcuTexRefSetFormat()\fP cannot follow calls to \fBcuTexRefSetAddress2D()\fP for the same texture reference.
+.PP
+It is required that \fCdptr\fP be aligned to the appropriate hardware-specific texture alignment. You can query this value using the device attribute \fBCU_DEVICE_ATTRIBUTE_TEXTURE_ALIGNMENT\fP. If an unaligned \fCdptr\fP is supplied, \fBCUDA_ERROR_INVALID_VALUE\fP is returned.
+.PP
+\fCPitch\fP has to be aligned to the hardware-specific texture pitch alignment. This value can be queried using the device attribute \fBCU_DEVICE_ATTRIBUTE_TEXTURE_PITCH_ALIGNMENT\fP. If an unaligned \fCPitch\fP is supplied, \fBCUDA_ERROR_INVALID_VALUE\fP is returned.
+.PP
+Width and Height, which are specified in elements (or texels), cannot exceed \fBCU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LINEAR_WIDTH\fP and \fBCU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LINEAR_HEIGHT\fP respectively. \fCPitch\fP, which is specified in bytes, cannot exceed \fBCU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LINEAR_PITCH\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhTexRef\fP - Texture reference to bind 
+.br
+\fIdesc\fP - Descriptor of CUDA array 
+.br
+\fIdptr\fP - Device pointer to bind 
+.br
+\fIPitch\fP - Line pitch in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFilterMode\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefSetAddressMode (\fBCUtexref\fP hTexRef, int dim, \fBCUaddress_mode\fP am)"
+.PP
+Specifies the addressing mode \fCam\fP for the given dimension \fCdim\fP of the texture reference \fChTexRef\fP. If \fCdim\fP is zero, the addressing mode is applied to the first parameter of the functions used to fetch from the texture; if \fCdim\fP is 1, the second, and so on. \fBCUaddress_mode\fP is defined as: 
+.PP
+.nf
+   typedef enum CUaddress_mode_enum {
+      CU_TR_ADDRESS_MODE_WRAP = 0,
+      CU_TR_ADDRESS_MODE_CLAMP = 1,
+      CU_TR_ADDRESS_MODE_MIRROR = 2,
+      CU_TR_ADDRESS_MODE_BORDER = 3
+   } CUaddress_mode;
+
+.fi
+.PP
+.PP
+Note that this call has no effect if \fChTexRef\fP is bound to linear memory. Also, if the flag, \fBCU_TRSF_NORMALIZED_COORDINATES\fP, is not set, the only supported address mode is \fBCU_TR_ADDRESS_MODE_CLAMP\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhTexRef\fP - Texture reference 
+.br
+\fIdim\fP - Dimension 
+.br
+\fIam\fP - Addressing mode to set
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFilterMode\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefSetArray (\fBCUtexref\fP hTexRef, \fBCUarray\fP hArray, unsigned int Flags)"
+.PP
+Binds the CUDA array \fChArray\fP to the texture reference \fChTexRef\fP. Any previous address or CUDA array state associated with the texture reference is superseded by this function. \fCFlags\fP must be set to \fBCU_TRSA_OVERRIDE_FORMAT\fP. Any CUDA array previously bound to \fChTexRef\fP is unbound.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhTexRef\fP - Texture reference to bind 
+.br
+\fIhArray\fP - Array to bind 
+.br
+\fIFlags\fP - Options (must be \fBCU_TRSA_OVERRIDE_FORMAT\fP)
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetFilterMode\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefSetBorderColor (\fBCUtexref\fP hTexRef, float * pBorderColor)"
+.PP
+Specifies the value of the RGBA color via the \fCpBorderColor\fP to the texture reference \fChTexRef\fP. The color value supports only float type and holds color components in the following sequence: pBorderColor[0] holds 'R' component pBorderColor[1] holds 'G' component pBorderColor[2] holds 'B' component pBorderColor[3] holds 'A' component
+.PP
+Note that the color values can be set only when the Address mode is set to CU_TR_ADDRESS_MODE_BORDER using \fBcuTexRefSetAddressMode\fP. Applications using integer border color values have to 'reinterpret_cast' their values to float.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhTexRef\fP - Texture reference 
+.br
+\fIpBorderColor\fP - RGBA color
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddressMode\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetBorderColor\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefSetFilterMode (\fBCUtexref\fP hTexRef, \fBCUfilter_mode\fP fm)"
+.PP
+Specifies the filtering mode \fCfm\fP to be used when reading memory through the texture reference \fChTexRef\fP. CUfilter_mode_enum is defined as:
+.PP
+.PP
+.nf
+   typedef enum CUfilter_mode_enum {
+      CU_TR_FILTER_MODE_POINT = 0,
+      CU_TR_FILTER_MODE_LINEAR = 1
+   } CUfilter_mode;
+.fi
+.PP
+.PP
+Note that this call has no effect if \fChTexRef\fP is bound to linear memory.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhTexRef\fP - Texture reference 
+.br
+\fIfm\fP - Filtering mode to set
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefSetFlags (\fBCUtexref\fP hTexRef, unsigned int Flags)"
+.PP
+Specifies optional flags via \fCFlags\fP to specify the behavior of data returned through the texture reference \fChTexRef\fP. The valid flags are:
+.PP
+.IP "\(bu" 2
+\fBCU_TRSF_READ_AS_INTEGER\fP, which suppresses the default behavior of having the texture promote integer data to floating point data in the range [0, 1]. Note that texture with 32-bit integer format would not be promoted, regardless of whether or not this flag is specified;
+.IP "\(bu" 2
+\fBCU_TRSF_NORMALIZED_COORDINATES\fP, which suppresses the default behavior of having the texture coordinates range from [0, Dim) where Dim is the width or height of the CUDA array. Instead, the texture coordinates [0, 1.0) reference the entire breadth of the array dimension;
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhTexRef\fP - Texture reference 
+.br
+\fIFlags\fP - Optional flags to set
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFilterMode\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefSetFormat (\fBCUtexref\fP hTexRef, \fBCUarray_format\fP fmt, int NumPackedComponents)"
+.PP
+Specifies the format of the data to be read by the texture reference \fChTexRef\fP. \fCfmt\fP and \fCNumPackedComponents\fP are exactly analogous to the Format and NumChannels members of the \fBCUDA_ARRAY_DESCRIPTOR\fP structure: They specify the format of each component and the number of components per array element.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhTexRef\fP - Texture reference 
+.br
+\fIfmt\fP - Format to set 
+.br
+\fINumPackedComponents\fP - Number of components per array element
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFilterMode\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefSetMaxAnisotropy (\fBCUtexref\fP hTexRef, unsigned int maxAniso)"
+.PP
+Specifies the maximum anisotropy \fCmaxAniso\fP to be used when reading memory through the texture reference \fChTexRef\fP.
+.PP
+Note that this call has no effect if \fChTexRef\fP is bound to linear memory.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhTexRef\fP - Texture reference 
+.br
+\fImaxAniso\fP - Maximum anisotropy
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefSetMipmapFilterMode (\fBCUtexref\fP hTexRef, \fBCUfilter_mode\fP fm)"
+.PP
+Specifies the mipmap filtering mode \fCfm\fP to be used when reading memory through the texture reference \fChTexRef\fP. CUfilter_mode_enum is defined as:
+.PP
+.PP
+.nf
+   typedef enum CUfilter_mode_enum {
+      CU_TR_FILTER_MODE_POINT = 0,
+      CU_TR_FILTER_MODE_LINEAR = 1
+   } CUfilter_mode;
+.fi
+.PP
+.PP
+Note that this call has no effect if \fChTexRef\fP is not bound to a mipmapped array.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhTexRef\fP - Texture reference 
+.br
+\fIfm\fP - Filtering mode to set
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefSetMipmapLevelBias (\fBCUtexref\fP hTexRef, float bias)"
+.PP
+Specifies the mipmap level bias \fCbias\fP to be added to the specified mipmap level when reading memory through the texture reference \fChTexRef\fP.
+.PP
+Note that this call has no effect if \fChTexRef\fP is not bound to a mipmapped array.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhTexRef\fP - Texture reference 
+.br
+\fIbias\fP - Mipmap level bias
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefSetMipmapLevelClamp (\fBCUtexref\fP hTexRef, float minMipmapLevelClamp, float maxMipmapLevelClamp)"
+.PP
+Specifies the min/max mipmap level clamps, \fCminMipmapLevelClamp\fP and \fCmaxMipmapLevelClamp\fP respectively, to be used when reading memory through the texture reference \fChTexRef\fP.
+.PP
+Note that this call has no effect if \fChTexRef\fP is not bound to a mipmapped array.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhTexRef\fP - Texture reference 
+.br
+\fIminMipmapLevelClamp\fP - Mipmap min level clamp 
+.br
+\fImaxMipmapLevelClamp\fP - Mipmap max level clamp
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetArray\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexRefSetMipmappedArray (\fBCUtexref\fP hTexRef, \fBCUmipmappedArray\fP hMipmappedArray, unsigned int Flags)"
+.PP
+Binds the CUDA mipmapped array \fChMipmappedArray\fP to the texture reference \fChTexRef\fP. Any previous address or CUDA array state associated with the texture reference is superseded by this function. \fCFlags\fP must be set to \fBCU_TRSA_OVERRIDE_FORMAT\fP. Any CUDA array previously bound to \fChTexRef\fP is unbound.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhTexRef\fP - Texture reference to bind 
+.br
+\fIhMipmappedArray\fP - Mipmapped array to bind 
+.br
+\fIFlags\fP - Options (must be \fBCU_TRSA_OVERRIDE_FORMAT\fP)
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexRefSetAddress\fP, \fBcuTexRefSetAddress2D\fP, \fBcuTexRefSetAddressMode\fP, \fBcuTexRefSetFilterMode\fP, \fBcuTexRefSetFlags\fP, \fBcuTexRefSetFormat\fP, \fBcuTexRefGetAddress\fP, \fBcuTexRefGetAddressMode\fP, \fBcuTexRefGetArray\fP, \fBcuTexRefGetFilterMode\fP, \fBcuTexRefGetFlags\fP, \fBcuTexRefGetFormat\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

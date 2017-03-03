@@ -23,7 +23,6 @@
 // For the CUDA runtime routines (prefixed with "cuda_")
 #include <cuda_runtime.h>
 #include <cuda.h>
-#include <cudaProfiler.h>
 
 // helper functions and utilities to work with CUDA
 #include <helper_functions.h>
@@ -136,8 +135,6 @@ int main(int argc, char **argv)
     free(h_A);
     free(h_B);
     free(h_C);
-
-    cuProfilerStop();
 
     printf("Done\n");
 

@@ -22,6 +22,7 @@
 // For the CUDA runtime routines (prefixed with "cuda_")
 #include <cuda_runtime.h>
 
+#include <helper_cuda.h>
 /**
  * CUDA Kernel Device code
  *
@@ -190,20 +191,6 @@ main(void)
     free(h_A);
     free(h_B);
     free(h_C);
-
-    // Reset the device and exit
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    err = cudaDeviceReset();
-
-    if (err != cudaSuccess)
-    {
-        fprintf(stderr, "Failed to deinitialize the device! error=%s\n", cudaGetErrorString(err));
-        exit(EXIT_FAILURE);
-    }
 
     printf("Done\n");
     return 0;

@@ -1,0 +1,235 @@
+.TH "OpenGL Interoperability" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+OpenGL Interoperability \- 
+.SS "Modules"
+
+.in +1c
+.ti -1c
+.RI "\fBOpenGL Interoperability [DEPRECATED]\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBCUGLDeviceList\fP { \fBCU_GL_DEVICE_LIST_ALL\fP =  0x01, \fBCU_GL_DEVICE_LIST_CURRENT_FRAME\fP =  0x02, \fBCU_GL_DEVICE_LIST_NEXT_FRAME\fP =  0x03 }"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCUresult\fP \fBcuGLGetDevices\fP (unsigned int *pCudaDeviceCount, \fBCUdevice\fP *pCudaDevices, unsigned int cudaDeviceCount, \fBCUGLDeviceList\fP deviceList)"
+.br
+.RI "\fIGets the CUDA devices associated with the current OpenGL context. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuGraphicsGLRegisterBuffer\fP (\fBCUgraphicsResource\fP *pCudaResource, GLuint buffer, unsigned int Flags)"
+.br
+.RI "\fIRegisters an OpenGL buffer object. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuGraphicsGLRegisterImage\fP (\fBCUgraphicsResource\fP *pCudaResource, GLuint image, GLenum target, unsigned int Flags)"
+.br
+.RI "\fIRegister an OpenGL texture or renderbuffer object. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuWGLGetDevice\fP (\fBCUdevice\fP *pDevice, HGPUNV hGpu)"
+.br
+.RI "\fIGets the CUDA device associated with hGpu. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief OpenGL interoperability functions of the low-level CUDA driver API (\fBcudaGL.h\fP)
+.PP
+This section describes the OpenGL interoperability functions of the low-level CUDA driver application programming interface. Note that mapping of OpenGL resources is performed with the graphics API agnostic, resource mapping interface described in \fBGraphics Interoperability\fP. 
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBCUGLDeviceList\fP"
+.PP
+CUDA devices corresponding to an OpenGL device 
+.PP
+\fBEnumerator: \fP
+.in +1c
+.TP
+\fB\fICU_GL_DEVICE_LIST_ALL \fP\fP
+The CUDA devices for all GPUs used by the current OpenGL context 
+.TP
+\fB\fICU_GL_DEVICE_LIST_CURRENT_FRAME \fP\fP
+The CUDA devices for the GPUs used by the current OpenGL context in its currently rendering frame 
+.TP
+\fB\fICU_GL_DEVICE_LIST_NEXT_FRAME \fP\fP
+The CUDA devices for the GPUs to be used by the current OpenGL context in the next frame 
+.SH "Function Documentation"
+.PP 
+.SS "\fBCUresult\fP cuGLGetDevices (unsigned int * pCudaDeviceCount, \fBCUdevice\fP * pCudaDevices, unsigned int cudaDeviceCount, \fBCUGLDeviceList\fP deviceList)"
+.PP
+Returns in \fC*pCudaDeviceCount\fP the number of CUDA-compatible devices corresponding to the current OpenGL context. Also returns in \fC*pCudaDevices\fP at most cudaDeviceCount of the CUDA-compatible devices corresponding to the current OpenGL context. If any of the GPUs being used by the current OpenGL context are not CUDA capable then the call will return CUDA_ERROR_NO_DEVICE.
+.PP
+The \fCdeviceList\fP argument may be any of the following:
+.IP "\(bu" 2
+\fBCU_GL_DEVICE_LIST_ALL\fP: Query all devices used by the current OpenGL context.
+.IP "\(bu" 2
+\fBCU_GL_DEVICE_LIST_CURRENT_FRAME\fP: Query the devices used by the current OpenGL context to render the current frame (in SLI).
+.IP "\(bu" 2
+\fBCU_GL_DEVICE_LIST_NEXT_FRAME\fP: Query the devices used by the current OpenGL context to render the next frame (in SLI). Note that this is a prediction, it can't be guaranteed that this is correct in all cases.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpCudaDeviceCount\fP - Returned number of CUDA devices. 
+.br
+\fIpCudaDevices\fP - Returned CUDA devices. 
+.br
+\fIcudaDeviceCount\fP - The size of the output device array pCudaDevices. 
+.br
+\fIdeviceList\fP - The set of devices to return.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_NO_DEVICE\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_GRAPHICS_CONTEXT\fP
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+This function is not supported on Mac OS X. 
+.PP
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuWGLGetDevice\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuGraphicsGLRegisterBuffer (\fBCUgraphicsResource\fP * pCudaResource, GLuint buffer, unsigned int Flags)"
+.PP
+Registers the buffer object specified by \fCbuffer\fP for access by CUDA. A handle to the registered object is returned as \fCpCudaResource\fP. The register flags \fCFlags\fP specify the intended usage, as follows:
+.PP
+.IP "\(bu" 2
+CU_GRAPHICS_REGISTER_FLAGS_NONE: Specifies no hints about how this resource will be used. It is therefore assumed that this resource will be read from and written to by CUDA. This is the default value.
+.IP "\(bu" 2
+CU_GRAPHICS_REGISTER_FLAGS_READ_ONLY: Specifies that CUDA will not write to this resource.
+.IP "\(bu" 2
+CU_GRAPHICS_REGISTER_FLAGS_WRITE_DISCARD: Specifies that CUDA will not read from this resource and will write over the entire contents of the resource, so none of the data previously stored in the resource will be preserved.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpCudaResource\fP - Pointer to the returned object handle 
+.br
+\fIbuffer\fP - name of buffer object to be registered 
+.br
+\fIFlags\fP - Register flags
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_ALREADY_MAPPED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuGraphicsUnregisterResource\fP, \fBcuGraphicsMapResources\fP, \fBcuGraphicsResourceGetMappedPointer\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuGraphicsGLRegisterImage (\fBCUgraphicsResource\fP * pCudaResource, GLuint image, GLenum target, unsigned int Flags)"
+.PP
+Registers the texture or renderbuffer object specified by \fCimage\fP for access by CUDA. A handle to the registered object is returned as \fCpCudaResource\fP.
+.PP
+\fCtarget\fP must match the type of the object, and must be one of GL_TEXTURE_2D, GL_TEXTURE_RECTANGLE, GL_TEXTURE_CUBE_MAP, GL_TEXTURE_3D, GL_TEXTURE_2D_ARRAY, or GL_RENDERBUFFER.
+.PP
+The register flags \fCFlags\fP specify the intended usage, as follows:
+.PP
+.IP "\(bu" 2
+CU_GRAPHICS_REGISTER_FLAGS_NONE: Specifies no hints about how this resource will be used. It is therefore assumed that this resource will be read from and written to by CUDA. This is the default value.
+.IP "\(bu" 2
+CU_GRAPHICS_REGISTER_FLAGS_READ_ONLY: Specifies that CUDA will not write to this resource.
+.IP "\(bu" 2
+CU_GRAPHICS_REGISTER_FLAGS_WRITE_DISCARD: Specifies that CUDA will not read from this resource and will write over the entire contents of the resource, so none of the data previously stored in the resource will be preserved.
+.IP "\(bu" 2
+CU_GRAPHICS_REGISTER_FLAGS_SURFACE_LDST: Specifies that CUDA will bind this resource to a surface reference.
+.IP "\(bu" 2
+CU_GRAPHICS_REGISTER_FLAGS_TEXTURE_GATHER: Specifies that CUDA will perform texture gather operations on this resource.
+.PP
+.PP
+The following image formats are supported. For brevity's sake, the list is abbreviated. For ex., {GL_R, GL_RG} X {8, 16} would expand to the following 4 formats {GL_R8, GL_R16, GL_RG8, GL_RG16} :
+.IP "\(bu" 2
+GL_RED, GL_RG, GL_RGBA, GL_LUMINANCE, GL_ALPHA, GL_LUMINANCE_ALPHA, GL_INTENSITY
+.IP "\(bu" 2
+{GL_R, GL_RG, GL_RGBA} X {8, 16, 16F, 32F, 8UI, 16UI, 32UI, 8I, 16I, 32I}
+.IP "\(bu" 2
+{GL_LUMINANCE, GL_ALPHA, GL_LUMINANCE_ALPHA, GL_INTENSITY} X {8, 16, 16F_ARB, 32F_ARB, 8UI_EXT, 16UI_EXT, 32UI_EXT, 8I_EXT, 16I_EXT, 32I_EXT}
+.PP
+.PP
+The following image classes are currently disallowed:
+.IP "\(bu" 2
+Textures with borders
+.IP "\(bu" 2
+Multisampled renderbuffers
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpCudaResource\fP - Pointer to the returned object handle 
+.br
+\fIimage\fP - name of texture or renderbuffer object to be registered 
+.br
+\fItarget\fP - Identifies the type of object specified by \fCimage\fP 
+.br
+\fIFlags\fP - Register flags
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_ALREADY_MAPPED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuGraphicsUnregisterResource\fP, \fBcuGraphicsMapResources\fP, \fBcuGraphicsSubResourceGetMappedArray\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuWGLGetDevice (\fBCUdevice\fP * pDevice, HGPUNV hGpu)"
+.PP
+Returns in \fC*pDevice\fP the CUDA device associated with a \fChGpu\fP, if applicable.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpDevice\fP - Device associated with hGpu 
+.br
+\fIhGpu\fP - Handle to a GPU, as queried via WGL_NV_gpu_affinity()
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuGLMapBufferObject\fP, \fBcuGLRegisterBufferObject\fP, \fBcuGLUnmapBufferObject\fP, \fBcuGLUnregisterBufferObject\fP, \fBcuGLUnmapBufferObjectAsync\fP, \fBcuGLSetBufferObjectMapFlags\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

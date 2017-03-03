@@ -39,7 +39,6 @@
 #include <thrust/scan.h>
 #include <thrust/copy.h>
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // declaration, types
 
@@ -89,13 +88,6 @@ int
 main(int argc, char **argv)
 {
     int res = runTest(argc, argv);
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 
     if (res != 1)
     {

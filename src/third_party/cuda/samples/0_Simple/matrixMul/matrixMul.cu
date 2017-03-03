@@ -34,6 +34,7 @@
 
 // Helper functions and utilities to work with CUDA
 #include <helper_functions.h>
+#include <helper_cuda.h>
 
 /**
  * Matrix multiplication (CUDA Kernel) on the device: C = A * B
@@ -161,7 +162,7 @@ int matrixMultiply(int argc, char **argv, int block_size, dim3 &dimsA, dim3 &dim
 
     if (error != cudaSuccess)
     {
-        printf("cudaMalloc d_A returned error code %d, line(%d)\n", error, __LINE__);
+        printf("cudaMalloc d_A returned error %s (code %d), line(%d)\n", cudaGetErrorString(error), error, __LINE__);
         exit(EXIT_FAILURE);
     }
 
@@ -169,7 +170,7 @@ int matrixMultiply(int argc, char **argv, int block_size, dim3 &dimsA, dim3 &dim
 
     if (error != cudaSuccess)
     {
-        printf("cudaMalloc d_B returned error code %d, line(%d)\n", error, __LINE__);
+        printf("cudaMalloc d_B returned error %s (code %d), line(%d)\n", cudaGetErrorString(error), error, __LINE__);
         exit(EXIT_FAILURE);
     }
 
@@ -177,7 +178,7 @@ int matrixMultiply(int argc, char **argv, int block_size, dim3 &dimsA, dim3 &dim
 
     if (error != cudaSuccess)
     {
-        printf("cudaMalloc d_C returned error code %d, line(%d)\n", error, __LINE__);
+        printf("cudaMalloc d_C returned error %s (code %d), line(%d)\n", cudaGetErrorString(error), error, __LINE__);
         exit(EXIT_FAILURE);
     }
 
@@ -186,7 +187,7 @@ int matrixMultiply(int argc, char **argv, int block_size, dim3 &dimsA, dim3 &dim
 
     if (error != cudaSuccess)
     {
-        printf("cudaMemcpy (d_A,h_A) returned error code %d, line(%d)\n", error, __LINE__);
+        printf("cudaMemcpy (d_A,h_A) returned error %s (code %d), line(%d)\n", cudaGetErrorString(error), error, __LINE__);
         exit(EXIT_FAILURE);
     }
 
@@ -194,7 +195,7 @@ int matrixMultiply(int argc, char **argv, int block_size, dim3 &dimsA, dim3 &dim
 
     if (error != cudaSuccess)
     {
-        printf("cudaMemcpy (d_B,h_B) returned error code %d, line(%d)\n", error, __LINE__);
+        printf("cudaMemcpy (d_B,h_B) returned error %s (code %d), line(%d)\n", cudaGetErrorString(error), error, __LINE__);
         exit(EXIT_FAILURE);
     }
 
@@ -305,7 +306,7 @@ int matrixMultiply(int argc, char **argv, int block_size, dim3 &dimsA, dim3 &dim
 
     if (error != cudaSuccess)
     {
-        printf("cudaMemcpy (h_C,d_C) returned error code %d, line(%d)\n", error, __LINE__);
+        printf("cudaMemcpy (h_C,d_C) returned error %s (code %d), line(%d)\n", cudaGetErrorString(error), error, __LINE__);
         exit(EXIT_FAILURE);
     }
 
@@ -341,13 +342,6 @@ int matrixMultiply(int argc, char **argv, int block_size, dim3 &dimsA, dim3 &dim
     cudaFree(d_C);
 
     printf("\nNOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.\n");
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 
     if (correct)
     {
@@ -393,7 +387,7 @@ int main(int argc, char **argv)
 
     if (error != cudaSuccess)
     {
-        printf("cudaGetDevice returned error code %d, line(%d)\n", error, __LINE__);
+        printf("cudaGetDevice returned error %s (code %d), line(%d)\n", cudaGetErrorString(error), error, __LINE__);
     }
 
     error = cudaGetDeviceProperties(&deviceProp, devID);
@@ -406,7 +400,7 @@ int main(int argc, char **argv)
 
     if (error != cudaSuccess)
     {
-        printf("cudaGetDeviceProperties returned error code %d, line(%d)\n", error, __LINE__);
+        printf("cudaGetDeviceProperties returned error %s (code %d), line(%d)\n", cudaGetErrorString(error), error, __LINE__);
     }
     else
     {

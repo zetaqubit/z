@@ -1,4 +1,4 @@
- /* Copyright 2009-2014 NVIDIA Corporation.  All rights reserved. 
+ /* Copyright 2009-2016 NVIDIA Corporation.  All rights reserved. 
   * 
   * NOTICE TO LICENSEE: 
   * 
@@ -19,7 +19,7 @@
   * LICENSE AGREEMENT, NVIDIA MAKES NO REPRESENTATION ABOUT THE 
   * SUITABILITY OF THESE LICENSED DELIVERABLES FOR ANY PURPOSE.  THEY ARE 
   * PROVIDED "AS IS" WITHOUT EXPRESS OR IMPLIED WARRANTY OF ANY KIND. 
-  * NVIDIA DISCLAIMS ALL WARRANTIES WITH REGARD TO THESE LICENSED 
+  * NVIDIA DISCLAIMS ALL WARRANTIES WITH REGARD TO THESE LICENSED                                                   
   * DELIVERABLES, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY, 
   * NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE. 
   * NOTWITHSTANDING ANY TERMS OR CONDITIONS TO THE CONTRARY IN THE 
@@ -69,6 +69,9 @@ extern "C" {
  * responsibility to avoid \ref sampling_beyond_image_boundaries. 
  *
  * @{
+ *
+ * These functions can be found in either the nppi or nppif libraries. Linking to only the sub-libraries that you use can significantly
+ * save link time, application load time, and CUDA runtime startup time when using dynamic libraries.
  *
  */
 
@@ -2716,6 +2719,8 @@ nppiFilterRowBorder32f_16s_AC4R(const Npp16s * pSrc, int nSrcStep, NppiSize oSrc
                                 const Npp32f * pKernel, Npp32s nMaskSize, Npp32s nAnchor, NppiBorderType eBorderType);
 
 /** @} FilterRowBorder32f */
+
+/** @} image_1D_linear_filter */
 
 /** @defgroup image_1D_window_sum 1D Window Sum
  *
@@ -8263,8 +8268,8 @@ nppiFilterMedianGetBufferSize_32f_AC4R(NppiSize oSizeROI, NppiSize oMaskSize, Np
 
 /** @defgroup fixed_filters Fixed Filters
  *
- * Fixed filters perform linear filtering operations (i.e. convolutions) with predefined kernels
- * of fixed sizes.
+ * Fixed filters perform linear filtering operations (such as convolutions) with predefined kernels
+ * of fixed sizes.  Note that this section also contains a few dynamic kernel filters, namely GaussAdvanced and Bilateral.
  * 
  * Some of the fixed filters have versions with border control.   For these functions, if any portion 
  * of the mask overlaps the source image boundary the requested border type operation is applied to 
@@ -9821,9 +9826,7 @@ NppStatus
 nppiFilterSobelHorizSecond_32f_C1R(const Npp32f * pSrc, Npp32s nSrcStep, Npp32f * pDst, Npp32s nDstStep, NppiSize oSizeROI,
                                    NppiMaskSize eMaskSize);
 
-/** @} FilterSobelVertSecond */
-
-/** @} FilterSobelVert */
+/** @} FilterSobelHorizSecond */
 
 /** @name FilterSobelVertSecond
  *
@@ -10584,9 +10587,7 @@ NppStatus
 nppiFilterSobelHorizSecondBorder_32f_C1R(const Npp32f * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp32f * pDst, Npp32s nDstStep, NppiSize oSizeROI,
                                          NppiMaskSize eMaskSize, NppiBorderType eBorderType);
 
-/** @} FilterSobelVertSecondBorder */
-
-/** @} FilterSobelVertBorder */
+/** @} FilterSobelHorizSecondBorder */
 
 /** @name FilterSobelVertSecondBorder
  *
@@ -12899,7 +12900,7 @@ nppiFilterGaussBorder_32f_AC4R(const Npp32f * pSrc, Npp32s nSrcStep, NppiSize oS
  * If any portion of the mask overlaps the source image boundary the requested border type operation is applied to all mask pixels
  * which fall outside of the source image.
  *
- * Currently only the NPP_BORDER_REPLICATE border type operation is supported.
+ * Currently only the NPP_BORDER_REPLICATE and NPP_BORDER_MIRROR border type operations are supported.
  *
  * @{
  *
@@ -13210,6 +13211,490 @@ nppiFilterGaussAdvancedBorder_32f_AC4R(const Npp32f * pSrc, Npp32s nSrcStep, Npp
                                        const int nFilterTaps, const Npp32f * pKernel, NppiBorderType eBorderType);
 
 /** @} FilterGaussAdvancedBorder */
+
+/** @name FilterGaussPyramidLayerDownBorder
+ *
+ * Filters the image using a separable Gaussian filter kernel with user supplied floating point coefficients with downsampling and border control.
+ * If the downsampling rate is equivalent to an integer value then unnecessary source pixels are just skipped.
+ * If any portion of the mask overlaps the source image boundary the requested border type operation is applied to all mask pixels
+ * which fall outside of the source image.
+ *
+ * Currently only the NPP_BORDER_MIRROR and NPP_BORDER_REPLICATE border type operations are supported.
+ *
+ * @{
+ *
+ */
+
+/**
+ * Calculate destination image SizeROI width and height from source image ROI width and height and downsampling rate.
+ * It is highly recommended that this function be use to determine the destination image ROI for consistent results. 
+ *
+ * \param nSrcROIWidth The desired source image ROI width, must be <= oSrcSize.width.
+ * \param nSrcROIHeight The desired source image ROI height, must be <= oSrcSize.height.
+ * \param pDstSizeROI Host memory pointer to the destination image roi_specification.
+ * \param nRate The downsampling rate to be used.  For integer equivalent rates unnecessary source pixels are just skipped.
+ *              For non-integer rates the source image is bilinear interpolated. nRate must be > 1.0F and <= 10.0F. 
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+
+NppStatus 
+nppiGetFilterGaussPyramidLayerDownBorderDstROI(int nSrcROIWidth, int nSrcROIHeight, NppiSize * pDstSizeROI, Npp32f nRate);
+
+/**
+ * Single channel 8-bit unsigned Gauss filter with downsampling and border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRate The downsampling rate to be used.  For integer equivalent rates unnecessary source pixels are just skipped.
+ *              For non-integer rates the source image is bilinear interpolated. nRate must be > 1.0F and <= 10.0F. 
+ * \param nFilterTaps The number of filter taps where nFilterTaps =  2 * ((int)((float)ceil(radius) + 0.5F) ) + 1.
+ * \param pKernel Pointer to an array of nFilterTaps kernel coefficients which sum to 1.0F. 
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterGaussPyramidLayerDownBorder_8u_C1R(const Npp8u * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp8u * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                             Npp32f nRate, const int nFilterTaps, const Npp32f * pKernel, NppiBorderType eBorderType);
+
+/**
+ * Three channel 8-bit unsigned Gauss filter with downsampling and border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRate The downsampling rate to be used.  For integer equivalent rates unnecessary source pixels are just skipped.
+ *              For non-integer rates the source image is bilinear interpolated. nRate must be > 1.0F and <= 10.0F. 
+ * \param nFilterTaps The number of filter taps where nFilterTaps =  2 * ((int)((float)ceil(radius) + 0.5F) ) + 1.
+ * \param pKernel Pointer to an array of nFilterTaps kernel coefficients which sum to 1.0F. 
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterGaussPyramidLayerDownBorder_8u_C3R(const Npp8u * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp8u * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                             Npp32f nRate, const int nFilterTaps, const Npp32f * pKernel, NppiBorderType eBorderType);
+
+/**
+ * Single channel 16-bit unsigned Gauss filter with downsampling and border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRate The downsampling rate to be used.  For integer equivalent rates unnecessary source pixels are just skipped.
+ *              For non-integer rates the source image is bilinear interpolated. nRate must be > 1.0F and <= 10.0F. 
+ * \param nFilterTaps The number of filter taps where nFilterTaps =  2 * ((int)((float)ceil(radius) + 0.5F) ) + 1.
+ * \param pKernel Pointer to an array of nFilterTaps kernel coefficients which sum to 1.0F. 
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterGaussPyramidLayerDownBorder_16u_C1R(const Npp16u * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp16u * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                              Npp32f nRate, const int nFilterTaps, const Npp32f * pKernel, NppiBorderType eBorderType);
+
+/**
+ * Three channel 16-bit unsigned Gauss filter with downsampling and border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRate The downsampling rate to be used.  For integer equivalent rates unnecessary source pixels are just skipped.
+ *              For non-integer rates the source image is bilinear interpolated. nRate must be > 1.0F and <= 10.0F. 
+ * \param nFilterTaps The number of filter taps where nFilterTaps =  2 * ((int)((float)ceil(radius) + 0.5F) ) + 1.
+ * \param pKernel Pointer to an array of nFilterTaps kernel coefficients which sum to 1.0F. 
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterGaussPyramidLayerDownBorder_16u_C3R(const Npp16u * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp16u * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                              Npp32f nRate, const int nFilterTaps, const Npp32f * pKernel, NppiBorderType eBorderType);
+
+/**
+ * Single channel 32-bit floating-point Gauss filter downsampling and with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRate The downsampling rate to be used.  For integer equivalent rates unnecessary source pixels are just skipped.
+ *              For non-integer rates the source image is bilinear interpolated. nRate must be > 1.0F and <= 10.0F. 
+ * \param nFilterTaps The number of filter taps where nFilterTaps =  2 * ((int)((float)ceil(radius) + 0.5F) ) + 1.
+ * \param pKernel Pointer to an array of nFilterTaps kernel coefficients which sum to 1.0F. 
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterGaussPyramidLayerDownBorder_32f_C1R(const Npp32f * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp32f * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                              Npp32f nRate, const int nFilterTaps, const Npp32f * pKernel, NppiBorderType eBorderType);
+
+/**
+ * Three channel 32-bit floating-point Gauss filter with downsampling and border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRate The downsampling rate to be used.  For integer equivalent rates unnecessary source pixels are just skipped.
+ *              For non-integer rates the source image is bilinear interpolated. nRate must be > 1.0F and <= 10.0F. 
+ * \param nFilterTaps The number of filter taps where nFilterTaps =  2 * ((int)((float)ceil(radius) + 0.5F) ) + 1.
+ * \param pKernel Pointer to an array of nFilterTaps kernel coefficients which sum to 1.0F. 
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterGaussPyramidLayerDownBorder_32f_C3R(const Npp32f * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp32f * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                              Npp32f nRate, const int nFilterTaps, const Npp32f * pKernel, NppiBorderType eBorderType);
+
+/** @} FilterGaussPyramidLayerDownBorder */
+
+/** @name FilterGaussPyramidLayerUpBorder
+ *
+ * Filters the image using a separable Gaussian filter kernel with user supplied floating point coefficients with upsampling and border control.
+ * If the upsampling rate is equivalent to an integer value then unnecessary source pixels are just skipped.
+ * If any portion of the mask overlaps the source image boundary the requested border type operation is applied to all mask pixels
+ * which fall outside of the source image.
+ *
+ * Currently only the NPP_BORDER_MIRROR and NPP_BORDER_REPLICATE border type operations are supported.
+ *
+ * @{
+ *
+ */
+
+/**
+ * Calculate destination image minimum and maximum SizeROI width and height from source image ROI width and height and upsampling rate.
+ * It is highly recommended that this function be use to determine the best destination image ROI for consistent results. 
+ *
+ * \param nSrcROIWidth The desired source image ROI width, must be <= oSrcSize.width.
+ * \param nSrcROIHeight The desired source image ROI height, must be <= oSrcSize.height.
+ * \param pDstSizeROIMin Host memory pointer to the minimum recommended destination image roi_specification.
+ * \param pDstSizeROIMax Host memory pointer to the maximum recommended destination image roi_specification.
+ * \param nRate The upsampling rate to be used.  For integer equivalent rates unnecessary source pixels are just skipped.
+ *              For non-integer rates the source image is bilinear interpolated. nRate must be > 1.0F and <= 10.0F. 
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+
+NppStatus 
+nppiGetFilterGaussPyramidLayerUpBorderDstROI(int nSrcROIWidth, int nSrcROIHeight, NppiSize * pDstSizeROIMin, NppiSize * pDstSizeROIMax, Npp32f nRate);
+
+/**
+ * Single channel 8-bit unsigned Gauss filter with upsampling and border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRate The upsampling rate to be used.  For integer equivalent rates unnecessary source pixels are just skipped.
+ *              For non-integer rates the source image is bilinear interpolated. nRate must be > 1.0F and <= 10.0F. 
+ * \param nFilterTaps The number of filter taps where nFilterTaps =  2 * ((int)((float)ceil(radius) + 0.5F) ) + 1.
+ * \param pKernel Pointer to an array of nFilterTaps kernel coefficients which sum to 1.0F. 
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterGaussPyramidLayerUpBorder_8u_C1R(const Npp8u * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp8u * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                           Npp32f nRate, const int nFilterTaps, const Npp32f * pKernel, NppiBorderType eBorderType);
+
+/**
+ * Three channel 8-bit unsigned Gauss filter with upsampling and border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRate The upsampling rate to be used.  For integer equivalent rates unnecessary source pixels are just skipped.
+ *              For non-integer rates the source image is bilinear interpolated. nRate must be > 1.0F and <= 10.0F. 
+ * \param nFilterTaps The number of filter taps where nFilterTaps =  2 * ((int)((float)ceil(radius) + 0.5F) ) + 1.
+ * \param pKernel Pointer to an array of nFilterTaps kernel coefficients which sum to 1.0F. 
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterGaussPyramidLayerUpBorder_8u_C3R(const Npp8u * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp8u * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                           Npp32f nRate, const int nFilterTaps, const Npp32f * pKernel, NppiBorderType eBorderType);
+
+/**
+ * Single channel 16-bit unsigned Gauss filter with upsampling and border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRate The upsampling rate to be used.  For integer equivalent rates unnecessary source pixels are just skipped.
+ *              For non-integer rates the source image is bilinear interpolated. nRate must be > 1.0F and <= 10.0F. 
+ * \param nFilterTaps The number of filter taps where nFilterTaps =  2 * ((int)((float)ceil(radius) + 0.5F) ) + 1.
+ * \param pKernel Pointer to an array of nFilterTaps kernel coefficients which sum to 1.0F. 
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterGaussPyramidLayerUpBorder_16u_C1R(const Npp16u * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp16u * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                            Npp32f nRate, const int nFilterTaps, const Npp32f * pKernel, NppiBorderType eBorderType);
+
+/**
+ * Three channel 16-bit unsigned Gauss filter with upsampling and border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRate The upsampling rate to be used.  For integer equivalent rates unnecessary source pixels are just skipped.
+ *              For non-integer rates the source image is bilinear interpolated. nRate must be > 1.0F and <= 10.0F. 
+ * \param nFilterTaps The number of filter taps where nFilterTaps =  2 * ((int)((float)ceil(radius) + 0.5F) ) + 1.
+ * \param pKernel Pointer to an array of nFilterTaps kernel coefficients which sum to 1.0F. 
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterGaussPyramidLayerUpBorder_16u_C3R(const Npp16u * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp16u * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                            Npp32f nRate, const int nFilterTaps, const Npp32f * pKernel, NppiBorderType eBorderType);
+
+/**
+ * Single channel 32-bit floating-point Gauss filter upsampling and with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRate The upsampling rate to be used.  For integer equivalent rates unnecessary source pixels are just skipped.
+ *              For non-integer rates the source image is bilinear interpolated. nRate must be > 1.0F and <= 10.0F. 
+ * \param nFilterTaps The number of filter taps where nFilterTaps =  2 * ((int)((float)ceil(radius) + 0.5F) ) + 1.
+ * \param pKernel Pointer to an array of nFilterTaps kernel coefficients which sum to 1.0F. 
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterGaussPyramidLayerUpBorder_32f_C1R(const Npp32f * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp32f * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                            Npp32f nRate, const int nFilterTaps, const Npp32f * pKernel, NppiBorderType eBorderType);
+
+/**
+ * Three channel 32-bit floating-point Gauss filter with upsampling and border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRate The upsampling rate to be used.  For integer equivalent rates unnecessary source pixels are just skipped.
+ *              For non-integer rates the source image is bilinear interpolated. nRate must be > 1.0F and <= 10.0F. 
+ * \param nFilterTaps The number of filter taps where nFilterTaps =  2 * ((int)((float)ceil(radius) + 0.5F) ) + 1.
+ * \param pKernel Pointer to an array of nFilterTaps kernel coefficients which sum to 1.0F. 
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterGaussPyramidLayerUpBorder_32f_C3R(const Npp32f * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp32f * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                            Npp32f nRate, const int nFilterTaps, const Npp32f * pKernel, NppiBorderType eBorderType);
+
+/** @} FilterGaussPyramidLayerUpBorder */
+
+/** @name FilterBilateralGaussBorder
+ *
+ * Filters the image using a bilateral Gaussian filter kernel with border control:
+ * If any portion of the mask overlaps the source image boundary the requested border type operation is applied to all mask pixels
+ * which fall outside of the source image.
+ *
+ * For this filter the anchor point is always the central element of the kernel. 
+ * Coefficients of the bilateral filter kernel depend on their position in the kernel and 
+ * on the value of some source image pixels overlayed by the filter kernel. 
+ * Only source image pixels with both coordinates divisible by nDistanceBetweenSrcPixels are used in calculations.
+ *
+ * The value of an output pixel \f$d\f$ is 
+ * \f[d = \frac{\sum_{h=-nRadius}^{nRadius}\sum_{w=-nRadius}^{nRadius}W1(h,w)\cdot W2(h,w)\cdot S(h,w)}{\sum_{h=-nRadius}^{nRadius}\sum_{w=-nRadius}^{nRadius}W1(h,w)\cdot W2(h,w)}\f]
+ * where h and w are the corresponding kernel width and height indexes, 
+ * S(h,w) is the value of the source image pixel overlayed by filter kernel position (h,w),
+ * W1(h,w) is func(nValSquareSigma, (S(h,w) - S(0,0))) where S(0,0) is the value of the source image pixel at the center of the kernel,
+ * W2(h,w) is func(nPosSquareSigma, sqrt(h*h+w*w)), and func is the following formula
+ * \f[func(S,I) = exp(-\frac{I^2}{2.0F\cdot S^2})\f]
+ *
+ * Currently only the NPP_BORDER_REPLICATE border type operations are supported.
+ *
+ * @{
+ *
+ */
+
+/**
+ * Single channel 8-bit unsigned bilateral Gauss filter with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRadius The radius of the round filter kernel to be used.  A radius of 1 indicates a filter kernel size of 3 by 3, 2 indicates 5 by 5, etc.
+ *        Radius values from 1 to 32 are supported.
+ * \param nStepBetweenSrcPixels The step size between adjacent source image pixels processed by the filter kernel, most commonly 1. 
+ * \param nValSquareSigma The square of the sigma for the relative intensity distance between a source image pixel in the filter kernel 
+ *        and the source image pixel at the center of the filter kernel.
+ * \param nPosSquareSigma The square of the sigma for the relative geometric distance between a source image pixel in the filter kernel 
+ *        and the source image pixel at the center of the filter kernel.
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterBilateralGaussBorder_8u_C1R(const Npp8u * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp8u * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                      const int nRadius, const int nStepBetweenSrcPixels, const Npp32f nValSquareSigma, const Npp32f nPosSquareSigma, NppiBorderType eBorderType);
+
+/**
+ * Three channel 8-bit unsigned bilateral Gauss filter with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRadius The radius of the round filter kernel to be used.  A radius of 1 indicates a filter kernel size of 3 by 3, 2 indicates 5 by 5, etc.
+ *        Radius values from 1 to 32 are supported.
+ * \param nStepBetweenSrcPixels The step size between adjacent source image pixels processed by the filter kernel, most commonly 1. 
+ * \param nValSquareSigma The square of the sigma for the relative intensity distance between a source image pixel in the filter kernel 
+ *        and the source image pixel at the center of the filter kernel.
+ * \param nPosSquareSigma The square of the sigma for the relative geometric distance between a source image pixel in the filter kernel 
+ *        and the source image pixel at the center of the filter kernel.
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterBilateralGaussBorder_8u_C3R(const Npp8u * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp8u * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                      const int nRadius, const int nStepBetweenSrcPixels, const Npp32f nValSquareSigma, const Npp32f nPosSquareSigma, NppiBorderType eBorderType);
+
+/**
+ * Single channel 16-bit unsigned bilateral Gauss filter with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRadius The radius of the round filter kernel to be used.  A radius of 1 indicates a filter kernel size of 3 by 3, 2 indicates 5 by 5, etc.
+ *        Radius values from 1 to 32 are supported.
+ * \param nStepBetweenSrcPixels The step size between adjacent source image pixels processed by the filter kernel, most commonly 1. 
+ * \param nValSquareSigma The square of the sigma for the relative intensity distance between a source image pixel in the filter kernel 
+ *        and the source image pixel at the center of the filter kernel.
+ * \param nPosSquareSigma The square of the sigma for the relative geometric distance between a source image pixel in the filter kernel 
+ *        and the source image pixel at the center of the filter kernel.
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterBilateralGaussBorder_16u_C1R(const Npp16u * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp16u * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                       const int nRadius, const int nStepBetweenSrcPixels, const Npp32f nValSquareSigma, const Npp32f nPosSquareSigma, NppiBorderType eBorderType);
+
+/**
+ * Three channel 16-bit unsigned bilateral Gauss filter with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRadius The radius of the round filter kernel to be used.  A radius of 1 indicates a filter kernel size of 3 by 3, 2 indicates 5 by 5, etc.
+ *        Radius values from 1 to 32 are supported.
+ * \param nStepBetweenSrcPixels The step size between adjacent source image pixels processed by the filter kernel, most commonly 1. 
+ * \param nValSquareSigma The square of the sigma for the relative intensity distance between a source image pixel in the filter kernel 
+ *        and the source image pixel at the center of the filter kernel.
+ * \param nPosSquareSigma The square of the sigma for the relative geometric distance between a source image pixel in the filter kernel 
+ *        and the source image pixel at the center of the filter kernel.
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterBilateralGaussBorder_16u_C3R(const Npp16u * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp16u * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                       const int nRadius, const int nStepBetweenSrcPixels, const Npp32f nValSquareSigma, const Npp32f nPosSquareSigma, NppiBorderType eBorderType);
+
+/**
+ * One channel 32-bit floating-point bilateral Gauss filter with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRadius The radius of the round filter kernel to be used.  A radius of 1 indicates a filter kernel size of 3 by 3, 2 indicates 5 by 5, etc.
+ *        Radius values from 1 to 32 are supported.
+ * \param nStepBetweenSrcPixels The step size between adjacent source image pixels processed by the filter kernel, most commonly 1. 
+ * \param nValSquareSigma The square of the sigma for the relative intensity distance between a source image pixel in the filter kernel 
+ *        and the source image pixel at the center of the filter kernel.
+ * \param nPosSquareSigma The square of the sigma for the relative geometric distance between a source image pixel in the filter kernel 
+ *        and the source image pixel at the center of the filter kernel.
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterBilateralGaussBorder_32f_C1R(const Npp32f * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp32f * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                       const int nRadius, const int nStepBetweenSrcPixels, const Npp32f nValSquareSigma, const Npp32f nPosSquareSigma, NppiBorderType eBorderType);
+
+/**
+ * Three channel 32-bit floating-point bilateral Gauss filter with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst \ref destination_image_pointer.
+ * \param nDstStep \ref destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param nRadius The radius of the round filter kernel to be used.  A radius of 1 indicates a filter kernel size of 3 by 3, 2 indicates 5 by 5, etc.
+ *        Radius values from 1 to 32 are supported.
+ * \param nStepBetweenSrcPixels The step size between adjacent source image pixels processed by the filter kernel, most commonly 1. 
+ * \param nValSquareSigma The square of the sigma for the relative intensity distance between a source image pixel in the filter kernel 
+ *        and the source image pixel at the center of the filter kernel.
+ * \param nPosSquareSigma The square of the sigma for the relative geometric distance between a source image pixel in the filter kernel 
+ *        and the source image pixel at the center of the filter kernel.
+ * \param eBorderType The border type operation to be applied at source image border boundaries.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterBilateralGaussBorder_32f_C3R(const Npp32f * pSrc, Npp32s nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, Npp32f * pDst, Npp32s nDstStep, NppiSize oSizeROI,
+                                       const int nRadius, const int nStepBetweenSrcPixels, const Npp32f nValSquareSigma, const Npp32f nPosSquareSigma, NppiBorderType eBorderType);
+
+/** @} FilterBilateralGaussBorder */
 
 /** @name FilterHighPass
  *
@@ -15387,8 +15872,951 @@ nppiFilterUnsharpGetBufferSize_32f_AC4R(const Npp32f nRadius, const Npp32f nSigm
 
 /** @} FilterUnsharp */
 
-/** @} fixed_filters */
+/** @name GradientVectorPrewittBorder
+ * 
+ *  RGB Color to Prewitt Gradient Vector conversion using user selected fixed mask size and gradient distance method.
+ *  Functions support up to 4 optional single channel output gradient vectors, X (vertical), Y (horizontal), magnitude, and angle
+ *  with user selectable distance methods.  Output for a particular vector is disabled by supplying a NULL pointer for that
+ *  vector. X and Y gradient vectors are in cartesian form in the destination data type.  
+ *  Magnitude vectors are polar gradient form in the destination data type, angle is always in floating point polar gradient format.
+ *  Only fixed mask sizes of 3x3 are supported.
+ *  Only nppiNormL1 (sum) and nppiNormL2 (sqrt of sum of squares) distance methods are currently supported.
+ *
+ * Currently only the NPP_BORDER_REPLICATE border type operation is supported.  Borderless output can be accomplished by using a
+ * larger source image than the destination and adjusting oSrcSize and oSrcOffset parameters accordingly.
+ *
+ * The following fixed kernel mask is used for producing the pDstX (vertical) output image.
+ *
+ * \f[
+ *  \left( \begin{array}{rrr}
+ *   -1 & 0 & 1 \\
+ *   -1 & 0 & 1 \\
+ *   -1 & 0 & 1 \\
+ *  \end{array} \right)
+ * \f]
+ *  
+ * The following fixed kernel mask is used for producing the pDstY (horizontal) output image.
+ *
+ * \f[
+ *  \left( \begin{array}{rrr}
+ *    1 &  1 &  1 \\
+ *    0 &  0 &  0 \\
+ *   -1 & -1 & -1 \\
+ *  \end{array} \right)
+ * \f]
+ *
+ * For the C1R versions of the function the pDstMag output image value for L1 normalization consists of 
+ * the absolute value of the pDstX value plus the absolute value of the pDstY value at that particular image pixel location.
+ * For the C1R versions of the function the pDstMag output image value for L2 normalization consists of 
+ * the square root of the pDstX value squared plus the pDstY value squared at that particular image pixel location.
+ * For the C1R versions of the function the pDstAngle output image value consists of the arctangent (atan2) of 
+ * the pDstY value and the pDstX value at that particular image pixel location.
+ *
+ * For the C3C1R versions of the function, regardless of the selected normalization method, 
+ * the L2 normalization value is first determined for each or the pDstX and pDstY values for each source channel then the largest L2
+ * normalization value (largest gradient) is used to select which of the 3 pDstX channel values are output to the pDstX image or 
+ * pDstY channel values are output to the pDstY image.
+ * For the C3C1R versions of the function the pDstMag output image value for L1 normalizaton consists of the same technique
+ * used for the C1R version for each source image channel.  Then the largest L2 normalization value is again used to select which
+ * of the 3 pDstMag channel values to output to the pDstMag image.
+ * For the C3C1R versions of the function the pDstMag output image value for L2 normalizaton consists of just outputting
+ * the largest per source channel L2 normalization value to the pDstMag image.
+ * For the C3C1R versions of the function the pDstAngle output image value consists of the same technique used for the C1R version
+ * calculated for each source image channel.  Then the largest L2 normalization value is again used to select which of the 3 angle
+ * values to output to the pDstAngle image. 
+ *
+ * @{
+ *
+ */
 
+/**
+ * 1 channel 8-bit unsigned packed RGB to optional 1 channel 16-bit signed X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorPrewittBorder_8u16s_C1R(const Npp8u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                          Npp16s * pDstX, int nDstXStep, Npp16s * pDstY, int nDstYStep, Npp16s * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                    NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 3 channel 8-bit unsigned packed RGB to optional 1 channel 16-bit signed X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorPrewittBorder_8u16s_C3C1R(const Npp8u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                            Npp16s * pDstX, int nDstXStep, Npp16s * pDstY, int nDstYStep, Npp16s * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                      NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 1 channel 16-bit signed packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorPrewittBorder_16s32f_C1R(const Npp16s * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                           Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                     NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 3 channel 16-bit signed packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorPrewittBorder_16s32f_C3C1R(const Npp16s * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                             Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                       NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 1 channel 16-bit unsigned packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorPrewittBorder_16u32f_C1R(const Npp16u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                           Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                     NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 3 channel 16-bit unsigned packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorPrewittBorder_16u32f_C3C1R(const Npp16u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                             Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                       NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 1 channel 32-bit floating point packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorPrewittBorder_32f_C1R(const Npp32f * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                        Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                  NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 3 channel 32-bit floating point packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorPrewittBorder_32f_C3C1R(const Npp32f * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                          Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                    NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+
+/** @} GradientVectorPrewittBorder */
+
+/** @name GradientVectorScharrBorder
+ * 
+ *  RGB Color to Scharr Gradient Vector conversion using user selected fixed mask size and gradient distance method.
+ *  Functions support up to 4 optional single channel output gradient vectors, X (vertical), Y (horizontal), magnitude, and angle
+ *  with user selectable distance methods.  Output for a particular vector is disabled by supplying a NULL pointer for that
+ *  vector. X and Y gradient vectors are in cartesian form in the destination data type.  
+ *  Magnitude vectors are polar gradient form in the destination data type, angle is always in floating point polar gradient format.
+ *  Only fixed mask sizes of 3x3 are supported.
+ *  Only nppiNormL1 (sum) and nppiNormL2 (sqrt of sum of squares) distance methods are currently supported.
+ *
+ * Currently only the NPP_BORDER_REPLICATE border type operation is supported.  Borderless output can be accomplished by using a
+ * larger source image than the destination and adjusting oSrcSize and oSrcOffset parameters accordingly.
+ *
+ * The following fixed kernel mask is used for producing the pDstX (vertical) output image.
+ *
+ * \f[
+ *  \left( \begin{array}{rrr}
+ *    3 & 0 &  -3 \\
+ *   10 & 0 & -10 \\
+ *    3 & 0 &  -3 \\
+ *  \end{array} \right)
+ * \f]
+ *  
+ * The following fixed kernel mask is used for producing the pDstY (horizontal) output image.
+ *
+ * \f[
+ *  \left( \begin{array}{rrr}
+ *    3 &  10 &  3 \\
+ *    0 &   0 &  0 \\
+ *   -3 & -10 & -3 \\
+ *  \end{array} \right)
+ * \f]
+ *
+ * For the C1R versions of the function the pDstMag output image value for L1 normalization consists of 
+ * the absolute value of the pDstX value plus the absolute value of the pDstY value at that particular image pixel location.
+ * For the C1R versions of the function the pDstMag output image value for L2 normalization consists of 
+ * the square root of the pDstX value squared plus the pDstY value squared at that particular image pixel location.
+ * For the C1R versions of the function the pDstAngle output image value consists of the arctangent (atan2) of 
+ * the pDstY value and the pDstX value at that particular image pixel location.
+ *
+ * For the C3C1R versions of the function, regardless of the selected normalization method, 
+ * the L2 normalization value is first determined for each or the pDstX and pDstY values for each source channel then the largest L2
+ * normalization value (largest gradient) is used to select which of the 3 pDstX channel values are output to the pDstX image or 
+ * pDstY channel values are output to the pDstY image.
+ * For the C3C1R versions of the function the pDstMag output image value for L1 normalizaton consists of the same technique
+ * used for the C1R version for each source image channel.  Then the largest L2 normalization value is again used to select which
+ * of the 3 pDstMag channel values to output to the pDstMag image.
+ * For the C3C1R versions of the function the pDstMag output image value for L2 normalizaton consists of just outputting
+ * the largest per source channel L2 normalization value to the pDstMag image.
+ * For the C3C1R versions of the function the pDstAngle output image value consists of the same technique used for the C1R version
+ * calculated for each source image channel.  Then the largest L2 normalization value is again used to select which of the 3 angle
+ * values to output to the pDstAngle image. 
+ *
+ * @{
+ *
+ */
+
+/**
+ * 1 channel 8-bit unsigned packed RGB to optional 1 channel 16-bit signed X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorScharrBorder_8u16s_C1R(const Npp8u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                         Npp16s * pDstX, int nDstXStep, Npp16s * pDstY, int nDstYStep, Npp16s * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                   NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 3 channel 8-bit unsigned packed RGB to optional 1 channel 16-bit signed X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorScharrBorder_8u16s_C3C1R(const Npp8u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                           Npp16s * pDstX, int nDstXStep, Npp16s * pDstY, int nDstYStep, Npp16s * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                     NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 1 channel 16-bit signed packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorScharrBorder_16s32f_C1R(const Npp16s * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                          Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                    NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 3 channel 16-bit signed packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorScharrBorder_16s32f_C3C1R(const Npp16s * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                            Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                      NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 1 channel 16-bit unsigned packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorScharrBorder_16u32f_C1R(const Npp16u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                          Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                    NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 3 channel 16-bit unsigned packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorScharrBorder_16u32f_C3C1R(const Npp16u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                            Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                      NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 1 channel 32-bit floating point packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorScharrBorder_32f_C1R(const Npp32f * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                       Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                 NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 3 channel 32-bit floating point packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorScharrBorder_32f_C3C1R(const Npp32f * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                         Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                   NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+
+/** @} GradientVectorScharrBorder */
+
+/** @name GradientVectorSobelBorder
+ * 
+ *  RGB Color to Sobel Gradient Vector conversion using user selected fixed mask size and gradient distance method.
+ *  Functions support up to 4 optional single channel output gradient vectors, X (vertical), Y (horizontal), magnitude, and angle
+ *  with user selectable distance methods.  Output for a particular vector is disabled by supplying a NULL pointer for that
+ *  vector. X and Y gradient vectors are in cartesian form in the destination data type.  
+ *  Magnitude vectors are polar gradient form in the destination data type, angle is always in floating point polar gradient format.
+ *  Only fixed mask sizes of 3x3 and 5x5 are supported.
+ *  Only nppiNormL1 (sum) and nppiNormL2 (sqrt of sum of squares) distance methods are currently supported.
+ *
+ * Currently only the NPP_BORDER_REPLICATE border type operation is supported.  Borderless output can be accomplished by using a
+ * larger source image than the destination and adjusting oSrcSize and oSrcOffset parameters accordingly.
+ *
+ * One of the following fixed kernel masks are used for producing the 3x3 or 5x5 pDstX (vertical) output image depending on selected mask size.
+ *
+ * \f[
+ *  \left( \begin{array}{rrr}
+ *   -1 & 0 & 1 \\
+ *   -2 & 0 & 2 \\
+ *   -1 & 0 & 1 \\
+ *  \end{array} \right)
+ * \f]
+ *  
+ *
+ * \f[
+ *  \left( \begin{array}{rrrrr}
+ *   -1 &  -2 & 0 &  2 & 1 \\
+ *   -4 &  -8 & 0 &  8 & 4 \\
+ *   -6 & -12 & 0 & 12 & 6 \\
+ *   -4 &  -8 & 0 &  8 & 4 \\
+ *   -1 &  -2 & 0 &  2 & 1 \\
+ *  \end{array} \right)
+ * \f]
+ *  
+ * One of the following fixed kernel masks are used for producing the 3x3 or 5x5 pDstY (horizontal) output image depending on selected mask size.
+ *
+ * \f[
+ *  \left( \begin{array}{rrr}
+ *    1 &  2 &  1 \\
+ *    0 &  0 &  0 \\
+ *   -1 & -2 & -1 \\
+ *  \end{array} \right)
+ * \f]
+ *
+ *
+ * \f[
+ *  \left( \begin{array}{rrrrr}
+ *    1 &  4 &   6 &  4 &  1 \\
+ *    2 &  8 &  12 &  8 &  2 \\
+ *    0 &  0 &   0 &  0 &  0 \\
+ *   -2 & -8 & -12 & -8 & -2 \\
+ *   -1 & -4 &  -6 & -4 & -1 \\
+ *  \end{array} \right)
+ * \f]
+ *
+ * For the C1R versions of the function the pDstMag output image value for L1 normalization consists of 
+ * the absolute value of the pDstX value plus the absolute value of the pDstY value at that particular image pixel location.
+ * For the C1R versions of the function the pDstMag output image value for L2 normalization consists of 
+ * the square root of the pDstX value squared plus the pDstY value squared at that particular image pixel location.
+ * For the C1R versions of the function the pDstAngle output image value consists of the arctangent (atan2) of 
+ * the pDstY value and the pDstX value at that particular image pixel location.
+ *
+ * For the C3C1R versions of the function, regardless of the selected normalization method, 
+ * the L2 normalization value is first determined for each or the pDstX and pDstY values for each source channel then the largest L2
+ * normalization value (largest gradient) is used to select which of the 3 pDstX channel values are output to the pDstX image or 
+ * pDstY channel values are output to the pDstY image.
+ * For the C3C1R versions of the function the pDstMag output image value for L1 normalizaton consists of the same technique
+ * used for the C1R version for each source image channel.  Then the largest L2 normalization value is again used to select which
+ * of the 3 pDstMag channel values to output to the pDstMag image.
+ * For the C3C1R versions of the function the pDstMag output image value for L2 normalizaton consists of just outputting
+ * the largest per source channel L2 normalization value to the pDstMag image.
+ * For the C3C1R versions of the function the pDstAngle output image value consists of the same technique used for the C1R version
+ * calculated for each source image channel.  Then the largest L2 normalization value is again used to select which of the 3 angle
+ * values to output to the pDstAngle image. 
+ *
+ * @{
+ *
+ */
+
+/**
+ * 1 channel 8-bit unsigned packed RGB to optional 1 channel 16-bit signed X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorSobelBorder_8u16s_C1R(const Npp8u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                        Npp16s * pDstX, int nDstXStep, Npp16s * pDstY, int nDstYStep, Npp16s * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                  NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 3 channel 8-bit unsigned packed RGB to optional 1 channel 16-bit signed X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorSobelBorder_8u16s_C3C1R(const Npp8u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                          Npp16s * pDstX, int nDstXStep, Npp16s * pDstY, int nDstYStep, Npp16s * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                    NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 1 channel 16-bit signed packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorSobelBorder_16s32f_C1R(const Npp16s * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                         Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                   NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 3 channel 16-bit signed packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorSobelBorder_16s32f_C3C1R(const Npp16s * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                           Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                     NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 1 channel 16-bit unsigned packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorSobelBorder_16u32f_C1R(const Npp16u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                         Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                   NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 3 channel 16-bit unsigned packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorSobelBorder_16u32f_C3C1R(const Npp16u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                           Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                     NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 1 channel 32-bit floating point packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorSobelBorder_32f_C1R(const Npp32f * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                      Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+/**
+ * 3 channel 32-bit floating point packed RGB to optional 1 channel 32-bit floating point X (vertical), Y (horizontal), magnitude, 
+ * and/or 32-bit floating point angle gradient vectors with user selectable fixed mask size and distance method with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDstX X vector destination_image_pointer.
+ * \param nDstXStep X vector destination_image_line_step.
+ * \param pDstY Y vector destination_image_pointer.
+ * \param nDstYStep Y vector destination_image_line_step.
+ * \param pDstMag magnitude destination_image_pointer.
+ * \param nDstMagStep magnitude destination_image_line_step.
+ * \param pDstAngle angle destination_image_pointer.
+ * \param nDstAngleStep angle destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus nppiGradientVectorSobelBorder_32f_C3C1R(const Npp32f * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                                        Npp32f * pDstX, int nDstXStep, Npp32f * pDstY, int nDstYStep, Npp32f * pDstMag, int nDstMagStep, Npp32f * pDstAngle, int nDstAngleStep,
+                                                  NppiSize oSizeROI, NppiMaskSize eMaskSize, NppiNorm eNorm, NppiBorderType eBorderType);
+
+
+/** @} GradientVectorSobelBorder */
+
+/** @name FilterCannyBorder
+ * 
+ *  Performs Canny edge detection on a single channel 8-bit grayscale image and outputs a single channel 8-bit image consisting of 0x00 and 0xFF
+ *  values with 0xFF representing edge pixels.  The algorithm consists of three phases.  The first phase generates two output images consisting
+ *  of a single channel 16-bit signed image containing magnitude values and a single channel 32-bit floating point image containing the angular
+ *  direction of those magnitude values.   This phase is accomplished by calling the appropriate GradientVectorBorder filter function based on
+ *  the filter type, filter mask size, and norm type requested.  The next phase uses those magnitude and direction images to suppress non-maximum
+ *  magnitude values which are lower than the values of either of its two nearest neighbors in the same direction as the test magnitude pixel in 
+ *  the 3x3 surrounding magnitude pixel neighborhood.  This phase outputs a new magnitude image with non-maximum pixel values suppressed.  Finally, in the
+ *  third phase, the new magnitude image is passed through a hysteresis threshold filter that filters out any magnitude values that are not connected
+ *  to another edge magnitude value.   In this phase, any magnitude value above the high threshold value is automatically accepted, any magnitude
+ *  value below the low threshold value is automatically rejected.  For magnitude values that lie between the low and high threshold, values are
+ *  only accepted if one of their two neighbors in the same direction in the 3x3 neighborhood around them lies above the low threshold value.  In other words,
+ *  if they are connected to an active edge.   J. Canny recommends that the ratio of high to low threshold limit be in the range two or three to one, 
+ *  based on predicted signal-to-noise ratios. The final output of the third phase consists of a single channel 8-bit unsigned image of 0x00 and 0xFF 
+ *  values based on whether they are accepted or rejected during threshold testing.
+ *    
+ * Currently only the NPP_BORDER_REPLICATE border type operation is supported.  Borderless output can be accomplished by using a
+ * larger source image than the destination and adjusting oSrcSize and oSrcOffset parameters accordingly.
+ *
+ * @{
+ *
+ */
+
+/**
+ * Calculate scratch buffer size needed for the FilterCannyBorder function based on destination image SizeROI width and height.
+ *
+ * \param oSizeROI \ref roi_specification.
+ * \param hpBufferSize Required buffer size. Important: hpBufferSize is a 
+ *        <em>host pointer.</em> \ref general_scratch_buffer.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+
+NppStatus 
+nppiFilterCannyBorderGetBufferSize(NppiSize oSizeROI, int * hpBufferSize);
+
+/**
+ * 1 channel 8-bit unsigned grayscale to 1 channel 8-bit unsigned black (0x00) and white (0xFF) image with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst output edge destination_image_pointer.
+ * \param nDstStep output edge destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eFilterType selects between Sobel or Scharr filter type.
+ * \param eMaskSize fixed filter mask size to use.
+ * \param nLowThreshold low hysteresis threshold value.
+ * \param nHighThreshold high hysteresis threshold value.
+ * \param eNorm gradient distance method to use.
+ * \param eBorderType source image border type to use use.
+ * \param pDeviceBuffer pointer to scratch DEVICE memory buffer of size hpBufferSize (see nppiFilterCannyBorderGetBufferSize() above)
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterCannyBorder_8u_C1R(const Npp8u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                   Npp8u * pDst, int nDstStep, NppiSize oSizeROI, NppiDifferentialKernel eFilterType,
+                             NppiMaskSize eMaskSize, Npp16s nLowThreshold, Npp16s nHighThreshold, NppiNorm eNorm, 
+                             NppiBorderType eBorderType, Npp8u * pDeviceBuffer);
+
+/** @} FilterCannyBorder */
+
+/** @name FilterHarrisCornersBorder
+ * 
+ *  Performs Harris Corner detection on a single channel 8-bit grayscale image and outputs a single channel 32-bit floating point image 
+ *  consisting the corner response at each pixel of the image.  The algorithm consists of two phases.  The first phase generates the floating
+ *  point product of XX, YY, and XY gradients at each pixel in the image.  The type of gradient used is controlled by the eFilterType and eMaskSize parameters.
+ *  The second phase averages those products over a window of either 3x3 or 5x5 pixels around the center pixel then generates the Harris corner
+ *  response at that pixel which is output in the destination image. The Harris response value is determined as H = ((XX * YY - XY * XY) - 
+ *  (nK * ((XX + YY) * (XX + YY)))) * nScale.
+ *    
+ * Currently only the NPP_BORDER_REPLICATE border type operation is supported.  Borderless output can be accomplished by using a
+ * larger source image than the destination and adjusting oSrcSize and oSrcOffset parameters accordingly.
+ *
+ * @{
+ *
+ */
+
+/**
+ * Calculate scratch buffer size needed for the FilterHarrisCornersBorder function based on destination image SizeROI width and height.
+ *
+ * \param oSizeROI \ref roi_specification.
+ * \param hpBufferSize Required buffer size. Important: hpBufferSize is a 
+ *        <em>host pointer.</em> \ref general_scratch_buffer.
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+
+NppStatus 
+nppiFilterHarrisCornersBorderGetBufferSize(NppiSize oSizeROI, int * hpBufferSize);
+
+/**
+ * 1 channel 8-bit unsigned grayscale to 1 channel 32-bit floating point Harris corners response image with border control.
+ *
+ * \param pSrc \ref source_image_pointer.
+ * \param nSrcStep \ref source_image_line_step.
+ * \param oSrcSize Source image width and height in pixels relative to pSrc.
+ * \param oSrcOffset The pixel offset that pSrc points to relative to the origin of the source image. 
+ * \param pDst output edge destination_image_pointer.
+ * \param nDstStep output edge destination_image_line_step.
+ * \param oSizeROI \ref roi_specification.
+ * \param eFilterType selects between Sobel or Scharr filter type.
+ * \param eMaskSize fixed filter mask size to use (3x3 or 5x5 for Sobel).
+ * \param eAvgWindowSize fixed window mask size to use (3x3 or 5x5).
+ * \param nK Harris Corners constant (commonly used value is 0.04F).
+ * \param nScale output is scaled by this scale factor.
+ * \param eBorderType source image border type to use use.
+ * \param pDeviceBuffer pointer to scratch DEVICE memory buffer of size hpBufferSize (see nppiFilterHarrisCornersBorderGetBufferSize() above)
+ * \return \ref image_data_error_codes, \ref roi_error_codes
+ */
+NppStatus 
+nppiFilterHarrisCornersBorder_8u32f_C1R(const Npp8u * pSrc, int nSrcStep, NppiSize oSrcSize, NppiPoint oSrcOffset, 
+                                              Npp32f * pDst, int nDstStep, NppiSize oSizeROI, NppiDifferentialKernel eFilterType,
+                                        NppiMaskSize eMaskSize, NppiMaskSize eAvgWindowSize, Npp32f nK, Npp32f nScale, 
+                                        NppiBorderType eBorderType, Npp8u * pDeviceBuffer);
+
+/** @} FilterHarrisCornersBorder */
+
+/** @} fixed_filters */
 
 /** @} image_filtering_functions */
 

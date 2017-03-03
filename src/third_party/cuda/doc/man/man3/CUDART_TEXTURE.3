@@ -1,0 +1,342 @@
+.TH "Texture Reference Management" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Texture Reference Management \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaBindTexture\fP (size_t *offset, const struct \fBtextureReference\fP *texref, const void *devPtr, const struct \fBcudaChannelFormatDesc\fP *desc, size_t size=UINT_MAX)"
+.br
+.RI "\fIBinds a memory area to a texture. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaBindTexture2D\fP (size_t *offset, const struct \fBtextureReference\fP *texref, const void *devPtr, const struct \fBcudaChannelFormatDesc\fP *desc, size_t width, size_t height, size_t pitch)"
+.br
+.RI "\fIBinds a 2D memory area to a texture. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaBindTextureToArray\fP (const struct \fBtextureReference\fP *texref, \fBcudaArray_const_t\fP array, const struct \fBcudaChannelFormatDesc\fP *desc)"
+.br
+.RI "\fIBinds an array to a texture. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaBindTextureToMipmappedArray\fP (const struct \fBtextureReference\fP *texref, \fBcudaMipmappedArray_const_t\fP mipmappedArray, const struct \fBcudaChannelFormatDesc\fP *desc)"
+.br
+.RI "\fIBinds a mipmapped array to a texture. \fP"
+.ti -1c
+.RI "struct \fBcudaChannelFormatDesc\fP \fBcudaCreateChannelDesc\fP (int x, int y, int z, int w, enum \fBcudaChannelFormatKind\fP f)"
+.br
+.RI "\fIReturns a channel descriptor using the specified format. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaGetChannelDesc\fP (struct \fBcudaChannelFormatDesc\fP *desc, \fBcudaArray_const_t\fP array)"
+.br
+.RI "\fIGet the channel descriptor of an array. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaGetTextureAlignmentOffset\fP (size_t *offset, const struct \fBtextureReference\fP *texref)"
+.br
+.RI "\fIGet the alignment offset of a texture. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaGetTextureReference\fP (const struct \fBtextureReference\fP **texref, const void *symbol)"
+.br
+.RI "\fIGet the texture reference associated with a symbol. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaUnbindTexture\fP (const struct \fBtextureReference\fP *texref)"
+.br
+.RI "\fIUnbinds a texture. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief texture reference management functions of the CUDA runtime API (cuda_runtime_api.h)
+.PP
+This section describes the low level texture reference management functions of the CUDA runtime application programming interface.
+.PP
+Some functions have overloaded C++ API template versions documented separately in the \fBC++ API Routines\fP module. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBcudaError_t\fP cudaBindTexture (size_t * offset, const struct \fBtextureReference\fP * texref, const void * devPtr, const struct \fBcudaChannelFormatDesc\fP * desc, size_t size = \fCUINT_MAX\fP)"
+.PP
+Binds \fCsize\fP bytes of the memory area pointed to by \fCdevPtr\fP to the texture reference \fCtexref\fP. \fCdesc\fP describes how the memory is interpreted when fetching values from the texture. Any memory previously bound to \fCtexref\fP is unbound.
+.PP
+Since the hardware enforces an alignment requirement on texture base addresses, \fBcudaBindTexture()\fP returns in \fC*offset\fP a byte offset that must be applied to texture fetches in order to read from the desired memory. This offset must be divided by the texel size and passed to kernels that read from the texture so they can be applied to the tex1Dfetch() function. If the device memory pointer was returned from \fBcudaMalloc()\fP, the offset is guaranteed to be 0 and NULL may be passed as the \fCoffset\fP parameter.
+.PP
+The total number of elements (or texels) in the linear address range cannot exceed \fBcudaDeviceProp::maxTexture1DLinear\fP[0]. The number of elements is computed as (\fCsize\fP / elementSize), where elementSize is determined from \fCdesc\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIoffset\fP - Offset in bytes 
+.br
+\fItexref\fP - Texture to bind 
+.br
+\fIdevPtr\fP - Memory area on device 
+.br
+\fIdesc\fP - Channel format 
+.br
+\fIsize\fP - Size of the memory area pointed to by devPtr
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidTexture\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C++ API)\fP, \fBcudaBindTexture2D (C API)\fP, \fBcudaBindTextureToArray (C API)\fP, \fBcudaUnbindTexture (C API)\fP, \fBcudaGetTextureAlignmentOffset (C API)\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaBindTexture2D (size_t * offset, const struct \fBtextureReference\fP * texref, const void * devPtr, const struct \fBcudaChannelFormatDesc\fP * desc, size_t width, size_t height, size_t pitch)"
+.PP
+Binds the 2D memory area pointed to by \fCdevPtr\fP to the texture reference \fCtexref\fP. The size of the area is constrained by \fCwidth\fP in texel units, \fCheight\fP in texel units, and \fCpitch\fP in byte units. \fCdesc\fP describes how the memory is interpreted when fetching values from the texture. Any memory previously bound to \fCtexref\fP is unbound.
+.PP
+Since the hardware enforces an alignment requirement on texture base addresses, \fBcudaBindTexture2D()\fP returns in \fC*offset\fP a byte offset that must be applied to texture fetches in order to read from the desired memory. This offset must be divided by the texel size and passed to kernels that read from the texture so they can be applied to the tex2D() function. If the device memory pointer was returned from \fBcudaMalloc()\fP, the offset is guaranteed to be 0 and NULL may be passed as the \fCoffset\fP parameter.
+.PP
+\fCwidth\fP and \fCheight\fP, which are specified in elements (or texels), cannot exceed \fBcudaDeviceProp::maxTexture2DLinear\fP[0] and \fBcudaDeviceProp::maxTexture2DLinear\fP[1] respectively. \fCpitch\fP, which is specified in bytes, cannot exceed \fBcudaDeviceProp::maxTexture2DLinear\fP[2].
+.PP
+The driver returns \fBcudaErrorInvalidValue\fP if \fCpitch\fP is not a multiple of \fBcudaDeviceProp::texturePitchAlignment\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIoffset\fP - Offset in bytes 
+.br
+\fItexref\fP - Texture reference to bind 
+.br
+\fIdevPtr\fP - 2D memory area on device 
+.br
+\fIdesc\fP - Channel format 
+.br
+\fIwidth\fP - Width in texel units 
+.br
+\fIheight\fP - Height in texel units 
+.br
+\fIpitch\fP - Pitch in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidTexture\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C API)\fP, \fBcudaBindTexture2D (C++ API)\fP, \fBcudaBindTexture2D (C++ API, inherited channel descriptor)\fP, \fBcudaBindTextureToArray (C API)\fP, \fBcudaBindTextureToArray (C API)\fP, \fBcudaGetTextureAlignmentOffset (C API)\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaBindTextureToArray (const struct \fBtextureReference\fP * texref, \fBcudaArray_const_t\fP array, const struct \fBcudaChannelFormatDesc\fP * desc)"
+.PP
+Binds the CUDA array \fCarray\fP to the texture reference \fCtexref\fP. \fCdesc\fP describes how the memory is interpreted when fetching values from the texture. Any CUDA array previously bound to \fCtexref\fP is unbound.
+.PP
+\fBParameters:\fP
+.RS 4
+\fItexref\fP - Texture to bind 
+.br
+\fIarray\fP - Memory array on device 
+.br
+\fIdesc\fP - Channel format
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidTexture\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C API)\fP, \fBcudaBindTexture2D (C API)\fP, \fBcudaBindTextureToArray (C++ API)\fP, \fBcudaUnbindTexture (C API)\fP, \fBcudaGetTextureAlignmentOffset (C API)\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaBindTextureToMipmappedArray (const struct \fBtextureReference\fP * texref, \fBcudaMipmappedArray_const_t\fP mipmappedArray, const struct \fBcudaChannelFormatDesc\fP * desc)"
+.PP
+Binds the CUDA mipmapped array \fCmipmappedArray\fP to the texture reference \fCtexref\fP. \fCdesc\fP describes how the memory is interpreted when fetching values from the texture. Any CUDA mipmapped array previously bound to \fCtexref\fP is unbound.
+.PP
+\fBParameters:\fP
+.RS 4
+\fItexref\fP - Texture to bind 
+.br
+\fImipmappedArray\fP - Memory mipmapped array on device 
+.br
+\fIdesc\fP - Channel format
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidTexture\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C API)\fP, \fBcudaBindTexture2D (C API)\fP, \fBcudaBindTextureToArray (C++ API)\fP, \fBcudaUnbindTexture (C API)\fP, \fBcudaGetTextureAlignmentOffset (C API)\fP 
+.RE
+.PP
+
+.SS "struct \fBcudaChannelFormatDesc\fP cudaCreateChannelDesc (int x, int y, int z, int w, enum \fBcudaChannelFormatKind\fP f)\fC [read]\fP"
+.PP
+Returns a channel descriptor with format \fCf\fP and number of bits of each component \fCx\fP, \fCy\fP, \fCz\fP, and \fCw\fP. The \fBcudaChannelFormatDesc\fP is defined as: 
+.PP
+.nf
+  struct cudaChannelFormatDesc {
+    int x, y, z, w;
+    enum cudaChannelFormatKind f;
+  };
+
+.fi
+.PP
+.PP
+where \fBcudaChannelFormatKind\fP is one of \fBcudaChannelFormatKindSigned\fP, \fBcudaChannelFormatKindUnsigned\fP, or \fBcudaChannelFormatKindFloat\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIx\fP - X component 
+.br
+\fIy\fP - Y component 
+.br
+\fIz\fP - Z component 
+.br
+\fIw\fP - W component 
+.br
+\fIf\fP - Channel format
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Channel descriptor with format \fCf\fP 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C++ API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C API)\fP, \fBcudaBindTexture2D (C API)\fP, \fBcudaBindTextureToArray (C API)\fP, \fBcudaUnbindTexture (C API)\fP, \fBcudaGetTextureAlignmentOffset (C API)\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaGetChannelDesc (struct \fBcudaChannelFormatDesc\fP * desc, \fBcudaArray_const_t\fP array)"
+.PP
+Returns in \fC*desc\fP the channel descriptor of the CUDA array \fCarray\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdesc\fP - Channel format 
+.br
+\fIarray\fP - Memory array on device
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C API)\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C API)\fP, \fBcudaBindTexture2D (C API)\fP, \fBcudaBindTextureToArray (C API)\fP, \fBcudaUnbindTexture (C API)\fP, \fBcudaGetTextureAlignmentOffset (C API)\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaGetTextureAlignmentOffset (size_t * offset, const struct \fBtextureReference\fP * texref)"
+.PP
+Returns in \fC*offset\fP the offset that was returned when texture reference \fCtexref\fP was bound.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIoffset\fP - Offset of texture reference in bytes 
+.br
+\fItexref\fP - Texture to get offset of
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidTexture\fP, \fBcudaErrorInvalidTextureBinding\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C API)\fP, \fBcudaBindTexture2D (C API)\fP, \fBcudaBindTextureToArray (C API)\fP, \fBcudaUnbindTexture (C API)\fP, \fBcudaGetTextureAlignmentOffset (C++ API)\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaGetTextureReference (const struct \fBtextureReference\fP ** texref, const void * symbol)"
+.PP
+Returns in \fC*texref\fP the structure associated to the texture reference defined by symbol \fCsymbol\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fItexref\fP - Texture reference associated with symbol 
+.br
+\fIsymbol\fP - Texture to get reference for
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidTexture\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+Use of a string naming a variable as the \fCsymbol\fP paramater was removed in CUDA 5.0.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureAlignmentOffset (C API)\fP, \fBcudaBindTexture (C API)\fP, \fBcudaBindTexture2D (C API)\fP, \fBcudaBindTextureToArray (C API)\fP, \fBcudaUnbindTexture (C API)\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaUnbindTexture (const struct \fBtextureReference\fP * texref)"
+.PP
+Unbinds the texture bound to \fCtexref\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fItexref\fP - Texture to unbind
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C API)\fP, \fBcudaBindTexture2D (C API)\fP, \fBcudaBindTextureToArray (C API)\fP, \fBcudaUnbindTexture (C++ API)\fP, \fBcudaGetTextureAlignmentOffset (C API)\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

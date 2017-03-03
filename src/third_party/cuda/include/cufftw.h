@@ -59,14 +59,6 @@
 #include <stdio.h>
 #include "cufft.h"
 
-#ifndef CUFFTAPI
-#ifdef _WIN32
-#define CUFFTAPI __stdcall
-#else
-#define CUFFTAPI 
-#endif
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -392,13 +384,17 @@ void CUFFTAPI fftwf_execute_dft_r2c(const fftwf_plan plan,
 void CUFFTAPI fftwf_execute_dft_c2r(const fftwf_plan plan, 
                                     fftwf_complex *idata,
                                     float *odata);
-                                   
+
+#ifdef _WIN32
+#define _CUFFTAPI(T) T CUFFTAPI
+#else
+#define _CUFFTAPI(T) CUFFTAPI T
+#endif
 
 // CUFFTW defines and supports the following support APIs
+_CUFFTAPI(void *) fftw_malloc(size_t n);
 
-void * CUFFTAPI fftw_malloc(size_t n);
-
-void * CUFFTAPI fftwf_malloc(size_t n);
+_CUFFTAPI(void *) fftwf_malloc(size_t n);
 
 void CUFFTAPI fftw_free(void *pointer);
 

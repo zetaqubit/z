@@ -247,7 +247,7 @@ main(int argc, char *argv[])
   // initialization of host data
   for (int j = 0; j < ny; j++) {
     for (int i = 0; i < nx; i++) {
-      h_X[j*nx + i] = j*nx + i;
+      h_X[j*nx + i] = (float) (j*nx + i);
     }
   }
   RUNTIME_API_CALL(cudaMalloc(&d_X, mem_size));

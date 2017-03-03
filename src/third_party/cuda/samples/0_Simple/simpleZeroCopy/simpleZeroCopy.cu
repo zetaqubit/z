@@ -118,12 +118,6 @@ int main(int argc, char **argv)
     {
         fprintf(stderr, "Device %d does not support mapping CPU host memory!\n", idev);
 
-        // cudaDeviceReset causes the driver to clean up all state. While 
-        // not mandatory in normal operation, it is good practice.  It is also 
-        // needed to ensure correct operation when the application is being 
-        // profiled. Calling cudaDeviceReset causes all profile data to be 
-        // flushed before the application exitsits
-        cudaDeviceReset();
         exit(EXIT_SUCCESS);
     }
 
@@ -131,12 +125,6 @@ int main(int argc, char **argv)
 #else
     fprintf(stderr, "CUDART version %d.%d does not support <cudaDeviceProp.canMapHostMemory> field\n", , CUDART_VERSION/1000, (CUDART_VERSION%100)/10);
 
-    // cudaDeviceReset causes the driver to clean up all state. While 
-    // not mandatory in normal operation, it is good practice.  It is also 
-    // needed to ensure correct operation when the application is being 
-    // profiled. Calling cudaDeviceReset causes all profile data to be 
-    // flushed before the application exitsits
-    cudaDeviceReset();
     exit(EXIT_SUCCESS);
 #endif
 
@@ -146,12 +134,6 @@ int main(int argc, char **argv)
     {
         fprintf(stderr, "CUDART version %d.%d does not support <cudaHostRegister> function\n", CUDART_VERSION/1000, (CUDART_VERSION%100)/10);
 
-        // cudaDeviceReset causes the driver to clean up all state. While 
-        // not mandatory in normal operation, it is good practice.  It is also 
-        // needed to ensure correct operation when the application is being 
-        // profiled. Calling cudaDeviceReset causes all profile data to be 
-        // flushed before the application exitsits
-        cudaDeviceReset();
         exit(EXIT_SUCCESS);
     }
 
@@ -254,13 +236,6 @@ int main(int argc, char **argv)
         checkCudaErrors(cudaFreeHost(c));
 #endif
     }
-
-    // cudaDeviceReset causes the driver to clean up all state. While 
-    // not mandatory in normal operation, it is good practice.  It is also 
-    // needed to ensure correct operation when the application is being 
-    // profiled. Calling cudaDeviceReset causes all profile data to be 
-    // flushed before the application exitsits
-    cudaDeviceReset();
 
     exit(errorNorm/refNorm < 1.e-6f ? EXIT_SUCCESS : EXIT_FAILURE);
 }

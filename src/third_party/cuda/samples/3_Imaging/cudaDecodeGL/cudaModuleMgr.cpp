@@ -10,7 +10,7 @@
  */
 
 /* CUmoduleManager manages loading CUBIN, initializing CUBIN kernel function,
- * initializating CUDA kernel function pointers, and obtaining global memory
+ * initializing CUDA kernel function pointers, and obtaining global memory
  * addresses (i.e. constants).
  */
 
@@ -109,8 +109,10 @@ bool modInitCTX(sCtxModule *pCtx, const char *filename, const char *exec_path, i
         {
             printf("cuModuleLoadDataEx error!\n");
         }
-
-        //      printf("> PTX JIT log:\n%s\n", jitLogBuffer);
+//      printf("> PTX JIT log:\n%s\n", jitLogBuffer);
+        delete[] jitOptions;
+        delete[] jitOptVals;
+        delete[] jitLogBuffer;
     }
     else
     {

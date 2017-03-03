@@ -45,7 +45,7 @@ class VideoParser;
 
 // A wrapper class around the CUvideosource entity and API.
 //  The CUvideosource manages video-source streams (right now
-// via openening a file containing the stream.) After successfully
+// via opening a file containing the stream.) After successfully
 // opening a video stream, one can query its properties, such as
 // video and audio compression format, frame-rate, etc.
 //
@@ -58,7 +58,7 @@ class VideoSource
         // Default constructor.
         // Parameters:
         //      pFrameQueue - A frame queue object that the decoding
-        //          thread and the main render thread use to excange
+        //          thread and the main render thread use to exchange
         //          decoded frames.
         VideoSource(const std::string sFileName, FrameQueue *pFrameQueue);
 
@@ -127,7 +127,7 @@ class VideoSource
         CUDAAPI
         HandleVideoData(void *pUserData, CUVIDSOURCEDATAPACKET *pPacket);
 
-        // Default constructor. Don't implemenent.
+        // Default constructor. Don't implement.
         VideoSource();
 
         // Copy constructor. Don't implement.

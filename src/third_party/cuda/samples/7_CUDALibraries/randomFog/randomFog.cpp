@@ -10,7 +10,7 @@
  */
 
 // OpenGL Graphics includes
-#include <GL/glew.h>
+#include <helper_gl.h>
 #if defined (__APPLE__) || defined(MACOSX)
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #include <GLUT/glut.h>
@@ -394,12 +394,6 @@ void cleanup(int code)
         g_pCheckRender = NULL;
     }
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(code);
 }
 
@@ -673,8 +667,11 @@ int main(int argc, char **argv)
             // Create a window with rendering context and everything else we need
             glutCreateWindow("Random Fog");
 
-            // initialize necessary OpenGL extensions
-            glewInit();
+            if (!isGLVersionSupported(2, 0))
+            {
+                fprintf(stderr, "This sample requires at least OpenGL 2.0\n");
+                exit(EXIT_WAIVED);
+            }
 
             // Select CUDA device with OpenGL interoperability
             findCudaGLDevice(argc, (const char **)argv);

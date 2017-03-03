@@ -1,0 +1,257 @@
+.TH "Event Management" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Event Management \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaEventCreate\fP (\fBcudaEvent_t\fP *event)"
+.br
+.RI "\fICreates an event object. \fP"
+.ti -1c
+.RI "__cudart_builtin__ \fBcudaError_t\fP \fBcudaEventCreateWithFlags\fP (\fBcudaEvent_t\fP *event, unsigned int flags)"
+.br
+.RI "\fICreates an event object with the specified flags. \fP"
+.ti -1c
+.RI "__cudart_builtin__ \fBcudaError_t\fP \fBcudaEventDestroy\fP (\fBcudaEvent_t\fP event)"
+.br
+.RI "\fIDestroys an event object. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaEventElapsedTime\fP (float *ms, \fBcudaEvent_t\fP start, \fBcudaEvent_t\fP end)"
+.br
+.RI "\fIComputes the elapsed time between events. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaEventQuery\fP (\fBcudaEvent_t\fP event)"
+.br
+.RI "\fIQueries an event's status. \fP"
+.ti -1c
+.RI "__cudart_builtin__ \fBcudaError_t\fP \fBcudaEventRecord\fP (\fBcudaEvent_t\fP event, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fIRecords an event. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaEventSynchronize\fP (\fBcudaEvent_t\fP event)"
+.br
+.RI "\fIWaits for an event to complete. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief event management functions of the CUDA runtime API (cuda_runtime_api.h)
+.PP
+This section describes the event management functions of the CUDA runtime application programming interface. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBcudaError_t\fP cudaEventCreate (\fBcudaEvent_t\fP * event)"
+.PP
+Creates an event object using \fBcudaEventDefault\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIevent\fP - Newly created event
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorLaunchFailure\fP, \fBcudaErrorMemoryAllocation\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaEventCreate (C++ API)\fP, \fBcudaEventCreateWithFlags\fP, \fBcudaEventRecord\fP, \fBcudaEventQuery\fP, \fBcudaEventSynchronize\fP, \fBcudaEventDestroy\fP, \fBcudaEventElapsedTime\fP, \fBcudaStreamWaitEvent\fP 
+.RE
+.PP
+
+.SS "__cudart_builtin__ \fBcudaError_t\fP cudaEventCreateWithFlags (\fBcudaEvent_t\fP * event, unsigned int flags)"
+.PP
+Creates an event object with the specified flags. Valid flags include:
+.IP "\(bu" 2
+\fBcudaEventDefault\fP: Default event creation flag.
+.IP "\(bu" 2
+\fBcudaEventBlockingSync\fP: Specifies that event should use blocking synchronization. A host thread that uses \fBcudaEventSynchronize()\fP to wait on an event created with this flag will block until the event actually completes.
+.IP "\(bu" 2
+\fBcudaEventDisableTiming\fP: Specifies that the created event does not need to record timing data. Events created with this flag specified and the \fBcudaEventBlockingSync\fP flag not specified will provide the best performance when used with \fBcudaStreamWaitEvent()\fP and \fBcudaEventQuery()\fP.
+.IP "\(bu" 2
+\fBcudaEventInterprocess\fP: Specifies that the created event may be used as an interprocess event by \fBcudaIpcGetEventHandle()\fP. \fBcudaEventInterprocess\fP must be specified along with \fBcudaEventDisableTiming\fP.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIevent\fP - Newly created event 
+.br
+\fIflags\fP - Flags for new event
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorLaunchFailure\fP, \fBcudaErrorMemoryAllocation\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaEventCreate (C API)\fP, \fBcudaEventSynchronize\fP, \fBcudaEventDestroy\fP, \fBcudaEventElapsedTime\fP, \fBcudaStreamWaitEvent\fP 
+.RE
+.PP
+
+.SS "__cudart_builtin__ \fBcudaError_t\fP cudaEventDestroy (\fBcudaEvent_t\fP event)"
+.PP
+Destroys the event specified by \fCevent\fP.
+.PP
+In case \fCevent\fP has been recorded but has not yet been completed when \fBcudaEventDestroy()\fP is called, the function will return immediately and the resources associated with \fCevent\fP will be released automatically once the device has completed \fCevent\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIevent\fP - Event to destroy
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorLaunchFailure\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaEventCreate (C API)\fP, \fBcudaEventCreateWithFlags\fP, \fBcudaEventQuery\fP, \fBcudaEventSynchronize\fP, \fBcudaEventRecord\fP, \fBcudaEventElapsedTime\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaEventElapsedTime (float * ms, \fBcudaEvent_t\fP start, \fBcudaEvent_t\fP end)"
+.PP
+Computes the elapsed time between two events (in milliseconds with a resolution of around 0.5 microseconds).
+.PP
+If either event was last recorded in a non-NULL stream, the resulting time may be greater than expected (even if both used the same stream handle). This happens because the \fBcudaEventRecord()\fP operation takes place asynchronously and there is no guarantee that the measured latency is actually just between the two events. Any number of other different stream operations could execute in between the two measured events, thus altering the timing in a significant way.
+.PP
+If \fBcudaEventRecord()\fP has not been called on either event, then \fBcudaErrorInvalidResourceHandle\fP is returned. If \fBcudaEventRecord()\fP has been called on both events but one or both of them has not yet been completed (that is, \fBcudaEventQuery()\fP would return \fBcudaErrorNotReady\fP on at least one of the events), \fBcudaErrorNotReady\fP is returned. If either event was created with the \fBcudaEventDisableTiming\fP flag, then this function will return \fBcudaErrorInvalidResourceHandle\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIms\fP - Time between \fCstart\fP and \fCend\fP in ms 
+.br
+\fIstart\fP - Starting event 
+.br
+\fIend\fP - Ending event
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorNotReady\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidResourceHandle\fP, \fBcudaErrorLaunchFailure\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaEventCreate (C API)\fP, \fBcudaEventCreateWithFlags\fP, \fBcudaEventQuery\fP, \fBcudaEventSynchronize\fP, \fBcudaEventDestroy\fP, \fBcudaEventRecord\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaEventQuery (\fBcudaEvent_t\fP event)"
+.PP
+Query the status of all device work preceding the most recent call to \fBcudaEventRecord()\fP (in the appropriate compute streams, as specified by the arguments to \fBcudaEventRecord()\fP).
+.PP
+If this work has successfully been completed by the device, or if \fBcudaEventRecord()\fP has not been called on \fCevent\fP, then \fBcudaSuccess\fP is returned. If this work has not yet been completed by the device then \fBcudaErrorNotReady\fP is returned.
+.PP
+For the purposes of Unified Memory, a return value of \fBcudaSuccess\fP is equivalent to having called \fBcudaEventSynchronize()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIevent\fP - Event to query
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorNotReady\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidResourceHandle\fP, \fBcudaErrorLaunchFailure\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaEventCreate (C API)\fP, \fBcudaEventCreateWithFlags\fP, \fBcudaEventRecord\fP, \fBcudaEventSynchronize\fP, \fBcudaEventDestroy\fP, \fBcudaEventElapsedTime\fP 
+.RE
+.PP
+
+.SS "__cudart_builtin__ \fBcudaError_t\fP cudaEventRecord (\fBcudaEvent_t\fP event, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Records an event. See note about NULL stream behavior. Since operation is asynchronous, \fBcudaEventQuery()\fP or \fBcudaEventSynchronize()\fP must be used to determine when the event has actually been recorded.
+.PP
+If \fBcudaEventRecord()\fP has previously been called on \fCevent\fP, then this call will overwrite any existing state in \fCevent\fP. Any subsequent calls which examine the status of \fCevent\fP will only examine the completion of this most recent call to \fBcudaEventRecord()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIevent\fP - Event to record 
+.br
+\fIstream\fP - Stream in which to record event
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidResourceHandle\fP, \fBcudaErrorLaunchFailure\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+This function uses standard  semantics. 
+.PP
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaEventCreate (C API)\fP, \fBcudaEventCreateWithFlags\fP, \fBcudaEventQuery\fP, \fBcudaEventSynchronize\fP, \fBcudaEventDestroy\fP, \fBcudaEventElapsedTime\fP, \fBcudaStreamWaitEvent\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaEventSynchronize (\fBcudaEvent_t\fP event)"
+.PP
+Wait until the completion of all device work preceding the most recent call to \fBcudaEventRecord()\fP (in the appropriate compute streams, as specified by the arguments to \fBcudaEventRecord()\fP).
+.PP
+If \fBcudaEventRecord()\fP has not been called on \fCevent\fP, \fBcudaSuccess\fP is returned immediately.
+.PP
+Waiting for an event that was created with the \fBcudaEventBlockingSync\fP flag will cause the calling CPU thread to block until the event has been completed by the device. If the \fBcudaEventBlockingSync\fP flag has not been set, then the CPU thread will busy-wait until the event has been completed by the device.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIevent\fP - Event to wait for
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidResourceHandle\fP, \fBcudaErrorLaunchFailure\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaEventCreate (C API)\fP, \fBcudaEventCreateWithFlags\fP, \fBcudaEventRecord\fP, \fBcudaEventQuery\fP, \fBcudaEventDestroy\fP, \fBcudaEventElapsedTime\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

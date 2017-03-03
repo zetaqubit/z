@@ -16,7 +16,6 @@
 // CUDA runtime
 #include <cuda_runtime.h>
 #include "nvrtc_helper.h"
-#include <cudaProfiler.h>
 
 // helper functions and utilities to work with CUDA
 #include <helper_functions.h>
@@ -317,8 +316,6 @@ int main(int argc, char **argv)
     checkCudaErrors(cuMemFree(dinfo));
 
     printf("\tShutting down...\n");
-
-    cuProfilerStop();
 
     return (error_count[0] == 0 && error_count[1] == 0 && error_count[2] == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

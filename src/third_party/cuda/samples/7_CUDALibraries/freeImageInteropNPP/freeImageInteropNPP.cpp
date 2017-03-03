@@ -143,7 +143,6 @@ main(int argc, char *argv[])
         // Min spec is SM 1.0 devices
         if (printfNPPinfo(argc, argv, 1, 0) == false) 
         {
-            cudaDeviceReset();
             exit(EXIT_SUCCESS);
         }
 
@@ -274,7 +273,6 @@ main(int argc, char *argv[])
         nppiFree(pSrcImageCUDA);
         nppiFree(pDstImageCUDA);
 
-        cudaDeviceReset();
         exit(EXIT_SUCCESS);
     }
     catch (npp::Exception &rException)

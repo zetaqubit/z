@@ -19,7 +19,11 @@
 #include <ctime>
 #include <vector>
 #include <algorithm>
+#ifdef USE_PTHREADS
+#include <pthread.h>
+#else
 #include <omp.h>
+#endif
 #include <stdlib.h>
 
 // cuBLAS
@@ -94,6 +98,20 @@ struct Task
     }
 };
 
+#ifdef USE_PTHREADS
+struct threadData_t
+{
+    int tid;
+    Task<double> *TaskListPtr;
+    cudaStream_t *streams;
+    cublasHandle_t *handles;
+    int taskSize;
+};
+
+typedef struct threadData_t threadData;
+#endif
+
+
 // simple host dgemv: assume data is in row-major format and square
 template <typename T>
 void gemv(int m, int n, T alpha, T *A, T *x, T beta, T *result)
@@ -111,6 +129,50 @@ void gemv(int m, int n, T alpha, T *A, T *x, T beta, T *result)
 }
 
 // execute a single task on either host or device depending on size
+#ifdef USE_PTHREADS
+void* execute(void* inpArgs)
+{
+    threadData *dataPtr    = (threadData *) inpArgs;
+    cudaStream_t *stream   = dataPtr->streams;
+    cublasHandle_t *handle = dataPtr->handles;
+    int tid                = dataPtr->tid;
+
+    for (int i = 0; i < dataPtr->taskSize; i++)
+    {
+        Task<double>  &t           = dataPtr->TaskListPtr[i];
+
+        if (t.size < 100)
+        {
+            // perform on host
+            printf("Task [%d], thread [%d] executing on host (%d)\n",t.id,tid,t.size);
+
+            // attach managed memory to a (dummy) stream to allow host access while the device is running
+            checkCudaErrors(cudaStreamAttachMemAsync(stream[0], t.data, 0, cudaMemAttachHost));
+            checkCudaErrors(cudaStreamAttachMemAsync(stream[0], t.vector, 0, cudaMemAttachHost));
+            checkCudaErrors(cudaStreamAttachMemAsync(stream[0], t.result, 0, cudaMemAttachHost));
+            // necessary to ensure Async cudaStreamAttachMemAsync calls have finished
+            checkCudaErrors(cudaStreamSynchronize(stream[0]));
+            // call the host operation
+            gemv(t.size, t.size, 1.0, t.data, t.vector, 0.0, t.result);
+        }
+        else
+        {
+            // perform on device
+            printf("Task [%d], thread [%d] executing on device (%d)\n",t.id,tid,t.size);
+            double one = 1.0;
+            double zero = 0.0;
+
+            // attach managed memory to my stream
+            checkCudaErrors(cublasSetStream(handle[tid+1], stream[tid+1]));
+            checkCudaErrors(cudaStreamAttachMemAsync(stream[tid+1], t.data, 0, cudaMemAttachSingle));
+            checkCudaErrors(cudaStreamAttachMemAsync(stream[tid+1], t.vector, 0, cudaMemAttachSingle));
+            checkCudaErrors(cudaStreamAttachMemAsync(stream[tid+1], t.result, 0, cudaMemAttachSingle));
+            // call the device operation
+            checkCudaErrors(cublasDgemv(handle[tid+1], CUBLAS_OP_N, t.size, t.size, &one, t.data, t.size, t.vector, 1, &zero, t.result, 1));
+        }
+    }
+}
+#else
 template <typename T>
 void execute(Task<T> &t, cublasHandle_t *handle, cudaStream_t *stream, int tid)
 {
@@ -144,6 +206,7 @@ void execute(Task<T> &t, cublasHandle_t *handle, cudaStream_t *stream, int tid)
         checkCudaErrors(cublasDgemv(handle[tid+1], CUBLAS_OP_N, t.size, t.size, &one, t.data, t.size, t.vector, 1, &zero, t.result, 1));
     }
 }
+#endif
 
 // populate a list of tasks with random sizes
 template <typename T>
@@ -169,26 +232,14 @@ int main(int argc, char **argv)
         // This samples requires being run on a device that supports Unified Memory
         fprintf(stderr, "Unified Memory not supported on this device\n");
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_WAIVED);
     }
 
-    if (device_prop.computeMode == cudaComputeModeExclusive || device_prop.computeMode == cudaComputeModeProhibited)
+    if (device_prop.computeMode == cudaComputeModeProhibited)
     {
         // This sample requires being run with a default or process exclusive mode
         fprintf(stderr, "This sample requires a device in either default or process exclusive mode\n");
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_WAIVED);
     }
 
@@ -198,7 +249,7 @@ int main(int argc, char **argv)
 
     // set number of threads
     const int nthreads = 4;
-    omp_set_num_threads(nthreads);
+
     // number of streams = number of threads
     cudaStream_t *streams = new cudaStream_t[nthreads+1];
     cublasHandle_t *handles = new cublasHandle_t[nthreads+1];
@@ -215,16 +266,54 @@ int main(int argc, char **argv)
     initialise_tasks(TaskList);
 
     printf("Executing tasks on host / device\n");
-    // run through all tasks using threads and streams
-    unsigned int i;
-    #pragma omp parallel for schedule(dynamic)
 
-    for (i=0; i<TaskList.size(); i++)
+    // run through all tasks using threads and streams
+#ifdef USE_PTHREADS
+    pthread_t threads[nthreads];
+    threadData *InputToThreads = new threadData[nthreads];
+
+    for (int i=0; i < nthreads; i++)
+    {
+        checkCudaErrors(cudaSetDevice(dev_id));
+        InputToThreads[i].tid         = i;
+        InputToThreads[i].streams     = streams;
+        InputToThreads[i].handles     = handles;
+
+        if ((TaskList.size() / nthreads) == 0)
+        {
+            InputToThreads[i].taskSize    = (TaskList.size() / nthreads);
+            InputToThreads[i].TaskListPtr = &TaskList[i*(TaskList.size() / nthreads)];
+        }
+        else
+        {
+            if (i == nthreads - 1)
+            {
+                InputToThreads[i].taskSize    = (TaskList.size() / nthreads) + (TaskList.size() % nthreads);
+                InputToThreads[i].TaskListPtr = &TaskList[i*(TaskList.size() / nthreads)+ (TaskList.size() % nthreads)];
+            }
+            else
+            {
+                InputToThreads[i].taskSize    = (TaskList.size() / nthreads);
+                InputToThreads[i].TaskListPtr = &TaskList[i*(TaskList.size() / nthreads)];
+            }
+        }
+
+        pthread_create(&threads[i], NULL, &execute, &InputToThreads[i]);
+    }
+    for (int i=0; i < nthreads; i++)
+    {
+        pthread_join(threads[i], NULL);
+    }
+#else
+    omp_set_num_threads(nthreads);
+    #pragma omp parallel for schedule(dynamic)
+    for (int i=0; i<TaskList.size(); i++)
     {
         checkCudaErrors(cudaSetDevice(dev_id));
         int tid = omp_get_thread_num();
         execute(TaskList[i], handles, streams, tid);
     }
+#endif
 
     cudaDeviceSynchronize();
 
@@ -238,12 +327,6 @@ int main(int argc, char **argv)
     // Free TaskList
     std::vector< Task<double> >().swap(TaskList);
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     printf("All Done!\n");
     exit(EXIT_SUCCESS);
 }

@@ -586,13 +586,6 @@ int main(int argc, char *argv[])
     if (cublasCreate(&handle) != CUBLAS_STATUS_SUCCESS)
     {
         fprintf(stdout, "CUBLAS initialization failed!\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 
@@ -609,13 +602,6 @@ int main(int argc, char *argv[])
     if (getDeviceVersion() < DEV_VER_DBL_SUPPORT)
     {
         fprintf(stdout, "@@@@ dgemm test WAIVED due to lack of DP support\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_WAIVED);
     }
 
@@ -664,13 +650,6 @@ int main(int argc, char *argv[])
         if (getDeviceVersion() < DEV_VER_DBL_SUPPORT)
         {
             fprintf(stdout, "@@@@ dgemm test WAIVED due to lack of DP support\n");
-
-            // cudaDeviceReset causes the driver to clean up all state. While
-            // not mandatory in normal operation, it is good practice.  It is also
-            // needed to ensure correct operation when the application is being
-            // profiled. Calling cudaDeviceReset causes all profile data to be
-            // flushed before the application exits
-            cudaDeviceReset();
             exit(EXIT_WAIVED);
         }
         else
@@ -681,13 +660,6 @@ int main(int argc, char *argv[])
     }
 
     cublasDestroy(handle);
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 
     printf("\nTest Summary\n");
     printf("%d error(s)\n", nTotalErrors);

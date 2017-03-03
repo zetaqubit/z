@@ -1,4 +1,4 @@
- /* Copyright 2009-2014 NVIDIA Corporation.  All rights reserved. 
+ /* Copyright 2009-2015 NVIDIA Corporation.  All rights reserved. 
   * 
   * NOTICE TO LICENSEE: 
   * 
@@ -114,6 +114,14 @@ nppGetMaxThreadsPerBlock(void);
 int 
 nppGetMaxThreadsPerSM(void);
 
+/**
+ * Get the maximum number of threads per SM, maximum threads per block, and number of SMs for the active GPU
+ *
+ * \return cudaSuccess for success, -1 for failure
+ */
+int 
+nppGetGpuDeviceProperties(int * pMaxThreadsPerSM, int * pMaxThreadsPerBlock, int * pNumberOfSMs);
+
 /** 
  * Get the name of the active CUDA device.
  *
@@ -132,6 +140,28 @@ nppGetGpuName(void);
  */
 cudaStream_t
 nppGetStream(void);
+
+/**
+ * Get the number of SMs on the device associated with the current NPP CUDA stream.
+ * NPP enables concurrent device tasks via a global stream state varible.
+ * The NPP stream by default is set to stream 0, i.e. non-concurrent mode.
+ * A user can set the NPP stream to any valid CUDA stream. All CUDA commands
+ * issued by NPP (e.g. kernels launched by the NPP library) are then
+ * issed to that NPP stream.  This call avoids a cudaGetDeviceProperties() call.
+ */
+unsigned int
+nppGetStreamNumSMs(void);
+
+/**
+ * Get the maximum number of threads per SM on the device associated with the current NPP CUDA stream.
+ * NPP enables concurrent device tasks via a global stream state varible.
+ * The NPP stream by default is set to stream 0, i.e. non-concurrent mode.
+ * A user can set the NPP stream to any valid CUDA stream. All CUDA commands
+ * issued by NPP (e.g. kernels launched by the NPP library) are then
+ * issed to that NPP stream.  This call avoids a cudaGetDeviceProperties() call.
+ */
+unsigned int
+nppGetStreamMaxThreadsPerSM(void);
 
 /**
  * Set the NPP CUDA stream.

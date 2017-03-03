@@ -1,4 +1,4 @@
- /* Copyright 2009-2014 NVIDIA Corporation.  All rights reserved. 
+ /* Copyright 2009-2015 NVIDIA Corporation.  All rights reserved. 
   * 
   * NOTICE TO LICENSEE: 
   * 
@@ -102,6 +102,17 @@ typedef enum
     NPPI_SMOOTH_EDGE             = (1 << 31) /**<  Smooth edge filtering. */
 } NppiInterpolationMode; 
 
+/** 
+ * Bayer Grid Position Registration.
+ */
+typedef enum 
+{
+    NPPI_BAYER_BGGR         = 0,             /**<  Default registration position. */
+    NPPI_BAYER_RGGB         = 1,
+    NPPI_BAYER_GBRG         = 2,
+    NPPI_BAYER_GRBG         = 3
+} NppiBayerGridPosition; 
+
 /**
  * Fixed filter-kernel sizes.
  */
@@ -119,6 +130,16 @@ typedef enum
     NPP_MASK_SIZE_13_X_13 = 700,
     NPP_MASK_SIZE_15_X_15 = 800
 } NppiMaskSize;
+
+/** 
+ * Differential Filter types
+ */
+ 
+typedef enum
+{
+    NPP_FILTER_SOBEL,
+    NPP_FILTER_SCHARR,
+} NppiDifferentialKernel;
 
 /**
  * Error Status Codes
@@ -228,7 +249,14 @@ typedef enum
     NPP_CUDA_3_0             = 300, /**<  Indicates that CUDA 3.0 capable device is machine's default device */
     NPP_CUDA_3_2             = 320, /**<  Indicates that CUDA 3.2 capable device is machine's default device */
     NPP_CUDA_3_5             = 350, /**<  Indicates that CUDA 3.5 capable device is machine's default device */
-    NPP_CUDA_5_0             = 500  /**<  Indicates that CUDA 5.0 or better is machine's default device */
+    NPP_CUDA_3_7             = 370, /**<  Indicates that CUDA 3.7 capable device is machine's default device */
+    NPP_CUDA_5_0             = 500, /**<  Indicates that CUDA 5.0 capable device is machine's default device */
+    NPP_CUDA_5_2             = 520, /**<  Indicates that CUDA 5.2 capable device is machine's default device */
+    NPP_CUDA_5_3             = 530, /**<  Indicates that CUDA 5.3 capable device is machine's default device */
+    NPP_CUDA_6_0             = 600, /**<  Indicates that CUDA 6.0 capable device is machine's default device */
+    NPP_CUDA_6_1             = 610, /**<  Indicates that CUDA 6.1 capable device is machine's default device */
+    NPP_CUDA_6_2             = 620, /**<  Indicates that CUDA 6.2 capable device is machine's default device */
+    NPP_CUDA_6_3             = 630  /**<  Indicates that CUDA 6.3 or better is machine's default device */
 } NppGpuComputeCapability;
 
 typedef struct 
@@ -390,8 +418,8 @@ typedef struct
  */
 typedef struct
 {
-    int x;          /**<  x-coordinate of upper left corner. */
-    int y;          /**<  y-coordinate of upper left corner. */
+    int x;          /**<  x-coordinate of upper left corner (lowest memory address). */
+    int y;          /**<  y-coordinate of upper left corner (lowest memory address). */
     int width;      /**<  Rectangle width. */
     int height;     /**<  Rectangle height. */
 } NppiRect;
@@ -476,7 +504,8 @@ typedef enum
     NPP_BORDER_NONE             = NPP_BORDER_UNDEFINED, 
     NPP_BORDER_CONSTANT         = 1,
     NPP_BORDER_REPLICATE        = 2,
-    NPP_BORDER_WRAP             = 3
+    NPP_BORDER_WRAP             = 3,
+    NPP_BORDER_MIRROR           = 4
 } NppiBorderType;
 
 
@@ -532,6 +561,13 @@ typedef enum {
     nppiDCTable,    /**<  DC Table */
     nppiACTable,    /**<  AC Table */
 } NppiHuffmanTableType;
+
+typedef enum {
+    nppiNormInf = 0, /**<  maximum */
+    nppiNormL1 = 1,  /**<  sum */
+    nppiNormL2 = 2   /**<  square root of sum of squares */
+} NppiNorm;
+
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -49,7 +49,7 @@ bool Test<Real>::operator()()
     }
 
     // This test prices a single Asian call option with European
-    // exercise, with the priced averaged arithmeticly on discrete
+    // exercise, with the priced averaged arithmetically on discrete
     // trading days (weekdays).
     AsianOption<Real> option;
     option.spot   = static_cast<Real>(40);

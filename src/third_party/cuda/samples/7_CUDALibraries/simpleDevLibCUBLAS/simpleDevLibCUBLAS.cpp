@@ -81,13 +81,6 @@ static float check_result(const float *result,
     if (fabs(ref_norm) < 1e-7)
     {
         fprintf(stderr, "!!!! Result check failed: reference norm is 0\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 
@@ -146,13 +139,6 @@ int main(int argc, char **argv)
     else
     {
         fprintf(stderr, "simpleDevLibCUBLAS examples requires Compute Capability of SM 3.5 or higher\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_WAIVED;
     }
 
@@ -161,13 +147,6 @@ int main(int argc, char **argv)
     if (status != CUBLAS_STATUS_SUCCESS)
     {
         fprintf(stderr, "!!!! CUBLAS initialization error\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
@@ -177,13 +156,6 @@ int main(int argc, char **argv)
     if (h_A == 0)
     {
         fprintf(stderr, "!!!! host memory allocation error (A)\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
@@ -192,13 +164,6 @@ int main(int argc, char **argv)
     if (h_B == 0)
     {
         fprintf(stderr, "!!!! host memory allocation error (B)\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
@@ -207,13 +172,6 @@ int main(int argc, char **argv)
     if (h_C_rnd == 0)
     {
         fprintf(stderr, "!!!! host memory allocation error (C_rnd)\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
@@ -222,13 +180,6 @@ int main(int argc, char **argv)
     if (h_C == 0)
     {
         fprintf(stderr, "!!!! host memory allocation error (C)\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
@@ -245,39 +196,18 @@ int main(int argc, char **argv)
     if (cudaMalloc((void **)&d_A, n2 * sizeof(d_A[0])) != cudaSuccess)
     {
         fprintf(stderr, "!!!! device memory allocation error (allocate A)\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
     if (cudaMalloc((void **)&d_B, n2 * sizeof(d_B[0])) != cudaSuccess)
     {
         fprintf(stderr, "!!!! device memory allocation error (allocate B)\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
     if (cudaMalloc((void **)&d_C, n2 * sizeof(d_C[0])) != cudaSuccess)
     {
         fprintf(stderr, "!!!! device memory allocation error (allocate C)\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
@@ -287,13 +217,6 @@ int main(int argc, char **argv)
     if (status != CUBLAS_STATUS_SUCCESS)
     {
         fprintf(stderr, "!!!! device access error (write A)\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
@@ -302,13 +225,6 @@ int main(int argc, char **argv)
     if (status != CUBLAS_STATUS_SUCCESS)
     {
         fprintf(stderr, "!!!! device access error (write B)\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
@@ -317,13 +233,6 @@ int main(int argc, char **argv)
     if (status != CUBLAS_STATUS_SUCCESS)
     {
         fprintf(stderr, "!!!! device access error (write C)\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
@@ -341,13 +250,6 @@ int main(int argc, char **argv)
     if (status != CUBLAS_STATUS_SUCCESS)
     {
         fprintf(stderr, "!!!! kernel execution error\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
@@ -357,13 +259,6 @@ int main(int argc, char **argv)
     if (h_C == 0)
     {
         fprintf(stderr, "!!!! host memory allocation error (C)\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
@@ -373,13 +268,6 @@ int main(int argc, char **argv)
     if (status != CUBLAS_STATUS_SUCCESS)
     {
         fprintf(stderr, "!!!! device access error (read C)\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
@@ -394,13 +282,6 @@ int main(int argc, char **argv)
         if (status != CUBLAS_STATUS_SUCCESS)
         {
             fprintf(stderr, "!!!! device access error (write C)\n");
-
-            // cudaDeviceReset causes the driver to clean up all state. While
-            // not mandatory in normal operation, it is good practice.  It is also
-            // needed to ensure correct operation when the application is being
-            // profiled. Calling cudaDeviceReset causes all profile data to be
-            // flushed before the application exits
-            cudaDeviceReset();
             return EXIT_FAILURE;
         }
 
@@ -415,13 +296,6 @@ int main(int argc, char **argv)
         if (status != CUBLAS_STATUS_SUCCESS)
         {
             fprintf(stderr, "!!!! device access error (read C)\n");
-
-            // cudaDeviceReset causes the driver to clean up all state. While
-            // not mandatory in normal operation, it is good practice.  It is also
-            // needed to ensure correct operation when the application is being
-            // profiled. Calling cudaDeviceReset causes all profile data to be
-            // flushed before the application exits
-            cudaDeviceReset();
             return EXIT_FAILURE;
         }
 
@@ -439,39 +313,18 @@ int main(int argc, char **argv)
     if (cudaFree(d_A) != cudaSuccess)
     {
         fprintf(stderr, "!!!! memory free error (A)\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
     if (cudaFree(d_B) != cudaSuccess)
     {
         fprintf(stderr, "!!!! memory free error (B)\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
     if (cudaFree(d_C) != cudaSuccess)
     {
         fprintf(stderr, "!!!! memory free error (C)\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
 
@@ -481,22 +334,8 @@ int main(int argc, char **argv)
     if (status != CUBLAS_STATUS_SUCCESS)
     {
         fprintf(stderr, "!!!! shutdown error (A)\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         return EXIT_FAILURE;
     }
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 
     bool test_result = do_device_api_test ?
                        host_api_test_ratio < 1e-6 &&

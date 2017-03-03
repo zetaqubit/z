@@ -410,7 +410,10 @@ typedef struct _CUVIDHEVCPICPARAMS
     unsigned char scaling_list_enable_flag;
     unsigned char IrapPicFlag;
     unsigned char IdrPicFlag;
-    unsigned char reserved1[16];
+    
+    unsigned char bit_depth_luma_minus8;
+    unsigned char bit_depth_chroma_minus8;
+    unsigned char reserved1[14];
     
     // pps
     unsigned char dependent_slice_segments_enabled_flag;
@@ -450,8 +453,8 @@ typedef struct _CUVIDHEVCPICPARAMS
     unsigned char num_tile_rows_minus1;
     
     unsigned short column_width_minus1[21];
-    unsigned short row_height_minus1[19];
-    unsigned int reserved3[16];
+    unsigned short row_height_minus1[21];
+    unsigned int reserved3[15];
 
     // RefPicSets
     int NumBitsForShortTermRPSInSlice;

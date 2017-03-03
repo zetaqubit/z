@@ -1,0 +1,1375 @@
+.TH "C++ API Routines" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+C++ API Routines \- C++-style interface built on top of CUDA runtime API.  
+
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "class \fB__cudaOccupancyB2DHelper\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "template<class T , int dim> \fBcudaError_t\fP \fBcudaBindSurfaceToArray\fP (const struct surface< T, dim > &surf, \fBcudaArray_const_t\fP array)"
+.br
+.RI "\fI[C++ API] Binds an array to a surface \fP"
+.ti -1c
+.RI "template<class T , int dim> \fBcudaError_t\fP \fBcudaBindSurfaceToArray\fP (const struct surface< T, dim > &surf, \fBcudaArray_const_t\fP array, const struct \fBcudaChannelFormatDesc\fP &desc)"
+.br
+.RI "\fI[C++ API] Binds an array to a surface \fP"
+.ti -1c
+.RI "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP \fBcudaBindTexture\fP (size_t *offset, const struct texture< T, dim, readMode > &tex, const void *devPtr, size_t size=UINT_MAX)"
+.br
+.RI "\fI[C++ API] Binds a memory area to a texture \fP"
+.ti -1c
+.RI "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP \fBcudaBindTexture\fP (size_t *offset, const struct texture< T, dim, readMode > &tex, const void *devPtr, const struct \fBcudaChannelFormatDesc\fP &desc, size_t size=UINT_MAX)"
+.br
+.RI "\fI[C++ API] Binds a memory area to a texture \fP"
+.ti -1c
+.RI "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP \fBcudaBindTexture2D\fP (size_t *offset, const struct texture< T, dim, readMode > &tex, const void *devPtr, size_t width, size_t height, size_t pitch)"
+.br
+.RI "\fI[C++ API] Binds a 2D memory area to a texture \fP"
+.ti -1c
+.RI "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP \fBcudaBindTexture2D\fP (size_t *offset, const struct texture< T, dim, readMode > &tex, const void *devPtr, const struct \fBcudaChannelFormatDesc\fP &desc, size_t width, size_t height, size_t pitch)"
+.br
+.RI "\fI[C++ API] Binds a 2D memory area to a texture \fP"
+.ti -1c
+.RI "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP \fBcudaBindTextureToArray\fP (const struct texture< T, dim, readMode > &tex, \fBcudaArray_const_t\fP array)"
+.br
+.RI "\fI[C++ API] Binds an array to a texture \fP"
+.ti -1c
+.RI "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP \fBcudaBindTextureToArray\fP (const struct texture< T, dim, readMode > &tex, \fBcudaArray_const_t\fP array, const struct \fBcudaChannelFormatDesc\fP &desc)"
+.br
+.RI "\fI[C++ API] Binds an array to a texture \fP"
+.ti -1c
+.RI "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP \fBcudaBindTextureToMipmappedArray\fP (const struct texture< T, dim, readMode > &tex, \fBcudaMipmappedArray_const_t\fP mipmappedArray)"
+.br
+.RI "\fI[C++ API] Binds a mipmapped array to a texture \fP"
+.ti -1c
+.RI "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP \fBcudaBindTextureToMipmappedArray\fP (const struct texture< T, dim, readMode > &tex, \fBcudaMipmappedArray_const_t\fP mipmappedArray, const struct \fBcudaChannelFormatDesc\fP &desc)"
+.br
+.RI "\fI[C++ API] Binds a mipmapped array to a texture \fP"
+.ti -1c
+.RI "template<class T > \fBcudaChannelFormatDesc\fP \fBcudaCreateChannelDesc\fP (void)"
+.br
+.RI "\fI[C++ API] Returns a channel descriptor using the specified format \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaEventCreate\fP (\fBcudaEvent_t\fP *event, unsigned int flags)"
+.br
+.RI "\fI[C++ API] Creates an event object with the specified flags \fP"
+.ti -1c
+.RI "template<class T > \fBcudaError_t\fP \fBcudaFuncGetAttributes\fP (struct \fBcudaFuncAttributes\fP *attr, T *entry)"
+.br
+.RI "\fI[C++ API] Find out attributes for a given function \fP"
+.ti -1c
+.RI "template<class T > \fBcudaError_t\fP \fBcudaFuncSetCacheConfig\fP (T *func, enum \fBcudaFuncCache\fP cacheConfig)"
+.br
+.RI "\fI[C++ API] Sets the preferred cache configuration for a device function \fP"
+.ti -1c
+.RI "template<class T > \fBcudaError_t\fP \fBcudaGetSymbolAddress\fP (void **devPtr, const T &symbol)"
+.br
+.RI "\fI[C++ API] Finds the address associated with a CUDA symbol \fP"
+.ti -1c
+.RI "template<class T > \fBcudaError_t\fP \fBcudaGetSymbolSize\fP (size_t *size, const T &symbol)"
+.br
+.RI "\fI[C++ API] Finds the size of the object associated with a CUDA symbol \fP"
+.ti -1c
+.RI "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP \fBcudaGetTextureAlignmentOffset\fP (size_t *offset, const struct texture< T, dim, readMode > &tex)"
+.br
+.RI "\fI[C++ API] Get the alignment offset of a texture \fP"
+.ti -1c
+.RI "template<class T > \fBcudaError_t\fP \fBcudaLaunch\fP (T *func)"
+.br
+.RI "\fI[C++ API] Launches a device function \fP"
+.ti -1c
+.RI "template<class T > \fBcudaError_t\fP \fBcudaLaunchKernel\fP (const T *func, dim3 gridDim, dim3 blockDim, void **args, size_t sharedMem=0, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fILaunches a device function. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMallocHost\fP (void **ptr, size_t size, unsigned int flags)"
+.br
+.RI "\fI[C++ API] Allocates page-locked memory on the host \fP"
+.ti -1c
+.RI "template<class T > \fBcudaError_t\fP \fBcudaMallocManaged\fP (T **devPtr, size_t size, unsigned int flags=cudaMemAttachGlobal)"
+.br
+.RI "\fIAllocates memory that will be automatically managed by the Unified Memory system. \fP"
+.ti -1c
+.RI "template<class T > \fBcudaError_t\fP \fBcudaMemcpyFromSymbol\fP (void *dst, const T &symbol, size_t count, size_t offset=0, enum \fBcudaMemcpyKind\fP kind=cudaMemcpyDeviceToHost)"
+.br
+.RI "\fI[C++ API] Copies data from the given symbol on the device \fP"
+.ti -1c
+.RI "template<class T > \fBcudaError_t\fP \fBcudaMemcpyFromSymbolAsync\fP (void *dst, const T &symbol, size_t count, size_t offset=0, enum \fBcudaMemcpyKind\fP kind=cudaMemcpyDeviceToHost, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fI[C++ API] Copies data from the given symbol on the device \fP"
+.ti -1c
+.RI "template<class T > \fBcudaError_t\fP \fBcudaMemcpyToSymbol\fP (const T &symbol, const void *src, size_t count, size_t offset=0, enum \fBcudaMemcpyKind\fP kind=cudaMemcpyHostToDevice)"
+.br
+.RI "\fI[C++ API] Copies data to the given symbol on the device \fP"
+.ti -1c
+.RI "template<class T > \fBcudaError_t\fP \fBcudaMemcpyToSymbolAsync\fP (const T &symbol, const void *src, size_t count, size_t offset=0, enum \fBcudaMemcpyKind\fP kind=cudaMemcpyHostToDevice, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fI[C++ API] Copies data to the given symbol on the device \fP"
+.ti -1c
+.RI "template<class T > \fBcudaError_t\fP \fBcudaOccupancyMaxActiveBlocksPerMultiprocessor\fP (int *numBlocks, T func, int blockSize, size_t dynamicSMemSize)"
+.br
+.RI "\fIReturns occupancy for a device function. \fP"
+.ti -1c
+.RI "template<class T > \fBcudaError_t\fP \fBcudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags\fP (int *numBlocks, T func, int blockSize, size_t dynamicSMemSize, unsigned int flags)"
+.br
+.RI "\fIReturns occupancy for a device function with the specified flags. \fP"
+.ti -1c
+.RI "template<class T > CUDART_DEVICE \fBcudaError_t\fP \fBcudaOccupancyMaxPotentialBlockSize\fP (int *minGridSize, int *blockSize, T func, size_t dynamicSMemSize=0, int blockSizeLimit=0)"
+.br
+.RI "\fIReturns grid and block size that achieves maximum potential occupancy for a device function. \fP"
+.ti -1c
+.RI "template<typename UnaryFunction , class T > CUDART_DEVICE \fBcudaError_t\fP \fBcudaOccupancyMaxPotentialBlockSizeVariableSMem\fP (int *minGridSize, int *blockSize, T func, UnaryFunction blockSizeToDynamicSMemSize, int blockSizeLimit=0)"
+.br
+.RI "\fIReturns grid and block size that achieves maximum potential occupancy for a device function. \fP"
+.ti -1c
+.RI "template<typename UnaryFunction , class T > CUDART_DEVICE \fBcudaError_t\fP \fBcudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags\fP (int *minGridSize, int *blockSize, T func, UnaryFunction blockSizeToDynamicSMemSize, int blockSizeLimit=0, unsigned int flags=0)"
+.br
+.RI "\fIReturns grid and block size that achieves maximum potential occupancy for a device function. \fP"
+.ti -1c
+.RI "template<class T > CUDART_DEVICE \fBcudaError_t\fP \fBcudaOccupancyMaxPotentialBlockSizeWithFlags\fP (int *minGridSize, int *blockSize, T func, size_t dynamicSMemSize=0, int blockSizeLimit=0, unsigned int flags=0)"
+.br
+.RI "\fIReturns grid and block size that achived maximum potential occupancy for a device function with the specified flags. \fP"
+.ti -1c
+.RI "template<class T > \fBcudaError_t\fP \fBcudaSetupArgument\fP (T arg, size_t offset)"
+.br
+.RI "\fI[C++ API] Configure a device launch \fP"
+.ti -1c
+.RI "template<class T > \fBcudaError_t\fP \fBcudaStreamAttachMemAsync\fP (\fBcudaStream_t\fP stream, T *devPtr, size_t length=0, unsigned int flags=cudaMemAttachSingle)"
+.br
+.RI "\fIAttach memory to a stream asynchronously. \fP"
+.ti -1c
+.RI "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP \fBcudaUnbindTexture\fP (const struct texture< T, dim, readMode > &tex)"
+.br
+.RI "\fI[C++ API] Unbinds a texture \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief C++ high level API functions of the CUDA runtime API (cuda_runtime_api.h)
+.PP
+This section describes the C++ high level API functions of the CUDA runtime application programming interface. To use these functions, your application needs to be compiled with the \fCnvcc\fP compiler. 
+.SH "Function Documentation"
+.PP 
+.SS "template<class T , int dim> \fBcudaError_t\fP cudaBindSurfaceToArray (const struct surface< T, dim > & surf, \fBcudaArray_const_t\fP array)"
+.PP
+Binds the CUDA array \fCarray\fP to the surface reference \fCsurf\fP. The channel descriptor is inherited from the CUDA array. Any CUDA array previously bound to \fCsurf\fP is unbound.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsurf\fP - Surface to bind 
+.br
+\fIarray\fP - Memory array on device
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidSurface\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaBindSurfaceToArray (C API)\fP, \fBcudaBindSurfaceToArray (C++ API)\fP 
+.RE
+.PP
+
+.SS "template<class T , int dim> \fBcudaError_t\fP cudaBindSurfaceToArray (const struct surface< T, dim > & surf, \fBcudaArray_const_t\fP array, const struct \fBcudaChannelFormatDesc\fP & desc)"
+.PP
+Binds the CUDA array \fCarray\fP to the surface reference \fCsurf\fP. \fCdesc\fP describes how the memory is interpreted when dealing with the surface. Any CUDA array previously bound to \fCsurf\fP is unbound.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsurf\fP - Surface to bind 
+.br
+\fIarray\fP - Memory array on device 
+.br
+\fIdesc\fP - Channel format
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidSurface\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaBindSurfaceToArray (C API)\fP, \fBcudaBindSurfaceToArray (C++ API, inherited channel descriptor)\fP 
+.RE
+.PP
+
+.SS "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP cudaBindTexture (size_t * offset, const struct texture< T, dim, readMode > & tex, const void * devPtr, size_t size = \fCUINT_MAX\fP)"
+.PP
+Binds \fCsize\fP bytes of the memory area pointed to by \fCdevPtr\fP to texture reference \fCtex\fP. The channel descriptor is inherited from the texture reference type. The \fCoffset\fP parameter is an optional byte offset as with the low-level \fBcudaBindTexture(size_t*, const struct textureReference*, const void*, const struct cudaChannelFormatDesc*, size_t)\fP function. Any memory previously bound to \fCtex\fP is unbound.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIoffset\fP - Offset in bytes 
+.br
+\fItex\fP - Texture to bind 
+.br
+\fIdevPtr\fP - Memory area on device 
+.br
+\fIsize\fP - Size of the memory area pointed to by devPtr
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidTexture\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C++ API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C API)\fP, \fBcudaBindTexture (C++ API)\fP, \fBcudaBindTexture2D (C++ API)\fP, \fBcudaBindTexture2D (C++ API, inherited channel descriptor)\fP, \fBcudaBindTextureToArray (C++ API)\fP, \fBcudaBindTextureToArray (C++ API, inherited channel descriptor)\fP, \fBcudaUnbindTexture (C++ API)\fP, \fBcudaGetTextureAlignmentOffset (C++ API)\fP 
+.RE
+.PP
+
+.SS "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP cudaBindTexture (size_t * offset, const struct texture< T, dim, readMode > & tex, const void * devPtr, const struct \fBcudaChannelFormatDesc\fP & desc, size_t size = \fCUINT_MAX\fP)"
+.PP
+Binds \fCsize\fP bytes of the memory area pointed to by \fCdevPtr\fP to texture reference \fCtex\fP. \fCdesc\fP describes how the memory is interpreted when fetching values from the texture. The \fCoffset\fP parameter is an optional byte offset as with the low-level \fBcudaBindTexture()\fP function. Any memory previously bound to \fCtex\fP is unbound.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIoffset\fP - Offset in bytes 
+.br
+\fItex\fP - Texture to bind 
+.br
+\fIdevPtr\fP - Memory area on device 
+.br
+\fIdesc\fP - Channel format 
+.br
+\fIsize\fP - Size of the memory area pointed to by devPtr
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidTexture\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C++ API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C API)\fP, \fBcudaBindTexture (C++ API, inherited channel descriptor)\fP, \fBcudaBindTexture2D (C++ API)\fP, \fBcudaBindTexture2D (C++ API, inherited channel descriptor)\fP, \fBcudaBindTextureToArray (C++ API)\fP, \fBcudaBindTextureToArray (C++ API, inherited channel descriptor)\fP, \fBcudaUnbindTexture (C++ API)\fP, \fBcudaGetTextureAlignmentOffset (C++ API)\fP 
+.RE
+.PP
+
+.SS "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP cudaBindTexture2D (size_t * offset, const struct texture< T, dim, readMode > & tex, const void * devPtr, size_t width, size_t height, size_t pitch)"
+.PP
+Binds the 2D memory area pointed to by \fCdevPtr\fP to the texture reference \fCtex\fP. The size of the area is constrained by \fCwidth\fP in texel units, \fCheight\fP in texel units, and \fCpitch\fP in byte units. The channel descriptor is inherited from the texture reference type. Any memory previously bound to \fCtex\fP is unbound.
+.PP
+Since the hardware enforces an alignment requirement on texture base addresses, \fBcudaBindTexture2D()\fP returns in \fC*offset\fP a byte offset that must be applied to texture fetches in order to read from the desired memory. This offset must be divided by the texel size and passed to kernels that read from the texture so they can be applied to the tex2D() function. If the device memory pointer was returned from \fBcudaMalloc()\fP, the offset is guaranteed to be 0 and NULL may be passed as the \fCoffset\fP parameter.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIoffset\fP - Offset in bytes 
+.br
+\fItex\fP - Texture reference to bind 
+.br
+\fIdevPtr\fP - 2D memory area on device 
+.br
+\fIwidth\fP - Width in texel units 
+.br
+\fIheight\fP - Height in texel units 
+.br
+\fIpitch\fP - Pitch in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidTexture\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C++ API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C++ API)\fP, \fBcudaBindTexture (C++ API, inherited channel descriptor)\fP, \fBcudaBindTexture2D (C API)\fP, \fBcudaBindTexture2D (C++ API)\fP, \fBcudaBindTextureToArray (C++ API)\fP, \fBcudaBindTextureToArray (C++ API, inherited channel descriptor)\fP, \fBcudaUnbindTexture (C++ API)\fP, \fBcudaGetTextureAlignmentOffset (C++ API)\fP 
+.RE
+.PP
+
+.SS "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP cudaBindTexture2D (size_t * offset, const struct texture< T, dim, readMode > & tex, const void * devPtr, const struct \fBcudaChannelFormatDesc\fP & desc, size_t width, size_t height, size_t pitch)"
+.PP
+Binds the 2D memory area pointed to by \fCdevPtr\fP to the texture reference \fCtex\fP. The size of the area is constrained by \fCwidth\fP in texel units, \fCheight\fP in texel units, and \fCpitch\fP in byte units. \fCdesc\fP describes how the memory is interpreted when fetching values from the texture. Any memory previously bound to \fCtex\fP is unbound.
+.PP
+Since the hardware enforces an alignment requirement on texture base addresses, \fBcudaBindTexture2D()\fP returns in \fC*offset\fP a byte offset that must be applied to texture fetches in order to read from the desired memory. This offset must be divided by the texel size and passed to kernels that read from the texture so they can be applied to the tex2D() function. If the device memory pointer was returned from \fBcudaMalloc()\fP, the offset is guaranteed to be 0 and NULL may be passed as the \fCoffset\fP parameter.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIoffset\fP - Offset in bytes 
+.br
+\fItex\fP - Texture reference to bind 
+.br
+\fIdevPtr\fP - 2D memory area on device 
+.br
+\fIdesc\fP - Channel format 
+.br
+\fIwidth\fP - Width in texel units 
+.br
+\fIheight\fP - Height in texel units 
+.br
+\fIpitch\fP - Pitch in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidTexture\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C++ API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C++ API)\fP, \fBcudaBindTexture (C++ API, inherited channel descriptor)\fP, \fBcudaBindTexture2D (C API)\fP, \fBcudaBindTexture2D (C++ API, inherited channel descriptor)\fP, \fBcudaBindTextureToArray (C++ API)\fP, \fBcudaBindTextureToArray (C++ API, inherited channel descriptor)\fP, \fBcudaUnbindTexture (C++ API)\fP, \fBcudaGetTextureAlignmentOffset (C++ API)\fP 
+.RE
+.PP
+
+.SS "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP cudaBindTextureToArray (const struct texture< T, dim, readMode > & tex, \fBcudaArray_const_t\fP array)"
+.PP
+Binds the CUDA array \fCarray\fP to the texture reference \fCtex\fP. The channel descriptor is inherited from the CUDA array. Any CUDA array previously bound to \fCtex\fP is unbound.
+.PP
+\fBParameters:\fP
+.RS 4
+\fItex\fP - Texture to bind 
+.br
+\fIarray\fP - Memory array on device
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidTexture\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C++ API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C++ API)\fP, \fBcudaBindTexture (C++ API, inherited channel descriptor)\fP, \fBcudaBindTexture2D (C++ API)\fP, \fBcudaBindTexture2D (C++ API, inherited channel descriptor)\fP, \fBcudaBindTextureToArray (C API)\fP, \fBcudaBindTextureToArray (C++ API)\fP, \fBcudaUnbindTexture (C++ API)\fP, \fBcudaGetTextureAlignmentOffset (C++ API)\fP 
+.RE
+.PP
+
+.SS "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP cudaBindTextureToArray (const struct texture< T, dim, readMode > & tex, \fBcudaArray_const_t\fP array, const struct \fBcudaChannelFormatDesc\fP & desc)"
+.PP
+Binds the CUDA array \fCarray\fP to the texture reference \fCtex\fP. \fCdesc\fP describes how the memory is interpreted when fetching values from the texture. Any CUDA array previously bound to \fCtex\fP is unbound.
+.PP
+\fBParameters:\fP
+.RS 4
+\fItex\fP - Texture to bind 
+.br
+\fIarray\fP - Memory array on device 
+.br
+\fIdesc\fP - Channel format
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidTexture\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C++ API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C++ API)\fP, \fBcudaBindTexture (C++ API, inherited channel descriptor)\fP, \fBcudaBindTexture2D (C++ API)\fP, \fBcudaBindTexture2D (C++ API, inherited channel descriptor)\fP, \fBcudaBindTextureToArray (C API)\fP, \fBcudaBindTextureToArray (C++ API, inherited channel descriptor)\fP, \fBcudaUnbindTexture (C++ API)\fP, \fBcudaGetTextureAlignmentOffset (C++ API)\fP 
+.RE
+.PP
+
+.SS "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP cudaBindTextureToMipmappedArray (const struct texture< T, dim, readMode > & tex, \fBcudaMipmappedArray_const_t\fP mipmappedArray)"
+.PP
+Binds the CUDA mipmapped array \fCmipmappedArray\fP to the texture reference \fCtex\fP. The channel descriptor is inherited from the CUDA array. Any CUDA mipmapped array previously bound to \fCtex\fP is unbound.
+.PP
+\fBParameters:\fP
+.RS 4
+\fItex\fP - Texture to bind 
+.br
+\fImipmappedArray\fP - Memory mipmapped array on device
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidTexture\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C++ API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C++ API)\fP, \fBcudaBindTexture (C++ API, inherited channel descriptor)\fP, \fBcudaBindTexture2D (C++ API)\fP, \fBcudaBindTexture2D (C++ API, inherited channel descriptor)\fP, \fBcudaBindTextureToArray (C API)\fP, \fBcudaBindTextureToArray (C++ API)\fP, \fBcudaUnbindTexture (C++ API)\fP, \fBcudaGetTextureAlignmentOffset (C++ API)\fP 
+.RE
+.PP
+
+.SS "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP cudaBindTextureToMipmappedArray (const struct texture< T, dim, readMode > & tex, \fBcudaMipmappedArray_const_t\fP mipmappedArray, const struct \fBcudaChannelFormatDesc\fP & desc)"
+.PP
+Binds the CUDA mipmapped array \fCmipmappedArray\fP to the texture reference \fCtex\fP. \fCdesc\fP describes how the memory is interpreted when fetching values from the texture. Any CUDA mipmapped array previously bound to \fCtex\fP is unbound.
+.PP
+\fBParameters:\fP
+.RS 4
+\fItex\fP - Texture to bind 
+.br
+\fImipmappedArray\fP - Memory mipmapped array on device 
+.br
+\fIdesc\fP - Channel format
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidTexture\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C++ API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C++ API)\fP, \fBcudaBindTexture (C++ API, inherited channel descriptor)\fP, \fBcudaBindTexture2D (C++ API)\fP, \fBcudaBindTexture2D (C++ API, inherited channel descriptor)\fP, \fBcudaBindTextureToArray (C API)\fP, \fBcudaBindTextureToArray (C++ API, inherited channel descriptor)\fP, \fBcudaUnbindTexture (C++ API)\fP, \fBcudaGetTextureAlignmentOffset (C++ API)\fP 
+.RE
+.PP
+
+.SS "template<class T > \fBcudaChannelFormatDesc\fP cudaCreateChannelDesc (void)"
+.PP
+Returns a channel descriptor with format \fCf\fP and number of bits of each component \fCx\fP, \fCy\fP, \fCz\fP, and \fCw\fP. The \fBcudaChannelFormatDesc\fP is defined as: 
+.PP
+.nf
+  struct cudaChannelFormatDesc {
+    int x, y, z, w;
+    enum cudaChannelFormatKind f;
+  };
+
+.fi
+.PP
+.PP
+where \fBcudaChannelFormatKind\fP is one of \fBcudaChannelFormatKindSigned\fP, \fBcudaChannelFormatKindUnsigned\fP, or \fBcudaChannelFormatKindFloat\fP.
+.PP
+\fBReturns:\fP
+.RS 4
+Channel descriptor with format \fCf\fP 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (Low level)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (High level)\fP, \fBcudaBindTexture (High level, inherited channel descriptor)\fP, \fBcudaBindTexture2D (High level)\fP, \fBcudaBindTextureToArray (High level)\fP, \fBcudaBindTextureToArray (High level, inherited channel descriptor)\fP, \fBcudaUnbindTexture (High level)\fP, \fBcudaGetTextureAlignmentOffset (High level)\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaEventCreate (\fBcudaEvent_t\fP * event, unsigned int flags)"
+.PP
+Creates an event object with the specified flags. Valid flags include:
+.IP "\(bu" 2
+\fBcudaEventDefault\fP: Default event creation flag.
+.IP "\(bu" 2
+\fBcudaEventBlockingSync\fP: Specifies that event should use blocking synchronization. A host thread that uses \fBcudaEventSynchronize()\fP to wait on an event created with this flag will block until the event actually completes.
+.IP "\(bu" 2
+\fBcudaEventDisableTiming\fP: Specifies that the created event does not need to record timing data. Events created with this flag specified and the \fBcudaEventBlockingSync\fP flag not specified will provide the best performance when used with \fBcudaStreamWaitEvent()\fP and \fBcudaEventQuery()\fP.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIevent\fP - Newly created event 
+.br
+\fIflags\fP - Flags for new event
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorLaunchFailure\fP, \fBcudaErrorMemoryAllocation\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaEventCreate (C API)\fP, \fBcudaEventCreateWithFlags\fP, \fBcudaEventRecord\fP, \fBcudaEventQuery\fP, \fBcudaEventSynchronize\fP, \fBcudaEventDestroy\fP, \fBcudaEventElapsedTime\fP, \fBcudaStreamWaitEvent\fP 
+.RE
+.PP
+
+.SS "template<class T > \fBcudaError_t\fP cudaFuncGetAttributes (struct \fBcudaFuncAttributes\fP * attr, T * entry)"
+.PP
+This function obtains the attributes of a function specified via \fCentry\fP. The parameter \fCentry\fP must be a pointer to a function that executes on the device. The parameter specified by \fCentry\fP must be declared as a \fC__global__\fP function. The fetched attributes are placed in \fCattr\fP. If the specified function does not exist, then \fBcudaErrorInvalidDeviceFunction\fP is returned.
+.PP
+Note that some function attributes such as \fBmaxThreadsPerBlock\fP may vary based on the device that is currently being used.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIattr\fP - Return pointer to function's attributes 
+.br
+\fIentry\fP - Function to get attributes of
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidDeviceFunction\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBcudaLaunchKernel (C++ API)\fP, \fBcudaFuncSetCacheConfig (C++ API)\fP, \fBcudaFuncGetAttributes (C API)\fP, \fBcudaSetDoubleForDevice\fP, \fBcudaSetDoubleForHost\fP, \fBcudaSetupArgument (C++ API)\fP 
+.SS "template<class T > \fBcudaError_t\fP cudaFuncSetCacheConfig (T * func, enum \fBcudaFuncCache\fP cacheConfig)"
+.PP
+On devices where the L1 cache and shared memory use the same hardware resources, this sets through \fCcacheConfig\fP the preferred cache configuration for the function specified via \fCfunc\fP. This is only a preference. The runtime will use the requested configuration if possible, but it is free to choose a different configuration if required to execute \fCfunc\fP.
+.PP
+\fCfunc\fP must be a pointer to a function that executes on the device. The parameter specified by \fCfunc\fP must be declared as a \fC__global__\fP function. If the specified function does not exist, then \fBcudaErrorInvalidDeviceFunction\fP is returned.
+.PP
+This setting does nothing on devices where the size of the L1 cache and shared memory are fixed.
+.PP
+Launching a kernel with a different preference than the most recent preference setting may insert a device-side synchronization point.
+.PP
+The supported cache configurations are:
+.IP "\(bu" 2
+\fBcudaFuncCachePreferNone\fP: no preference for shared memory or L1 (default)
+.IP "\(bu" 2
+\fBcudaFuncCachePreferShared\fP: prefer larger shared memory and smaller L1 cache
+.IP "\(bu" 2
+\fBcudaFuncCachePreferL1\fP: prefer larger L1 cache and smaller shared memory
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfunc\fP - device function pointer 
+.br
+\fIcacheConfig\fP - Requested cache configuration
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidDeviceFunction\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBcudaLaunchKernel (C++ API)\fP, \fBcudaFuncSetCacheConfig (C API)\fP, \fBcudaFuncGetAttributes (C++ API)\fP, \fBcudaSetDoubleForDevice\fP, \fBcudaSetDoubleForHost\fP, \fBcudaSetupArgument (C++ API)\fP, \fBcudaThreadGetCacheConfig\fP, \fBcudaThreadSetCacheConfig\fP 
+.SS "template<class T > \fBcudaError_t\fP cudaGetSymbolAddress (void ** devPtr, const T & symbol)"
+.PP
+Returns in \fC*devPtr\fP the address of symbol \fCsymbol\fP on the device. \fCsymbol\fP can either be a variable that resides in global or constant memory space. If \fCsymbol\fP cannot be found, or if \fCsymbol\fP is not declared in the global or constant memory space, \fC*devPtr\fP is unchanged and the error \fBcudaErrorInvalidSymbol\fP is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevPtr\fP - Return device pointer associated with symbol 
+.br
+\fIsymbol\fP - Device symbol reference
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidSymbol\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaGetSymbolAddress (C API)\fP, \fBcudaGetSymbolSize (C++ API)\fP 
+.RE
+.PP
+
+.SS "template<class T > \fBcudaError_t\fP cudaGetSymbolSize (size_t * size, const T & symbol)"
+.PP
+Returns in \fC*size\fP the size of symbol \fCsymbol\fP. \fCsymbol\fP must be a variable that resides in global or constant memory space. If \fCsymbol\fP cannot be found, or if \fCsymbol\fP is not declared in global or constant memory space, \fC*size\fP is unchanged and the error \fBcudaErrorInvalidSymbol\fP is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsize\fP - Size of object associated with symbol 
+.br
+\fIsymbol\fP - Device symbol reference
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidSymbol\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaGetSymbolAddress (C++ API)\fP, \fBcudaGetSymbolSize (C API)\fP 
+.RE
+.PP
+
+.SS "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP cudaGetTextureAlignmentOffset (size_t * offset, const struct texture< T, dim, readMode > & tex)"
+.PP
+Returns in \fC*offset\fP the offset that was returned when texture reference \fCtex\fP was bound.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIoffset\fP - Offset of texture reference in bytes 
+.br
+\fItex\fP - Texture to get offset of
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidTexture\fP, \fBcudaErrorInvalidTextureBinding\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C++ API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C++ API)\fP, \fBcudaBindTexture (C++ API, inherited channel descriptor)\fP, \fBcudaBindTexture2D (C++ API)\fP, \fBcudaBindTexture2D (C++ API, inherited channel descriptor)\fP, \fBcudaBindTextureToArray (C++ API)\fP, \fBcudaBindTextureToArray (C++ API, inherited channel descriptor)\fP, \fBcudaUnbindTexture (C++ API)\fP, \fBcudaGetTextureAlignmentOffset (C API)\fP 
+.RE
+.PP
+
+.SS "template<class T > \fBcudaError_t\fP cudaLaunch (T * func)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 7.0
+.RE
+.PP
+Launches the function \fCfunc\fP on the device. The parameter \fCfunc\fP must be a function that executes on the device. The parameter specified by \fCfunc\fP must be declared as a \fC__global__\fP function. \fBcudaLaunch()\fP must be preceded by a call to \fBcudaConfigureCall()\fP since it pops the data that was pushed by \fBcudaConfigureCall()\fP from the execution stack.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfunc\fP - Device function pointer to execute
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidDeviceFunction\fP, \fBcudaErrorInvalidConfiguration\fP, \fBcudaErrorLaunchFailure\fP, \fBcudaErrorLaunchTimeout\fP, \fBcudaErrorLaunchOutOfResources\fP, \fBcudaErrorSharedObjectSymbolNotFound\fP, \fBcudaErrorSharedObjectInitFailed\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBcudaLaunchKernel (C++ API)\fP, \fBcudaFuncSetCacheConfig (C++ API)\fP, \fBcudaFuncGetAttributes (C++ API)\fP, \fBcudaLaunch (C API)\fP, \fBcudaSetDoubleForDevice\fP, \fBcudaSetDoubleForHost\fP, \fBcudaSetupArgument (C++ API)\fP, \fBcudaThreadGetCacheConfig\fP, \fBcudaThreadSetCacheConfig\fP 
+.SS "template<class T > \fBcudaError_t\fP cudaLaunchKernel (const T * func, dim3 gridDim, dim3 blockDim, void ** args, size_t sharedMem = \fC0\fP, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+The function invokes kernel \fCfunc\fP on \fCgridDim\fP (\fCgridDim.x\fP × \fCgridDim.y\fP × \fCgridDim.z\fP) grid of blocks. Each block contains \fCblockDim\fP (\fCblockDim.x\fP × \fCblockDim.y\fP × \fCblockDim.z\fP) threads.
+.PP
+If the kernel has N parameters the \fCargs\fP should point to array of N pointers. Each pointer, from \fCargs[0]\fP to \fCargs[N - 1]\fP, point to the region of memory from which the actual parameter will be copied.
+.PP
+\fCsharedMem\fP sets the amount of dynamic shared memory that will be available to each thread block.
+.PP
+\fCstream\fP specifies a stream the invocation is associated to.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfunc\fP - Device function symbol 
+.br
+\fIgridDim\fP - Grid dimentions 
+.br
+\fIblockDim\fP - Block dimentions 
+.br
+\fIargs\fP - Arguments 
+.br
+\fIsharedMem\fP - Shared memory (defaults to 0) 
+.br
+\fIstream\fP - Stream identifier (defaults to NULL)
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidDeviceFunction\fP, \fBcudaErrorInvalidConfiguration\fP, \fBcudaErrorLaunchFailure\fP, \fBcudaErrorLaunchTimeout\fP, \fBcudaErrorLaunchOutOfResources\fP, \fBcudaErrorSharedObjectInitFailed\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBcudaLaunchKernel (C API)\fP 
+.SS "\fBcudaError_t\fP cudaMallocHost (void ** ptr, size_t size, unsigned int flags)"
+.PP
+Allocates \fCsize\fP bytes of host memory that is page-locked and accessible to the device. The driver tracks the virtual memory ranges allocated with this function and automatically accelerates calls to functions such as \fBcudaMemcpy()\fP. Since the memory can be accessed directly by the device, it can be read or written with much higher bandwidth than pageable memory obtained with functions such as malloc(). Allocating excessive amounts of pinned memory may degrade system performance, since it reduces the amount of memory available to the system for paging. As a result, this function is best used sparingly to allocate staging areas for data exchange between host and device.
+.PP
+The \fCflags\fP parameter enables different options to be specified that affect the allocation, as follows.
+.IP "\(bu" 2
+\fBcudaHostAllocDefault\fP: This flag's value is defined to be 0.
+.IP "\(bu" 2
+\fBcudaHostAllocPortable\fP: The memory returned by this call will be considered as pinned memory by all CUDA contexts, not just the one that performed the allocation.
+.IP "\(bu" 2
+\fBcudaHostAllocMapped\fP: Maps the allocation into the CUDA address space. The device pointer to the memory may be obtained by calling \fBcudaHostGetDevicePointer()\fP.
+.IP "\(bu" 2
+\fBcudaHostAllocWriteCombined\fP: Allocates the memory as write-combined (WC). WC memory can be transferred across the PCI Express bus more quickly on some system configurations, but cannot be read efficiently by most CPUs. WC memory is a good option for buffers that will be written by the CPU and read by the device via mapped pinned memory or host->device transfers.
+.PP
+.PP
+All of these flags are orthogonal to one another: a developer may allocate memory that is portable, mapped and/or write-combined with no restrictions.
+.PP
+\fBcudaSetDeviceFlags()\fP must have been called with the \fBcudaDeviceMapHost\fP flag in order for the \fBcudaHostAllocMapped\fP flag to have any effect.
+.PP
+The \fBcudaHostAllocMapped\fP flag may be specified on CUDA contexts for devices that do not support mapped pinned memory. The failure is deferred to \fBcudaHostGetDevicePointer()\fP because the memory may be mapped into other CUDA contexts via the \fBcudaHostAllocPortable\fP flag.
+.PP
+Memory allocated by this function must be freed with \fBcudaFreeHost()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIptr\fP - Device pointer to allocated memory 
+.br
+\fIsize\fP - Requested allocation size in bytes 
+.br
+\fIflags\fP - Requested properties of allocated memory
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorMemoryAllocation\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaSetDeviceFlags\fP, \fBcudaMallocHost (C API)\fP, \fBcudaFreeHost\fP, \fBcudaHostAlloc\fP 
+.RE
+.PP
+
+.SS "template<class T > \fBcudaError_t\fP cudaMallocManaged (T ** devPtr, size_t size, unsigned int flags = \fCcudaMemAttachGlobal\fP)"
+.PP
+Allocates \fCsize\fP bytes of managed memory on the device and returns in \fC*devPtr\fP a pointer to the allocated memory. If the device doesn't support allocating managed memory, \fBcudaErrorNotSupported\fP is returned. Support for managed memory can be queried using the device attribute \fBcudaDevAttrManagedMemory\fP. The allocated memory is suitably aligned for any kind of variable. The memory is not cleared. If \fCsize\fP is 0, \fBcudaMallocManaged\fP returns \fBcudaErrorInvalidValue\fP. The pointer is valid on the CPU and on all GPUs in the system that support managed memory. All accesses to this pointer must obey the Unified Memory programming model.
+.PP
+\fCflags\fP specifies the default stream association for this allocation. \fCflags\fP must be one of \fBcudaMemAttachGlobal\fP or \fBcudaMemAttachHost\fP. The default value for \fCflags\fP is \fBcudaMemAttachGlobal\fP. If \fBcudaMemAttachGlobal\fP is specified, then this memory is accessible from any stream on any device. If \fBcudaMemAttachHost\fP is specified, then the allocation should not be accessed from devices that have a zero value for the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP; an explicit call to \fBcudaStreamAttachMemAsync\fP will be required to enable access on such devices.
+.PP
+If the association is later changed via \fBcudaStreamAttachMemAsync\fP to a single stream, the default association, as specifed during \fBcudaMallocManaged\fP, is restored when that stream is destroyed. For __managed__ variables, the default association is always \fBcudaMemAttachGlobal\fP. Note that destroying a stream is an asynchronous operation, and as a result, the change to default association won't happen until all work in the stream has completed.
+.PP
+Memory allocated with \fBcudaMallocManaged\fP should be released with \fBcudaFree\fP.
+.PP
+Device memory oversubscription is possible for GPUs that have a non-zero value for the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP. Managed memory on such GPUs may be evicted from device memory to host memory at any time by the Unified Memory driver in order to make room for other allocations.
+.PP
+In a multi-GPU system where all GPUs have a non-zero value for the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP, managed memory may not be populated when this API returns and instead may be populated on access. In such systems, managed memory can migrate to any processor's memory at any time. The Unified Memory driver will employ heuristics to maintain data locality and prevent excessive page faults to the extent possible. The application can also guide the driver about memory usage patterns via \fBcudaMemAdvise\fP. The application can also explicitly migrate memory to a desired processor's memory via \fBcudaMemPrefetchAsync\fP.
+.PP
+In a multi-GPU system where all of the GPUs have a zero value for the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP and all the GPUs have peer-to-peer support with each other, the physical storage for managed memory is created on the GPU which is active at the time \fBcudaMallocManaged\fP is called. All other GPUs will reference the data at reduced bandwidth via peer mappings over the PCIe bus. The Unified Memory driver does not migrate memory among such GPUs.
+.PP
+In a multi-GPU system where not all GPUs have peer-to-peer support with each other and where the value of the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP is zero for at least one of those GPUs, the location chosen for physical storage of managed memory is system-dependent.
+.IP "\(bu" 2
+On Linux, the location chosen will be device memory as long as the current set of active contexts are on devices that either have peer-to-peer support with each other or have a non-zero value for the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP. If there is an active context on a GPU that does not have a non-zero value for that device attribute and it does not have peer-to-peer support with the other devices that have active contexts on them, then the location for physical storage will be 'zero-copy' or host memory. Note that this means that managed memory that is located in device memory is migrated to host memory if a new context is created on a GPU that doesn't have a non-zero value for the device attribute and does not support peer-to-peer with at least one of the other devices that has an active context. This in turn implies that context creation may fail if there is insufficient host memory to migrate all managed allocations.
+.IP "\(bu" 2
+On Windows, the physical storage is always created in 'zero-copy' or host memory. All GPUs will reference the data at reduced bandwidth over the PCIe bus. In these circumstances, use of the environment variable CUDA_VISIBLE_DEVICES is recommended to restrict CUDA to only use those GPUs that have peer-to-peer support. Alternatively, users can also set CUDA_MANAGED_FORCE_DEVICE_ALLOC to a non-zero value to force the driver to always use device memory for physical storage. When this environment variable is set to a non-zero value, all devices used in that process that support managed memory have to be peer-to-peer compatible with each other. The error \fBcudaErrorInvalidDevice\fP will be returned if a device that supports managed memory is used and it is not peer-to-peer compatible with any of the other managed memory supporting devices that were previously used in that process, even if \fBcudaDeviceReset\fP has been called on those devices. These environment variables are described in the CUDA programming guide under the 'CUDA environment variables' section.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevPtr\fP - Pointer to allocated device memory 
+.br
+\fIsize\fP - Requested allocation size in bytes 
+.br
+\fIflags\fP - Must be either \fBcudaMemAttachGlobal\fP or \fBcudaMemAttachHost\fP (defaults to \fBcudaMemAttachGlobal\fP)
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorMemoryAllocation\fP \fBcudaErrorNotSupported\fP \fBcudaErrorInvalidValue\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMallocPitch\fP, \fBcudaFree\fP, \fBcudaMallocArray\fP, \fBcudaFreeArray\fP, \fBcudaMalloc3D\fP, \fBcudaMalloc3DArray\fP, \fBcudaMallocHost (C API)\fP, \fBcudaFreeHost\fP, \fBcudaHostAlloc\fP, \fBcudaDeviceGetAttribute\fP, \fBcudaStreamAttachMemAsync\fP 
+.RE
+.PP
+
+.SS "template<class T > \fBcudaError_t\fP cudaMemcpyFromSymbol (void * dst, const T & symbol, size_t count, size_t offset = \fC0\fP, enum \fBcudaMemcpyKind\fP kind = \fCcudaMemcpyDeviceToHost\fP)"
+.PP
+Copies \fCcount\fP bytes from the memory area \fCoffset\fP bytes from the start of symbol \fCsymbol\fP to the memory area pointed to by \fCdst\fP. The memory areas may not overlap. \fCsymbol\fP is a variable that resides in global or constant memory space. \fCkind\fP can be either \fBcudaMemcpyDeviceToHost\fP or \fBcudaMemcpyDeviceToDevice\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIsymbol\fP - Device symbol reference 
+.br
+\fIcount\fP - Size in bytes to copy 
+.br
+\fIoffset\fP - Offset from start of symbol in bytes 
+.br
+\fIkind\fP - Type of transfer
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidSymbol\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+Use of a string naming a variable as the \fCsymbol\fP paramater was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "template<class T > \fBcudaError_t\fP cudaMemcpyFromSymbolAsync (void * dst, const T & symbol, size_t count, size_t offset = \fC0\fP, enum \fBcudaMemcpyKind\fP kind = \fCcudaMemcpyDeviceToHost\fP, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Copies \fCcount\fP bytes from the memory area \fCoffset\fP bytes from the start of symbol \fCsymbol\fP to the memory area pointed to by \fCdst\fP. The memory areas may not overlap. \fCsymbol\fP is a variable that resides in global or constant memory space. \fCkind\fP can be either \fBcudaMemcpyDeviceToHost\fP or \fBcudaMemcpyDeviceToDevice\fP.
+.PP
+\fBcudaMemcpyFromSymbolAsync()\fP is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero \fCstream\fP argument. If \fCkind\fP is \fBcudaMemcpyDeviceToHost\fP and \fCstream\fP is non-zero, the copy may overlap with operations in other streams.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIsymbol\fP - Device symbol reference 
+.br
+\fIcount\fP - Size in bytes to copy 
+.br
+\fIoffset\fP - Offset from start of symbol in bytes 
+.br
+\fIkind\fP - Type of transfer 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidSymbol\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+Use of a string naming a variable as the \fCsymbol\fP paramater was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP 
+.RE
+.PP
+
+.SS "template<class T > \fBcudaError_t\fP cudaMemcpyToSymbol (const T & symbol, const void * src, size_t count, size_t offset = \fC0\fP, enum \fBcudaMemcpyKind\fP kind = \fCcudaMemcpyHostToDevice\fP)"
+.PP
+Copies \fCcount\fP bytes from the memory area pointed to by \fCsrc\fP to the memory area \fCoffset\fP bytes from the start of symbol \fCsymbol\fP. The memory areas may not overlap. \fCsymbol\fP is a variable that resides in global or constant memory space. \fCkind\fP can be either \fBcudaMemcpyHostToDevice\fP or \fBcudaMemcpyDeviceToDevice\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsymbol\fP - Device symbol reference 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIcount\fP - Size in bytes to copy 
+.br
+\fIoffset\fP - Offset from start of symbol in bytes 
+.br
+\fIkind\fP - Type of transfer
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidSymbol\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+Use of a string naming a variable as the \fCsymbol\fP paramater was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "template<class T > \fBcudaError_t\fP cudaMemcpyToSymbolAsync (const T & symbol, const void * src, size_t count, size_t offset = \fC0\fP, enum \fBcudaMemcpyKind\fP kind = \fCcudaMemcpyHostToDevice\fP, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Copies \fCcount\fP bytes from the memory area pointed to by \fCsrc\fP to the memory area \fCoffset\fP bytes from the start of symbol \fCsymbol\fP. The memory areas may not overlap. \fCsymbol\fP is a variable that resides in global or constant memory space. \fCkind\fP can be either \fBcudaMemcpyHostToDevice\fP or \fBcudaMemcpyDeviceToDevice\fP.
+.PP
+\fBcudaMemcpyToSymbolAsync()\fP is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero \fCstream\fP argument. If \fCkind\fP is \fBcudaMemcpyHostToDevice\fP and \fCstream\fP is non-zero, the copy may overlap with operations in other streams.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsymbol\fP - Device symbol reference 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIcount\fP - Size in bytes to copy 
+.br
+\fIoffset\fP - Offset from start of symbol in bytes 
+.br
+\fIkind\fP - Type of transfer 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidSymbol\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+Use of a string naming a variable as the \fCsymbol\fP paramater was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "template<class T > \fBcudaError_t\fP cudaOccupancyMaxActiveBlocksPerMultiprocessor (int * numBlocks, T func, int blockSize, size_t dynamicSMemSize)"
+.PP
+Returns in \fC*numBlocks\fP the maximum number of active blocks per streaming multiprocessor for the device function.
+.PP
+\fBParameters:\fP
+.RS 4
+\fInumBlocks\fP - Returned occupancy 
+.br
+\fIfunc\fP - Kernel function for which occupancy is calulated 
+.br
+\fIblockSize\fP - Block size the kernel is intended to be launched with 
+.br
+\fIdynamicSMemSize\fP - Per-block dynamic shared memory usage intended, in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorCudartUnloading\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidDevice\fP, \fBcudaErrorInvalidDeviceFunction\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorUnknown\fP, 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags\fP 
+.PP
+\fBcudaOccupancyMaxPotentialBlockSize\fP 
+.PP
+\fBcudaOccupancyMaxPotentialBlockSizeWithFlags\fP 
+.PP
+\fBcudaOccupancyMaxPotentialBlockSizeVariableSMem\fP 
+.PP
+\fBcudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags\fP 
+.RE
+.PP
+
+.SS "template<class T > \fBcudaError_t\fP cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags (int * numBlocks, T func, int blockSize, size_t dynamicSMemSize, unsigned int flags)"
+.PP
+Returns in \fC*numBlocks\fP the maximum number of active blocks per streaming multiprocessor for the device function.
+.PP
+The \fCflags\fP parameter controls how special cases are handled. Valid flags include:
+.PP
+.IP "\(bu" 2
+\fBcudaOccupancyDefault\fP: keeps the default behavior as \fBcudaOccupancyMaxActiveBlocksPerMultiprocessor\fP
+.PP
+.PP
+.IP "\(bu" 2
+\fBcudaOccupancyDisableCachingOverride\fP: suppresses the default behavior on platform where global caching affects occupancy. On such platforms, if caching is enabled, but per-block SM resource usage would result in zero occupancy, the occupancy calculator will calculate the occupancy as if caching is disabled. Setting this flag makes the occupancy calculator to return 0 in such cases. More information can be found about this feature in the 'Unified L1/Texture Cache' section of the Maxwell tuning guide.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fInumBlocks\fP - Returned occupancy 
+.br
+\fIfunc\fP - Kernel function for which occupancy is calulated 
+.br
+\fIblockSize\fP - Block size the kernel is intended to be launched with 
+.br
+\fIdynamicSMemSize\fP - Per-block dynamic shared memory usage intended, in bytes 
+.br
+\fIflags\fP - Requested behavior for the occupancy calculator
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorCudartUnloading\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidDevice\fP, \fBcudaErrorInvalidDeviceFunction\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorUnknown\fP, 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaOccupancyMaxActiveBlocksPerMultiprocessor\fP 
+.PP
+\fBcudaOccupancyMaxPotentialBlockSize\fP 
+.PP
+\fBcudaOccupancyMaxPotentialBlockSizeWithFlags\fP 
+.PP
+\fBcudaOccupancyMaxPotentialBlockSizeVariableSMem\fP 
+.PP
+\fBcudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags\fP 
+.RE
+.PP
+
+.SS "template<class T > CUDART_DEVICE \fBcudaError_t\fP cudaOccupancyMaxPotentialBlockSize (int * minGridSize, int * blockSize, T func, size_t dynamicSMemSize = \fC0\fP, int blockSizeLimit = \fC0\fP)"
+.PP
+Returns in \fC*minGridSize\fP and \fC*blocksize\fP a suggested grid / block size pair that achieves the best potential occupancy (i.e. the maximum number of active warps with the smallest number of blocks).
+.PP
+Use 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaOccupancyMaxPotentialBlockSizeVariableSMem\fP if the amount of per-block dynamic shared memory changes with different block sizes.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIminGridSize\fP - Returned minimum grid size needed to achieve the best potential occupancy 
+.br
+\fIblockSize\fP - Returned block size 
+.br
+\fIfunc\fP - Device function symbol 
+.br
+\fIdynamicSMemSize\fP - Per-block dynamic shared memory usage intended, in bytes 
+.br
+\fIblockSizeLimit\fP - The maximum block size \fCfunc\fP is designed to work with. 0 means no limit.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorCudartUnloading\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidDevice\fP, \fBcudaErrorInvalidDeviceFunction\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorUnknown\fP, 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaOccupancyMaxPotentialBlockSizeWithFlags\fP 
+.PP
+\fBcudaOccupancyMaxActiveBlocksPerMultiprocessor\fP 
+.PP
+\fBcudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags\fP 
+.PP
+\fBcudaOccupancyMaxPotentialBlockSizeVariableSMem\fP 
+.PP
+\fBcudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags\fP 
+.RE
+.PP
+
+.SS "template<typename UnaryFunction , class T > CUDART_DEVICE \fBcudaError_t\fP cudaOccupancyMaxPotentialBlockSizeVariableSMem (int * minGridSize, int * blockSize, T func, UnaryFunction blockSizeToDynamicSMemSize, int blockSizeLimit = \fC0\fP)"
+.PP
+Returns in \fC*minGridSize\fP and \fC*blocksize\fP a suggested grid / block size pair that achieves the best potential occupancy (i.e. the maximum number of active warps with the smallest number of blocks).
+.PP
+\fBParameters:\fP
+.RS 4
+\fIminGridSize\fP - Returned minimum grid size needed to achieve the best potential occupancy 
+.br
+\fIblockSize\fP - Returned block size 
+.br
+\fIfunc\fP - Device function symbol 
+.br
+\fIblockSizeToDynamicSMemSize\fP - A unary function / functor that takes block size, and returns the size, in bytes, of dynamic shared memory needed for a block 
+.br
+\fIblockSizeLimit\fP - The maximum block size \fCfunc\fP is designed to work with. 0 means no limit.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorCudartUnloading\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidDevice\fP, \fBcudaErrorInvalidDeviceFunction\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorUnknown\fP, 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags\fP 
+.PP
+\fBcudaOccupancyMaxActiveBlocksPerMultiprocessor\fP 
+.PP
+\fBcudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags\fP 
+.PP
+\fBcudaOccupancyMaxPotentialBlockSize\fP 
+.PP
+\fBcudaOccupancyMaxPotentialBlockSizeWithFlags\fP 
+.RE
+.PP
+
+.SS "template<typename UnaryFunction , class T > CUDART_DEVICE \fBcudaError_t\fP cudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags (int * minGridSize, int * blockSize, T func, UnaryFunction blockSizeToDynamicSMemSize, int blockSizeLimit = \fC0\fP, unsigned int flags = \fC0\fP)"
+.PP
+Returns in \fC*minGridSize\fP and \fC*blocksize\fP a suggested grid / block size pair that achieves the best potential occupancy (i.e. the maximum number of active warps with the smallest number of blocks).
+.PP
+The \fCflags\fP parameter controls how special cases are handled. Valid flags include:
+.PP
+.IP "\(bu" 2
+\fBcudaOccupancyDefault\fP: keeps the default behavior as \fBcudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags\fP
+.PP
+.PP
+.IP "\(bu" 2
+\fBcudaOccupancyDisableCachingOverride\fP: This flag suppresses the default behavior on platform where global caching affects occupancy. On such platforms, if caching is enabled, but per-block SM resource usage would result in zero occupancy, the occupancy calculator will calculate the occupancy as if caching is disabled. Setting this flag makes the occupancy calculator to return 0 in such cases. More information can be found about this feature in the 'Unified L1/Texture Cache' section of the Maxwell tuning guide.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIminGridSize\fP - Returned minimum grid size needed to achieve the best potential occupancy 
+.br
+\fIblockSize\fP - Returned block size 
+.br
+\fIfunc\fP - Device function symbol 
+.br
+\fIblockSizeToDynamicSMemSize\fP - A unary function / functor that takes block size, and returns the size, in bytes, of dynamic shared memory needed for a block 
+.br
+\fIblockSizeLimit\fP - The maximum block size \fCfunc\fP is designed to work with. 0 means no limit. 
+.br
+\fIflags\fP - Requested behavior for the occupancy calculator
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorCudartUnloading\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidDevice\fP, \fBcudaErrorInvalidDeviceFunction\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorUnknown\fP, 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaOccupancyMaxPotentialBlockSizeVariableSMem\fP 
+.PP
+\fBcudaOccupancyMaxActiveBlocksPerMultiprocessor\fP 
+.PP
+\fBcudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags\fP 
+.PP
+\fBcudaOccupancyMaxPotentialBlockSize\fP 
+.PP
+\fBcudaOccupancyMaxPotentialBlockSizeWithFlags\fP 
+.RE
+.PP
+
+.SS "template<class T > CUDART_DEVICE \fBcudaError_t\fP cudaOccupancyMaxPotentialBlockSizeWithFlags (int * minGridSize, int * blockSize, T func, size_t dynamicSMemSize = \fC0\fP, int blockSizeLimit = \fC0\fP, unsigned int flags = \fC0\fP)"
+.PP
+Returns in \fC*minGridSize\fP and \fC*blocksize\fP a suggested grid / block size pair that achieves the best potential occupancy (i.e. the maximum number of active warps with the smallest number of blocks).
+.PP
+The \fCflags\fP parameter controls how special cases are handle. Valid flags include:
+.PP
+.IP "\(bu" 2
+\fBcudaOccupancyDefault\fP: keeps the default behavior as \fBcudaOccupancyMaxPotentialBlockSize\fP
+.PP
+.PP
+.IP "\(bu" 2
+\fBcudaOccupancyDisableCachingOverride\fP: This flag suppresses the default behavior on platform where global caching affects occupancy. On such platforms, if caching is enabled, but per-block SM resource usage would result in zero occupancy, the occupancy calculator will calculate the occupancy as if caching is disabled. Setting this flag makes the occupancy calculator to return 0 in such cases. More information can be found about this feature in the 'Unified L1/Texture Cache' section of the Maxwell tuning guide.
+.PP
+.PP
+Use 
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaOccupancyMaxPotentialBlockSizeVariableSMem\fP if the amount of per-block dynamic shared memory changes with different block sizes.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIminGridSize\fP - Returned minimum grid size needed to achieve the best potential occupancy 
+.br
+\fIblockSize\fP - Returned block size 
+.br
+\fIfunc\fP - Device function symbol 
+.br
+\fIdynamicSMemSize\fP - Per-block dynamic shared memory usage intended, in bytes 
+.br
+\fIblockSizeLimit\fP - The maximum block size \fCfunc\fP is designed to work with. 0 means no limit. 
+.br
+\fIflags\fP - Requested behavior for the occupancy calculator
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorCudartUnloading\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidDevice\fP, \fBcudaErrorInvalidDeviceFunction\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorUnknown\fP, 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaOccupancyMaxPotentialBlockSize\fP 
+.PP
+\fBcudaOccupancyMaxActiveBlocksPerMultiprocessor\fP 
+.PP
+\fBcudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags\fP 
+.PP
+\fBcudaOccupancyMaxPotentialBlockSizeVariableSMem\fP 
+.PP
+\fBcudaOccupancyMaxPotentialBlockSizeVariableSMemWithFlags\fP 
+.RE
+.PP
+
+.SS "template<class T > \fBcudaError_t\fP cudaSetupArgument (T arg, size_t offset)"
+.PP
+\fBDeprecated\fP
+.RS 4
+This function is deprecated as of CUDA 7.0
+.RE
+.PP
+Pushes \fCsize\fP bytes of the argument pointed to by \fCarg\fP at \fCoffset\fP bytes from the start of the parameter passing area, which starts at offset 0. The arguments are stored in the top of the execution stack. \fBcudaSetupArgument()\fP must be preceded by a call to \fBcudaConfigureCall()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIarg\fP - Argument to push for a kernel launch 
+.br
+\fIoffset\fP - Offset in argument stack to push new arg
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBcudaLaunchKernel (C++ API)\fP, \fBcudaFuncGetAttributes (C++ API)\fP, \fBcudaLaunch (C++ API)\fP, \fBcudaSetDoubleForDevice\fP, \fBcudaSetDoubleForHost\fP, \fBcudaSetupArgument (C API)\fP 
+.SS "template<class T > \fBcudaError_t\fP cudaStreamAttachMemAsync (\fBcudaStream_t\fP stream, T * devPtr, size_t length = \fC0\fP, unsigned int flags = \fCcudaMemAttachSingle\fP)"
+.PP
+Enqueues an operation in \fCstream\fP to specify stream association of \fClength\fP bytes of memory starting from \fCdevPtr\fP. This function is a stream-ordered operation, meaning that it is dependent on, and will only take effect when, previous work in stream has completed. Any previous association is automatically replaced.
+.PP
+\fCdevPtr\fP must point to an address within managed memory space declared using the __managed__ keyword or allocated with \fBcudaMallocManaged\fP.
+.PP
+\fClength\fP must be zero, to indicate that the entire allocation's stream association is being changed. Currently, it's not possible to change stream association for a portion of an allocation. The default value for \fClength\fP is zero.
+.PP
+The stream association is specified using \fCflags\fP which must be one of \fBcudaMemAttachGlobal\fP, \fBcudaMemAttachHost\fP or \fBcudaMemAttachSingle\fP. The default value for \fCflags\fP is \fBcudaMemAttachSingle\fP If the \fBcudaMemAttachGlobal\fP flag is specified, the memory can be accessed by any stream on any device. If the \fBcudaMemAttachHost\fP flag is specified, the program makes a guarantee that it won't access the memory on the device from any stream on a device that has a zero value for the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP. If the \fBcudaMemAttachSingle\fP flag is specified and \fCstream\fP is associated with a device that has a zero value for the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP, the program makes a guarantee that it will only access the memory on the device from \fCstream\fP. It is illegal to attach singly to the NULL stream, because the NULL stream is a virtual global stream and not a specific stream. An error will be returned in this case.
+.PP
+When memory is associated with a single stream, the Unified Memory system will allow CPU access to this memory region so long as all operations in \fCstream\fP have completed, regardless of whether other streams are active. In effect, this constrains exclusive ownership of the managed memory region by an active GPU to per-stream activity instead of whole-GPU activity.
+.PP
+Accessing memory on the device from streams that are not associated with it will produce undefined results. No error checking is performed by the Unified Memory system to ensure that kernels launched into other streams do not access this region.
+.PP
+It is a program's responsibility to order calls to \fBcudaStreamAttachMemAsync\fP via events, synchronization or other means to ensure legal access to memory at all times. Data visibility and coherency will be changed appropriately for all kernels which follow a stream-association change.
+.PP
+If \fCstream\fP is destroyed while data is associated with it, the association is removed and the association reverts to the default visibility of the allocation as specified at \fBcudaMallocManaged\fP. For __managed__ variables, the default association is always \fBcudaMemAttachGlobal\fP. Note that destroying a stream is an asynchronous operation, and as a result, the change to default association won't happen until all work in the stream has completed.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstream\fP - Stream in which to enqueue the attach operation 
+.br
+\fIdevPtr\fP - Pointer to memory (must be a pointer to managed memory) 
+.br
+\fIlength\fP - Length of memory (must be zero, defaults to zero) 
+.br
+\fIflags\fP - Must be one of \fBcudaMemAttachGlobal\fP, \fBcudaMemAttachHost\fP or \fBcudaMemAttachSingle\fP (defaults to \fBcudaMemAttachSingle\fP)
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorNotReady\fP, \fBcudaErrorInvalidValue\fP \fBcudaErrorInvalidResourceHandle\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaStreamCreate\fP, \fBcudaStreamCreateWithFlags\fP, \fBcudaStreamWaitEvent\fP, \fBcudaStreamSynchronize\fP, \fBcudaStreamAddCallback\fP, \fBcudaStreamDestroy\fP, \fBcudaMallocManaged\fP 
+.RE
+.PP
+
+.SS "template<class T , int dim, enum cudaTextureReadMode readMode> \fBcudaError_t\fP cudaUnbindTexture (const struct texture< T, dim, readMode > & tex)"
+.PP
+Unbinds the texture bound to \fCtex\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fItex\fP - Texture to unbind
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaCreateChannelDesc (C++ API)\fP, \fBcudaGetChannelDesc\fP, \fBcudaGetTextureReference\fP, \fBcudaBindTexture (C++ API)\fP, \fBcudaBindTexture (C++ API, inherited channel descriptor)\fP, \fBcudaBindTexture2D (C++ API)\fP, \fBcudaBindTexture2D (C++ API, inherited channel descriptor)\fP, \fBcudaBindTextureToArray (C++ API)\fP, \fBcudaBindTextureToArray (C++ API, inherited channel descriptor)\fP, \fBcudaUnbindTexture (C API)\fP, \fBcudaGetTextureAlignmentOffset (C++ API)\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

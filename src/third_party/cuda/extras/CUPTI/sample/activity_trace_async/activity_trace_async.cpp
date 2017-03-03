@@ -183,12 +183,12 @@ printActivity(CUpti_Activity *record)
   case CUPTI_ACTIVITY_KIND_MEMSET:
     {
       CUpti_ActivityMemset *memset = (CUpti_ActivityMemset *) record;
-      printf("MEMSET value=%u [ %llu - %llu ] device %u, context %u, stream %u, correlation %u/r%u\n",
+      printf("MEMSET value=%u [ %llu - %llu ] device %u, context %u, stream %u, correlation %u\n",
              memset->value,
              (unsigned long long) (memset->start - startTimestamp),
              (unsigned long long) (memset->end - startTimestamp),
              memset->deviceId, memset->contextId, memset->streamId,
-             memset->correlationId, memset->runtimeCorrelationId);
+             memset->correlationId);
       break;
     }
   case CUPTI_ACTIVITY_KIND_KERNEL:
@@ -263,9 +263,9 @@ printActivity(CUpti_Activity *record)
     }
   case CUPTI_ACTIVITY_KIND_MARKER:
     {
-      CUpti_ActivityMarker *marker = (CUpti_ActivityMarker *) record;
-      printf("MARKER id %u [ %llu ], name %s\n",
-             marker->id, (unsigned long long) marker->timestamp, marker->name);
+      CUpti_ActivityMarker2 *marker = (CUpti_ActivityMarker2 *) record;
+      printf("MARKER id %u [ %llu ], name %s, domain %s\n",
+             marker->id, (unsigned long long) marker->timestamp, marker->name, marker->domain);
       break;
     }
   case CUPTI_ACTIVITY_KIND_MARKER_DATA:

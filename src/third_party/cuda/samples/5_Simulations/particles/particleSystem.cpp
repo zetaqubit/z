@@ -9,6 +9,10 @@
  *
  */
 
+// OpenGL Graphics includes
+#define HELPERGL_EXTERN_GL_FUNC_IMPLEMENTATION
+#include <helper_gl.h>
+
 #include "particleSystem.h"
 #include "particleSystem.cuh"
 #include "particles_kernel.cuh"
@@ -24,7 +28,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <algorithm>
-#include <GL/glew.h>
 
 #ifndef CUDART_PI_F
 #define CUDART_PI_F         3.141592654f
@@ -166,8 +169,8 @@ ParticleSystem::_initialize(int numParticles)
         registerGLBufferObject(m_colorVBO, &m_cuda_colorvbo_resource);
 
         // fill color buffer
-        glBindBufferARB(GL_ARRAY_BUFFER, m_colorVBO);
-        float *data = (float *) glMapBufferARB(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+        glBindBuffer(GL_ARRAY_BUFFER, m_colorVBO);
+        float *data = (float *) glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
         float *ptr = data;
 
         for (uint i=0; i<m_numParticles; i++)
@@ -184,7 +187,7 @@ ParticleSystem::_initialize(int numParticles)
             *ptr++ = 1.0f;
         }
 
-        glUnmapBufferARB(GL_ARRAY_BUFFER);
+        glUnmapBuffer(GL_ARRAY_BUFFER);
     }
     else
     {

@@ -1,0 +1,221 @@
+.TH CUDA-GDB 1 2013-05-06 "NVIDIA" "CUDA Toolkit Documentation"
+.sp
+
+.SH NAME
+
+.sp
+cuda-gdb \- The NVIDIA CUDA Debugger
+.sp
+cuda-gdbserver \- The NVIDIA CUDA-GDB server for remote debugging
+.sp
+
+.SH SYNOPSIS
+
+.sp
+\fBcuda-gdb\fR [gdb-options] [\fB--cuda-use-lockfile\fR
+\fIVALUE\fR] \fI[prog [core|procID]]\fR
+.sp
+\fBcuda-gdb\fR [gdb-options] [\fB--cuda-use-lockfile\fR
+\fIVALUE\fR] --args prog \fI[arguments]\fR
+.sp
+
+.SH DESCRIPTION
+
+.sp
+\fBcuda-gdb\fR is the NVIDIA CUDA debugger for Unix platforms. It
+is \fBgdb\fR with extra commands specific to CUDA debugging.
+.sp
+All the existing \fBgdb\fR commands are supported. On top of
+those commands, the following CUDA-specific commands are also
+supported.
+.SS Info Commands
+
+.sp
+Commands to query information about CUDA activities:
+.sp
+
+.TP
+\fBinfo cuda devices\fR
+information about all the devices
+.TP
+\fBinfo cuda sms\fR
+information about all the SMs in the current device
+.TP
+\fBinfo cuda warps\fR
+information about all the warps in the current SM
+.TP
+\fBinfo cuda lanes\fR
+information about all the lanes in the current warp
+.TP
+\fBinfo cuda kernels\fR
+information about all the active kernels
+.TP
+\fBinfo cuda contexts\fR
+information about all the contexts
+.TP
+\fBinfo cuda blocks\fR
+information about all the active blocks in the current kernel
+.TP
+\fBinfo cuda threads\fR
+information about all the active threads in the current kernel
+.TP
+\fBinfo cuda launch trace\fR
+information about the parent kernels of the kernel in focus
+.TP
+\fBinfo cuda launch children\fR
+information about the kernels launched by the kernels in focus
+.SS Focus Commands
+
+.sp
+Commands to query or switch the focus of the debugger:
+.sp
+
+.TP
+\fBcuda block\fR
+Print or select the current CUDA block
+.TP
+\fBcuda device\fR
+Print or select the current CUDA device
+.TP
+\fBcuda grid\fR
+Print or select the current CUDA grid
+.TP
+\fBcuda kernel\fR
+Print or select the current CUDA kernel
+.TP
+\fBcuda lane\fR
+Print or select the current CUDA lane
+.TP
+\fBcuda sm\fR
+Print or select the current CUDA SM
+.TP
+\fBcuda thread\fR
+Print or select the current CUDA thread
+.TP
+\fBcuda warp\fR
+Print or select the current CUDA warp
+.SS Configuration Commands
+
+.sp
+Commands to configure the CUDA-specific commands:
+.sp
+
+.TP
+\fBset cuda api_failures\fR
+Set the api_failures to ignore/stop/hide on CUDA driver API call
+errors
+.TP
+\fBset cuda break_on_launch\fR
+Automatically set a breakpoint at the entrance of kernels
+.TP
+\fBset cuda coalescing\fR
+Turn on/off coalescing of the CUDA commands output
+.TP
+\fBset cuda context_events\fR
+Turn on/off context events (push/pop/create/destroy) output
+messages
+.TP
+\fBset cuda defer_kernel_launch_notifications\fR
+Turn on/off deferral of kernel launch messages
+.TP
+\fBset cuda disassemble_from\fR
+Choose whether to disassemble from the device memory (slow) or
+the ELF image (fast)
+.TP
+\fBset cuda gpu_busy_check\fR
+Turn on/off GPU busy check the next time the inferior application
+is run
+.TP
+\fBset cuda hide_internal_frame\fR
+Set hiding of the internal CUDA frames when printing the call
+stack
+.TP
+\fBset cuda kernel_events\fR
+Turn on/off kernel events (launch/termination) output messages
+.TP
+\fBset cuda launch_blocking\fR
+Turn on/off CUDA kernel launch blocking (effective starting from
+the next run)
+.TP
+\fBset cuda memcheck\fR
+Turn on/off CUDA Memory Checker next time the inferior
+application is run
+.TP
+\fBset cuda notify\fR
+Thread to notify about CUDA events when no other known candidate
+.TP
+\fBset cuda software_preemption\fR
+Turn on/off CUDA software preemption debugging the next time the
+inferior application is run
+.TP
+\fBset cuda thread_selection\fR
+Set the automatic thread selection policy to use when the current
+thread cannot be selected
+.sp
+
+.SH OPTIONS
+
+.sp
+CUDA-GDB supports the same options as GDB, with the addition of
+the following options:
+.sp
+
+.TP
+\fB--cuda-use-lockfile=VALUE\fR
+If VALUE is 0, CUDA-GDB will not create a lock file and will not
+enforce the exclusive usage of GPUs.
+.sp
+
+.SH ENVIRONMENT
+
+.sp
+
+.TP
+\fBTMPDIR\fR
+If non-null, the full pathname for an alternate temporary
+directory. Note that the debugger must have write and exec
+permission to that directory.
+.sp
+
+.SH FILES
+
+.sp
+
+.TP
+\fB~/.cuda-gdbinit\fR
+Per user configuration file. The file format is indentical to
+~/.gdbinit. See \fBgdb\fR(5) for further details.
+.TP
+\fB/tmp/cuda-dbg/\fR
+Temporary directory where the debugger stores intermediate files.
+The directory must have write and and exec permissions. Use
+$TMPDIR to override the location.
+.sp
+
+.SH NOTES
+
+.sp
+For more information about cuda-gdb, please see the online
+documentation at http://docs.nvidia.com/cuda/cuda-gdb/index.html.
+.sp
+For more information about CUDA-related features, type \fBhelp
+cuda\fR or \fBhelp info cuda\fR from within CUDA-GDB, or consult
+the CUDA-GDB online manual.
+.sp
+
+.SH SEE ALSO
+
+.sp
+\fBcuda-binaries\fR(1), \fBcuda-libraries\fR(7), \fBgdb\fR(1)
+.sp
+
+.SH REPORTING BUGS
+
+.sp
+Email bugs to cuda-debugger-bugs@nvidia.com
+.sp
+
+.SH COPYRIGHT
+
+.sp
+©2013 NVIDIA Corporation. All rights reserved.

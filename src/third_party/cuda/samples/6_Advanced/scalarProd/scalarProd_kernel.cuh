@@ -16,7 +16,7 @@
 // (the same as for floating point  multiplication and addition),
 // whereas full 32-bit multiplication takes 16 clocks per warp.
 // So if integer multiplication operands are  guaranteed to fit into 24 bits
-// (always lie withtin [-8M, 8M - 1] range in signed case),
+// (always lie within [-8M, 8M - 1] range in signed case),
 // explicit 24-bit multiplication is preferred for performance.
 ///////////////////////////////////////////////////////////////////////////////
 #define IMUL(a, b) __mul24(a, b)

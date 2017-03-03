@@ -1,0 +1,110 @@
+.TH "Unified Addressing" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Unified Addressing \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaPointerGetAttributes\fP (struct \fBcudaPointerAttributes\fP *attributes, const void *ptr)"
+.br
+.RI "\fIReturns attributes about a specified pointer. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief unified addressing functions of the CUDA runtime API (cuda_runtime_api.h)
+.PP
+This section describes the unified addressing functions of the CUDA runtime application programming interface.
+.SH "Overview"
+.PP
+CUDA devices can share a unified address space with the host. For these devices there is no distinction between a device pointer and a host pointer -- the same pointer value may be used to access memory from the host program and from a kernel running on the device (with exceptions enumerated below).
+.SH "Supported Platforms"
+.PP
+Whether or not a device supports unified addressing may be queried by calling \fBcudaGetDeviceProperties()\fP with the device property \fBcudaDeviceProp::unifiedAddressing\fP.
+.PP
+Unified addressing is automatically enabled in 64-bit processes .
+.PP
+Unified addressing is not yet supported on Windows Vista or Windows 7 for devices that do not use the TCC driver model.
+.SH "Looking Up Information from Pointer Values"
+.PP
+It is possible to look up information about the memory which backs a pointer value. For instance, one may want to know if a pointer points to host or device memory. As another example, in the case of device memory, one may want to know on which CUDA device the memory resides. These properties may be queried using the function \fBcudaPointerGetAttributes()\fP
+.PP
+Since pointers are unique, it is not necessary to specify information about the pointers specified to \fBcudaMemcpy()\fP and other copy functions. The copy direction \fBcudaMemcpyDefault\fP may be used to specify that the CUDA runtime should infer the location of the pointer from its value.
+.SH "Automatic Mapping of Host Allocated Host Memory"
+.PP
+All host memory allocated through all devices using \fBcudaMallocHost()\fP and \fBcudaHostAlloc()\fP is always directly accessible from all devices that support unified addressing. This is the case regardless of whether or not the flags \fBcudaHostAllocPortable\fP and \fBcudaHostAllocMapped\fP are specified.
+.PP
+The pointer value through which allocated host memory may be accessed in kernels on all devices that support unified addressing is the same as the pointer value through which that memory is accessed on the host. It is not necessary to call \fBcudaHostGetDevicePointer()\fP to get the device pointer for these allocations.
+.PP
+Note that this is not the case for memory allocated using the flag \fBcudaHostAllocWriteCombined\fP, as discussed below.
+.SH "Direct Access of Peer Memory"
+.PP
+Upon enabling direct access from a device that supports unified addressing to another peer device that supports unified addressing using \fBcudaDeviceEnablePeerAccess()\fP all memory allocated in the peer device using \fBcudaMalloc()\fP and \fBcudaMallocPitch()\fP will immediately be accessible by the current device. The device pointer value through which any peer's memory may be accessed in the current device is the same pointer value through which that memory may be accessed from the peer device.
+.SH "Exceptions, Disjoint Addressing"
+.PP
+Not all memory may be accessed on devices through the same pointer value through which they are accessed on the host. These exceptions are host memory registered using \fBcudaHostRegister()\fP and host memory allocated using the flag \fBcudaHostAllocWriteCombined\fP. For these exceptions, there exists a distinct host and device address for the memory. The device address is guaranteed to not overlap any valid host pointer range and is guaranteed to have the same value across all devices that support unified addressing.
+.PP
+This device address may be queried using \fBcudaHostGetDevicePointer()\fP when a device using unified addressing is current. Either the host or the unified device pointer value may be used to refer to this memory in \fBcudaMemcpy()\fP and similar functions using the \fBcudaMemcpyDefault\fP memory direction. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBcudaError_t\fP cudaPointerGetAttributes (struct \fBcudaPointerAttributes\fP * attributes, const void * ptr)"
+.PP
+Returns in \fC*attributes\fP the attributes of the pointer \fCptr\fP. If pointer was not allocated in, mapped by or registered with context supporting unified addressing \fBcudaErrorInvalidValue\fP is returned.
+.PP
+The \fBcudaPointerAttributes\fP structure is defined as: 
+.PP
+.nf
+    struct cudaPointerAttributes {
+        enum cudaMemoryType memoryType;
+        int device;
+        void *devicePointer;
+        void *hostPointer;
+        int isManaged;
+    }
+
+.fi
+.PP
+ In this structure, the individual fields mean
+.PP
+.IP "\(bu" 2
+\fBmemoryType\fP identifies the physical location of the memory associated with pointer \fCptr\fP. It can be \fBcudaMemoryTypeHost\fP for host memory or \fBcudaMemoryTypeDevice\fP for device memory.
+.PP
+.PP
+.IP "\(bu" 2
+\fBdevice\fP is the device against which \fCptr\fP was allocated. If \fCptr\fP has memory type \fBcudaMemoryTypeDevice\fP then this identifies the device on which the memory referred to by \fCptr\fP physically resides. If \fCptr\fP has memory type \fBcudaMemoryTypeHost\fP then this identifies the device which was current when the allocation was made (and if that device is deinitialized then this allocation will vanish with that device's state).
+.PP
+.PP
+.IP "\(bu" 2
+\fBdevicePointer\fP is the device pointer alias through which the memory referred to by \fCptr\fP may be accessed on the current device. If the memory referred to by \fCptr\fP cannot be accessed directly by the current device then this is NULL.
+.PP
+.PP
+.IP "\(bu" 2
+\fBhostPointer\fP is the host pointer alias through which the memory referred to by \fCptr\fP may be accessed on the host. If the memory referred to by \fCptr\fP cannot be accessed directly by the host then this is NULL.
+.PP
+.PP
+.IP "\(bu" 2
+\fBisManaged\fP indicates if the pointer \fCptr\fP points to managed memory or not.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIattributes\fP - Attributes for the specified pointer 
+.br
+\fIptr\fP - Pointer to get attributes for
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidDevice\fP, \fBcudaErrorInvalidValue\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaGetDeviceCount\fP, \fBcudaGetDevice\fP, \fBcudaSetDevice\fP, \fBcudaChooseDevice\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

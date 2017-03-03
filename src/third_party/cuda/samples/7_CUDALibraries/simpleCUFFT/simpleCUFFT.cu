@@ -31,6 +31,7 @@
 // includes, project
 #include <cuda_runtime.h>
 #include <cufft.h>
+#include <cufftXt.h>
 #include <helper_functions.h>
 #include <helper_cuda.h>
 
@@ -76,7 +77,7 @@ void runTest(int argc, char **argv)
     // Allocate host memory for the signal
     Complex *h_signal = (Complex *)malloc(sizeof(Complex) * SIGNAL_SIZE);
 
-    // Initalize the memory for the signal
+    // Initialize the memory for the signal
     for (unsigned int i = 0; i < SIGNAL_SIZE; ++i)
     {
         h_signal[i].x = rand() / (float)RAND_MAX;
@@ -86,7 +87,7 @@ void runTest(int argc, char **argv)
     // Allocate host memory for the filter
     Complex *h_filter_kernel = (Complex *)malloc(sizeof(Complex) * FILTER_KERNEL_SIZE);
 
-    // Initalize the memory for the filter
+    // Initialize the memory for the filter
     for (unsigned int i = 0; i < FILTER_KERNEL_SIZE; ++i)
     {
         h_filter_kernel[i].x = rand() / (float)RAND_MAX;
@@ -115,14 +116,23 @@ void runTest(int argc, char **argv)
     checkCudaErrors(cudaMemcpy(d_filter_kernel, h_padded_filter_kernel, mem_size,
                                cudaMemcpyHostToDevice));
 
-    // CUFFT plan
+    // CUFFT plan simple API
     cufftHandle plan;
     checkCudaErrors(cufftPlan1d(&plan, new_size, CUFFT_C2C, 1));
+
+    // CUFFT plan advanced API
+    cufftHandle plan_adv;
+    size_t workSize;
+    long long int new_size_long = new_size;
+
+    checkCudaErrors(cufftCreate(&plan_adv));
+    checkCudaErrors(cufftXtMakePlanMany(plan_adv, 1, &new_size_long, NULL, 1, 1, CUDA_C_32F, NULL, 1, 1, CUDA_C_32F, 1, &workSize, CUDA_C_32F));
+    printf("Temporary buffer size %li bytes\n", workSize);
 
     // Transform signal and kernel
     printf("Transforming signal cufftExecC2C\n");
     checkCudaErrors(cufftExecC2C(plan, (cufftComplex *)d_signal, (cufftComplex *)d_signal, CUFFT_FORWARD));
-    checkCudaErrors(cufftExecC2C(plan, (cufftComplex *)d_filter_kernel, (cufftComplex *)d_filter_kernel, CUFFT_FORWARD));
+    checkCudaErrors(cufftExecC2C(plan_adv, (cufftComplex *)d_filter_kernel, (cufftComplex *)d_filter_kernel, CUFFT_FORWARD));
 
     // Multiply the coefficients together and normalize the result
     printf("Launching ComplexPointwiseMulAndScale<<< >>>\n");
@@ -153,6 +163,7 @@ void runTest(int argc, char **argv)
 
     //Destroy CUFFT context
     checkCudaErrors(cufftDestroy(plan));
+    checkCudaErrors(cufftDestroy(plan_adv));
 
     // cleanup memory
     free(h_signal);
@@ -163,12 +174,6 @@ void runTest(int argc, char **argv)
     checkCudaErrors(cudaFree(d_signal));
     checkCudaErrors(cudaFree(d_filter_kernel));
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(bTestResult ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 

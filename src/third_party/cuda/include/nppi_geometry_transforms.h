@@ -66,6 +66,9 @@ extern "C" {
  *
  * Routines manipulating an image's geometry.
  *
+ * These functions can be found in either the nppi or nppig libraries. Linking to only the sub-libraries that you use can significantly
+ * save link time, application load time, and CUDA runtime startup time when using dynamic libraries.
+ *
  * \section geometric_transform_api Geometric Transform API Specifics
  *
  * This section covers some of the unique API features common to the

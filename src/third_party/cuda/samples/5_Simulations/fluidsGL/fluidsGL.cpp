@@ -8,8 +8,10 @@
  * is strictly prohibited.
  *
  */
+
 // OpenGL Graphics includes
-#include <GL/glew.h>
+#include <helper_gl.h>
+
 #if defined(__APPLE__) || defined(MACOSX)
   #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   #include <GLUT/glut.h>
@@ -37,46 +39,6 @@
 #include <rendercheck_gl.h>
 #include <helper_cuda.h>
 #include <helper_cuda_gl.h>
-
-#ifdef WIN32
-bool IsOpenGLAvailable(const char *appName)
-{
-    return true;
-}
-#else
-#if (defined(__APPLE__) || defined(MACOSX))
-bool IsOpenGLAvailable(const char *appName)
-{
-    return true;
-}
-#else
-// check if this is a linux machine
-#include <X11/Xlib.h>
-
-bool IsOpenGLAvailable(const char *appName)
-{
-    Display *Xdisplay = XOpenDisplay(NULL);
-
-    if (Xdisplay == NULL)
-    {
-        return false;
-    }
-    else
-    {
-        XCloseDisplay(Xdisplay);
-        return true;
-    }
-}
-#endif
-#endif
-
-#if defined(__APPLE__) || defined(MACOSX)
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#include <GLUT/glut.h>
-#else
-#include <GL/freeglut.h>
-#endif
 
 #include "defines.h"
 #include "fluidsGL_kernels.h"
@@ -167,10 +129,10 @@ void display(void)
     glEnableClientState(GL_VERTEX_ARRAY);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB, vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glVertexPointer(2, GL_FLOAT, 0, NULL);
     glDrawArrays(GL_POINTS, 0, DS);
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisable(GL_TEXTURE_2D);
@@ -216,7 +178,7 @@ void autoTest(char **argv)
     {
         simulateFluids();
 
-        // add in a little force so the automated testing is interesing.
+        // add in a little force so the automated testing is interesting.
         if (ref_file)
         {
             int x = wWidth/(count+1);
@@ -243,7 +205,7 @@ void autoTest(char **argv)
 
     fbo->unbindRenderPath();
 
-    // compare to offical reference image, printing PASS or FAIL.
+    // compare to official reference image, printing PASS or FAIL.
     printf("> (Frame %d) Readback BackBuffer\n", 100);
     g_CheckRender->readback(wWidth, wHeight);
     g_CheckRender->savePPM("fluidsGL.ppm", true, NULL);
@@ -317,10 +279,10 @@ void keyboard(unsigned char key, int x, int y)
 
             getLastCudaError("cudaGraphicsUnregisterBuffer failed");
 
-            glBindBufferARB(GL_ARRAY_BUFFER_ARB, vbo);
-            glBufferDataARB(GL_ARRAY_BUFFER_ARB, sizeof(cData) * DS,
+            glBindBuffer(GL_ARRAY_BUFFER, vbo);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(cData) * DS,
                             particles, GL_DYNAMIC_DRAW_ARB);
-            glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
 
             cudaGraphicsGLRegisterBuffer(&cuda_vbo_resource, vbo, cudaGraphicsMapFlagsNone);
 
@@ -392,34 +354,14 @@ void cleanup(void)
     cufftDestroy(planr2c);
     cufftDestroy(planc2r);
 
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
-    glDeleteBuffersARB(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glDeleteBuffers(1, &vbo);
 
     sdkDeleteTimer(&timer);
-
-    if (g_bExitESC)
-    {
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        checkCudaErrors(cudaDeviceReset());
-    }
 }
 
 int initGL(int *argc, char **argv)
 {
-    if (IsOpenGLAvailable(sSDKname))
-    {
-        fprintf(stderr, "   OpenGL device is Available\n");
-    }
-    else
-    {
-        fprintf(stderr, "   OpenGL device is NOT Available, [%s] exiting...\n", sSDKname);
-        exit(EXIT_SUCCESS);
-    }
-
     glutInit(argc, argv);
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
     glutInitWindowSize(wWidth, wHeight);
@@ -431,9 +373,14 @@ int initGL(int *argc, char **argv)
     glutReshapeFunc(reshape);
 
 
-    glewInit();
+    if (!isGLVersionSupported(1, 5))
+    {
+        fprintf(stderr, "ERROR: Support for OpenGL 1.5 is missing");
+        fflush(stderr);
+        return false;
+    }
 
-    if (! glewIsSupported(
+    if (! areGLExtensionsSupported(
             "GL_ARB_vertex_buffer_object"
         ))
     {
@@ -515,17 +462,17 @@ int main(int argc, char **argv)
     cufftSetCompatibilityMode(planr2c, CUFFT_COMPATIBILITY_FFTW_PADDING);
     cufftSetCompatibilityMode(planc2r, CUFFT_COMPATIBILITY_FFTW_PADDING);
 
-    glGenBuffersARB(1, &vbo);
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB, vbo);
-    glBufferDataARB(GL_ARRAY_BUFFER_ARB, sizeof(cData) * DS,
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cData) * DS,
                     particles, GL_DYNAMIC_DRAW_ARB);
 
-    glGetBufferParameterivARB(GL_ARRAY_BUFFER_ARB, GL_BUFFER_SIZE_ARB, &bsize);
+    glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &bsize);
 
     if (bsize != (sizeof(cData) * DS))
         goto EXTERR;
 
-    glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     checkCudaErrors(cudaGraphicsGLRegisterBuffer(&cuda_vbo_resource, vbo, cudaGraphicsMapFlagsNone));
     getLastCudaError("cudaGraphicsGLRegisterBuffer failed");
@@ -535,12 +482,6 @@ int main(int argc, char **argv)
         autoTest(argv);
         cleanup();
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         printf("[fluidsGL] - Test Results: %d Failures\n", g_TotalErrors);
         exit(g_TotalErrors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 
@@ -555,13 +496,6 @@ int main(int argc, char **argv)
         glutMainLoop();
     }
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
-
     if (!ref_file)
     {
         exit(EXIT_SUCCESS);
@@ -572,11 +506,5 @@ int main(int argc, char **argv)
 EXTERR:
     printf("Failed to initialize GL extensions.\n");
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(EXIT_FAILURE);
 }

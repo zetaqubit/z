@@ -58,14 +58,14 @@
 #ifndef CUPTIAPI
 #ifdef _WIN32
 #define CUPTIAPI __stdcall
-#else 
+#else
 #define CUPTIAPI
-#endif 
-#endif 
+#endif
+#endif
 
 #if defined(__cplusplus)
 extern "C" {
-#endif 
+#endif
 
 /**
  * \defgroup CUPTI_METRIC_API CUPTI Metric API
@@ -76,13 +76,13 @@ extern "C" {
 /**
  * \brief ID for a metric.
  *
- * A metric provides a measure of some aspect of the device. 
+ * A metric provides a measure of some aspect of the device.
  */
 typedef uint32_t CUpti_MetricID;
 
 /**
  * \brief A metric category.
- * 
+ *
  * Each metric is assigned to a category that represents the general
  * type of the metric. A metric's category is accessed using \ref
  * cuptiMetricGetAttribute and the CUPTI_METRIC_ATTR_CATEGORY
@@ -109,12 +109,16 @@ typedef enum {
    * A texture related metric.
    */
   CUPTI_METRIC_CATEGORY_TEXTURE         = 4,
+  /**
+   *A Nvlink related metric.
+  */
+  CUPTI_METRIC_CATEGORY_NVLINK          = 5,
   CUPTI_METRIC_CATEGORY_FORCE_INT                         = 0x7fffffff,
 } CUpti_MetricCategory;
 
 /**
  * \brief A metric evaluation mode.
- * 
+ *
  * A metric can be evaluated per hardware instance to know the load balancing
  * across instances of a domain or the metric can be evaluated in aggregate mode
  * when the events involved in metric evaluation are from different event
@@ -197,7 +201,7 @@ typedef enum {
 
 /**
  * \brief Metric attributes.
- * 
+ *
  * Metric attributes describe properties of a metric. These attributes
  * can be read using \ref cuptiMetricGetAttribute.
  */
@@ -276,11 +280,12 @@ typedef enum {
   CUPTI_METRIC_PROPERTY_DEVICE_CLASS_TESLA          = 0,
   CUPTI_METRIC_PROPERTY_DEVICE_CLASS_QUADRO         = 1,
   CUPTI_METRIC_PROPERTY_DEVICE_CLASS_GEFORCE        = 2,
+  CUPTI_METRIC_PROPERTY_DEVICE_CLASS_TEGRA          = 3,
 } CUpti_MetricPropertyDeviceClass;
 
 /**
  * \brief Metric device properties.
- * 
+ *
  * Metric device properties describe device properties which are needed for a metric.
  * Some of these properties can be collected using cuDeviceGetAttribute.
  */
@@ -322,20 +327,20 @@ typedef enum {
    */
   CUPTI_METRIC_PROPERTY_GLOBAL_MEMORY_BANDWIDTH,
   /*
-   * PCIE link rate in Mega bits/sec. This should be collected using 
-   * value of \param CUPTI_DEVICE_ATTR_PCIE_LINK_RATE of 
+   * PCIE link rate in Mega bits/sec. This should be collected using
+   * value of \param CUPTI_DEVICE_ATTR_PCIE_LINK_RATE of
    * cuptiDeviceGetAttribute.
    */
   CUPTI_METRIC_PROPERTY_PCIE_LINK_RATE,
   /*
-   * PCIE link width for device. This should be collected using 
-   * value of \param CUPTI_DEVICE_ATTR_PCIE_LINK_WIDTH of 
+   * PCIE link width for device. This should be collected using
+   * value of \param CUPTI_DEVICE_ATTR_PCIE_LINK_WIDTH of
    * cuptiDeviceGetAttribute.
    */
   CUPTI_METRIC_PROPERTY_PCIE_LINK_WIDTH,
   /*
-   * PCIE generation for device. This should be collected using 
-   * value of \param CUPTI_DEVICE_ATTR_PCIE_GEN of 
+   * PCIE generation for device. This should be collected using
+   * value of \param CUPTI_DEVICE_ATTR_PCIE_GEN of
    * cuptiDeviceGetAttribute.
    */
   CUPTI_METRIC_PROPERTY_PCIE_GEN,
@@ -373,6 +378,20 @@ typedef enum {
    * cuDeviceGetAttribute.
    */
   CUPTI_METRIC_PROPERTY_ECC_ENABLED,
+  /*
+   * Peak half precision floating point operations that
+   * can be performed in one cycle by the device.
+   * This should be collected using value of
+   * \param CUPTI_DEVICE_ATTR_FLOP_HP_PER_CYCLE of
+   * cuptiDeviceGetAttribute.
+   */
+  CUPTI_METRIC_PROPERTY_FLOP_HP_PER_CYCLE,
+  /*
+   * NVLINK Bandwitdh for device. This should be collected
+   * using value of \param CUPTI_DEVICE_ATTR_GPU_CPU_NVLINK_BW of
+   * cuptiDeviceGetAttribute.
+   */
+  CUPTI_METRIC_PROPERTY_GPU_CPU_NVLINK_BANDWIDTH,
 } CUpti_MetricPropertyID;
 
 /**
@@ -406,7 +425,7 @@ CUptiResult CUPTIAPI cuptiGetNumMetrics(uint32_t *numMetrics);
  * \retval CUPTI_ERROR_INVALID_PARAMETER if \p arraySizeBytes or
  * \p metricArray are NULL
 */
-CUptiResult CUPTIAPI cuptiEnumMetrics(size_t *arraySizeBytes, 
+CUptiResult CUPTIAPI cuptiEnumMetrics(size_t *arraySizeBytes,
                                       CUpti_MetricID *metricArray);
 
 /**
@@ -423,7 +442,7 @@ CUptiResult CUPTIAPI cuptiEnumMetrics(size_t *arraySizeBytes,
  * \retval CUPTI_ERROR_INVALID_DEVICE
  * \retval CUPTI_ERROR_INVALID_PARAMETER if \p numMetrics is NULL
  */
-CUptiResult CUPTIAPI cuptiDeviceGetNumMetrics(CUdevice device, 
+CUptiResult CUPTIAPI cuptiDeviceGetNumMetrics(CUdevice device,
                                               uint32_t *numMetrics);
 
 /**
@@ -444,11 +463,11 @@ CUptiResult CUPTIAPI cuptiDeviceGetNumMetrics(CUdevice device,
  * \retval CUPTI_SUCCESS
  * \retval CUPTI_ERROR_NOT_INITIALIZED
  * \retval CUPTI_ERROR_INVALID_DEVICE
- * \retval CUPTI_ERROR_INVALID_PARAMETER if \p arraySizeBytes or 
+ * \retval CUPTI_ERROR_INVALID_PARAMETER if \p arraySizeBytes or
  * \p metricArray are NULL
  */
-CUptiResult CUPTIAPI cuptiDeviceEnumMetrics(CUdevice device, 
-                                            size_t *arraySizeBytes, 
+CUptiResult CUPTIAPI cuptiDeviceEnumMetrics(CUdevice device,
+                                            size_t *arraySizeBytes,
                                             CUpti_MetricID *metricArray);
 
 /**
@@ -477,9 +496,9 @@ CUptiResult CUPTIAPI cuptiDeviceEnumMetrics(CUdevice device,
  * attribute values, indicates that the \p value buffer is too small
  * to hold the attribute value.
  */
-CUptiResult CUPTIAPI cuptiMetricGetAttribute(CUpti_MetricID metric, 
-                                             CUpti_MetricAttribute attrib, 
-                                             size_t *valueSize, 
+CUptiResult CUPTIAPI cuptiMetricGetAttribute(CUpti_MetricID metric,
+                                             CUpti_MetricAttribute attrib,
+                                             size_t *valueSize,
                                              void *value);
 
 /**
@@ -500,8 +519,8 @@ CUptiResult CUPTIAPI cuptiMetricGetAttribute(CUpti_MetricID metric,
  * \retval CUPTI_ERROR_INVALID_PARAMETER if \p metricName or \p
  * metric are NULL.
  */
-CUptiResult CUPTIAPI cuptiMetricGetIdFromName(CUdevice device, 
-                                              const char *metricName, 
+CUptiResult CUPTIAPI cuptiMetricGetIdFromName(CUdevice device,
+                                              const char *metricName,
                                               CUpti_MetricID *metric);
 
 /**
@@ -518,7 +537,7 @@ CUptiResult CUPTIAPI cuptiMetricGetIdFromName(CUdevice device,
  * \retval CUPTI_ERROR_INVALID_METRIC_ID
  * \retval CUPTI_ERROR_INVALID_PARAMETER if \p numEvents is NULL
  */
-CUptiResult CUPTIAPI cuptiMetricGetNumEvents(CUpti_MetricID metric, 
+CUptiResult CUPTIAPI cuptiMetricGetNumEvents(CUpti_MetricID metric,
                                              uint32_t *numEvents);
 
 /**
@@ -543,8 +562,8 @@ CUptiResult CUPTIAPI cuptiMetricGetNumEvents(CUpti_MetricID metric,
  * \retval CUPTI_ERROR_INVALID_PARAMETER if \p eventIdArraySizeBytes or \p
  * eventIdArray are NULL.
  */
-CUptiResult CUPTIAPI cuptiMetricEnumEvents(CUpti_MetricID metric, 
-                                           size_t *eventIdArraySizeBytes, 
+CUptiResult CUPTIAPI cuptiMetricEnumEvents(CUpti_MetricID metric,
+                                           size_t *eventIdArraySizeBytes,
                                            CUpti_EventID *eventIdArray);
 
 /**
@@ -562,7 +581,7 @@ CUptiResult CUPTIAPI cuptiMetricEnumEvents(CUpti_MetricID metric,
  * \retval CUPTI_ERROR_INVALID_METRIC_ID
  * \retval CUPTI_ERROR_INVALID_PARAMETER if \p numProp is NULL
  */
-CUptiResult CUPTIAPI cuptiMetricGetNumProperties(CUpti_MetricID metric, 
+CUptiResult CUPTIAPI cuptiMetricGetNumProperties(CUpti_MetricID metric,
                                                  uint32_t *numProp);
 
 /**
@@ -587,8 +606,8 @@ CUptiResult CUPTIAPI cuptiMetricGetNumProperties(CUpti_MetricID metric,
  * \retval CUPTI_ERROR_INVALID_PARAMETER if \p propIdArraySizeBytes or \p
  * propIdArray are NULL.
  */
-CUptiResult CUPTIAPI cuptiMetricEnumProperties(CUpti_MetricID metric, 
-                                               size_t *propIdArraySizeBytes, 
+CUptiResult CUPTIAPI cuptiMetricEnumProperties(CUpti_MetricID metric,
+                                               size_t *propIdArraySizeBytes,
                                                CUpti_MetricPropertyID *propIdArray);
 
 
@@ -616,7 +635,7 @@ CUptiResult CUPTIAPI cuptiMetricEnumProperties(CUpti_MetricID metric,
  * \retval CUPTI_ERROR_INVALID_METRIC_ID
  */
 CUptiResult CUPTIAPI cuptiMetricGetRequiredEventGroupSets(CUcontext context,
-                                                          CUpti_MetricID metric,                                                            
+                                                          CUpti_MetricID metric,
                                                           CUpti_EventGroupSets **eventGroupSets);
 
 /**
@@ -626,7 +645,7 @@ CUptiResult CUPTIAPI cuptiMetricGetRequiredEventGroupSets(CUcontext context,
  *
  * For a set of metrics, get the grouping that indicates the number of
  * passes and the event groups necessary to collect the events
- * required for those metrics. 
+ * required for those metrics.
  *
  * \see cuptiEventGroupSetsCreate for details on event group set
  * creation.
@@ -655,7 +674,7 @@ CUptiResult CUPTIAPI cuptiMetricCreateEventGroupSets(CUcontext context,
  *
  * Use the events collected for a metric to calculate the metric
  * value. Metric value evaluation depends on the evaluation mode
- * \ref CUpti_MetricEvaluationMode that the metric supports. 
+ * \ref CUpti_MetricEvaluationMode that the metric supports.
  * If a metric has evaluation mode as CUPTI_METRIC_EVALUATION_MODE_PER_INSTANCE,
  * then it assumes that the input event value is for one domain instance.
  * If a metric has evaluation mode as CUPTI_METRIC_EVALUATION_MODE_AGGREGATE,
@@ -700,7 +719,7 @@ CUptiResult CUPTIAPI cuptiMetricCreateEventGroupSets(CUcontext context,
  * \retval CUPTI_ERROR_INVALID_PARAMETER if \p metricValue,
  * \p eventIdArray or \p eventValueArray is NULL
  */
-CUptiResult CUPTIAPI cuptiMetricGetValue(CUdevice device, 
+CUptiResult CUPTIAPI cuptiMetricGetValue(CUdevice device,
                                          CUpti_MetricID metric,
                                          size_t eventIdArraySizeBytes,
                                          CUpti_EventID *eventIdArray,
@@ -778,7 +797,7 @@ CUptiResult CUPTIAPI cuptiMetricGetValue2(CUpti_MetricID metric,
 
 #if defined(__cplusplus)
 }
-#endif 
+#endif
 
 #endif /*_CUPTI_METRIC_H_*/
 

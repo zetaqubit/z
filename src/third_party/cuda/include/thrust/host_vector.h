@@ -56,10 +56,12 @@ template<typename T, typename Alloc = std::allocator<T> >
     typedef detail::vector_base<T,Alloc> Parent;
 
   public:
-    /*! \cond */
+    /*! \cond
+     */
     typedef typename Parent::size_type  size_type;
     typedef typename Parent::value_type value_type;
-    /*! \endcond */
+    /*! \endcond
+     */
 
     /*! This constructor creates an empty \p host_vector.
      */
@@ -67,9 +69,16 @@ template<typename T, typename Alloc = std::allocator<T> >
     host_vector(void)
       :Parent() {}
 
+    /*! The destructor erases the elements.
+     */
+    //  Define an empty destructor to explicitly specify
+    //  its execution space qualifier, as a workaround for nvcc warning
+    __host__
+    ~host_vector(void) {}
+
     /*! This constructor creates a \p host_vector with the given
      *  size.
-     *  \param n The number of elements to initially craete.
+     *  \param n The number of elements to initially create.
      */
     __host__
     explicit host_vector(size_type n)

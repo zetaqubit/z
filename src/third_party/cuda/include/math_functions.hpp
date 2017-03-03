@@ -149,27 +149,19 @@ __forceinline__ __host__ __device__ __cudart_builtin__ int isinf(long double x) 
 
 #if defined(_LIBCPP_VERSION)
 extern "C" __host__ __device__ float powif(float, int);
-__forceinline__ __host__ __device__ __cudart_builtin__ float pow(float a, int b) throw()
-{
-#if defined(__CUDA_ARCH__)
-  return powif(a, (b));
-#else /* !defined(__CUDA_ARCH__) */
-  return pow<float, int>(a, b);
-#endif /* defined(__CUDA_ARCH__) */
-}
 extern "C" __host__ __device__ double powi(double, int);
-__forceinline__ __host__ __device__ __cudart_builtin__ double pow(double a, int b) throw()
-{
-#if defined(__CUDA_ARCH__)
-  return powi(a, (b)); 
-#else /* !defined(__CUDA_ARCH__) */
-  return pow<double, int>(a, b);
-#endif /* defined(__CUDA_ARCH__) */
-}
 #endif /* _LIBCPP_VERSION */
 
 #else /* __APPLE__ */
 
+#if __GNUC__ > 5 && __cplusplus >= 201103L
+#if defined(__CUDA_ARCH__)
+#define __NV_BUILTIN_FUNC_DECL__ __forceinline__ __host__ __device__ __cudart_builtin__
+__NV_BUILTIN_FUNC_DECL__ int  isnan(double a) throw() { return __isnan(a); }
+__NV_BUILTIN_FUNC_DECL__ int  isinf(double x) throw() { return __isinf(x); }
+#undef __NV_BUILTIN_FUNC_DECL__
+#endif /* __CUDA_ARCH */
+#else /* !(__GNUC__ > 5 && __cplusplus >= 201103L) */
 
 #if defined(__QNX__)
 extern "C" __host__ __device__ float powif(float, int); 
@@ -252,7 +244,7 @@ static __inline__ __host__ __device__ bool isinf(float a)
 #endif /* defined(__CUDA_ARCH__) */
 }
 
-#else /* !QNX */
+#else /* !__QNX__ */
 __forceinline__ __host__ __device__ __cudart_builtin__ int signbit(float x) { return __signbitf(x); }
 #if defined(__ICC)
 __forceinline__ __host__ __device__ __cudart_builtin__ int signbit(double x) throw() { return __signbit(x); }
@@ -261,14 +253,45 @@ __forceinline__ __host__ __device__ __cudart_builtin__ int signbit(double x) { r
 #endif /* __ICC */
 __forceinline__ __host__ __device__ __cudart_builtin__ int signbit(long double x) { return __signbitl(x);}
 
-__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(float x) { return __finitef(x); } 
-#if defined(__ICC)
-__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(double x) throw() { return __finite(x); }
-#else /* !__ICC */
-__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(double x) { return __finite(x); }
-#endif /* __ICC */
-__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(long double x) { return __finitel(x); }
+#if defined(__ANDROID__)
+__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(float x) {
+#if defined(__CUDA_ARCH__)
+  return __finitef(x);
+#else	/* !__CUDA_ARCH__ */
+  return __isfinitef(x);
+#endif /* __CUDA_ARCH__ */
+}
+#else /* !__ANDROID__ */
+__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(float x) { return __finitef(x); }
+#endif  /* __ANDROID__ */
 
+#if defined(__ANDROID__)
+__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(double x)
+{
+#ifdef __CUDA_ARCH__
+  return __finite(x);
+#else  /* !__CUDA_ARCH__ */
+  return __isfinite(x);
+#endif  /* __CUDA_ARCH__ */
+}
+#elif defined(__ICC)
+__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(double x) throw() { return __finite(x); }
+#else
+__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(double x) { return __finite(x); }
+#endif /* __ANDROID__ */
+
+#if defined(__ANDROID__)
+__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(long double x) 
+{
+#ifdef __CUDA_ARCH__
+   return __finitel(x);
+#else /* !__CUDA_ARCH__ */
+   return __isfinitel(x);
+#endif  /* __CUDA_ARCH__ */
+}
+#else /* !__ANDROID__ */
+__forceinline__ __host__ __device__ __cudart_builtin__ int isfinite(long double x) { return __finitel(x); }
+#endif  /* __ANDROID__ */
 
 __forceinline__ __host__ __device__ __cudart_builtin__ int isnan(float x) { return __isnanf(x); }
 #if defined(__ANDROID__)
@@ -285,8 +308,9 @@ __forceinline__ __host__ __device__ __cudart_builtin__ int isinf(double x) { ret
 __forceinline__ __host__ __device__ __cudart_builtin__ int isinf(double x) throw()  { return __isinf(x); }
 #endif /* __ANDROID__ */
 __forceinline__ __host__ __device__ __cudart_builtin__ int isinf(long double x) { return __isinfl(x); }
-#endif /* QNX */
+#endif /* __QNX__ */
 
+#endif /* __GNUC__ > 5 && __cplusplus >= 201103L */
 #endif /* __APPLE__ */
 
 #if defined(__arm__) && !defined(_STLPORT_VERSION) && !_GLIBCXX_USE_C99
@@ -297,14 +321,14 @@ static __inline__ __host__ __device__ __cudart_builtin__ long long int abs(long 
 {
   return llabs(a);
 }
-#endif /* !QNX */
+#endif /* !__QNX__ */
 
 #endif /* !__ANDROID__ || __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 8) */
 #endif /* __arm__ && !_STLPORT_VERSION && !_GLIBCXX_USE_C99 */
 
 #elif defined(_WIN32)
 
-#if _MSC_VER < 1800
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 static __inline__ __host__ __device__ int signbit(long double a)
 {
   return __signbitl(a);
@@ -319,14 +343,14 @@ static __inline__ __host__ __device__ int signbit(float a)
 {
   return __signbitf(a);
 }
-#endif /* _MSC_VER < 1800 */
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
-#if _MSC_VER < 1800
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 static __inline__ __host__ __device__ int isinf(long double a)
 {
   return __isinfl(a);
 }
-#else /* _MSC_VER < 1800 */
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 static __inline__ __host__ __device__ bool isinf(long double a)
 {
 #if defined(__CUDA_ARCH__)
@@ -335,14 +359,14 @@ static __inline__ __host__ __device__ bool isinf(long double a)
   return isinf<long double>(a);
 #endif /* defined(__CUDA_ARCH__) */
 }
-#endif /* _MSC_VER < 1800 */
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
-#if _MSC_VER < 1800
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 static __inline__ __host__ __device__ int isinf(double a)
 {
   return __isinf(a);
 }
-#else /* _MSC_VER < 1800 */
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 static __inline__ __host__ __device__ bool isinf(double a)
 {
 #if defined(__CUDA_ARCH__)
@@ -351,14 +375,14 @@ static __inline__ __host__ __device__ bool isinf(double a)
   return isinf<double>(a);
 #endif /* defined(__CUDA_ARCH__) */
 }
-#endif /* _MSC_VER < 1800 */
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
-#if _MSC_VER < 1800
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 static __inline__ __host__ __device__ int isinf(float a)
 {
   return __isinff(a);
 }
-#else /* _MSC_VER < 1800 */
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 static __inline__ __host__ __device__ bool isinf(float a)
 {
 #if defined(__CUDA_ARCH__)
@@ -367,14 +391,14 @@ static __inline__ __host__ __device__ bool isinf(float a)
   return isinf<float>(a);
 #endif /* defined(__CUDA_ARCH__) */
 }
-#endif /* _MSC_VER < 1800 */
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
-#if _MSC_VER < 1800
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 static __inline__ __host__ __device__ int isnan(long double a)
 {
   return __isnanl(a);
 }
-#else /* _MSC_VER < 1800 */
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 static __inline__ __host__ __device__ bool isnan(long double a)
 {
 #if defined(__CUDA_ARCH__)
@@ -383,14 +407,14 @@ static __inline__ __host__ __device__ bool isnan(long double a)
   return isnan<long double>(a);
 #endif /* defined(__CUDA_ARCH__) */
 }
-#endif /* _MSC_VER < 1800 */
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
-#if _MSC_VER < 1800
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 static __inline__ __host__ __device__ int isnan(double a)
 {
   return __isnan(a);
 }
-#else /* _MSC_VER < 1800 */
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 static __inline__ __host__ __device__ bool isnan(double a)
 {
 #if defined(__CUDA_ARCH__)
@@ -399,14 +423,14 @@ static __inline__ __host__ __device__ bool isnan(double a)
   return isnan<double>(a);
 #endif /* defined(__CUDA_ARCH__) */
 }
-#endif /* _MSC_VER < 1800 */
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
-#if _MSC_VER < 1800
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 static __inline__ __host__ __device__ int isnan(float a)
 {
   return __isnanf(a);
 }
-#else /* _MSC_VER < 1800 */
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 static __inline__ __host__ __device__ bool isnan(float a)
 {
 #if defined(__CUDA_ARCH__)
@@ -415,14 +439,14 @@ static __inline__ __host__ __device__ bool isnan(float a)
   return isnan<float>(a);
 #endif /* defined(__CUDA_ARCH__) */
 }
-#endif /* _MSC_VER < 1800 */
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
-#if _MSC_VER < 1800
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 static __inline__ __host__ __device__ int isfinite(long double a)
 {
   return __finitel(a);
 }
-#else /* _MSC_VER < 1800 */
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 static __inline__ __host__ __device__ bool isfinite(long double a)
 {
 #if defined(__CUDA_ARCH__)
@@ -431,14 +455,14 @@ static __inline__ __host__ __device__ bool isfinite(long double a)
   return isfinite<long double>(a);
 #endif /* defined(__CUDA_ARCH__) */
 }
-#endif /* _MSC_VER < 1800 */
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
-#if _MSC_VER < 1800
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 static __inline__ __host__ __device__ int isfinite(double a)
 {
   return __finite(a);
 }
-#else /* _MSC_VER < 1800 */
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 static __inline__ __host__ __device__ bool isfinite(double a)
 {
 #if defined(__CUDA_ARCH__)
@@ -447,14 +471,14 @@ static __inline__ __host__ __device__ bool isfinite(double a)
   return isfinite<double>(a);
 #endif /* defined(__CUDA_ARCH__) */
 }
-#endif /* _MSC_VER < 1800 */
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
-#if _MSC_VER < 1800
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 static __inline__ __host__ __device__ int isfinite(float a)
 {
   return __finitef(a);
 }
-#else /* _MSC_VER < 1800 */
+#else /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 static __inline__ __host__ __device__ bool isfinite(float a)
 {
 #if defined(__CUDA_ARCH__)
@@ -463,7 +487,7 @@ static __inline__ __host__ __device__ bool isfinite(float a)
   return isfinite<float>(a);
 #endif /* defined(__CUDA_ARCH__) */
 }
-#endif /* _MSC_VER < 1800 */
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
 #endif /* __CUDACC_RTC__ */
 
@@ -473,8 +497,9 @@ static __inline__ __host__ __device__ bool isfinite(float a)
 #define __MATH_FUNCTIONS_DECL__ static inline __host__ __device__
 #endif /* __CUDACC_RTC__ */
 
-#if defined(__CUDACC_RTC__) || _MSC_VER < 1800
+#if defined(__CUDACC_RTC__) || (!defined(_MSC_VER) || _MSC_VER < 1800)
 #if !defined(__QNX__)
+#if !(__GNUC__ > 5 && __cplusplus >= 201103L)
 __MATH_FUNCTIONS_DECL__ float logb(float a)
 {
   return logbf(a);
@@ -649,8 +674,9 @@ __MATH_FUNCTIONS_DECL__ float fmin(float a, float b)
 {
   return fminf(a, b);
 }
+#endif /* !(__GNUC__ > 5 && __cplusplus >= 201103L) */
 #endif /* !QNX */
-#endif /* __CUDACC__JIT__ || _MSC_VER < 1800 */
+#endif /* __CUDACC__JIT__ || (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
 __MATH_FUNCTIONS_DECL__ float exp10(float a)
 {
@@ -777,6 +803,68 @@ __MATH_FUNCTIONS_DECL__ unsigned int min(unsigned int a, int b)
   return umin(a, (unsigned int)b);
 }
 
+__MATH_FUNCTIONS_DECL__ long int min(long int a, long int b)
+{
+  /* Suppress VS warning: warning C4127: conditional expression is constant */
+#if defined(_MSC_VER)
+#pragma warning (disable: 4127)
+#endif /* _MSC_VER */
+  /* long can be of 32-bit type on some systems. */
+  if (sizeof(long int) == sizeof(int)) {
+#if defined(_MSC_VER)
+#pragma warning (default: 4127)
+#endif /* _MSC_VER */
+    return (long int)min((int)a, (int)b);
+  } else {
+    return (long int)llmin((long long int)a, (long long int)b);
+  }
+}
+
+__MATH_FUNCTIONS_DECL__ unsigned long int min(unsigned long int a, unsigned long int b)
+{
+#if defined(_MSC_VER)
+#pragma warning (disable: 4127)
+#endif /* _MSC_VER */
+  if (sizeof(unsigned long int) == sizeof(unsigned int)) {
+#if defined(_MSC_VER)
+#pragma warning (default: 4127)
+#endif /* _MSC_VER */
+    return (unsigned long int)umin((unsigned int)a, (unsigned int)b);
+  } else {
+    return (unsigned long int)ullmin((unsigned long long int)a, (unsigned long long int)b);
+  }
+}
+
+__MATH_FUNCTIONS_DECL__ unsigned long int min(long int a, unsigned long int b)
+{
+#if defined(_MSC_VER)
+#pragma warning (disable: 4127)
+#endif /* _MSC_VER */
+  if (sizeof(unsigned long int) == sizeof(unsigned int)) {
+#if defined(_MSC_VER)
+#pragma warning (default: 4127)
+#endif /* _MSC_VER */
+    return (unsigned long int)umin((unsigned int)a, (unsigned int)b);
+  } else {
+    return (unsigned long int)ullmin((unsigned long long int)a, (unsigned long long int)b);
+  }
+}
+
+__MATH_FUNCTIONS_DECL__ unsigned long int min(unsigned long int a, long int b)
+{
+#if defined(_MSC_VER)
+#pragma warning (disable: 4127)
+#endif /* _MSC_VER */
+  if (sizeof(unsigned long int) == sizeof(unsigned int)) {
+#if defined(_MSC_VER)
+#pragma warning (default: 4127)
+#endif /* _MSC_VER */
+    return (unsigned long int)umin((unsigned int)a, (unsigned int)b);
+  } else {
+    return (unsigned long int)ullmin((unsigned long long int)a, (unsigned long long int)b);
+  }
+}
+
 __MATH_FUNCTIONS_DECL__ long long int min(long long int a, long long int b)
 {
   return llmin(a, b);
@@ -832,6 +920,67 @@ __MATH_FUNCTIONS_DECL__ unsigned int max(unsigned int a, int b)
   return umax(a, (unsigned int)b);
 }
 
+__MATH_FUNCTIONS_DECL__ long int max(long int a, long int b)
+{
+  /* long can be of 32-bit type on some systems. */
+#if defined(_MSC_VER)
+#pragma warning (disable: 4127)
+#endif /* _MSC_VER */
+  if (sizeof(long int) == sizeof(int)) {
+#if defined(_MSC_VER)
+#pragma warning (default: 4127)
+#endif /* _MSC_VER */
+    return (long int)max((int)a, (int)b);
+  } else {
+    return (long int)llmax((long long int)a, (long long int)b);
+  }
+}
+
+__MATH_FUNCTIONS_DECL__ unsigned long int max(unsigned long int a, unsigned long int b)
+{
+#if defined(_MSC_VER)
+#pragma warning (disable: 4127)
+#endif /* _MSC_VER */
+  if (sizeof(unsigned long int) == sizeof(unsigned int)) {
+#if defined(_MSC_VER)
+#pragma warning (default: 4127)
+#endif /* _MSC_VER */
+    return (unsigned long int)umax((unsigned int)a, (unsigned int)b);
+  } else {
+    return (unsigned long int)ullmax((unsigned long long int)a, (unsigned long long int)b);
+  }
+}
+
+__MATH_FUNCTIONS_DECL__ unsigned long int max(long int a, unsigned long int b)
+{
+#if defined(_MSC_VER)
+#pragma warning (disable: 4127)
+#endif /* _MSC_VER */
+  if (sizeof(unsigned long int) == sizeof(unsigned int)) {
+#if defined(_MSC_VER)
+#pragma warning (default: 4127)
+#endif /* _MSC_VER */
+    return (unsigned long int)umax((unsigned int)a, (unsigned int)b);
+  } else {
+    return (unsigned long int)ullmax((unsigned long long int)a, (unsigned long long int)b);
+  }
+}
+
+__MATH_FUNCTIONS_DECL__ unsigned long int max(unsigned long int a, long int b)
+{
+#if defined(_MSC_VER)
+#pragma warning (disable: 4127)
+#endif /* _MSC_VER */
+  if (sizeof(unsigned long int) == sizeof(unsigned int)) {
+#if defined(_MSC_VER)
+#pragma warning (default: 4127)
+#endif /* _MSC_VER */
+    return (unsigned long int)umax((unsigned int)a, (unsigned int)b);
+  } else {
+    return (unsigned long int)ullmax((unsigned long long int)a, (unsigned long long int)b);
+  }
+}
+
 __MATH_FUNCTIONS_DECL__ long long int max(long long int a, long long int b)
 {
   return llmax(a, b);
@@ -872,6 +1021,65 @@ __MATH_FUNCTIONS_DECL__ double max(double a, float b)
   return fmax(a, (double)b);
 }
 
+
+#if !defined(__CUDA_ARCH__)
+#if defined(_WIN32)
+#define __HELPER_FUNC_LINKAGE static inline __host__ __device__
+#pragma warning(disable : 4211)
+#else  /* !defined(_WIN32) */
+#define __HELPER_FUNC_LINKAGE inline __host__ __device__
+#endif  /* defined(_WIN32) */
+
+__HELPER_FUNC_LINKAGE int min(int a, int b)
+{
+  return a < b ? a : b;
+}
+
+__HELPER_FUNC_LINKAGE unsigned umin(unsigned int a, unsigned int b)
+{
+  return a < b ? a : b;
+}
+
+__HELPER_FUNC_LINKAGE long long int llmin(long long int a, long long int b)
+{
+  return a < b ? a : b;
+}
+
+__HELPER_FUNC_LINKAGE unsigned long long int ullmin(unsigned long long int a,
+						                                        unsigned long long int b)
+{
+  return a < b ? a : b;
+}
+
+__HELPER_FUNC_LINKAGE int max(int a, int b)
+{
+  return a > b ? a : b;
+}
+
+__HELPER_FUNC_LINKAGE unsigned int umax(unsigned int a, unsigned int b)
+{
+  return a > b ? a : b;
+}
+
+__HELPER_FUNC_LINKAGE long long int llmax(long long int a, long long int b)
+{
+  return a > b ? a : b;
+}
+
+__HELPER_FUNC_LINKAGE unsigned long long int ullmax(unsigned long long int a,
+                                                    unsigned long long int b)
+{
+  return a > b ? a : b;
+}
+
+#if defined(_WIN32)
+#pragma warning(default: 4211)
+#endif /* defined(_WIN32) */
+
+#undef __HELPER_FUNC_LINKAGE
+
+#endif /* !defined(__CUDA_ARCH__) */
+
 #undef __MATH_FUNCTIONS_DECL__
 
 /*******************************************************************************
@@ -881,7 +1089,7 @@ __MATH_FUNCTIONS_DECL__ double max(double a, float b)
 *******************************************************************************/
 
 #endif /* __CUDACC_RTC__ || __cplusplus && __CUDACC__ */
-#if defined(__CUDACC_RTC__) || !defined(__CUDACC__)
+#if defined(__CUDACC_RTC__) || !defined(__CUDACC__) || (defined(__CUDACC_INTEGRATED__) && defined(__CUDABE__))
 
 #include "host_defines.h"
 #include "math_constants.h"
@@ -900,9 +1108,17 @@ __MATH_FUNCTIONS_DECL__ double max(double a, float b)
 
 #if defined(__CUDACC_RTC__)
 #define __MATH_FUNCTIONS_DECL__ __host__ __device__
-#else /* __CUDACC_RTC__ */
+#elif defined(__CUDACC_INTEGRATED__)
+#define __MATH_FUNCTIONS_DECL__ __host__ __device__ __cudart_builtin__
+#else
 #define __MATH_FUNCTIONS_DECL__ static __forceinline__
 #endif /* __CUDACC_RTC__ */
+
+#if !defined(__CUDACC_INTEGRATED__)
+#undef __THROW
+#define __THROW
+#endif /* !defined(__CUDACC_INTEGRATED__) */
+
 
 /*******************************************************************************
 *                                                                              *
@@ -916,12 +1132,12 @@ __MATH_FUNCTIONS_DECL__ double max(double a, float b)
 *                                                                              *
 *******************************************************************************/
 
-__MATH_FUNCTIONS_DECL__ float rintf(float a)
+__MATH_FUNCTIONS_DECL__ float rintf(float a) __THROW
 {
   return __nv_rintf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ long int lrintf(float a)
+__MATH_FUNCTIONS_DECL__ long int lrintf(float a) __THROW
 {
 #if defined(__LP64__)
   return (long int)__float2ll_rn(a);
@@ -930,12 +1146,12 @@ __MATH_FUNCTIONS_DECL__ long int lrintf(float a)
 #endif /* __LP64__ */
 }
 
-__MATH_FUNCTIONS_DECL__ long long int llrintf(float a)
+__MATH_FUNCTIONS_DECL__ long long int llrintf(float a)  __THROW
 {
   return __nv_llrintf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float nearbyintf(float a)
+__MATH_FUNCTIONS_DECL__ float nearbyintf(float a)  __THROW
 {
   return __nv_nearbyintf(a);
 }
@@ -946,7 +1162,7 @@ __MATH_FUNCTIONS_DECL__ float nearbyintf(float a)
 *                                                                              *
 *******************************************************************************/
 
-__MATH_FUNCTIONS_DECL__ int __signbitf(float a)
+__MATH_FUNCTIONS_DECL__ int __signbitf(float a) __THROW
 {
   return __nv_signbitf(a);
 }
@@ -970,12 +1186,12 @@ __MATH_FUNCTIONS_DECL__ int _fdsign(float a)
 }
 #endif
 
-__MATH_FUNCTIONS_DECL__ float copysignf(float a, float b)
+__MATH_FUNCTIONS_DECL__ float copysignf(float a, float b) __THROW
 {
   return __nv_copysignf(a, b);
 }
 
-__MATH_FUNCTIONS_DECL__ int __finitef(float a)
+__MATH_FUNCTIONS_DECL__ int __finitef(float a) __THROW
 {
   return __nv_finitef(a);
 }
@@ -989,22 +1205,22 @@ __MATH_FUNCTIONS_DECL__ int __isfinitef(float a)
 
 #endif /* __APPLE__ */
 
-__MATH_FUNCTIONS_DECL__ int __isinff(float a)
+__MATH_FUNCTIONS_DECL__ int __isinff(float a) __THROW
 {
   return __nv_isinff(a);
 }
 
-__MATH_FUNCTIONS_DECL__ int __isnanf(float a)
+__MATH_FUNCTIONS_DECL__ int __isnanf(float a) __THROW
 {
   return __nv_isnanf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float nextafterf(float a, float b)
+__MATH_FUNCTIONS_DECL__ float nextafterf(float a, float b) __THROW
 {
   return __nv_nextafterf(a, b);
 }
 
-__MATH_FUNCTIONS_DECL__ float nanf(const char *tagp)
+__MATH_FUNCTIONS_DECL__ float nanf(const char *tagp) __THROW
 {
   return __nv_nanf((const signed char *) tagp);
 }
@@ -1015,288 +1231,303 @@ __MATH_FUNCTIONS_DECL__ float nanf(const char *tagp)
 *                                                                              *
 *******************************************************************************/
 
-__MATH_FUNCTIONS_DECL__ float sinf(float a)
+__MATH_FUNCTIONS_DECL__ float sinf(float a) __THROW
 {
-#if defined(__USE_FAST_MATH__)
-  return __nv_fast_sinf(a);
-#else /* __USE_FAST_MATH__ */
-  return __nv_sinf(a);
-#endif /* __USE_FAST_MATH__ */
+  if (__USE_FAST_MATH__) {
+    return __nv_fast_sinf(a);
+  } else {
+    return __nv_sinf(a);
+  }
 }
 
-__MATH_FUNCTIONS_DECL__ float cosf(float a)
+__MATH_FUNCTIONS_DECL__ float cosf(float a) __THROW
 {
-#if defined(__USE_FAST_MATH__)
-  return __nv_fast_cosf(a);
-#else /* __USE_FAST_MATH__ */
-  return __nv_cosf(a);
-#endif /* __USE_FAST_MATH__ */
+  if (__USE_FAST_MATH__) {
+    return __nv_fast_cosf(a);
+  } else {
+    return __nv_cosf(a);
+  }
 }
 
-__MATH_FUNCTIONS_DECL__ void sincosf(float a, float *sptr, float *cptr)
+__MATH_FUNCTIONS_DECL__ void sincosf(float a, float *sptr, float *cptr) __THROW
 {
-#if defined(__USE_FAST_MATH__)
-  __nv_fast_sincosf(a, sptr, cptr);
-#else /* __USE_FAST_MATH__ */
-  __nv_sincosf(a, sptr, cptr);
-#endif /* __USE_FAST_MATH__ */
+  if (__USE_FAST_MATH__) {
+    __nv_fast_sincosf(a, sptr, cptr);
+  } else {
+    __nv_sincosf(a, sptr, cptr);
+  }
 }
 
-__MATH_FUNCTIONS_DECL__ float sinpif(float a)
+__MATH_FUNCTIONS_DECL__ float sinpif(float a) /* __THROW */
 {
   return __nv_sinpif(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float cospif(float a)
+__MATH_FUNCTIONS_DECL__ float cospif(float a) /* __THROW */
 {
   return __nv_cospif(a);
 }
 
-__MATH_FUNCTIONS_DECL__ void sincospif(float a, float *sptr, float *cptr)
+__MATH_FUNCTIONS_DECL__ void sincospif(float a, float *sptr, float *cptr)  /* __THROW */
 {
   __nv_sincospif(a, sptr, cptr);
 }
 
-__MATH_FUNCTIONS_DECL__ float tanf(float a)
+__MATH_FUNCTIONS_DECL__ float tanf(float a) __THROW
 {
-#if defined(__USE_FAST_MATH__)
-  return __nv_fast_tanf(a);
-#else /* __USE_FAST_MATH__ */
-  return __nv_tanf(a);
-#endif /* __USE_FAST_MATH__ */
+  if (__USE_FAST_MATH__) {
+    return __nv_fast_tanf(a);
+  } else {
+    return __nv_tanf(a);
+  }
 }
 
-__MATH_FUNCTIONS_DECL__ float log2f(float a)
+__MATH_FUNCTIONS_DECL__ float log2f(float a) __THROW
 {
-#if defined(__USE_FAST_MATH__)
-  return __nv_fast_log2f(a);
-#else /* __USE_FAST_MATH__ */
-  return __nv_log2f(a);
-#endif /* __USE_FAST_MATH__ */
+  if (__USE_FAST_MATH__) {
+    return __nv_fast_log2f(a);
+  } else {
+    return __nv_log2f(a);
+  }
 }
 
-__MATH_FUNCTIONS_DECL__ float expf(float a)
+__MATH_FUNCTIONS_DECL__ float expf(float a) __THROW
 {
-#if defined(__USE_FAST_MATH__)
-  return __nv_fast_expf(a);
-#else /* __USE_FAST_MATH__ */
-  return __nv_expf(a);
-#endif /* __USE_FAST_MATH__ */
+  if (__USE_FAST_MATH__) {
+    return __nv_fast_expf(a);
+  } else {
+    return __nv_expf(a);
+  }
 }
 
-__MATH_FUNCTIONS_DECL__ float exp10f(float a)
+__MATH_FUNCTIONS_DECL__ float exp10f(float a) __THROW
 {
-#if defined(__USE_FAST_MATH__)
-  return __nv_fast_exp10f(a);
-#else /* __USE_FAST_MATH__ */
-  return __nv_exp10f(a);
-#endif /* __USE_FAST_MATH__ */
+  if (__USE_FAST_MATH__) {
+    return __nv_fast_exp10f(a);
+  } else {
+    return __nv_exp10f(a);
+  }
 }
 
-__MATH_FUNCTIONS_DECL__ float coshf(float a)
+__MATH_FUNCTIONS_DECL__ float coshf(float a) __THROW
 {
   return __nv_coshf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float sinhf(float a)
+__MATH_FUNCTIONS_DECL__ float sinhf(float a) __THROW
 {
   return __nv_sinhf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float tanhf(float a)
+__MATH_FUNCTIONS_DECL__ float tanhf(float a) __THROW
 {
   return __nv_tanhf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float atan2f(float a, float b)
+__MATH_FUNCTIONS_DECL__ float atan2f(float a, float b) __THROW
 {
   return __nv_atan2f(a, b);
 }
 
-__MATH_FUNCTIONS_DECL__ float atanf(float a)
+__MATH_FUNCTIONS_DECL__ float atanf(float a) __THROW
 {
   return __nv_atanf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float asinf(float a)
+__MATH_FUNCTIONS_DECL__ float asinf(float a) __THROW
 {
   return __nv_asinf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float acosf(float a)
+__MATH_FUNCTIONS_DECL__ float acosf(float a) __THROW
 {
   return __nv_acosf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float logf(float a)
+__MATH_FUNCTIONS_DECL__ float logf(float a) __THROW
 {
-#if defined(__USE_FAST_MATH__)
-  return __nv_fast_logf(a);
-#else /* __USE_FAST_MATH__ */
-  return __nv_logf(a);
-#endif /* __USE_FAST_MATH__ */
+  if (__USE_FAST_MATH__) {
+    return __nv_fast_logf(a);
+  } else {
+    return __nv_logf(a);
+  }
 }
 
-__MATH_FUNCTIONS_DECL__ float log10f(float a)
+__MATH_FUNCTIONS_DECL__ float log10f(float a) __THROW
 {
-#if defined(__USE_FAST_MATH__)
-  return __nv_fast_log10f(a);
-#else /* __USE_FAST_MATH__ */
-  return __nv_log10f(a);
-#endif /* __USE_FAST_MATH__ */
+  if (__USE_FAST_MATH__) {
+    return __nv_fast_log10f(a);
+  } else {
+    return __nv_log10f(a);
+  }
 }
 
-__MATH_FUNCTIONS_DECL__ float log1pf(float a)
+__MATH_FUNCTIONS_DECL__ float log1pf(float a) __THROW
 {
   return __nv_log1pf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float acoshf(float a)
+__MATH_FUNCTIONS_DECL__ float acoshf(float a) __THROW
 {
   return __nv_acoshf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float asinhf(float a)
+__MATH_FUNCTIONS_DECL__ float asinhf(float a) __THROW
 {
   return __nv_asinhf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float atanhf(float a)
+__MATH_FUNCTIONS_DECL__ float atanhf(float a) __THROW
 {
   return __nv_atanhf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float expm1f(float a)
+__MATH_FUNCTIONS_DECL__ float expm1f(float a) __THROW
 {
   return __nv_expm1f(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float hypotf(float a, float b)
+__MATH_FUNCTIONS_DECL__ float hypotf(float a, float b) __THROW
 {
   return __nv_hypotf(a, b);
 }
 
-__MATH_FUNCTIONS_DECL__ float rhypotf(float a, float b)
+__MATH_FUNCTIONS_DECL__ float rhypotf(float a, float b) __THROW
 {
   return __nv_rhypotf(a, b);
 }
 
-__MATH_FUNCTIONS_DECL__ float norm3df(float a, float b, float c)
+__MATH_FUNCTIONS_DECL__ float rnormf(int dim, float const * a) __THROW
+{
+  return __nv_rnormf(dim, a);
+}
+
+__MATH_FUNCTIONS_DECL__ float normf(int dim, float const * a) __THROW
+{
+  return __nv_normf(dim, a);
+}
+
+__MATH_FUNCTIONS_DECL__ float norm3df(float a, float b, float c) __THROW
 {
   return __nv_norm3df(a, b, c);
 }
 
-__MATH_FUNCTIONS_DECL__ float rnorm3df(float a, float b, float c)
+__MATH_FUNCTIONS_DECL__ float rnorm3df(float a, float b, float c) __THROW
 {
   return __nv_rnorm3df(a, b, c);
 }
 
-__MATH_FUNCTIONS_DECL__ float norm4df(float a, float b, float c, float d)
+__MATH_FUNCTIONS_DECL__ float norm4df(float a, float b, float c, float d) __THROW
 {
   return __nv_norm4df(a, b, c, d);
 }
 
-__MATH_FUNCTIONS_DECL__ float cbrtf(float a)
+__MATH_FUNCTIONS_DECL__ float rnorm4df(float a, float b, float c, float d) __THROW
+{
+  return __nv_rnorm4df(a, b, c, d);
+}
+
+__MATH_FUNCTIONS_DECL__ float cbrtf(float a) __THROW
 {
   return __nv_cbrtf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float rcbrtf(float a)
+__MATH_FUNCTIONS_DECL__ float rcbrtf(float a) /*__THROW */
 {
   return __nv_rcbrtf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float j0f(float a)
+__MATH_FUNCTIONS_DECL__ float j0f(float a) __THROW
 {
   return __nv_j0f(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float j1f(float a)
+__MATH_FUNCTIONS_DECL__ float j1f(float a) __THROW
 {
   return __nv_j1f(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float y0f(float a)
+__MATH_FUNCTIONS_DECL__ float y0f(float a) __THROW
 {
   return __nv_y0f(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float y1f(float a)
+__MATH_FUNCTIONS_DECL__ float y1f(float a) __THROW
 {
   return __nv_y1f(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float ynf(int n, float a)
+__MATH_FUNCTIONS_DECL__ float ynf(int n, float a) __THROW
 {
   return __nv_ynf(n, a);
 }
 
-__MATH_FUNCTIONS_DECL__ float jnf(int n, float a)
+__MATH_FUNCTIONS_DECL__ float jnf(int n, float a) __THROW
 {
   return __nv_jnf(n, a);
 }
 
-__MATH_FUNCTIONS_DECL__ float cyl_bessel_i0f(float a)
+__MATH_FUNCTIONS_DECL__ float cyl_bessel_i0f(float a) __THROW
 {
   return __nv_cyl_bessel_i0f(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float cyl_bessel_i1f(float a)
+__MATH_FUNCTIONS_DECL__ float cyl_bessel_i1f(float a) __THROW
 {
   return __nv_cyl_bessel_i1f(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float erff(float a)
+__MATH_FUNCTIONS_DECL__ float erff(float a) __THROW
 {
   return __nv_erff(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float erfinvf(float a)
+__MATH_FUNCTIONS_DECL__ float erfinvf(float a) /* __THROW */
 {
   return __nv_erfinvf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float erfcf(float a)
+__MATH_FUNCTIONS_DECL__ float erfcf(float a) __THROW
 {
   return __nv_erfcf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float erfcxf(float a)
+__MATH_FUNCTIONS_DECL__ float erfcxf(float a) /* __THROW */
 {
   return __nv_erfcxf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float erfcinvf(float a)
+__MATH_FUNCTIONS_DECL__ float erfcinvf(float a) /* __THROW */
 {
   return __nv_erfcinvf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float normcdfinvf(float a)
+__MATH_FUNCTIONS_DECL__ float normcdfinvf(float a) /* __THROW */
 {
   return __nv_normcdfinvf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float normcdff(float a)
+__MATH_FUNCTIONS_DECL__ float normcdff(float a) /* __THROW */
 {
   return __nv_normcdff(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float lgammaf(float a)
+__MATH_FUNCTIONS_DECL__ float lgammaf(float a) __THROW
 {
   return __nv_lgammaf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float ldexpf(float a, int b)
+__MATH_FUNCTIONS_DECL__ float ldexpf(float a, int b) __THROW
 {
   return __nv_ldexpf(a, b);
 }
 
-__MATH_FUNCTIONS_DECL__ float scalbnf(float a, int b)
+__MATH_FUNCTIONS_DECL__ float scalbnf(float a, int b) __THROW
 {
   return __nv_scalbnf(a, b);
 }
 
-__MATH_FUNCTIONS_DECL__ float scalblnf(float a, long int b)
+__MATH_FUNCTIONS_DECL__ float scalblnf(float a, long int b) __THROW
 {
   int t;
   if (b > 2147483647L) {
@@ -1309,71 +1540,71 @@ __MATH_FUNCTIONS_DECL__ float scalblnf(float a, long int b)
   return scalbnf(a, t);
 }
 
-__MATH_FUNCTIONS_DECL__ float frexpf(float a, int *b)
+__MATH_FUNCTIONS_DECL__ float frexpf(float a, int *b) __THROW
 {
   return __nv_frexpf(a, b);
 }
 
-__MATH_FUNCTIONS_DECL__ float modff(float a, float *b)
+__MATH_FUNCTIONS_DECL__ float modff(float a, float *b) __THROW
 {
   return __nv_modff(a, b);
 }
 
-__MATH_FUNCTIONS_DECL__ float fmodf(float a, float b)
+__MATH_FUNCTIONS_DECL__ float fmodf(float a, float b) __THROW
 {
   return __nv_fmodf(a, b);
 }
 
-__MATH_FUNCTIONS_DECL__ float remainderf(float a, float b)
+__MATH_FUNCTIONS_DECL__ float remainderf(float a, float b) __THROW
 {
   return __nv_remainderf(a, b);
 }
 
-__MATH_FUNCTIONS_DECL__ float remquof(float a, float b, int* quo)
+__MATH_FUNCTIONS_DECL__ float remquof(float a, float b, int* quo) __THROW
 {
   return __nv_remquof(a, b, quo);
 }
 
-__MATH_FUNCTIONS_DECL__ float fmaf(float a, float b, float c)
+__MATH_FUNCTIONS_DECL__ float fmaf(float a, float b, float c) __THROW
 {
   return __nv_fmaf(a, b, c);
 }
 
-__MATH_FUNCTIONS_DECL__ float powif(float a, int b)
+__MATH_FUNCTIONS_DECL__ float powif(float a, int b) /* __THROW */
 {
   return __nv_powif(a, b);
 }
 
-__MATH_FUNCTIONS_DECL__ double powi(double a, int b)
+__MATH_FUNCTIONS_DECL__ double powi(double a, int b) /* __THROW */
 {
   return __nv_powi(a, b);
 }
 
-__MATH_FUNCTIONS_DECL__ float powf(float a, float b)
+__MATH_FUNCTIONS_DECL__ float powf(float a, float b) __THROW
 {
-#if defined(__USE_FAST_MATH__)
-  return __nv_fast_powf(a, b);
-#else /* __USE_FAST_MATH__ */
-  return __nv_powf(a, b);
-#endif /* __USE_FAST_MATH__ */
+  if (__USE_FAST_MATH__) {
+    return __nv_fast_powf(a, b);
+  } else {
+    return __nv_powf(a, b);
+  }
 }
 
-__MATH_FUNCTIONS_DECL__ float tgammaf(float a)
+__MATH_FUNCTIONS_DECL__ float tgammaf(float a) __THROW
 {
   return __nv_tgammaf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float roundf(float a)
+__MATH_FUNCTIONS_DECL__ float roundf(float a) __THROW
 {
   return __nv_roundf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ long long int llroundf(float a)
+__MATH_FUNCTIONS_DECL__ long long int llroundf(float a) __THROW
 {
   return __nv_llroundf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ long int lroundf(float a)
+__MATH_FUNCTIONS_DECL__ long int lroundf(float a) __THROW
 {
 #if defined(__LP64__)
   return (long int)llroundf(a);
@@ -1382,17 +1613,17 @@ __MATH_FUNCTIONS_DECL__ long int lroundf(float a)
 #endif /* __LP64__ */
 }
 
-__MATH_FUNCTIONS_DECL__ float fdimf(float a, float b)
+__MATH_FUNCTIONS_DECL__ float fdimf(float a, float b) __THROW
 {
   return __nv_fdimf(a, b);
 }
 
-__MATH_FUNCTIONS_DECL__ int ilogbf(float a)
+__MATH_FUNCTIONS_DECL__ int ilogbf(float a) __THROW
 {
   return __nv_ilogbf(a);
 }
 
-__MATH_FUNCTIONS_DECL__ float logbf(float a)
+__MATH_FUNCTIONS_DECL__ float logbf(float a) __THROW
 {
   return __nv_logbf(a);
 }
@@ -1513,12 +1744,12 @@ __func__(int __isinf(double a))
 
 #if defined(_WIN32) || defined (__ANDROID__)
 
-#if _MSC_VER < 1800
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 __func__(double log2(double a))
 {
   return log(a) * 1.44269504088896340;
 }
-#endif /* _MSC_VER < 1800 */
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
 #endif /* _WIN32 || __ANDROID__ */
 
@@ -1541,7 +1772,7 @@ __func__(int __signbit(double a))
   return cvt.l < 0ll;
 }
 
-#if _MSC_VER < 1800
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 __func__(double copysign(double a, double b))
 {
   volatile union {
@@ -1567,7 +1798,7 @@ __func__(int __finite(double a))
   return cvt.l << 1 < 0xffe0000000000000ull;
 }
 
-#if _MSC_VER < 1800
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 __func__(double fmax(double a, double b))
 {
   if (__isnan(a) && __isnan(b)) return a + b;
@@ -2918,7 +3149,7 @@ __func__(double tgamma(double a))
     }
   }
 }
-#endif /* _MSC_VER < 1800 */
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
 /*******************************************************************************
 *                                                                              *
@@ -2967,7 +3198,7 @@ __func__(int __isnanf(float a))
   return __isnan((double)a);
 }
 
-#if _MSC_VER < 1800
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 __func__(float fmaxf(float a, float b))
 {
   return (float)fmax((double)a, (double)b);
@@ -3117,7 +3348,7 @@ __func__(float remainderf(float a, float b))
 {
   return (float)remainder((double)a, (double)b);
 }
-#endif /* _MSC_VER < 1800 */
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
 /*******************************************************************************
 *                                                                              *
@@ -3125,7 +3356,7 @@ __func__(float remainderf(float a, float b))
 *                                                                              *
 *******************************************************************************/
 
-#if _MSC_VER < 1800
+#if (!defined(_MSC_VER) || _MSC_VER < 1800)
 __func__(float copysignf(float a, float b))
 {
   volatile union {
@@ -3176,7 +3407,7 @@ __func__(float nanf(const char *tagp))
   return cvt.f;
 }
 
-#endif /* _MSC_VER < 1800 */
+#endif /* (!defined(_MSC_VER) || _MSC_VER < 1800) */
 
 #endif /* _WIN32 */
 
@@ -3610,52 +3841,6 @@ __func__(float normcdff(float a))
 __func__(float erfcxf(float a))
 {
   return (float)erfcx((double)a);
-}
-
-/*******************************************************************************
-*                                                                              *
-* HOST IMPLEMENTATION FOR UTILITY ROUTINES. ALL PLATFORMS                      *
-*                                                                              *
-*******************************************************************************/
-
-__func__(int min(int a, int b))
-{
-  return a < b ? a : b;
-}
-
-__func__(unsigned int umin(unsigned int a, unsigned int b))
-{
-  return a < b ? a : b;
-}
-
-__func__(long long int llmin(long long int a, long long int b))
-{
-  return a < b ? a : b;
-}
-
-__func__(unsigned long long int ullmin(unsigned long long int a, unsigned long long int b))
-{
-  return a < b ? a : b;
-}
-
-__func__(int max(int a, int b))
-{
-  return a > b ? a : b;
-}
-
-__func__(unsigned int umax(unsigned int a, unsigned int b))
-{
-  return a > b ? a : b;
-}
-
-__func__(long long int llmax(long long int a, long long int b))
-{
-  return a > b ? a : b;
-}
-
-__func__(unsigned long long int ullmax(unsigned long long int a, unsigned long long int b))
-{
-  return a > b ? a : b;
 }
 
 #if defined(_WIN32)

@@ -42,7 +42,7 @@
 */
 
 // OpenGL Graphics includes
-#include <GL/glew.h>
+#include <helper_gl.h>
 #if defined(__APPLE__) || defined(MACOSX)
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #include <GLUT/glut.h>
@@ -245,7 +245,7 @@ void display()
 
     checkCudaErrors(cudaGraphicsUnmapResources(1, &cuda_pbo_resource, 0));
 
-    // Common diplay path
+    // Common display path
     {
         // display results
         glClear(GL_COLOR_BUFFER_BIT);
@@ -258,7 +258,7 @@ void display()
         glProgramLocalParameterI4iNV(GL_FRAGMENT_PROGRAM_ARB, 0, width, 0, 0, 0);
 #else
         // download image from PBO to OpenGL texture
-        glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
         glBindTexture(GL_TEXTURE_TYPE, displayTex);
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glTexSubImage2D(GL_TEXTURE_TYPE,
@@ -281,7 +281,7 @@ void display()
         glDisable(GL_TEXTURE_TYPE);
         glDisable(GL_FRAGMENT_PROGRAM_ARB);
 
-        glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
 
         if (drawCurves)
         {
@@ -461,7 +461,7 @@ void cleanup()
     freeTexture();
     checkCudaErrors(cudaGraphicsUnregisterResource(cuda_pbo_resource));
 
-    glDeleteBuffersARB(1, &pbo);
+    glDeleteBuffers(1, &pbo);
 
 #if USE_BUFFER_TEX
     glDeleteTextures(1, &bufferTex);
@@ -471,13 +471,6 @@ void cleanup()
 #endif
 
     sdkDeleteTimer(&timer);
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 }
 
 int iDivUp(int a, int b)
@@ -491,14 +484,14 @@ void initGLBuffers()
     {
         // delete old buffer
         checkCudaErrors(cudaGraphicsUnregisterResource(cuda_pbo_resource));
-        glDeleteBuffersARB(1, &pbo);
+        glDeleteBuffers(1, &pbo);
     }
 
     // create pixel buffer object for display
-    glGenBuffersARB(1, &pbo);
-    glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
-    glBufferDataARB(GL_PIXEL_UNPACK_BUFFER_ARB, width*height*sizeof(uchar4), 0, GL_STREAM_DRAW_ARB);
-    glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+    glGenBuffers(1, &pbo);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER_ARB, width*height*sizeof(uchar4), 0, GL_STREAM_DRAW_ARB);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
 
     checkCudaErrors(cudaGraphicsGLRegisterBuffer(&cuda_pbo_resource, pbo,
                                                  cudaGraphicsMapFlagsWriteDiscard));
@@ -619,13 +612,6 @@ void runAutoTest(int argc, char **argv, const char *dump_filename, eFilterMode f
 
     checkCudaErrors(cudaFree(d_output));
     free(h_result);
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 }
 
 
@@ -749,11 +735,8 @@ void initGL(int *argc, char **argv)
 
     initMenus();
 
-    glewInit();
-
-    if (!glewIsSupported("GL_VERSION_2_0 "
-                         "GL_ARB_pixel_buffer_object "
-                        ))
+    if (!isGLVersionSupported(2,0) ||
+        !areGLExtensionsSupported("GL_ARB_pixel_buffer_object"))
     {
         fprintf(stderr, "Required OpenGL extensions are missing.");
         exit(EXIT_FAILURE);
@@ -761,13 +744,13 @@ void initGL(int *argc, char **argv)
 
 #if USE_BUFFER_TEX
 
-    if (!glewIsSupported("GL_EXT_texture_buffer_object"))
+    if (!areGLExtensionsSupported("GL_EXT_texture_buffer_object"))
     {
         fprintf(stderr, "OpenGL extension: GL_EXT_texture_buffer_object missing.\n");
         exit(EXIT_FAILURE);
     }
 
-    if (!glewIsSupported("GL_NV_gpu_program4"))
+    if (!areGLExtensionsSupported("GL_NV_gpu_program4"))
     {
         fprintf(stderr, "OpenGL extension: GL_NV_gpu_program4 missing.\n");
         exit(EXIT_FAILURE);

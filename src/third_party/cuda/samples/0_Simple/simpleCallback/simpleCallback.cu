@@ -111,7 +111,7 @@ CUT_THREADPROC postprocess(void *void_arg)
     checkCudaErrors(cudaFreeHost(workload->h_data));
     checkCudaErrors(cudaStreamDestroy(workload->stream));
 
-    // Signal the end of the heterogenous workload to main thread
+    // Signal the end of the heterogeneous workload to main thread
     cutIncrementBarrier(&thread_barrier);
 
     CUT_THREADEND;
@@ -165,7 +165,7 @@ int main(int argc, char **argv)
     workloads = (heterogeneous_workload *) malloc(N_workloads * sizeof(heterogeneous_workload));;
     thread_barrier = cutCreateBarrier(N_workloads);
 
-    // Main thread spawns a CPU worker thread for each heterogenous workload
+    // Main thread spawns a CPU worker thread for each heterogeneous workload
     printf("Starting %d heterogeneous computing workloads\n", N_workloads);
 
     for (int i=0; i< N_workloads; ++i)
@@ -188,13 +188,6 @@ int main(int argc, char **argv)
     }
 
     printf("%s\n", success ? "Success" : "Failure");
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 
     free(workloads);
 

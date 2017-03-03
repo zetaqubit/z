@@ -7,7 +7,7 @@
       <meta name="copyright" content="(C) Copyright 2005"></meta>
       <meta name="DC.rights.owner" content="(C) Copyright 2005"></meta>
       <meta name="DC.Type" content="concept"></meta>
-      <meta name="DC.Title" content="NVVM IR Specification 1.2"></meta>
+      <meta name="DC.Title" content="NVVM IR Specification 1.3"></meta>
       <meta name="abstract" content="Reference guide to the NVVM compiler IR (internal representation) based on the LVVM IR."></meta>
       <meta name="description" content="Reference guide to the NVVM compiler IR (internal representation) based on the LVVM IR."></meta>
       <meta name="DC.Coverage" content="Compiler SDK"></meta>
@@ -48,7 +48,7 @@
       <div id="site-content">
          <nav id="site-nav">
             <div class="category closed"><a href="../index.html" title="The root of the site.">CUDA Toolkit
-                  v7.0</a></div>
+                  v8.0</a></div>
             <div class="category"><a href="index.html" title="NVVM IR">NVVM IR</a></div>
             <ul>
                <li>
@@ -75,58 +75,73 @@
                         <div class="section-link"><a href="#visibility-styles">3.3.&nbsp;Visibility Styles</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#named-types">3.4.&nbsp;Named Types</a></div>
+                        <div class="section-link"><a href="#dll-storage-classes">3.4.&nbsp;DLL Storage Classes</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#global-variables">3.5.&nbsp;Global Variables</a></div>
+                        <div class="section-link"><a href="#threadlocal-storage-models">3.5.&nbsp;Thread Local Storage Models</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#functions">3.6.&nbsp;Functions</a></div>
+                        <div class="section-link"><a href="#comdats">3.6.&nbsp;Comdats</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#aliases">3.7.&nbsp;Aliases</a></div>
+                        <div class="section-link"><a href="#named-types">3.7.&nbsp;Named Types</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#named-metadata">3.8.&nbsp;Named Metadata</a></div>
+                        <div class="section-link"><a href="#global-variables">3.8.&nbsp;Global Variables</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#parameter-attributes">3.9.&nbsp;Parameter Attributes</a></div>
+                        <div class="section-link"><a href="#functions">3.9.&nbsp;Functions</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#garbage-collector-names">3.10.&nbsp;Garbage Collector Names</a></div>
+                        <div class="section-link"><a href="#aliases">3.10.&nbsp;Aliases</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#prefix-data">3.11.&nbsp;Prefix Data</a></div>
+                        <div class="section-link"><a href="#named-metadata">3.11.&nbsp;Named Metadata</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#attribute-groups">3.12.&nbsp;Attribute Groups</a></div>
+                        <div class="section-link"><a href="#parameter-attributes">3.12.&nbsp;Parameter Attributes</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#function-attributes">3.13.&nbsp;Function Attributes</a></div>
+                        <div class="section-link"><a href="#garbage-collector-names">3.13.&nbsp;Garbage Collector Names</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#module-level-inline-assembly">3.14.&nbsp;Module-Level Inline Assembly</a></div>
+                        <div class="section-link"><a href="#prefix-data">3.14.&nbsp;Prefix Data</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#data-layout">3.15.&nbsp;Data Layout</a></div>
+                        <div class="section-link"><a href="#attribute-groups">3.15.&nbsp;Attribute Groups</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#target-triple">3.16.&nbsp;Target Triple</a></div>
+                        <div class="section-link"><a href="#function-attributes">3.16.&nbsp;Function Attributes</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#pointer-aliasing-rules">3.17.&nbsp;Pointer Aliasing Rules</a></div>
+                        <div class="section-link"><a href="#unique_1301633514">3.17.&nbsp;Operand Bundles</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#volatile-memory-access">3.18.&nbsp;Volatile Memory Access</a></div>
+                        <div class="section-link"><a href="#module-level-inline-assembly">3.18.&nbsp;Module-Level Inline Assembly</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#memory-model-for-concurrent-operations">3.19.&nbsp;Memory Model for Concurrent Operations</a></div>
+                        <div class="section-link"><a href="#data-layout">3.19.&nbsp;Data Layout</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#atomic-memory-ordering-constraints">3.20.&nbsp;Atomic Memory Ordering Constraints</a></div>
+                        <div class="section-link"><a href="#target-triple">3.20.&nbsp;Target Triple</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#unique_203021795">3.21.&nbsp;Fast Math Flags</a></div>
+                        <div class="section-link"><a href="#pointer-aliasing-rules">3.21.&nbsp;Pointer Aliasing Rules</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="#volatile-memory-access">3.22.&nbsp;Volatile Memory Access</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="#memory-model-for-concurrent-operations">3.23.&nbsp;Memory Model for Concurrent Operations</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="#atomic-memory-ordering-constraints">3.24.&nbsp;Atomic Memory Ordering Constraints</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="#unique_341835507">3.25.&nbsp;Fast Math Flags</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="#uselist-order-directives">3.26.&nbsp;Use-list Order Directives</a></div>
                      </li>
                   </ul>
                </li>
@@ -190,7 +205,7 @@
                               <div class="section-link"><a href="#atomicrmw-instruction">8.6.6.&nbsp;atomicrmw Instruction</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#unique_1211874785">8.6.7.&nbsp;getelementptr Instruction</a></div>
+                              <div class="section-link"><a href="#unique_1360837405">8.6.7.&nbsp;getelementptr Instruction</a></div>
                            </li>
                         </ul>
                      </li>
@@ -224,7 +239,7 @@
                         <div class="section-link"><a href="#arithmetic-with-overflow-intrinsics">9.6.&nbsp;Arithmetic with Overflow Intrinsics</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#unique_868632050">9.7.&nbsp;Specialised Arithmetic Intrinsics</a></div>
+                        <div class="section-link"><a href="#unique_180430865">9.7.&nbsp;Specialised Arithmetic Intrinsics</a></div>
                      </li>
                      <li>
                         <div class="section-link"><a href="#half-precision-floating-point-intrinsics">9.8.&nbsp;Half Precision Floating Point Intrinsics</a></div>
@@ -239,10 +254,16 @@
                         <div class="section-link"><a href="#trampoline-intrinsics">9.11.&nbsp;Trampoline Intrinsics</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#memory-use-markers">9.12.&nbsp;Memory Use Markers</a></div>
+                        <div class="section-link"><a href="#unique_1288556551">9.12.&nbsp;Masked Vector Load and Store Intrinsics</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#general-intrinsics">9.13.&nbsp;General Intrinsics</a></div>
+                        <div class="section-link"><a href="#unique_1712563255">9.13.&nbsp;Masked Vector Gather and Scatter Intrinsics</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="#memory-use-markers">9.14.&nbsp;Memory Use Markers</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="#general-intrinsics">9.15.&nbsp;General Intrinsics</a></div>
                      </li>
                   </ul>
                </li>
@@ -321,7 +342,7 @@
                               <div class="section-link"><a href="#nvvm-intrin-surface-load">13.5.2.&nbsp;Surface Loads</a></div>
                            </li>
                            <li>
-                              <div class="section-link"><a href="#unique_1160360147">13.5.3.&nbsp;Surface Stores</a></div>
+                              <div class="section-link"><a href="#unique_1849183472">13.5.3.&nbsp;Surface Stores</a></div>
                            </li>
                         </ul>
                      </li>
@@ -358,10 +379,10 @@
                   (<a href="../../pdf/NVVM_IR_Specification.pdf">PDF</a>)
                   -
                   
-                  v7.0
+                  v8.0
                   (<a href="https://developer.nvidia.com/cuda-toolkit-archive">older</a>)
                   -
-                  Last updated March 5, 2015
+                  Last updated January 12, 2017
                   -
                   <a href="mailto:cudatools@nvidia.com?subject=CUDA Toolkit Documentation Feedback: NVVM IR">Send Feedback</a>
                   -
@@ -369,7 +390,7 @@
             </div>
             <article id="contents">
                <div class="topic nested0" id="abstract"><a name="abstract" shape="rect">
-                     <!-- --></a><h2 class="title topictitle1"><a href="#abstract" name="abstract" shape="rect">NVVM IR Specification 1.2</a></h2>
+                     <!-- --></a><h2 class="title topictitle1"><a href="#abstract" name="abstract" shape="rect">NVVM IR Specification 1.3</a></h2>
                   <div class="body conbody"></div>
                </div>
                <div class="topic concept nested0" id="introduction"><a name="introduction" shape="rect">
@@ -384,11 +405,16 @@
                         PTX codegen part of a NVVM compiler needs to know the source language because of the
                         difference in DCI (driver/compiler interface). 
                      </p>
+                     <p class="p"> NVVM IR is a binary format and is based on a subset of LLVM IR
+                        bitcode format. This document uses only human-readable form to
+                        describe NVVM IR.
+                        
+                     </p>
                      <p class="p">Technically speaking, NVVM IR is LLVM IR with a set of rules, restrictions, and
                         conventions, plus a set of supported intrinsic functions. A program specified in NVVM IR
                         is always a legal LLVM program. A legal LLVM program may not be a legal NVVM program. 
                      </p>
-                     <p class="p">There are three levels of support for LLVM IR.</p>
+                     <p class="p">There are three levels of support for NVVM IR.</p>
                      <ul class="ul">
                         <li class="li">Supported: The feature is fully supported. Most IR features should fall into this
                            category.
@@ -403,11 +429,14 @@
                            accept and ignore IRs that are illegal in the current version.
                         </li>
                      </ul>
-                     <p class="p">The current NVVM IR is based on LLVM 3.4. For the complete semantics of the IR, readers
-                        of this document should check the official LLVM Language Reference Manual (<a class="xref" href="http://llvm.org/releases/3.4/docs/LangRef.html" target="_blank" shape="rect">http://llvm.org/releases/3.4/docs/LangRef.html</a>).
-                     </p>
-                     <p class="p">This document describes version 1.2 of the NVVM IR and
+                     <p class="p">This document describes version 1.3 of the NVVM IR and
                         version 2.0 of the NVVM debug metadata (see <a class="xref" href="index.html#source-level-debugging-support" shape="rect">Source Level Debugging Support</a>).
+                        
+                     </p>
+                     <p class="p">The current NVVM IR is based on LLVM 3.8. For the complete semantics of the IR, readers
+                        of this document should check the official LLVM Language Reference Manual (<a class="xref" href="http://llvm.org/releases/3.8.0/docs/LangRef.html" target="_blank" shape="rect">http://llvm.org/releases/3.8.0/docs/LangRef.html</a>). The NVVM IR version 1.2 and the NVVM debug metadata
+                        version 2.0 are based on LLVM 3.4.
+                        The Language Reference Manual for LLVM 3.4 is at <a class="xref" href="http://llvm.org/releases/3.4/docs/LangRef.html" target="_blank" shape="rect">http://llvm.org/releases/3.4/docs/LangRef.html</a>.
                         
                      </p>
                      <p class="p">Support for the following compute architectures are provided with this release of the
@@ -421,6 +450,7 @@
                         <li class="li"><samp class="ph codeph">compute_37</samp></li>
                         <li class="li"><samp class="ph codeph">compute_50</samp></li>
                         <li class="li"><samp class="ph codeph">compute_52</samp></li>
+                        <li class="li"><samp class="ph codeph">compute_53</samp></li>
                      </ul>
                   </div>
                </div>
@@ -548,14 +578,32 @@
                         <p class="p">All styles—default, hidden, and protected—are accepted and ignored.</p>
                      </div>
                   </div>
+                  <div class="topic concept nested1" id="dll-storage-classes"><a name="dll-storage-classes" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#dll-storage-classes" name="dll-storage-classes" shape="rect">3.4.&nbsp;DLL Storage Classes</a></h3>
+                     <div class="body conbody">
+                        <p class="p">DLL storage classes are not supported.</p>
+                     </div>
+                  </div>
+                  <div class="topic concept nested1" id="threadlocal-storage-models"><a name="threadlocal-storage-models" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#threadlocal-storage-models" name="threadlocal-storage-models" shape="rect">3.5.&nbsp;Thread Local Storage Models</a></h3>
+                     <div class="body conbody">
+                        <p class="p">Not supported.</p>
+                     </div>
+                  </div>
+                  <div class="topic concept nested1" id="comdats"><a name="comdats" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#comdats" name="comdats" shape="rect">3.6.&nbsp;Comdats</a></h3>
+                     <div class="body conbody">
+                        <p class="p">Not supported.</p>
+                     </div>
+                  </div>
                   <div class="topic concept nested1" id="named-types"><a name="named-types" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#named-types" name="named-types" shape="rect">3.4.&nbsp;Named Types</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#named-types" name="named-types" shape="rect">3.7.&nbsp;Named Types</a></h3>
                      <div class="body conbody">
                         <p class="p">Fully supported.</p>
                      </div>
                   </div>
                   <div class="topic concept nested1" id="global-variables"><a name="global-variables" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#global-variables" name="global-variables" shape="rect">3.5.&nbsp;Global Variables</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#global-variables" name="global-variables" shape="rect">3.8.&nbsp;Global Variables</a></h3>
                      <div class="body conbody">
                         <p class="p">A global variable, that is not an intrinsic global variable, may be optionally declared to reside
                            in one of the following address spaces: 
@@ -575,25 +623,28 @@
                      </div>
                   </div>
                   <div class="topic concept nested1" id="functions"><a name="functions" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#functions" name="functions" shape="rect">3.6.&nbsp;Functions</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#functions" name="functions" shape="rect">3.9.&nbsp;Functions</a></h3>
                      <div class="body conbody">
-                        <p class="p">The following are not supported on functions.</p><a name="functions__ul_gtp_gdb_n3" shape="rect">
+                        <p class="p">The following are not supported on functions:</p><a name="functions__ul_gtp_gdb_n3" shape="rect">
                            <!-- --></a><ul class="ul" id="functions__ul_gtp_gdb_n3">
                            <li class="li">Alignment</li>
                            <li class="li">Explicit section</li>
                            <li class="li">Garbage collector name</li>
                            <li class="li">Prefix data</li>
+                           <li class="li">Prologue</li>
+                           <li class="li">Personality</li>
+                           <li class="li">Optional list of attached metadata</li>
                         </ul>
                      </div>
                   </div>
                   <div class="topic concept nested1" id="aliases"><a name="aliases" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#aliases" name="aliases" shape="rect">3.7.&nbsp;Aliases</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#aliases" name="aliases" shape="rect">3.10.&nbsp;Aliases</a></h3>
                      <div class="body conbody">
                         <p class="p">Fully supported.</p>
                      </div>
                   </div>
                   <div class="topic concept nested1" id="named-metadata"><a name="named-metadata" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#named-metadata" name="named-metadata" shape="rect">3.8.&nbsp;Named Metadata</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#named-metadata" name="named-metadata" shape="rect">3.11.&nbsp;Named Metadata</a></h3>
                      <div class="body conbody">
                         <p class="p">Accepted and ignored, except for the following:</p><a name="named-metadata__ul_wzy_5db_n3" shape="rect">
                            <!-- --></a><ul class="ul" id="named-metadata__ul_wzy_5db_n3">
@@ -629,35 +680,47 @@
 !0 = metadata !{ i32 1, i32 0, i32 1, i32 0}</pre></li>
                            </ul>
                            
-                           The version of NVVM IR described in this document is 1.2. The version of NVVM IR debug metadata described in this document
+                           The version of NVVM IR described in this document is 1.3. The version of NVVM IR debug metadata described in this document
                            is 2.0.
                            
                         </div>
                      </div>
                   </div>
                   <div class="topic concept nested1" id="parameter-attributes"><a name="parameter-attributes" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#parameter-attributes" name="parameter-attributes" shape="rect">3.9.&nbsp;Parameter Attributes</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#parameter-attributes" name="parameter-attributes" shape="rect">3.12.&nbsp;Parameter Attributes</a></h3>
                      <div class="body conbody">
-                        <p class="p"> Fully supported, except that <samp class="ph codeph">inreg</samp> and <samp class="ph codeph">nest</samp> are accepted and ignored.
-                        </p>
+                        <p class="p"> Fully supported, except the following:</p>
+                        <p class="p"> Accepted and ignored:</p>
+                        <ul class="ul">
+                           <li class="li"><samp class="ph codeph">inreg</samp></li>
+                           <li class="li"><samp class="ph codeph">nest</samp></li>
+                           <li class="li"><samp class="ph codeph">nonnull</samp></li>
+                           <li class="li"><samp class="ph codeph">dereferenceable(&lt;n&gt;)</samp></li>
+                           <li class="li"><samp class="ph codeph">dereferenceable_or_null(&lt;n&gt;)</samp></li>
+                        </ul>
+                        <p class="p"> Not supported:</p>
+                        <ul class="ul">
+                           <li class="li"><samp class="ph codeph">inalloca</samp></li>
+                           <li class="li"><samp class="ph codeph">align &lt;n&gt;</samp></li>
+                        </ul>
                         <p class="p">See <a class="xref" href="index.html#calling-conventions" shape="rect">Calling Conventions</a> for the use of the attributes.
                         </p>
                      </div>
                   </div>
                   <div class="topic concept nested1" id="garbage-collector-names"><a name="garbage-collector-names" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#garbage-collector-names" name="garbage-collector-names" shape="rect">3.10.&nbsp;Garbage Collector Names</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#garbage-collector-names" name="garbage-collector-names" shape="rect">3.13.&nbsp;Garbage Collector Names</a></h3>
                      <div class="body conbody">
                         <p class="p"> Not supported.</p>
                      </div>
                   </div>
                   <div class="topic concept nested1" id="prefix-data"><a name="prefix-data" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#prefix-data" name="prefix-data" shape="rect">3.11.&nbsp;Prefix Data</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#prefix-data" name="prefix-data" shape="rect">3.14.&nbsp;Prefix Data</a></h3>
                      <div class="body conbody">
                         <p class="p">Not supported.</p>
                      </div>
                   </div>
                   <div class="topic concept nested1" id="attribute-groups"><a name="attribute-groups" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#attribute-groups" name="attribute-groups" shape="rect">3.12.&nbsp;Attribute Groups</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#attribute-groups" name="attribute-groups" shape="rect">3.15.&nbsp;Attribute Groups</a></h3>
                      <div class="body conbody">
                         <p class="p">Fully supported.  The set of supported attributes is equal to the set of attributes
                            accepted where the attribute group is used.
@@ -665,7 +728,7 @@
                      </div>
                   </div>
                   <div class="topic concept nested1" id="function-attributes"><a name="function-attributes" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#function-attributes" name="function-attributes" shape="rect">3.13.&nbsp;Function Attributes</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#function-attributes" name="function-attributes" shape="rect">3.16.&nbsp;Function Attributes</a></h3>
                      <div class="body conbody">
                         <p class="p">Supported:</p><a name="function-attributes__ul_ed5_hgb_n3" shape="rect">
                            <!-- --></a><ul class="ul" id="function-attributes__ul_ed5_hgb_n3">
@@ -681,6 +744,13 @@
                            <li class="li"><samp class="ph codeph">optsize</samp></li>
                            <li class="li"><samp class="ph codeph">readnone</samp></li>
                            <li class="li"><samp class="ph codeph">readonly</samp></li>
+                        </ul>
+                        <p class="p"> Accepted and ignored:</p>
+                        <ul class="ul">
+                           <li class="li"><samp class="ph codeph">argmemonly</samp></li>
+                           <li class="li"><samp class="ph codeph">inaccessiblememonly</samp></li>
+                           <li class="li"><samp class="ph codeph">inaccessiblemem_or_argmemonly</samp></li>
+                           <li class="li"><samp class="ph codeph">norecurse</samp></li>
                         </ul>
                         <p class="p">Not Supported:</p><a name="function-attributes__ul_fvq_sgb_n3" shape="rect">
                            <!-- --></a><ul class="ul" id="function-attributes__ul_fvq_sgb_n3">
@@ -699,17 +769,27 @@
                            <li class="li"><samp class="ph codeph">sspreq</samp></li>
                            <li class="li"><samp class="ph codeph">sspstrong</samp></li>
                            <li class="li"><samp class="ph codeph">uwtable</samp></li>
+                           <li class="li"><samp class="ph codeph">convergent</samp></li>
+                           <li class="li"><samp class="ph codeph">jumptable</samp></li>
+                           <li class="li"><samp class="ph codeph">safestack</samp></li>
+                           <li class="li"><samp class="ph codeph">"thunk"</samp></li>
                         </ul>
                      </div>
                   </div>
+                  <div class="topic concept nested1" id="unique_1301633514"><a name="unique_1301633514" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_1301633514" name="unique_1301633514" shape="rect">Operand Bundles</a></h3>
+                     <div class="body conbody">
+                        <p class="p">Not supported.</p>
+                     </div>
+                  </div>
                   <div class="topic concept nested1" id="module-level-inline-assembly"><a name="module-level-inline-assembly" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#module-level-inline-assembly" name="module-level-inline-assembly" shape="rect">3.14.&nbsp;Module-Level Inline Assembly</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#module-level-inline-assembly" name="module-level-inline-assembly" shape="rect">3.18.&nbsp;Module-Level Inline Assembly</a></h3>
                      <div class="body conbody">
                         <p class="p">Supported.</p>
                      </div>
                   </div>
                   <div class="topic concept nested1" id="data-layout"><a name="data-layout" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#data-layout" name="data-layout" shape="rect">3.15.&nbsp;Data Layout</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#data-layout" name="data-layout" shape="rect">3.19.&nbsp;Data Layout</a></h3>
                      <div class="body conbody">
                         <p class="p">Only the following data layouts are supported,</p><a name="data-layout__ul_p3j_ps1_n3" shape="rect">
                            <!-- --></a><ul class="ul" id="data-layout__ul_p3j_ps1_n3">
@@ -728,7 +808,7 @@
                      </div>
                   </div>
                   <div class="topic concept nested1" id="target-triple"><a name="target-triple" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#target-triple" name="target-triple" shape="rect">3.16.&nbsp;Target Triple</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#target-triple" name="target-triple" shape="rect">3.20.&nbsp;Target Triple</a></h3>
                      <div class="body conbody">
                         <p class="p">Only the following target triples are supported,</p>
                         <ul class="ul">
@@ -742,13 +822,13 @@
                      </div>
                   </div>
                   <div class="topic concept nested1" id="pointer-aliasing-rules"><a name="pointer-aliasing-rules" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#pointer-aliasing-rules" name="pointer-aliasing-rules" shape="rect">3.17.&nbsp;Pointer Aliasing Rules</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#pointer-aliasing-rules" name="pointer-aliasing-rules" shape="rect">3.21.&nbsp;Pointer Aliasing Rules</a></h3>
                      <div class="body conbody">
                         <p class="p">Fully supported.</p>
                      </div>
                   </div>
                   <div class="topic concept nested1" id="volatile-memory-access"><a name="volatile-memory-access" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#volatile-memory-access" name="volatile-memory-access" shape="rect">3.18.&nbsp;Volatile Memory Access</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#volatile-memory-access" name="volatile-memory-access" shape="rect">3.22.&nbsp;Volatile Memory Access</a></h3>
                      <div class="body conbody">
                         <p class="p">Fully supported. Note that for code generation: <samp class="ph codeph">ld.volatile</samp> and
                            <samp class="ph codeph">st.volatile</samp> will be generated.
@@ -756,7 +836,7 @@
                      </div>
                   </div>
                   <div class="topic concept nested1" id="memory-model-for-concurrent-operations"><a name="memory-model-for-concurrent-operations" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#memory-model-for-concurrent-operations" name="memory-model-for-concurrent-operations" shape="rect">3.19.&nbsp;Memory Model for Concurrent Operations</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#memory-model-for-concurrent-operations" name="memory-model-for-concurrent-operations" shape="rect">3.23.&nbsp;Memory Model for Concurrent Operations</a></h3>
                      <div class="body conbody">
                         <p class="p">Not applicable. Threads in an NVVM IR program must use atomic operations or
                            barrier synchronization to communicate.
@@ -764,17 +844,23 @@
                      </div>
                   </div>
                   <div class="topic concept nested1" id="atomic-memory-ordering-constraints"><a name="atomic-memory-ordering-constraints" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#atomic-memory-ordering-constraints" name="atomic-memory-ordering-constraints" shape="rect">3.20.&nbsp;Atomic Memory Ordering Constraints</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#atomic-memory-ordering-constraints" name="atomic-memory-ordering-constraints" shape="rect">3.24.&nbsp;Atomic Memory Ordering Constraints</a></h3>
                      <div class="body conbody">
                         <p class="p">Atomic loads and stores are not supported. Other atomic operations on other than 32-bit
                            or 64-bit operands are not supported.
                         </p>
                      </div>
                   </div>
-                  <div class="topic concept nested1" id="unique_203021795"><a name="unique_203021795" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_203021795" name="unique_203021795" shape="rect">Fast Math Flags</a></h3>
+                  <div class="topic concept nested1" id="unique_341835507"><a name="unique_341835507" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_341835507" name="unique_341835507" shape="rect">Fast Math Flags</a></h3>
                      <div class="body conbody">
                         <p class="p">Accepted and ignored.</p>
+                     </div>
+                  </div>
+                  <div class="topic concept nested1" id="uselist-order-directives"><a name="uselist-order-directives" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#uselist-order-directives" name="uselist-order-directives" shape="rect">3.26.&nbsp;Use-list Order Directives</a></h3>
+                     <div class="body conbody">
+                        <p class="p">Not supported.</p>
                      </div>
                   </div>
                </div>
@@ -786,7 +872,9 @@
                         <li class="li">Floating point types <samp class="ph codeph">half</samp>, <samp class="ph codeph">fp128</samp>, <samp class="ph codeph">x86_fp80</samp>,
                            <samp class="ph codeph">fp128</samp> and <samp class="ph codeph">ppc_fp128</samp> are not supported.
                         </li>
-                        <li class="li">The <samp class="ph codeph">x86mmx</samp> type is not supported.
+                        <li class="li">The <samp class="ph codeph">x86_mmx</samp> type is not supported.
+                        </li>
+                        <li class="li">The <samp class="ph codeph">token</samp> type is not supported.
                         </li>
                      </ul>
                   </div>
@@ -796,6 +884,8 @@
                   <div class="body conbody">
                      <p class="p">Fully supported, except for the following:</p>
                      <ul class="ul">
+                        <li class="li"><samp class="ph codeph">Token constants</samp> is not supported.
+                        </li>
                         <li class="li"><samp class="ph codeph">blockaddress(@function, %block)</samp> is not supported.
                         </li>
                         <li class="li">For a constant expression that is used as the initializer of a global variable
@@ -820,34 +910,34 @@
                                  <!-- --></a><table cellpadding="4" cellspacing="0" summary="" id="inline-assembler-expressions__table_kcr_tpb_n3" class="table" frame="border" border="1" rules="all">
                                  <thead class="thead" align="left">
                                     <tr class="row">
-                                       <th class="entry" valign="top" width="50%" id="d54e1014" rowspan="1" colspan="1">Constraint</th>
-                                       <th class="entry" valign="top" width="50%" id="d54e1017" rowspan="1" colspan="1">Type</th>
+                                       <th class="entry" valign="top" width="50%" id="d54e1181" rowspan="1" colspan="1">Constraint</th>
+                                       <th class="entry" valign="top" width="50%" id="d54e1184" rowspan="1" colspan="1">Type</th>
                                     </tr>
                                  </thead>
                                  <tbody class="tbody">
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="50%" headers="d54e1014" rowspan="1" colspan="1">c</td>
-                                       <td class="entry" valign="top" width="50%" headers="d54e1017" rowspan="1" colspan="1">i8</td>
+                                       <td class="entry" valign="top" width="50%" headers="d54e1181" rowspan="1" colspan="1">c</td>
+                                       <td class="entry" valign="top" width="50%" headers="d54e1184" rowspan="1" colspan="1">i8</td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="50%" headers="d54e1014" rowspan="1" colspan="1">h</td>
-                                       <td class="entry" valign="top" width="50%" headers="d54e1017" rowspan="1" colspan="1">i16</td>
+                                       <td class="entry" valign="top" width="50%" headers="d54e1181" rowspan="1" colspan="1">h</td>
+                                       <td class="entry" valign="top" width="50%" headers="d54e1184" rowspan="1" colspan="1">i16</td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="50%" headers="d54e1014" rowspan="1" colspan="1">r</td>
-                                       <td class="entry" valign="top" width="50%" headers="d54e1017" rowspan="1" colspan="1">i32</td>
+                                       <td class="entry" valign="top" width="50%" headers="d54e1181" rowspan="1" colspan="1">r</td>
+                                       <td class="entry" valign="top" width="50%" headers="d54e1184" rowspan="1" colspan="1">i32</td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="50%" headers="d54e1014" rowspan="1" colspan="1">l</td>
-                                       <td class="entry" valign="top" width="50%" headers="d54e1017" rowspan="1" colspan="1">i64</td>
+                                       <td class="entry" valign="top" width="50%" headers="d54e1181" rowspan="1" colspan="1">l</td>
+                                       <td class="entry" valign="top" width="50%" headers="d54e1184" rowspan="1" colspan="1">i64</td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="50%" headers="d54e1014" rowspan="1" colspan="1">f</td>
-                                       <td class="entry" valign="top" width="50%" headers="d54e1017" rowspan="1" colspan="1">f32</td>
+                                       <td class="entry" valign="top" width="50%" headers="d54e1181" rowspan="1" colspan="1">f</td>
+                                       <td class="entry" valign="top" width="50%" headers="d54e1184" rowspan="1" colspan="1">f32</td>
                                     </tr>
                                     <tr class="row">
-                                       <td class="entry" valign="top" width="50%" headers="d54e1014" rowspan="1" colspan="1">d</td>
-                                       <td class="entry" valign="top" width="50%" headers="d54e1017" rowspan="1" colspan="1">f64</td>
+                                       <td class="entry" valign="top" width="50%" headers="d54e1181" rowspan="1" colspan="1">d</td>
+                                       <td class="entry" valign="top" width="50%" headers="d54e1184" rowspan="1" colspan="1">f64</td>
                                     </tr>
                                  </tbody>
                               </table>
@@ -862,10 +952,16 @@
                   <div class="topic concept nested1" id="metadata-nodes-and-metadata-strings"><a name="metadata-nodes-and-metadata-strings" shape="rect">
                         <!-- --></a><h3 class="title topictitle2"><a href="#metadata-nodes-and-metadata-strings" name="metadata-nodes-and-metadata-strings" shape="rect">6.2.&nbsp;Metadata Nodes and Metadata Strings</a></h3>
                      <div class="body conbody">
-                        <p class="p">Fully supported. </p>
+                        <p class="p">Fully supported. The <samp class="ph codeph">distinct</samp> keyword
+                           is accepted and ignored.
+                           The specialized metadata nodes are not supported.
+                        </p>
                         <p class="p">The following metadata are understood by the NVVM compiler:</p>
                         <ul class="ul">
-                           <li class="li">Debug information.</li>
+                           <li class="li">Debug information (using LLVM 3.4 debug metadata)</li>
+                           <li class="li"><samp class="ph codeph">llvm.loop.unroll.count</samp></li>
+                           <li class="li"><samp class="ph codeph">llvm.loop.unroll.disable</samp></li>
+                           <li class="li"><samp class="ph codeph">llvm.loop.unroll.full</samp></li>
                            <li class="li"><samp class="ph codeph">pragma unroll</samp><p class="p">Attached to the branch instruction corresponding to
                                  the backedge of a loop.
                               </p>
@@ -876,16 +972,14 @@
                                  
                               </p><pre xml:space="preserve">br i1 %cond, label %BR1, label %BR2, !pragma !42
 !42 = !{ !"unroll", i32 4}</pre></li>
-                        </ul>
-                        <ul class="ul">
-                           <li class="li"><samp class="ph codeph">callalign</samp></li>
+                           <li class="li"><samp class="ph codeph">callalign</samp>
+                              (see <a class="xref" href="index.html#rules-and-restrictions" shape="rect">Rules and Restrictions</a> for <dfn class="term">Calling Conventions</dfn>)
+                           </li>
                         </ul>
                         <p class="p">Module flags metadata (<samp class="ph codeph">llvm.module.flags</samp>) is supported and verified, but
                            the metadata values will be ignored.
                         </p>
                         <p class="p">All other metadata is accepted and ignored.</p>
-                        <p class="p">See <a class="xref" href="index.html#rules-and-restrictions" shape="rect">Rules and Restrictions</a> for <dfn class="term">Calling Conventions</dfn>.
-                        </p>
                      </div>
                   </div>
                </div>
@@ -924,6 +1018,9 @@
                            <li class="li"><samp class="ph codeph">indirectbr</samp></li>
                            <li class="li"><samp class="ph codeph">invoke</samp></li>
                            <li class="li"><samp class="ph codeph">resume</samp></li>
+                           <li class="li"><samp class="ph codeph">catchswitch</samp></li>
+                           <li class="li"><samp class="ph codeph">catchret</samp></li>
+                           <li class="li"><samp class="ph codeph">cleanupret</samp></li>
                         </ul>
                      </div>
                   </div>
@@ -992,7 +1089,8 @@
                         <div class="body conbody">
                            <p class="p">The <samp class="ph codeph">alloca</samp> instruction returns a generic pointer to the local address
                               space. The number of elements, if specified, must be a compile-time constant, otherwise 
-                              it is not supported.
+                              it is not supported. The <samp class="ph codeph">inalloca</samp>
+                              attribute is not supported.
                            </p>
                         </div>
                      </div>
@@ -1029,6 +1127,11 @@
                                     space. 
                                  </p>
                               </li>
+                              <li class="li">
+                                 <p class="p">The <samp class="ph codeph">weak</samp> marker and the <samp class="ph codeph">failure
+                                       ordering</samp> are accepted and ignored. 
+                                 </p>
+                              </li>
                            </ul>
                         </div>
                      </div>
@@ -1047,8 +1150,8 @@
                            </ul>
                         </div>
                      </div>
-                     <div class="topic concept nested2" id="unique_1211874785"><a name="unique_1211874785" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#unique_1211874785" name="unique_1211874785" shape="rect">getelementptr Instruction</a></h3>
+                     <div class="topic concept nested2" id="unique_1360837405"><a name="unique_1360837405" shape="rect">
+                           <!-- --></a><h3 class="title topictitle2"><a href="#unique_1360837405" name="unique_1360837405" shape="rect">getelementptr Instruction</a></h3>
                         <div class="body conbody">
                            <p class="p">Fully supported.</p>
                         </div>
@@ -1087,7 +1190,7 @@
                            <li class="li"><samp class="ph codeph">fcmp</samp></li>
                            <li class="li"><samp class="ph codeph">phi</samp></li>
                            <li class="li"><samp class="ph codeph">select</samp></li>
-                           <li class="li"><samp class="ph codeph">call</samp> (See <a class="xref" href="index.html#calling-conventions" shape="rect">Calling Conventions</a> for rules and
+                           <li class="li"><samp class="ph codeph">call</samp> (The <samp class="ph codeph">musttail</samp> and <samp class="ph codeph">notail</samp> markers are not supported. Optional fast math flags are accepted and ignored. See <a class="xref" href="index.html#calling-conventions" shape="rect">Calling Conventions</a> for other rules and
                               restrictions.)
                            </li>
                         </ul>
@@ -1095,6 +1198,8 @@
                         <ul class="ul">
                            <li class="li"><samp class="ph codeph">va_arg</samp></li>
                            <li class="li"><samp class="ph codeph">landingpad</samp></li>
+                           <li class="li"><samp class="ph codeph">catchpad</samp></li>
+                           <li class="li"><samp class="ph codeph">cleanuppad</samp></li>
                         </ul>
                      </div>
                   </div>
@@ -1201,6 +1306,12 @@
                            <li class="li"><samp class="ph codeph">llvm.round</samp><p class="p">Not supported.</p>
                               <p class="p"></p>
                            </li>
+                           <li class="li"><samp class="ph codeph">llvm.minnum</samp><p class="p">Not supported.</p>
+                              <p class="p"></p>
+                           </li>
+                           <li class="li"><samp class="ph codeph">llvm.maxnum</samp><p class="p">Not supported.</p>
+                              <p class="p"></p>
+                           </li>
                         </ul>
                      </div>
                   </div>
@@ -1208,6 +1319,9 @@
                         <!-- --></a><h3 class="title topictitle2"><a href="#bit-manipulations-intrinics" name="bit-manipulations-intrinics" shape="rect">Bit Manipulations Intrinsics</a></h3>
                      <div class="body conbody"><a name="bit-manipulations-intrinics__ul_f2n_1th_n3" shape="rect">
                            <!-- --></a><ul class="ul" id="bit-manipulations-intrinics__ul_f2n_1th_n3">
+                           <li class="li"><samp class="ph codeph">llvm.bitreverse</samp><p class="p">Not supported. </p>
+                              <p class="p"></p>
+                           </li>
                            <li class="li"><samp class="ph codeph">llvm.bswap</samp><p class="p">Supported for <samp class="ph codeph">i16</samp>,
                                  <samp class="ph codeph">i32</samp>, and <samp class="ph codeph">i64</samp>. 
                               </p>
@@ -1240,8 +1354,8 @@
                         <p class="p">Not supported.</p>
                      </div>
                   </div>
-                  <div class="topic concept nested1" id="unique_868632050"><a name="unique_868632050" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_868632050" name="unique_868632050" shape="rect">Specialised Arithmetic Intrinsics</a></h3>
+                  <div class="topic concept nested1" id="unique_180430865"><a name="unique_180430865" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_180430865" name="unique_180430865" shape="rect">Specialised Arithmetic Intrinsics</a></h3>
                      <div class="body conbody">
                         <p class="p">Supported: <samp class="ph codeph">llvm.fmuladd</samp></p>
                      </div>
@@ -1249,15 +1363,15 @@
                   <div class="topic concept nested1" id="half-precision-floating-point-intrinsics"><a name="half-precision-floating-point-intrinsics" shape="rect">
                         <!-- --></a><h3 class="title topictitle2"><a href="#half-precision-floating-point-intrinsics" name="half-precision-floating-point-intrinsics" shape="rect">9.8.&nbsp;Half Precision Floating Point Intrinsics</a></h3>
                      <div class="body conbody">
-                        <p class="p">Supported: <samp class="ph codeph">llvm.convert.to.fp16</samp> and
-                           <samp class="ph codeph">llvm.convert.from.fp16</samp>.
-                        </p>
+                        <p class="p">Supported: <samp class="ph codeph">llvm.convert.to.fp16.f32</samp>,
+                           <samp class="ph codeph">llvm.convert.from.fp16.f32</samp>, and the LLVM 3.4
+                           versions <samp class="ph codeph">llvm.convert.to.fp16</samp>, <samp class="ph codeph">llvm.convert.from.fp16</samp></p>
                      </div>
                   </div>
                   <div class="topic concept nested1" id="debugger-intrinsics"><a name="debugger-intrinsics" shape="rect">
                         <!-- --></a><h3 class="title topictitle2"><a href="#debugger-intrinsics" name="debugger-intrinsics" shape="rect">9.9.&nbsp;Debugger Intrinsics</a></h3>
                      <div class="body conbody">
-                        <p class="p">Supported: <samp class="ph codeph">llvm.dbg.declare</samp> and <samp class="ph codeph">llvm.dbg.value</samp>.
+                        <p class="p">Supported: LLVM 3.4 versions of <samp class="ph codeph">llvm.dbg.declare</samp> and <samp class="ph codeph">llvm.dbg.value</samp>.
                         </p>
                      </div>
                   </div>
@@ -1273,8 +1387,20 @@
                         <p class="p">Not supported.</p>
                      </div>
                   </div>
+                  <div class="topic concept nested1" id="unique_1288556551"><a name="unique_1288556551" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_1288556551" name="unique_1288556551" shape="rect">Masked Vector Load and Store Intrinsics</a></h3>
+                     <div class="body conbody">
+                        <p class="p">Not supported.</p>
+                     </div>
+                  </div>
+                  <div class="topic concept nested1" id="unique_1712563255"><a name="unique_1712563255" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_1712563255" name="unique_1712563255" shape="rect">Masked Vector Gather and Scatter Intrinsics</a></h3>
+                     <div class="body conbody">
+                        <p class="p">Not supported.</p>
+                     </div>
+                  </div>
                   <div class="topic concept nested1" id="memory-use-markers"><a name="memory-use-markers" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#memory-use-markers" name="memory-use-markers" shape="rect">9.12.&nbsp;Memory Use Markers</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#memory-use-markers" name="memory-use-markers" shape="rect">9.14.&nbsp;Memory Use Markers</a></h3>
                      <div class="body conbody">
                         <p class="p">Supported: <samp class="ph codeph">llvm.lifetime.start</samp>, <samp class="ph codeph">llvm.lifetime.end</samp>,
                            <samp class="ph codeph">llvm.invariant.start</samp>, and <samp class="ph codeph">llvm.invariant.end</samp>.
@@ -1282,7 +1408,7 @@
                      </div>
                   </div>
                   <div class="topic concept nested1" id="general-intrinsics"><a name="general-intrinsics" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#general-intrinsics" name="general-intrinsics" shape="rect">9.13.&nbsp;General Intrinsics</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#general-intrinsics" name="general-intrinsics" shape="rect">9.15.&nbsp;General Intrinsics</a></h3>
                      <div class="body conbody">
                         <ul class="ul">
                            <li class="li">
@@ -1311,7 +1437,13 @@
                            <li class="li"><samp class="ph codeph">llvm.objectsize</samp><p class="p">Not supported.</p>
                               <p class="p"></p>
                            </li>
-                           <li class="li"><samp class="ph codeph">llvm.except</samp><p class="p">Supported.</p>
+                           <li class="li"><samp class="ph codeph">llvm.expect</samp><p class="p">Supported.</p>
+                              <p class="p"></p>
+                           </li>
+                           <li class="li"><samp class="ph codeph">llvm.assume</samp><p class="p">Not supported.</p>
+                              <p class="p"></p>
+                           </li>
+                           <li class="li"><samp class="ph codeph">llvm.bitset.test</samp><p class="p">Not supported.</p>
                               <p class="p"></p>
                            </li>
                            <li class="li"><samp class="ph codeph">llvm.donothing</samp><p class="p">Supported.</p>
@@ -1335,16 +1467,16 @@
                               <!-- --></a><table cellpadding="4" cellspacing="0" summary="" id="address-spaces__table_ecr_txh_n3" class="table" frame="border" border="1" rules="all">
                               <thead class="thead" align="left">
                                  <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e2260" rowspan="1" colspan="1">Name</th>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e2263" rowspan="1" colspan="1">Address Space Number</th>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e2266" rowspan="1" colspan="1">Semantics/Example</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e2551" rowspan="1" colspan="1">Name</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e2554" rowspan="1" colspan="1">Address Space Number</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e2557" rowspan="1" colspan="1">Semantics/Example</th>
                                  </tr>
                               </thead>
                               <tbody class="tbody">
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2260" rowspan="1" colspan="1">code</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2263" rowspan="1" colspan="1">0</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2266" rowspan="1" colspan="1">functions, code <a name="address-spaces__ul_ttv_dyh_n3" shape="rect">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2551" rowspan="1" colspan="1">code</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2554" rowspan="1" colspan="1">0</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2557" rowspan="1" colspan="1">functions, code <a name="address-spaces__ul_ttv_dyh_n3" shape="rect">
                                           <!-- --></a><ul class="ul" id="address-spaces__ul_ttv_dyh_n3">
                                           <li class="li">CUDA C/C++ function</li>
                                           <li class="li">OpenCL C function</li>
@@ -1352,18 +1484,18 @@
                                     </td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2260" rowspan="1" colspan="1"> generic </td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2263" rowspan="1" colspan="1">0</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2266" rowspan="1" colspan="1"> Can only be used to qualify the pointee of a pointer <a name="address-spaces__ul_srj_nyh_n3" shape="rect">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2551" rowspan="1" colspan="1"> generic </td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2554" rowspan="1" colspan="1">0</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2557" rowspan="1" colspan="1"> Can only be used to qualify the pointee of a pointer <a name="address-spaces__ul_srj_nyh_n3" shape="rect">
                                           <!-- --></a><ul class="ul" id="address-spaces__ul_srj_nyh_n3">
                                           <li class="li"> Pointers in CUDA C/C++</li>
                                        </ul>
                                     </td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2260" rowspan="1" colspan="1">global</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2263" rowspan="1" colspan="1">1</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2266" rowspan="1" colspan="1"><a name="address-spaces__ul_gpb_xyh_n3" shape="rect">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2551" rowspan="1" colspan="1">global</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2554" rowspan="1" colspan="1">1</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2557" rowspan="1" colspan="1"><a name="address-spaces__ul_gpb_xyh_n3" shape="rect">
                                           <!-- --></a><ul class="ul" id="address-spaces__ul_gpb_xyh_n3">
                                           <li class="li">CUDA C/C++ __device__</li>
                                           <li class="li">OpenCL C global</li>
@@ -1371,9 +1503,9 @@
                                     </td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2260" rowspan="1" colspan="1">shared</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2263" rowspan="1" colspan="1">3</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2266" rowspan="1" colspan="1"><a name="address-spaces__ul_ow2_zyh_n3" shape="rect">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2551" rowspan="1" colspan="1">shared</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2554" rowspan="1" colspan="1">3</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2557" rowspan="1" colspan="1"><a name="address-spaces__ul_ow2_zyh_n3" shape="rect">
                                           <!-- --></a><ul class="ul" id="address-spaces__ul_ow2_zyh_n3">
                                           <li class="li">CUDA C/C++ __shared__</li>
                                           <li class="li">OpenCL C local</li>
@@ -1381,9 +1513,9 @@
                                     </td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2260" rowspan="1" colspan="1">constant</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2263" rowspan="1" colspan="1">4</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2266" rowspan="1" colspan="1"><a name="address-spaces__ul_w3z_1zh_n3" shape="rect">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2551" rowspan="1" colspan="1">constant</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2554" rowspan="1" colspan="1">4</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2557" rowspan="1" colspan="1"><a name="address-spaces__ul_w3z_1zh_n3" shape="rect">
                                           <!-- --></a><ul class="ul" id="address-spaces__ul_w3z_1zh_n3">
                                           <li class="li">CUDA C/C++ __constant__</li>
                                           <li class="li">OpenCL C constant</li>
@@ -1391,9 +1523,9 @@
                                     </td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2260" rowspan="1" colspan="1">local</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2263" rowspan="1" colspan="1">5</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2266" rowspan="1" colspan="1"><a name="address-spaces__ul_tql_czh_n3" shape="rect">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2551" rowspan="1" colspan="1">local</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2554" rowspan="1" colspan="1">5</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2557" rowspan="1" colspan="1"><a name="address-spaces__ul_tql_czh_n3" shape="rect">
                                           <!-- --></a><ul class="ul" id="address-spaces__ul_tql_czh_n3">
                                           <li class="li">CUDA C/C++ local</li>
                                           <li class="li">OpenCL C private</li>
@@ -1401,9 +1533,9 @@
                                     </td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2260" rowspan="1" colspan="1">&lt;reserved&gt;</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2263" rowspan="1" colspan="1">2, 101 and above</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2266" rowspan="1" colspan="1">&nbsp;</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2551" rowspan="1" colspan="1">&lt;reserved&gt;</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2554" rowspan="1" colspan="1">2, 101 and above</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2557" rowspan="1" colspan="1">&nbsp;</td>
                                  </tr>
                               </tbody>
                            </table>
@@ -1574,57 +1706,57 @@ __device__ int g;
                               <!-- --></a><table cellpadding="4" cellspacing="0" summary="" id="supported-properties__table_usq_cp3_n3" class="table" frame="border" border="1" rules="all">
                               <thead class="thead" align="left">
                                  <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e2678" rowspan="1" colspan="1">Property Name</th>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e2681" rowspan="1" colspan="1">Annotated On</th>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e2684" rowspan="1" colspan="1">Description</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e2969" rowspan="1" colspan="1">Property Name</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e2972" rowspan="1" colspan="1">Annotated On</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e2975" rowspan="1" colspan="1">Description</th>
                                  </tr>
                               </thead>
                               <tbody class="tbody">
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2678" rowspan="1" colspan="1"><samp class="ph codeph">maxntid{x, y, z}</samp></td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2681" rowspan="1" colspan="1">kernel function</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2684" rowspan="1" colspan="1">Maximum expected CTA size from any launch.</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2969" rowspan="1" colspan="1"><samp class="ph codeph">maxntid{x, y, z}</samp></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2972" rowspan="1" colspan="1">kernel function</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2975" rowspan="1" colspan="1">Maximum expected CTA size from any launch.</td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2678" rowspan="1" colspan="1"><samp class="ph codeph">reqntid{x, y, z}</samp></td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2681" rowspan="1" colspan="1">kernel function</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2684" rowspan="1" colspan="1">Minimum expected CTA size from any launch.</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2969" rowspan="1" colspan="1"><samp class="ph codeph">reqntid{x, y, z}</samp></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2972" rowspan="1" colspan="1">kernel function</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2975" rowspan="1" colspan="1">Minimum expected CTA size from any launch.</td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2678" rowspan="1" colspan="1"><samp class="ph codeph">minctasm</samp></td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2681" rowspan="1" colspan="1">kernel function</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2684" rowspan="1" colspan="1">Hint/directive to the compiler/driver, asking it to put at least
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2969" rowspan="1" colspan="1"><samp class="ph codeph">minctasm</samp></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2972" rowspan="1" colspan="1">kernel function</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2975" rowspan="1" colspan="1">Hint/directive to the compiler/driver, asking it to put at least
                                        these many CTAs on an SM.
                                     </td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2678" rowspan="1" colspan="1"><samp class="ph codeph">kernel</samp></td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2681" rowspan="1" colspan="1">function</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2684" rowspan="1" colspan="1">Signifies that this function is a kernel function.</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2969" rowspan="1" colspan="1"><samp class="ph codeph">kernel</samp></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2972" rowspan="1" colspan="1">function</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2975" rowspan="1" colspan="1">Signifies that this function is a kernel function.</td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2678" rowspan="1" colspan="1"><samp class="ph codeph">align</samp></td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2681" rowspan="1" colspan="1">function</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2684" rowspan="1" colspan="1">Signifies that the value in low 16-bits of the 32-bit value contains
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2969" rowspan="1" colspan="1"><samp class="ph codeph">align</samp></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2972" rowspan="1" colspan="1">function</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2975" rowspan="1" colspan="1">Signifies that the value in low 16-bits of the 32-bit value contains
                                        alignment of n th parameter type if its alignment is not the natural
                                        alignment. n is specified by high 16-bits of the value. For return type,
                                        n is 0.
                                     </td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2678" rowspan="1" colspan="1"><samp class="ph codeph">texture</samp></td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2681" rowspan="1" colspan="1">global variable</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2684" rowspan="1" colspan="1">Signifies that variable is a texture.</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2969" rowspan="1" colspan="1"><samp class="ph codeph">texture</samp></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2972" rowspan="1" colspan="1">global variable</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2975" rowspan="1" colspan="1">Signifies that variable is a texture.</td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2678" rowspan="1" colspan="1"><samp class="ph codeph">surface</samp></td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2681" rowspan="1" colspan="1">global variable</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2684" rowspan="1" colspan="1">Signifies that variable is a surface.</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2969" rowspan="1" colspan="1"><samp class="ph codeph">surface</samp></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2972" rowspan="1" colspan="1">global variable</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2975" rowspan="1" colspan="1">Signifies that variable is a surface.</td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2678" rowspan="1" colspan="1"><samp class="ph codeph">managed</samp></td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2681" rowspan="1" colspan="1">global variable</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2684" rowspan="1" colspan="1">Signifies that variable is a UVM managed variable.</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2969" rowspan="1" colspan="1"><samp class="ph codeph">managed</samp></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2972" rowspan="1" colspan="1">global variable</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2975" rowspan="1" colspan="1">Signifies that variable is a UVM managed variable.</td>
                                  </tr>
                               </tbody>
                            </table>
@@ -1770,32 +1902,32 @@ declare void @llvm.nvvm.membar.sys()
                            spaces to the generic address space.
                         </p>
                         <div class="p"><pre xml:space="preserve">
-declare i8* @llvm.nvvm.ptr.global.to.gen.p0i8.p1i8(i8 addrspace(1))
+declare i8* @llvm.nvvm.ptr.global.to.gen.p0i8.p1i8(i8 addrspace(1)*)
 declare i8* @llvm.nvvm.ptr.shared.to.gen.p0i8.p3i8(i8 addrspace(3)*)
 declare i8* @llvm.nvvm.ptr.constant.to.gen.p0i8.p4i8(i8 addrspace(4)*)
 declare i8* @llvm.nvvm.ptr.local.to.gen.p0i8.p5i8(i8 addrspace(5)*)
 
-declare i16* @llvm.nvvm.ptr.global.to.gen.p0i16.p1i16(i16 addrspace(1))
+declare i16* @llvm.nvvm.ptr.global.to.gen.p0i16.p1i16(i16 addrspace(1)*)
 declare i16* @llvm.nvvm.ptr.shared.to.gen.p0i16.p3i16(i16 addrspace(3)*)
 declare i16* @llvm.nvvm.ptr.constant.to.gen.p0i16.p4i16(i16 addrspace(4)*)
 declare i16* @llvm.nvvm.ptr.local.to.gen.p0i16.p5i16(i16 addrspace(5)*)
 
-declare i32* @llvm.nvvm.ptr.global.to.gen.p0i32.p1i32(i32 addrspace(1))
+declare i32* @llvm.nvvm.ptr.global.to.gen.p0i32.p1i32(i32 addrspace(1)*)
 declare i32* @llvm.nvvm.ptr.shared.to.gen.p0i32.p3i32(i32 addrspace(3)*)
 declare i32* @llvm.nvvm.ptr.constant.to.gen.p0i32.p4i32(i32 addrspace(4)*)
 declare i32* @llvm.nvvm.ptr.local.to.gen.p0i32.p5i32(i32 addrspace(5)*)
 
-declare i64* @llvm.nvvm.ptr.global.to.gen.p0i64.p1i64(i64 addrspace(1))
+declare i64* @llvm.nvvm.ptr.global.to.gen.p0i64.p1i64(i64 addrspace(1)*)
 declare i64* @llvm.nvvm.ptr.shared.to.gen.p0i64.p3i64(i64 addrspace(3)*)
 declare i64* @llvm.nvvm.ptr.constant.to.gen.p0i64.p4i64(i64 addrspace(4)*)
 declare i64* @llvm.nvvm.ptr.local.to.gen.p0i64.p5i64(i64 addrspace(5)*)
 
-declare f32* @llvm.nvvm.ptr.global.to.gen.p0f32.p1f32(f32 addrspace(1))
+declare f32* @llvm.nvvm.ptr.global.to.gen.p0f32.p1f32(f32 addrspace(1)*)
 declare f32* @llvm.nvvm.ptr.shared.to.gen.p0f32.p3f32(f32 addrspace(3)*)
 declare f32* @llvm.nvvm.ptr.constant.to.gen.p0f32.p4f32(f32 addrspace(4)*)
 declare f32* @llvm.nvvm.ptr.local.to.gen.p0f32.p5f32(f32 addrspace(5)*)
 
-declare f64* @llvm.nvvm.ptr.global.to.gen.p0f64.p1f64(f64 addrspace(1))
+declare f64* @llvm.nvvm.ptr.global.to.gen.p0f64.p1f64(f64 addrspace(1)*)
 declare f64* @llvm.nvvm.ptr.shared.to.gen.p0f64.p3f64(f64 addrspace(3)*)
 declare f64* @llvm.nvvm.ptr.constant.to.gen.p0f64.p4f64(f64 addrspace(4)*)
 declare f64* @llvm.nvvm.ptr.local.to.gen.p0f64.p5f64(f64 addrspace(5)*)
@@ -2204,11 +2336,12 @@ i64 @llvm.nvvm.suld.3d.i64.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z)
     </pre></div>
                         </div>
                      </div>
-                     <div class="topic concept nested2" id="unique_1160360147"><a name="unique_1160360147" shape="rect">
-                           <!-- --></a><h3 class="title topictitle2"><a href="#unique_1160360147" name="unique_1160360147" shape="rect">Surface Stores</a></h3>
+                     <div class="topic concept nested2" id="unique_1849183472"><a name="unique_1849183472" shape="rect">
+                           <!-- --></a><h3 class="title topictitle2"><a href="#unique_1849183472" name="unique_1849183472" shape="rect">Surface Stores</a></h3>
                         <div class="body conbody">
-                           <p class="p">In the following intrinsics, <samp class="ph codeph">&lt;clamp&gt;</samp> represents the surface clamp mode
-                              and can be one of the following: <samp class="ph codeph">clamp</samp>, <samp class="ph codeph">trap</samp>, or
+                           <p class="p">In the following intrinsics, <samp class="ph codeph">&lt;clamp&gt;</samp> represents the surface clamp mode.
+                              It is <samp class="ph codeph">trap</samp> for the formatted stores, and can be one
+                              of the following for unformatted stores: <samp class="ph codeph">clamp</samp>, <samp class="ph codeph">trap</samp>, or
                               <samp class="ph codeph">zero</samp>.
                            </p>
                            <p class="p">For surface store instructions that operate on 8-bit data channels, the input operands are
@@ -2235,20 +2368,10 @@ void @llvm.nvvm.sust.b.1d.v4i32.&lt;clamp&gt;(i64 %tex, i32 %x,
                                         i32 %r, i32 %g, i32 %b, i32 %a)
 
 ;; Formatted
-void @llvm.nvvm.sust.p.1d.i8.&lt;clamp&gt;(i64 %tex, i32 %x, i16 %r)
-void @llvm.nvvm.sust.p.1d.i16.&lt;clamp&gt;(i64 %tex, i32 %x, i16 %r)
 void @llvm.nvvm.sust.p.1d.i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %r)
-void @llvm.nvvm.sust.p.1d.i64.&lt;clamp&gt;(i64 %tex, i32 %x, i64 %r)
 
-void @llvm.nvvm.sust.p.1d.v2i8.&lt;clamp&gt;(i64 %tex, i32 %x, i16 %r, i16 %g)
-void @llvm.nvvm.sust.p.1d.v2i16.&lt;clamp&gt;(i64 %tex, i32 %x, i16 %r, i16 %g)
 void @llvm.nvvm.sust.p.1d.v2i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %r, i32 %g)
-void @llvm.nvvm.sust.p.1d.v2i64.&lt;clamp&gt;(i64 %tex, i32 %x, i64 %r, i64 %g)
 
-void @llvm.nvvm.sust.p.1d.v4i8.&lt;clamp&gt;(i64 %tex, i32 %x,
-                                       i16 %r, i16 %g, i16 %b, i16 %a)
-void @llvm.nvvm.sust.p.1d.v4i16.&lt;clamp&gt;(i64 %tex, i32 %x,
-                                        i16 %r, i16 %g, i16 %b, i16 %a)
 void @llvm.nvvm.sust.p.1d.v4i32.&lt;clamp&gt;(i64 %tex, i32 %x,
                                         i32 %r, i32 %g, i32 %b, i32 %a)
     </pre></div>
@@ -2281,28 +2404,12 @@ void @llvm.nvvm.sust.b.1d.array.v4i32.&lt;clamp&gt;(i64 %tex, i32 %idx, i32 %x,
                                               i32 %r, i32 %g, i32 %b, i32 %a)
 
 ;; Formatted
-void @llvm.nvvm.sust.p.1d.array.i8.&lt;clamp&gt;(i64 %tex, i32 %idx, i32 %x,
-                                                 i16 %r)
-void @llvm.nvvm.sust.p.1d.array.i16.&lt;clamp&gt;(i64 %tex, i32 %idx, i32 %x,
-                                                  i16 %r)
 void @llvm.nvvm.sust.p.1d.array.i32.&lt;clamp&gt;(i64 %tex, i32 %idx, i32 %x,
                                                   i32 %r)
-void @llvm.nvvm.sust.p.1d.array.i64.&lt;clamp&gt;(i64 %tex, i32 %idx, i32 %x,
-                                                  i64 %r)
 
-void @llvm.nvvm.sust.p.1d.array.v2i8.&lt;clamp&gt;(i64 %tex, i32 %idx, i32 %x,
-                                             i16 %r, i16 %g)
-void @llvm.nvvm.sust.p.1d.array.v2i16.&lt;clamp&gt;(i64 %tex, i32 %idx, i32 %x,
-                                              i16 %r, i16 %g)
 void @llvm.nvvm.sust.p.1d.array.v2i32.&lt;clamp&gt;(i64 %tex, i32 %idx, i32 %x,
                                               i32 %r, i32 %g)
-void @llvm.nvvm.sust.p.1d.array.v2i64.&lt;clamp&gt;(i64 %tex, i32 %idx, i32 %x,
-                                              i64 %r, i64 %g)
 
-void @llvm.nvvm.sust.p.1d.array.v4i8.&lt;clamp&gt;(i64 %tex, i32 %idx, i32 %x,
-                                             i16 %r, i16 %g, i16 %b, i16 %a)
-void @llvm.nvvm.sust.p.1d.array.v4i16.&lt;clamp&gt;(i64 %tex, i32 %idx, i32 %x,
-                                              i16 %r, i16 %g, i16 %b, i16 %a)
 void @llvm.nvvm.sust.p.1d.array.v4i32.&lt;clamp&gt;(i64 %tex, i32 %idx, i32 %x,
                                               i32 %r, i32 %g, i32 %b, i32 %a)
     </pre></div>
@@ -2331,24 +2438,11 @@ void @llvm.nvvm.sust.b.2d.v4i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y,
                                         i32 %r, i32 %g, i32 %b, i32 %a)
 
 ;; Formatted
-void @llvm.nvvm.sust.p.2d.i8.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i16 %r)
-void @llvm.nvvm.sust.p.2d.i16.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i16 %r)
 void @llvm.nvvm.sust.p.2d.i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %r)
-void @llvm.nvvm.sust.p.2d.i64.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i64 %r)
 
-void @llvm.nvvm.sust.p.2d.v2i8.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y,
-                                       i16 %r, i16 %g)
-void @llvm.nvvm.sust.p.2d.v2i16.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y,
-                                        i16 %r, i16 %g)
 void @llvm.nvvm.sust.p.2d.v2i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y,
                                         i32 %r, i32 %g)
-void @llvm.nvvm.sust.p.2d.v2i64.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y,
-                                        i64 %r, i64 %g)
 
-void @llvm.nvvm.sust.p.2d.v4i8.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y,
-                                       i16 %r, i16 %g, i16 %b, i16 %a)
-void @llvm.nvvm.sust.p.2d.v4i16.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y,
-                                        i16 %r, i16 %g, i16 %b, i16 %a)
 void @llvm.nvvm.sust.p.2d.v4i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y,
                                         i32 %r, i32 %g, i32 %b, i32 %a)
     </pre></div>
@@ -2388,34 +2482,13 @@ void @llvm.nvvm.sust.b.2d.array.v4i32.&lt;clamp&gt;(i64 %tex, i32 %idx,
                                               i32 %r, i32 %g, i32 %b, i32 %a)
 
 ;; Formatted
-void @llvm.nvvm.sust.p.2d.array.i8.&lt;clamp&gt;(i64 %tex, i32 %idx,
-                                           i32 %x, i32 %y, i16 %r)
-void @llvm.nvvm.sust.p.2d.array.i16.&lt;clamp&gt;(i64 %tex, i32 %idx,
-                                            i32 %x, i32 %y, i16 %r)
 void @llvm.nvvm.sust.p.2d.array.i32.&lt;clamp&gt;(i64 %tex, i32 %idx,
                                             i32 %x, i32 %y, i32 %r)
-void @llvm.nvvm.sust.p.2d.array.i64.&lt;clamp&gt;(i64 %tex, i32 %idx,
-                                            i32 %x, i32 %y, i64 %r)
 
-void @llvm.nvvm.sust.p.2d.array.v2i8.&lt;clamp&gt;(i64 %tex, i32 %idx,
-                                             i32 %x, i32 %y,
-                                             i16 %r, i16 %g)
-void @llvm.nvvm.sust.p.2d.array.v2i16.&lt;clamp&gt;(i64 %tex, i32 %idx,
-                                              i32 %x, i32 %y,
-                                              i16 %r, i16 %g)
 void @llvm.nvvm.sust.p.2d.array.v2i32.&lt;clamp&gt;(i64 %tex, i32 %idx,
                                               i32 %x, i32 %y,
                                               i32 %r, i32 %g)
-void @llvm.nvvm.sust.p.2d.array.v2i64.&lt;clamp&gt;(i64 %tex, i32 %idx,
-                                              i32 %x, i32 %y,
-                                              i64 %r, i64 %g)
 
-void @llvm.nvvm.sust.p.2d.array.v4i8.&lt;clamp&gt;(i64 %tex, i32 %idx,
-                                             i32 %x, i32 %y,
-                                             i16 %r, i16 %g, i16 %b, i16 %a)
-void @llvm.nvvm.sust.p.2d.array.v4i16.&lt;clamp&gt;(i64 %tex, i32 %idx,
-                                              i32 %x, i32 %y,
-                                              i16 %r, i16 %g, i16 %b, i16 %a)
 void @llvm.nvvm.sust.p.2d.array.v4i32.&lt;clamp&gt;(i64 %tex, i32 %idx,
                                               i32 %x, i32 %y,
                                               i32 %r, i32 %g, i32 %b, i32 %a)
@@ -2445,24 +2518,11 @@ void @llvm.nvvm.sust.b.3d.v4i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z,
                                         i32 %r, i32 %g, i32 %b, i32 %a)
 
 ;; Formatted
-void @llvm.nvvm.sust.p.3d.i8.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z, i16 %r)
-void @llvm.nvvm.sust.p.3d.i16.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z, i16 %r)
 void @llvm.nvvm.sust.p.3d.i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z, i32 %r)
-void @llvm.nvvm.sust.p.3d.i64.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z, i64 %r)
 
-void @llvm.nvvm.sust.p.3d.v2i8.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z,
-                                       i16 %r, i16 %g)
-void @llvm.nvvm.sust.p.3d.v2i16.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z,
-                                        i16 %r, i16 %g)
 void @llvm.nvvm.sust.p.3d.v2i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z,
                                         i32 %r, i32 %g)
-void @llvm.nvvm.sust.p.3d.v2i64.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z,
-                                        i64 %r, i64 %g)
 
-void @llvm.nvvm.sust.p.3d.v4i8.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z,
-                                       i16 %r, i16 %g, i16 %b, i16 %a)
-void @llvm.nvvm.sust.p.3d.v4i16.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z,
-                                        i16 %r, i16 %g, i16 %b, i16 %a)
 void @llvm.nvvm.sust.p.3d.v4i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z,
                                         i32 %r, i32 %g, i32 %b, i32 %a)
     </pre></div>
@@ -2481,7 +2541,8 @@ void @llvm.nvvm.sust.p.3d.v4i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z,
                         
                      </p>
                      <p class="p">The current NVVM IR debugging support is based on that in LLVM 3.4. For the complete semantics of the IR, readers
-                        of this chapter should check the official Source Level Debugging with LLVM Manual (<a class="xref" href="http://llvm.org/releases/3.4/docs/SourceLevelDebugging.html" target="_blank" shape="rect">http://llvm.org/releases/3.4/docs/SourceLevelDebugging.html</a>).
+                        of this chapter should check the official Source Level Debugging with LLVM Manual (<a class="xref" href="http://llvm.org/releases/3.4/docs/SourceLevelDebugging.html" target="_blank" shape="rect">http://llvm.org/releases/3.4/docs/SourceLevelDebugging.html</a>). Additionally, LLVM 3.8 bitcode format is not supported
+                        for source level debugging.
                      </p>
                      <div class="p"> The following metadata nodes need to be present in the module
                         when debugging support is requested:
@@ -2555,48 +2616,48 @@ void @llvm.nvvm.sust.p.3d.v4i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z,
                               <!-- --></a><table cellpadding="4" cellspacing="0" summary="" id="linkage-types-nvvm__table_ech_f53_n3" class="table" frame="border" border="1" rules="all">
                               <thead class="thead" align="left">
                                  <tr class="row">
-                                    <th class="entry" colspan="2" valign="top" id="d54e3412" rowspan="1">LLVM Linkage Type</th>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e3415" rowspan="1" colspan="1">PTX Linker Directive</th>
+                                    <th class="entry" colspan="2" valign="top" id="d54e3706" rowspan="1">LLVM Linkage Type</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e3709" rowspan="1" colspan="1">PTX Linker Directive</th>
                                  </tr>
                               </thead>
                               <tbody class="tbody">
                                  <tr class="row">
-                                    <td class="entry" colspan="2" valign="top" headers="d54e3412" rowspan="1"><samp class="ph codeph">private</samp>, 
+                                    <td class="entry" colspan="2" valign="top" headers="d54e3706" rowspan="1"><samp class="ph codeph">private</samp>, 
                                        			                                <samp class="ph codeph">internal</samp></td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3415" rowspan="1" colspan="1">This is the default linkage type and does not require a linker
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3709" rowspan="1" colspan="1">This is the default linkage type and does not require a linker
                                        directive.
                                     </td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" rowspan="4" valign="top" width="33.33333333333333%" headers="d54e3412" colspan="1"><samp class="ph codeph">external</samp></td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3412" rowspan="1" colspan="1">function with definition</td>
-                                    <td class="entry" rowspan="2" valign="top" width="33.33333333333333%" headers="d54e3415" colspan="1"><samp class="ph codeph">.visible</samp></td>
+                                    <td class="entry" rowspan="4" valign="top" width="33.33333333333333%" headers="d54e3706" colspan="1"><samp class="ph codeph">external</samp></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3706" rowspan="1" colspan="1">function with definition</td>
+                                    <td class="entry" rowspan="2" valign="top" width="33.33333333333333%" headers="d54e3709" colspan="1"><samp class="ph codeph">.visible</samp></td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3412" rowspan="1" colspan="1">global variable with initialization</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3706" rowspan="1" colspan="1">global variable with initialization</td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3412" rowspan="1" colspan="1">function without definition</td>
-                                    <td class="entry" rowspan="2" valign="top" width="33.33333333333333%" headers="d54e3415" colspan="1"><samp class="ph codeph">.extern</samp></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3706" rowspan="1" colspan="1">function without definition</td>
+                                    <td class="entry" rowspan="2" valign="top" width="33.33333333333333%" headers="d54e3709" colspan="1"><samp class="ph codeph">.extern</samp></td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3412" rowspan="1" colspan="1">global variable without initialization</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3706" rowspan="1" colspan="1">global variable without initialization</td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" colspan="2" valign="top" headers="d54e3412" rowspan="1"><samp class="ph codeph">available_externally</samp></td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3415" rowspan="1" colspan="1"><samp class="ph codeph">.extern</samp></td>
+                                    <td class="entry" colspan="2" valign="top" headers="d54e3706" rowspan="1"><samp class="ph codeph">common</samp></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3709" rowspan="1" colspan="1"><samp class="ph codeph">.common</samp> for the global address space, otherwise <samp class="ph codeph">.weak</samp></td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" colspan="2" valign="top" headers="d54e3412" rowspan="1"><samp class="ph codeph">linkonce</samp>, 
+                                    <td class="entry" colspan="2" valign="top" headers="d54e3706" rowspan="1"><samp class="ph codeph">available_externally</samp>, 
+                                       			       <samp class="ph codeph">linkonce</samp>, 
                                        			       <samp class="ph codeph">linkonce_odr</samp>,
                                        			       <samp class="ph codeph">weak</samp>,
-                                       <samp class="ph codeph">weak_odr</samp>,
-                                       			       <samp class="ph codeph">common</samp></td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3415" rowspan="1" colspan="1"><samp class="ph codeph">.weak</samp></td>
+                                       <samp class="ph codeph">weak_odr</samp></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3709" rowspan="1" colspan="1"><samp class="ph codeph">.weak</samp></td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" colspan="2" valign="top" headers="d54e3412" rowspan="1">all other linkage types</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3415" rowspan="1" colspan="1">Not supported.</td>
+                                    <td class="entry" colspan="2" valign="top" headers="d54e3706" rowspan="1">all other linkage types</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3709" rowspan="1" colspan="1">Not supported.</td>
                                  </tr>
                               </tbody>
                            </table>
@@ -2613,16 +2674,16 @@ void @llvm.nvvm.sust.p.3d.v4i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z,
                               <!-- --></a><table cellpadding="4" cellspacing="0" summary="" id="argument-passing-and-return__table_ech_f53_n3" class="table" frame="border" border="1" rules="all">
                               <thead class="thead" align="left">
                                  <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e3546" rowspan="1" colspan="1">Source Type</th>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e3549" rowspan="1" colspan="1">Size in Bits</th>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e3552" rowspan="1" colspan="1">PTX Type </th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e3843" rowspan="1" colspan="1">Source Type</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e3846" rowspan="1" colspan="1">Size in Bits</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e3849" rowspan="1" colspan="1">PTX Type </th>
                                  </tr>
                               </thead>
                               <tbody class="tbody">
                                  <tr class="row">
-                                    <td class="entry" rowspan="2" valign="top" width="33.33333333333333%" headers="d54e3546" colspan="1">Integer types</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3549" rowspan="1" colspan="1">&lt;= 32</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3552" rowspan="1" colspan="1">
+                                    <td class="entry" rowspan="2" valign="top" width="33.33333333333333%" headers="d54e3843" colspan="1">Integer types</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3846" rowspan="1" colspan="1">&lt;= 32</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3849" rowspan="1" colspan="1">
                                        <p class="p"><samp class="ph codeph">.u32</samp> or <samp class="ph codeph">.b32</samp> (zero-extended if unsigned)
                                        </p>
                                        <p class="p"><samp class="ph codeph">.s32</samp> or <samp class="ph codeph">.b32</samp> (sign-extended if signed)
@@ -2630,8 +2691,8 @@ void @llvm.nvvm.sust.p.3d.v4i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z,
                                     </td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3549" rowspan="1" colspan="1">64</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3552" rowspan="1" colspan="1">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3846" rowspan="1" colspan="1">64</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3849" rowspan="1" colspan="1">
                                        <p class="p"><samp class="ph codeph">.u64</samp> or <samp class="ph codeph">.b64</samp> (if unsigned)
                                        </p>
                                        <p class="p"><samp class="ph codeph">.s64</samp> or <samp class="ph codeph">.b64</samp> (if signed)
@@ -2639,29 +2700,29 @@ void @llvm.nvvm.sust.p.3d.v4i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z,
                                     </td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" rowspan="2" valign="top" width="33.33333333333333%" headers="d54e3546" colspan="1">Pointer types (without <samp class="ph codeph">byval</samp>
+                                    <td class="entry" rowspan="2" valign="top" width="33.33333333333333%" headers="d54e3843" colspan="1">Pointer types (without <samp class="ph codeph">byval</samp>
                                        attribute)
                                     </td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3549" rowspan="1" colspan="1">32</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3552" rowspan="1" colspan="1"><samp class="ph codeph">.u32</samp> or <samp class="ph codeph">.b32</samp></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3846" rowspan="1" colspan="1">32</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3849" rowspan="1" colspan="1"><samp class="ph codeph">.u32</samp> or <samp class="ph codeph">.b32</samp></td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3549" rowspan="1" colspan="1">64</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3552" rowspan="1" colspan="1"><samp class="ph codeph">.u64</samp> or <samp class="ph codeph">.b64</samp></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3846" rowspan="1" colspan="1">64</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3849" rowspan="1" colspan="1"><samp class="ph codeph">.u64</samp> or <samp class="ph codeph">.b64</samp></td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" rowspan="2" valign="top" width="33.33333333333333%" headers="d54e3546" colspan="1">Floating-point types</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3549" rowspan="1" colspan="1">32</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3552" rowspan="1" colspan="1"><samp class="ph codeph">.f32</samp> or <samp class="ph codeph">.b32</samp></td>
+                                    <td class="entry" rowspan="2" valign="top" width="33.33333333333333%" headers="d54e3843" colspan="1">Floating-point types</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3846" rowspan="1" colspan="1">32</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3849" rowspan="1" colspan="1"><samp class="ph codeph">.f32</samp> or <samp class="ph codeph">.b32</samp></td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3549" rowspan="1" colspan="1">64</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3552" rowspan="1" colspan="1"><samp class="ph codeph">.f64</samp> or <samp class="ph codeph">.b64</samp></td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3846" rowspan="1" colspan="1">64</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3849" rowspan="1" colspan="1"><samp class="ph codeph">.f64</samp> or <samp class="ph codeph">.b64</samp></td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3546" rowspan="1" colspan="1">Aggregate types</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3549" rowspan="1" colspan="1">Any size</td>
-                                    <td class="entry" rowspan="3" valign="top" width="33.33333333333333%" headers="d54e3552" colspan="1">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3843" rowspan="1" colspan="1">Aggregate types</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3846" rowspan="1" colspan="1">Any size</td>
+                                    <td class="entry" rowspan="3" valign="top" width="33.33333333333333%" headers="d54e3849" colspan="1">
                                        <p class="p"><samp class="ph codeph">.align </samp><em class="ph i">align </em><samp class="ph codeph">.b8 </samp><em class="ph i">name</em>[<em class="ph i">size</em>]
                                        </p>
                                        <p class="p">Where <em class="ph i">align</em> is overall aggregate or vector alignment in bytes,
@@ -2672,14 +2733,14 @@ void @llvm.nvvm.sust.p.3d.v4i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z,
                                     </td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3546" rowspan="1" colspan="1">Pointer types to aggregate with <samp class="ph codeph">byval</samp>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3843" rowspan="1" colspan="1">Pointer types to aggregate with <samp class="ph codeph">byval</samp>
                                        attribute
                                     </td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3549" rowspan="1" colspan="1">32 or 64</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3846" rowspan="1" colspan="1">32 or 64</td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3546" rowspan="1" colspan="1">Vector type</td>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3549" rowspan="1" colspan="1">Any size</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3843" rowspan="1" colspan="1">Vector type</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e3846" rowspan="1" colspan="1">Any size</td>
                                  </tr>
                               </tbody>
                            </table>
@@ -2709,6 +2770,12 @@ void @llvm.nvvm.sust.p.3d.v4i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z,
                            <li class="li">Update to LLVM 3.4 for CUDA 7.0</li>
                            <li class="li">Remove address space intrinsics in favor of <samp class="ph codeph">addrspacecast</samp></li>
                            <li class="li">Add information about source level debugging support</li>
+                        </ul>
+                     </div>
+                     <div class="section">
+                        <h2 class="title sectiontitle">Version 1.3</h2>
+                        <ul class="ul">
+                           <li class="li">Add support for LLVM 3.8 for CUDA 8.0</li>
                         </ul>
                      </div>
                   </div>
@@ -2752,7 +2819,7 @@ void @llvm.nvvm.sust.p.3d.v4i32.&lt;clamp&gt;(i64 %tex, i32 %x, i32 %y, i32 %z,
                      <div class="body refbody">
                         <div class="section">
                            <h3 class="title sectiontitle">Copyright</h3>
-                           <p class="p">© <span class="ph">2012</span>-<span class="ph">2015</span> NVIDIA
+                           <p class="p">© <span class="ph">2012</span>-<span class="ph">2017</span> NVIDIA
                               Corporation. All rights reserved.
                            </p>
                            <p class="p">This product includes software developed by the Syncro Soft SRL (http://www.sync.ro/).</p>

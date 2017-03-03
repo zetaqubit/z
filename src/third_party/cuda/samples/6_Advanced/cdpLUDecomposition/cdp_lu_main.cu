@@ -108,7 +108,7 @@ bool checkresult(Parameters &host_params)
 
     double *device_I;
     double *host_I = (double *)malloc(len);
-    // initialize iidentity matrix
+    // initialize identity matrix
     memset(host_I, 0, len);
 
     for (int i = 0; i < host_params.n; i++)
@@ -261,13 +261,6 @@ int main(int argc, char **argv)
     if (!cdpCapable)
     {
         printf("cdpLUDecomposition requires SM 3.5 or higher to use CUDA Dynamic Parallelism.  Exiting...\n");
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_WAIVED);
     }
 
@@ -278,13 +271,6 @@ int main(int argc, char **argv)
     printf("Compute LU decomposition of a random %dx%d matrix using CUDA Dynamic Parallelism\n", matrix_size, matrix_size);
     printf("Launching single task from device...\n");
     bool result = launch_test(host_params);
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 
     if (result)
     {

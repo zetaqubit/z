@@ -28,7 +28,7 @@ texture<unsigned int, cudaTextureType2D, cudaReadModeElementType> tex2Dright;
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// This function applies the video instrinsic operations to compute a
+// This function applies the video intrinsic operations to compute a
 // sum of absolute differences.  The absolute differences are computed
 // and the optional .add instruction is used to sum the lanes.
 //
@@ -58,7 +58,7 @@ __device__ unsigned int __usad4(unsigned int A, unsigned int B, unsigned int C=0
 //! For stereo disparity this performs a basic block matching scheme.
 //! The sum of abs. diffs between and area of the candidate pixel in the left images
 //! is computed against different horizontal shifts of areas from the right.
-//! Ths shift at which the difference is minimum is taken as how far that pixel
+//! The shift at which the difference is minimum is taken as how far that pixel
 //! moved between left/right image pairs.   The recovered motion is the disparity map
 //! More motion indicates more parallax indicates a closer object.
 //! @param g_img1  image 1 in global memory, RGBA, 4 bytes/pixel

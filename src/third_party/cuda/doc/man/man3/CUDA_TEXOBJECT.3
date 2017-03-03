@@ -1,0 +1,352 @@
+.TH "Texture Object Management" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Texture Object Management \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexObjectCreate\fP (\fBCUtexObject\fP *pTexObject, const \fBCUDA_RESOURCE_DESC\fP *pResDesc, const \fBCUDA_TEXTURE_DESC\fP *pTexDesc, const \fBCUDA_RESOURCE_VIEW_DESC\fP *pResViewDesc)"
+.br
+.RI "\fICreates a texture object. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexObjectDestroy\fP (\fBCUtexObject\fP texObject)"
+.br
+.RI "\fIDestroys a texture object. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexObjectGetResourceDesc\fP (\fBCUDA_RESOURCE_DESC\fP *pResDesc, \fBCUtexObject\fP texObject)"
+.br
+.RI "\fIReturns a texture object's resource descriptor. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexObjectGetResourceViewDesc\fP (\fBCUDA_RESOURCE_VIEW_DESC\fP *pResViewDesc, \fBCUtexObject\fP texObject)"
+.br
+.RI "\fIReturns a texture object's resource view descriptor. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuTexObjectGetTextureDesc\fP (\fBCUDA_TEXTURE_DESC\fP *pTexDesc, \fBCUtexObject\fP texObject)"
+.br
+.RI "\fIReturns a texture object's texture descriptor. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief texture object management functions of the low-level CUDA driver API (\fBcuda.h\fP)
+.PP
+This section describes the texture object management functions of the low-level CUDA driver application programming interface. The texture object API is only supported on devices of compute capability 3.0 or higher. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBCUresult\fP cuTexObjectCreate (\fBCUtexObject\fP * pTexObject, const \fBCUDA_RESOURCE_DESC\fP * pResDesc, const \fBCUDA_TEXTURE_DESC\fP * pTexDesc, const \fBCUDA_RESOURCE_VIEW_DESC\fP * pResViewDesc)"
+.PP
+Creates a texture object and returns it in \fCpTexObject\fP. \fCpResDesc\fP describes the data to texture from. \fCpTexDesc\fP describes how the data should be sampled. \fCpResViewDesc\fP is an optional argument that specifies an alternate format for the data described by \fCpResDesc\fP, and also describes the subresource region to restrict access to when texturing. \fCpResViewDesc\fP can only be specified if the type of resource is a CUDA array or a CUDA mipmapped array.
+.PP
+Texture objects are only supported on devices of compute capability 3.0 or higher. Additionally, a texture object is an opaque value, and, as such, should only be accessed through CUDA API calls.
+.PP
+The \fBCUDA_RESOURCE_DESC\fP structure is defined as: 
+.PP
+.nf
+        typedef struct CUDA_RESOURCE_DESC_st
+        {
+            CUresourcetype resType;
+
+            union {
+                struct {
+                    CUarray hArray;
+                } array;
+                struct {
+                    CUmipmappedArray hMipmappedArray;
+                } mipmap;
+                struct {
+                    CUdeviceptr devPtr;
+                    CUarray_format format;
+                    unsigned int numChannels;
+                    size_t sizeInBytes;
+                } linear;
+                struct {
+                    CUdeviceptr devPtr;
+                    CUarray_format format;
+                    unsigned int numChannels;
+                    size_t width;
+                    size_t height;
+                    size_t pitchInBytes;
+                } pitch2D;
+            } res;
+
+            unsigned int flags;
+        } CUDA_RESOURCE_DESC;
+
+.fi
+.PP
+ where:
+.IP "\(bu" 2
+\fBCUDA_RESOURCE_DESC::resType\fP specifies the type of resource to texture from. CUresourceType is defined as: 
+.PP
+.nf
+        typedef enum CUresourcetype_enum {
+            CU_RESOURCE_TYPE_ARRAY           = 0x00,
+            CU_RESOURCE_TYPE_MIPMAPPED_ARRAY = 0x01,
+            CU_RESOURCE_TYPE_LINEAR          = 0x02,
+            CU_RESOURCE_TYPE_PITCH2D         = 0x03
+        } CUresourcetype;
+
+.fi
+.PP
+
+.PP
+.PP
+\fB\fP.RS 4
+If \fBCUDA_RESOURCE_DESC::resType\fP is set to \fBCU_RESOURCE_TYPE_ARRAY\fP, CUDA_RESOURCE_DESC::res::array::hArray must be set to a valid CUDA array handle.
+.RE
+.PP
+\fB\fP.RS 4
+If \fBCUDA_RESOURCE_DESC::resType\fP is set to \fBCU_RESOURCE_TYPE_MIPMAPPED_ARRAY\fP, CUDA_RESOURCE_DESC::res::mipmap::hMipmappedArray must be set to a valid CUDA mipmapped array handle.
+.RE
+.PP
+\fB\fP.RS 4
+If \fBCUDA_RESOURCE_DESC::resType\fP is set to \fBCU_RESOURCE_TYPE_LINEAR\fP, CUDA_RESOURCE_DESC::res::linear::devPtr must be set to a valid device pointer, that is aligned to \fBCU_DEVICE_ATTRIBUTE_TEXTURE_ALIGNMENT\fP. CUDA_RESOURCE_DESC::res::linear::format and CUDA_RESOURCE_DESC::res::linear::numChannels describe the format of each component and the number of components per array element. CUDA_RESOURCE_DESC::res::linear::sizeInBytes specifies the size of the array in bytes. The total number of elements in the linear address range cannot exceed \fBCU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_LINEAR_WIDTH\fP. The number of elements is computed as (sizeInBytes / (sizeof(format) * numChannels)).
+.RE
+.PP
+\fB\fP.RS 4
+If \fBCUDA_RESOURCE_DESC::resType\fP is set to \fBCU_RESOURCE_TYPE_PITCH2D\fP, CUDA_RESOURCE_DESC::res::pitch2D::devPtr must be set to a valid device pointer, that is aligned to \fBCU_DEVICE_ATTRIBUTE_TEXTURE_ALIGNMENT\fP. CUDA_RESOURCE_DESC::res::pitch2D::format and CUDA_RESOURCE_DESC::res::pitch2D::numChannels describe the format of each component and the number of components per array element. CUDA_RESOURCE_DESC::res::pitch2D::width and CUDA_RESOURCE_DESC::res::pitch2D::height specify the width and height of the array in elements, and cannot exceed \fBCU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LINEAR_WIDTH\fP and \fBCU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LINEAR_HEIGHT\fP respectively. CUDA_RESOURCE_DESC::res::pitch2D::pitchInBytes specifies the pitch between two rows in bytes and has to be aligned to \fBCU_DEVICE_ATTRIBUTE_TEXTURE_PITCH_ALIGNMENT\fP. Pitch cannot exceed \fBCU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LINEAR_PITCH\fP.
+.RE
+.PP
+.IP "\(bu" 2
+flags must be set to zero.
+.PP
+.PP
+The \fBCUDA_TEXTURE_DESC\fP struct is defined as 
+.PP
+.nf
+        typedef struct CUDA_TEXTURE_DESC_st {
+            CUaddress_mode addressMode[3];
+            CUfilter_mode filterMode;
+            unsigned int flags;
+            unsigned int maxAnisotropy;
+            CUfilter_mode mipmapFilterMode;
+            float mipmapLevelBias;
+            float minMipmapLevelClamp;
+            float maxMipmapLevelClamp;
+        } CUDA_TEXTURE_DESC;
+
+.fi
+.PP
+ where
+.IP "\(bu" 2
+\fBCUDA_TEXTURE_DESC::addressMode\fP specifies the addressing mode for each dimension of the texture data. \fBCUaddress_mode\fP is defined as: 
+.PP
+.nf
+        typedef enum CUaddress_mode_enum {
+            CU_TR_ADDRESS_MODE_WRAP = 0,
+            CU_TR_ADDRESS_MODE_CLAMP = 1,
+            CU_TR_ADDRESS_MODE_MIRROR = 2,
+            CU_TR_ADDRESS_MODE_BORDER = 3
+        } CUaddress_mode;
+
+.fi
+.PP
+ This is ignored if \fBCUDA_RESOURCE_DESC::resType\fP is \fBCU_RESOURCE_TYPE_LINEAR\fP. Also, if the flag, \fBCU_TRSF_NORMALIZED_COORDINATES\fP is not set, the only supported address mode is \fBCU_TR_ADDRESS_MODE_CLAMP\fP.
+.PP
+.PP
+.IP "\(bu" 2
+\fBCUDA_TEXTURE_DESC::filterMode\fP specifies the filtering mode to be used when fetching from the texture. CUfilter_mode is defined as: 
+.PP
+.nf
+        typedef enum CUfilter_mode_enum {
+            CU_TR_FILTER_MODE_POINT = 0,
+            CU_TR_FILTER_MODE_LINEAR = 1
+        } CUfilter_mode;
+
+.fi
+.PP
+ This is ignored if \fBCUDA_RESOURCE_DESC::resType\fP is \fBCU_RESOURCE_TYPE_LINEAR\fP.
+.PP
+.PP
+.IP "\(bu" 2
+CUDA_TEXTURE_DESC::flags can be any combination of the following:
+.IP "  \(bu" 4
+\fBCU_TRSF_READ_AS_INTEGER\fP, which suppresses the default behavior of having the texture promote integer data to floating point data in the range [0, 1]. Note that texture with 32-bit integer format would not be promoted, regardless of whether or not this flag is specified.
+.IP "  \(bu" 4
+\fBCU_TRSF_NORMALIZED_COORDINATES\fP, which suppresses the default behavior of having the texture coordinates range from [0, Dim) where Dim is the width or height of the CUDA array. Instead, the texture coordinates [0, 1.0) reference the entire breadth of the array dimension; Note that for CUDA mipmapped arrays, this flag has to be set.
+.PP
+
+.PP
+.PP
+.IP "\(bu" 2
+\fBCUDA_TEXTURE_DESC::maxAnisotropy\fP specifies the maximum anisotropy ratio to be used when doing anisotropic filtering. This value will be clamped to the range [1,16].
+.PP
+.PP
+.IP "\(bu" 2
+\fBCUDA_TEXTURE_DESC::mipmapFilterMode\fP specifies the filter mode when the calculated mipmap level lies between two defined mipmap levels.
+.PP
+.PP
+.IP "\(bu" 2
+\fBCUDA_TEXTURE_DESC::mipmapLevelBias\fP specifies the offset to be applied to the calculated mipmap level.
+.PP
+.PP
+.IP "\(bu" 2
+\fBCUDA_TEXTURE_DESC::minMipmapLevelClamp\fP specifies the lower end of the mipmap level range to clamp access to.
+.PP
+.PP
+.IP "\(bu" 2
+\fBCUDA_TEXTURE_DESC::maxMipmapLevelClamp\fP specifies the upper end of the mipmap level range to clamp access to.
+.PP
+.PP
+The \fBCUDA_RESOURCE_VIEW_DESC\fP struct is defined as 
+.PP
+.nf
+        typedef struct CUDA_RESOURCE_VIEW_DESC_st
+        {
+            CUresourceViewFormat format;
+            size_t width;
+            size_t height;
+            size_t depth;
+            unsigned int firstMipmapLevel;
+            unsigned int lastMipmapLevel;
+            unsigned int firstLayer;
+            unsigned int lastLayer;
+        } CUDA_RESOURCE_VIEW_DESC;
+
+.fi
+.PP
+ where:
+.IP "\(bu" 2
+CUDA_RESOURCE_VIEW_DESC::format specifies how the data contained in the CUDA array or CUDA mipmapped array should be interpreted. Note that this can incur a change in size of the texture data. If the resource view format is a block compressed format, then the underlying CUDA array or CUDA mipmapped array has to have a base of format \fBCU_AD_FORMAT_UNSIGNED_INT32\fP. with 2 or 4 channels, depending on the block compressed format. For ex., BC1 and BC4 require the underlying CUDA array to have a format of \fBCU_AD_FORMAT_UNSIGNED_INT32\fP with 2 channels. The other BC formats require the underlying resource to have the same base format but with 4 channels.
+.PP
+.PP
+.IP "\(bu" 2
+CUDA_RESOURCE_VIEW_DESC::width specifies the new width of the texture data. If the resource view format is a block compressed format, this value has to be 4 times the original width of the resource. For non block compressed formats, this value has to be equal to that of the original resource.
+.PP
+.PP
+.IP "\(bu" 2
+CUDA_RESOURCE_VIEW_DESC::height specifies the new height of the texture data. If the resource view format is a block compressed format, this value has to be 4 times the original height of the resource. For non block compressed formats, this value has to be equal to that of the original resource.
+.PP
+.PP
+.IP "\(bu" 2
+CUDA_RESOURCE_VIEW_DESC::depth specifies the new depth of the texture data. This value has to be equal to that of the original resource.
+.PP
+.PP
+.IP "\(bu" 2
+\fBCUDA_RESOURCE_VIEW_DESC::firstMipmapLevel\fP specifies the most detailed mipmap level. This will be the new mipmap level zero. For non-mipmapped resources, this value has to be zero.\fBCUDA_TEXTURE_DESC::minMipmapLevelClamp\fP and \fBCUDA_TEXTURE_DESC::maxMipmapLevelClamp\fP will be relative to this value. For ex., if the firstMipmapLevel is set to 2, and a minMipmapLevelClamp of 1.2 is specified, then the actual minimum mipmap level clamp will be 3.2.
+.PP
+.PP
+.IP "\(bu" 2
+\fBCUDA_RESOURCE_VIEW_DESC::lastMipmapLevel\fP specifies the least detailed mipmap level. For non-mipmapped resources, this value has to be zero.
+.PP
+.PP
+.IP "\(bu" 2
+\fBCUDA_RESOURCE_VIEW_DESC::firstLayer\fP specifies the first layer index for layered textures. This will be the new layer zero. For non-layered resources, this value has to be zero.
+.PP
+.PP
+.IP "\(bu" 2
+\fBCUDA_RESOURCE_VIEW_DESC::lastLayer\fP specifies the last layer index for layered textures. For non-layered resources, this value has to be zero.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpTexObject\fP - Texture object to create 
+.br
+\fIpResDesc\fP - Resource descriptor 
+.br
+\fIpTexDesc\fP - Texture descriptor 
+.br
+\fIpResViewDesc\fP - Resource view descriptor
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexObjectDestroy\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexObjectDestroy (\fBCUtexObject\fP texObject)"
+.PP
+Destroys the texture object specified by \fCtexObject\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fItexObject\fP - Texture object to destroy
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexObjectCreate\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexObjectGetResourceDesc (\fBCUDA_RESOURCE_DESC\fP * pResDesc, \fBCUtexObject\fP texObject)"
+.PP
+Returns the resource descriptor for the texture object specified by \fCtexObject\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpResDesc\fP - Resource descriptor 
+.br
+\fItexObject\fP - Texture object
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexObjectCreate\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexObjectGetResourceViewDesc (\fBCUDA_RESOURCE_VIEW_DESC\fP * pResViewDesc, \fBCUtexObject\fP texObject)"
+.PP
+Returns the resource view descriptor for the texture object specified by \fCtexObject\fP. If no resource view was set for \fCtexObject\fP, the \fBCUDA_ERROR_INVALID_VALUE\fP is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpResViewDesc\fP - Resource view descriptor 
+.br
+\fItexObject\fP - Texture object
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexObjectCreate\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuTexObjectGetTextureDesc (\fBCUDA_TEXTURE_DESC\fP * pTexDesc, \fBCUtexObject\fP texObject)"
+.PP
+Returns the texture descriptor for the texture object specified by \fCtexObject\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpTexDesc\fP - Texture descriptor 
+.br
+\fItexObject\fP - Texture object
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuTexObjectCreate\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

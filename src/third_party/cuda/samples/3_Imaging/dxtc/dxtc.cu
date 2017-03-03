@@ -567,13 +567,6 @@ int main(int argc, char **argv)
     if (image_path == 0)
     {
         printf("Error, unable to find source image  <%s>\n", image_path);
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 
@@ -581,12 +574,6 @@ int main(int argc, char **argv)
     {
         printf("Error, unable to open source image file <%s>\n", image_path);
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 
@@ -694,13 +681,6 @@ int main(int argc, char **argv)
     if (fp == 0)
     {
         printf("Error, unable to open output image <%s>\n", output_filename);
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 
@@ -738,12 +718,6 @@ int main(int argc, char **argv)
     {
         printf("Error, unable to find reference image\n");
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 
@@ -753,12 +727,6 @@ int main(int argc, char **argv)
     {
         printf("Error, unable to open reference image\n");
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_FAILURE);
     }
 
@@ -801,13 +769,6 @@ int main(int argc, char **argv)
     free(h_result);
     free(reference);
     sdkDeleteTimer(&timer);
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 
     printf("RMS(reference, result) = %f\n\n", rms);
     printf(rms <= ERROR_THRESHOLD ? "Test passed\n" : "Test failed!\n");

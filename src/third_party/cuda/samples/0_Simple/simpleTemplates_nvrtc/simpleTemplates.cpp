@@ -30,8 +30,6 @@
 #include <nvrtc_helper.h>
 #include <timer.h>
 
-#include <cudaProfiler.h>
-
 #ifndef MAX
 #define MAX(a,b) (a > b ? a : b)
 #endif
@@ -71,8 +69,6 @@ int main(int argc, char **argv)
     runTest<int>(argc, argv, 64);
 
     printf("\n[simpleTemplates_nvrtc] -> Test Results: %d Failures\n", g_TotalFailures);
-
-    cuProfilerStop();
 
     exit(g_TotalFailures == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
@@ -200,7 +196,7 @@ void runTest(int argc, char **argv, int len)
     // allocate host memory
     T *h_idata = (T *) malloc(mem_size);
 
-    // initalize the memory
+    // initialize the memory
     for (unsigned int i = 0; i < num_threads; ++i)
     {
         h_idata[i] = (T) i;
@@ -260,7 +256,7 @@ void runTest(int argc, char **argv, int len)
     else
     {
         // custom output handling when no regression test running
-        // in this case check if the result is equivalent to the expected soluion
+        // in this case check if the result is equivalent to the expected solution
         bool res = comparator.compare(reference, h_odata, num_threads);
 
         printf("Compare %s\n\n", (1 == res) ? "OK" : "MISMATCH");

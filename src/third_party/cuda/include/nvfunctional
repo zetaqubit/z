@@ -140,27 +140,6 @@ _T&& forward(typename std::remove_reference<_T>::type&& __t) __NV_NOEXCEPT
   return static_cast<_T&&>(__t);
 }
 
-// Provide device version of forward functions because the use of 
-// function::operator() is limited within device code.
-// These functions are only used in function::operator() and 
-// __make_functor::__invoke that is called by function::operator().
-template <class _T> 
-inline __device__
-_T&& device_forward(typename std::remove_reference<_T>::type& __t) __NV_NOEXCEPT
-{
-  return static_cast<_T&&>(__t);
-}
-
-template <class _T> 
-inline __device__
-_T&& device_forward(typename std::remove_reference<_T>::type&& __t) 
-     __NV_NOEXCEPT
-{
-  static_assert(!std::is_lvalue_reference<_T>::value,
-                "Error: __t is instantiated with an lvalue reference type");
-  return static_cast<_T&&>(__t);
-}
-
 } // namespace internal
 
 namespace __functional_helpers
@@ -231,6 +210,7 @@ class function<_RetType(_ArgTypes...)>
   typedef void(*__destructor_type)(function *);
   __destructor_type __destructor;
 
+  #pragma nv_exec_check_disable
   template <class _F>
   __device__ __host__
   __NV_CONSTEXPR bool __use_small_functor_data() const
@@ -240,18 +220,21 @@ class function<_RetType(_ArgTypes...)>
                                   __functional_helpers::_Small_functor_types));
   }
 
+  #pragma nv_exec_check_disable
   __device__ __host__
   void* __get_small_functor_data() const
   {
     return (void*)(&__small_functor_data.__data[0]);
   }
 
+  #pragma nv_exec_check_disable
   __device__ __host__
   bool __is_small_functor_data() const
   {
     return __obj == __get_small_functor_data();
   }
 
+  #pragma nv_exec_check_disable
   template <class _F>
   __device__ __host__
   static _F& __get_functor(void *__p)
@@ -259,6 +242,7 @@ class function<_RetType(_ArgTypes...)>
     return *((_F*)__p);
   }
 
+  #pragma nv_exec_check_disable
   template <class _F>
   __device__ __host__
   static bool __is_empty_functor(const _F& /*__p*/)
@@ -266,13 +250,15 @@ class function<_RetType(_ArgTypes...)>
     return false;
   }
 
+  #pragma nv_exec_check_disable
   template <class _F>
   __device__ __host__
   static bool __is_empty_functor(const _F* __p)
   {
     return !__p;
   }
-
+  
+  #pragma nv_exec_check_disable
   template <class _Res, class _C>
   __device__ __host__
   static bool __is_empty_functor(const _Res _C::* __p)
@@ -280,16 +266,18 @@ class function<_RetType(_ArgTypes...)>
     return !__p;
   }
  
+  #pragma nv_exec_check_disable
   template <class _Res, class... _Args>
   __device__ __host__
   static bool __is_empty_functor(const function<_Res(_Args...)>& __p)
   {
     return !__p;
   }
-
+  
   template <class _F>
   struct __make_cloner
   {
+    #pragma nv_exec_check_disable
     __device__ __host__
     static void __clone_data(function &__dest, const function &__src)
     {
@@ -306,6 +294,7 @@ class function<_RetType(_ArgTypes...)>
   template <class _F>
   struct __make_destructor
   {
+    #pragma nv_exec_check_disable
     __device__ __host__
     static void __destruct(function *__fn)
     {
@@ -330,7 +319,8 @@ class function<_RetType(_ArgTypes...)>
   {
     typedef _RetType1 type;
 
-    __device__
+    #pragma nv_exec_check_disable
+    __device__ __host__
     static _RetType1 __invoke(void *__d, _ArgTypes1... __args)
     {
       return __get_functor<_F>(__d)(
@@ -344,7 +334,8 @@ class function<_RetType(_ArgTypes...)>
     typedef _RetType1 type;
     typedef _RetType1(*_Fn)(_ArgTypes1...);
 
-    __device__
+    #pragma nv_exec_check_disable    
+    __device__ __host__
     static _RetType1 __invoke(void *__d, _ArgTypes1... __args)
     {
       return __get_functor<_Fn>(__d)(
@@ -392,6 +383,7 @@ class function<_RetType(_ArgTypes...)>
   { };
 #endif /* __GNUC__ == 4) && (__GNUC_MINOR__ < 8) */
 
+  #pragma nv_exec_check_disable
   __device__ __host__
   void __destroy()
   {
@@ -400,7 +392,8 @@ class function<_RetType(_ArgTypes...)>
       __obj = 0;
     }
   }
-
+  
+  #pragma nv_exec_check_disable 
   __device__ __host__
   void __clear()
   {
@@ -424,14 +417,18 @@ public:
  */
 
   // 20.8.11.2.1 construct/copy/destroy [func.wrap.con]
+  
+  #pragma nv_exec_check_disable 
   __device__ __host__ 
   function() __NV_NOEXCEPT
     : __obj(0), __meta_fn(0), __cloner(0), __destructor(0) {}
 
+  #pragma nv_exec_check_disable 
   __device__ __host__ 
   function(std::nullptr_t) __NV_NOEXCEPT
     : __obj(0), __meta_fn(0), __cloner(0), __destructor(0) {}
 
+  #pragma nv_exec_check_disable 
   __device__ __host__ 
   function(const function &__fn)
   {
@@ -446,6 +443,7 @@ public:
     }
   }
 
+  #pragma nv_exec_check_disable 
   __device__ __host__ 
   function(function &&__fn)
   {
@@ -459,11 +457,14 @@ public:
   //          class = typename std::enable_if<
   //                    __check_callability<_F>::value
   //         >::type>
+  
+  #pragma nv_exec_check_disable   
   template<class _F>
   __device__ __host__ 
   function(_F);
 
   // copy and swap
+  #pragma nv_exec_check_disable   
   __device__ __host__
   function& operator=(const function& __fn)
   {
@@ -471,6 +472,7 @@ public:
     return *this;
   }
 
+  #pragma nv_exec_check_disable 
   __device__ __host__
   function& operator=(function&& __fn)
   {
@@ -478,6 +480,7 @@ public:
     return *this;
   }
 
+  #pragma nv_exec_check_disable 
   __device__ __host__
   function& operator=(std::nullptr_t)
   {
@@ -485,6 +488,7 @@ public:
     return *this;
   }
 
+  #pragma nv_exec_check_disable
   template<class _F>
   __device__ __host__
   function&
@@ -496,6 +500,7 @@ public:
     return *this;
   }
 
+  #pragma nv_exec_check_disable
   __device__ __host__
   ~function()
   {
@@ -503,6 +508,7 @@ public:
   }
 
   // 20.8.11.2.2 function modifiers [func.wrap.func.mod]
+  #pragma nv_exec_check_disable 
   __device__ __host__
   void swap(function& __fn) __NV_NOEXCEPT
   {
@@ -529,6 +535,7 @@ public:
   }
 
   // 20.8.11.2.3 function capacity [func.wrap.func.cap]
+  #pragma nv_exec_check_disable   
   __device__ __host__
   explicit operator bool() const __NV_NOEXCEPT
   {
@@ -538,12 +545,14 @@ public:
   // 20.8.11.2.4 function invocation [func.wrap.func.inv]
   // function::operator() can only be called in device code
   // to avoid cross-execution space calls
-  __device__
+  #pragma nv_exec_check_disable   
+  __device__ __host__
   _RetType operator()(_ArgTypes...) const;
 
 };
 
 // Out-of-line definitions
+#pragma nv_exec_check_disable
 template<class _RetType, class... _ArgTypes>
 template<class _F>
 __device__ __host__
@@ -567,16 +576,18 @@ function<_RetType(_ArgTypes...)>::function(_F __fn)
   }
 }
 
+#pragma nv_exec_check_disable 
 template <class _RetType, class..._ArgTypes>
-__device__
+__device__ __host__
 _RetType
 function<_RetType(_ArgTypes...)>::operator()(_ArgTypes... __args) const
 {
-  return __meta_fn(__obj, internal::device_forward<_ArgTypes>(__args)...);
+  return __meta_fn(__obj, internal::forward<_ArgTypes>(__args)...);
 }
 
 // 20.8.11.2.6, Null pointer comparisons:
 
+#pragma nv_exec_check_disable 
 template <class _R, class... _ArgTypes>
 __device__ __host__
 bool operator==(const function<_R(_ArgTypes...)>& __fn, std::nullptr_t) 
@@ -585,6 +596,7 @@ __NV_NOEXCEPT
   return !__fn;
 }
 
+#pragma nv_exec_check_disable 
 template <class _R, class... _ArgTypes>
 __device__ __host__
 bool operator==(std::nullptr_t, const function<_R(_ArgTypes...)>& __fn)
@@ -593,6 +605,7 @@ __NV_NOEXCEPT
   return !__fn;
 }
 
+#pragma nv_exec_check_disable 
 template <class _R, class... _ArgTypes>
 __device__ __host__
 bool operator!=(const function<_R(_ArgTypes...)>& __fn, std::nullptr_t)
@@ -601,6 +614,7 @@ __NV_NOEXCEPT
   return static_cast<bool>(__fn);
 }
 
+#pragma nv_exec_check_disable 
 template <class _R, class... _ArgTypes>
 __device__ __host__
 bool operator!=(std::nullptr_t, const function<_R(_ArgTypes...)>& __fn)
@@ -610,6 +624,7 @@ __NV_NOEXCEPT
 }
 
 // 20.8.11.2.7, specialized algorithms:
+#pragma nv_exec_check_disable 
 template <class _R, class... _ArgTypes>
 __device__ __host__
 void swap(function<_R(_ArgTypes...)>& __fn1, function<_R(_ArgTypes...)>& __fn2)

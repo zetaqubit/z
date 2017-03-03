@@ -10,20 +10,15 @@
  */
 
 #include "render_particles.h"
-#include <GL/glew.h>
+
+#define HELPERGL_EXTERN_GL_FUNC_IMPLEMENTATION
+#include <helper_gl.h>
 
 #include <cuda_runtime.h>
 #include <cuda_gl_interop.h>
 
 #include <helper_cuda.h>
 #include <helper_cuda_gl.h>
-
-#if defined(__APPLE__) || defined(MACOSX)
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#include <GLUT/glut.h>
-#else
-#include <GL/freeglut.h>
-#endif
 
 #include <math.h>
 #include <assert.h>
@@ -70,9 +65,9 @@ void ParticleRenderer::setPositions(float *pos, int numParticles)
         glGenBuffers(1, (GLuint *)&m_pbo);
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER_ARB, m_pbo);
-    glBufferData(GL_ARRAY_BUFFER_ARB, numParticles * 4 * sizeof(float), pos, GL_STATIC_DRAW_ARB);
-    glBindBuffer(GL_ARRAY_BUFFER_ARB, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, m_pbo);
+    glBufferData(GL_ARRAY_BUFFER, numParticles * 4 * sizeof(float), pos, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     SDK_CHECK_ERROR_GL();
 }
 
@@ -87,17 +82,17 @@ void ParticleRenderer::setPositions(double *pos, int numParticles)
         glGenBuffers(1, (GLuint *)&m_pbo);
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER_ARB, m_pbo);
-    glBufferData(GL_ARRAY_BUFFER_ARB, numParticles * 4 * sizeof(double), pos, GL_STATIC_DRAW_ARB);
-    glBindBuffer(GL_ARRAY_BUFFER_ARB, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, m_pbo);
+    glBufferData(GL_ARRAY_BUFFER, numParticles * 4 * sizeof(double), pos, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     SDK_CHECK_ERROR_GL();
 }
 
 void ParticleRenderer::setColors(float *color, int numParticles)
 {
-    glBindBuffer(GL_ARRAY_BUFFER_ARB, m_vboColor);
-    glBufferData(GL_ARRAY_BUFFER_ARB, numParticles * 4 * sizeof(float), color, GL_STATIC_DRAW_ARB);
-    glBindBuffer(GL_ARRAY_BUFFER_ARB, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vboColor);
+    glBufferData(GL_ARRAY_BUFFER, numParticles * 4 * sizeof(float), color, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void ParticleRenderer::setBaseColor(float color[4])
@@ -141,7 +136,7 @@ void ParticleRenderer::_drawPoints(bool color)
     {
         glEnableClientState(GL_VERTEX_ARRAY);
 
-        glBindBufferARB(GL_ARRAY_BUFFER_ARB, m_pbo);
+        glBindBuffer(GL_ARRAY_BUFFER, m_pbo);
 
         if (m_bFp64Positions)
             glVertexPointer(4, GL_DOUBLE, 0, 0);
@@ -151,14 +146,14 @@ void ParticleRenderer::_drawPoints(bool color)
         if (color)
         {
             glEnableClientState(GL_COLOR_ARRAY);
-            glBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vboColor);
+            glBindBuffer(GL_ARRAY_BUFFER, m_vboColor);
             //glActiveTexture(GL_TEXTURE1);
             //glTexCoordPointer(4, GL_FLOAT, 0, 0);
             glColorPointer(4, GL_FLOAT, 0, 0);
         }
 
         glDrawArrays(GL_POINTS, 0, m_numParticles);
-        glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_COLOR_ARRAY);
     }
@@ -192,7 +187,7 @@ void ParticleRenderer::display(DisplayMode mode /* = PARTICLE_POINTS */)
                 GLuint texLoc = glGetUniformLocation(m_programSprites, "splatTexture");
                 glUniform1i(texLoc, 0);
 
-                glActiveTextureARB(GL_TEXTURE0_ARB);
+                glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, m_texture);
 
                 glColor3f(1, 1, 1);
@@ -224,7 +219,7 @@ void ParticleRenderer::display(DisplayMode mode /* = PARTICLE_POINTS */)
                 GLuint texLoc = glGetUniformLocation(m_programSprites, "splatTexture");
                 glUniform1i(texLoc, 0);
 
-                glActiveTextureARB(GL_TEXTURE0_ARB);
+                glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, m_texture);
 
                 glColor3f(1, 1, 1);
@@ -315,9 +310,9 @@ void ParticleRenderer::_initGL()
     _createTexture(32);
 
     glGenBuffers(1, (GLuint *)&m_vboColor);
-    glBindBuffer(GL_ARRAY_BUFFER_ARB, m_vboColor);
-    glBufferData(GL_ARRAY_BUFFER_ARB, m_numParticles * 4 * sizeof(float), 0, GL_STATIC_DRAW_ARB);
-    glBindBuffer(GL_ARRAY_BUFFER_ARB, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vboColor);
+    glBufferData(GL_ARRAY_BUFFER, m_numParticles * 4 * sizeof(float), 0, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 //------------------------------------------------------------------------------

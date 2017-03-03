@@ -19,7 +19,7 @@
 */
 
 // OpenGL Graphics includes
-#include <GL/glew.h>
+#include <helper_gl.h>
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 #include <GL/wglew.h>
 #endif
@@ -41,7 +41,6 @@
 #include <helper_functions.h>
 #include <helper_cuda.h>
 #include <helper_cuda_gl.h>
-#include <rendercheck_gl.h>
 
 // Includes
 #include <stdio.h>
@@ -357,10 +356,8 @@ void renderImage(bool bUseOpenGL, bool fp64, int mode)
                     RunMandelbrot0(d_dst, imageW, imageH, crunch, x, y,
                                    xJParam, yJParam, s, colors, pass++, animationFrame, precisionMode, numSMs, g_isJuliaSet, version);
 
-                cudaDeviceSynchronize();
-
                 // Estimate the total time of the frame if one more pass is rendered
-                timeEstimate = 0.001f * sdkGetTimerValue(&hTimer) * ((float)(pass + 1 - startPass) / (float)(pass - startPass));
+                timeEstimate = 0.1f * sdkGetTimerValue(&hTimer) * ((float)(pass + 1 - startPass) / (float)(pass - startPass));
             }
             while ((pass < 128) && (timeEstimate < 1.0f / 60.0f) && !RUN_TIMING);
 
@@ -414,10 +411,10 @@ void displayFunc(void)
     renderImage(true, g_isJuliaSet, precisionMode);
 
     // load texture from PBO
-    //  glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, gl_PBO);
+    //  glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, gl_PBO);
     glBindTexture(GL_TEXTURE_2D, gl_Tex);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, imageW, imageH, GL_RGBA, GL_UNSIGNED_BYTE, BUFFER_DATA(0));
-    //  glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+    //  glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
 
     // fragment program is required to display floating point texture
     glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, gl_Shader);
@@ -456,7 +453,7 @@ void cleanup()
     sdkDeleteTimer(&hTimer);
 
     //DEPRECATED: checkCudaErrors(cudaGLUnregisterBufferObject(gl_PBO));
-    cudaGraphicsUnregisterResource(cuda_pbo_resource);
+    checkCudaErrors(cudaGraphicsUnregisterResource(cuda_pbo_resource));
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
 
     glDeleteBuffers(1, &gl_PBO);
@@ -477,7 +474,13 @@ void keyboardFunc(unsigned char k, int, int)
         case 'q':
         case 'Q':
             printf("Shutting down...\n");
+
+            #if defined(__APPLE__) || defined(MACOSX)
             exit(EXIT_SUCCESS);
+            #else
+            glutDestroyWindow(glutGetWindow());
+            return;
+            #endif
             break;
 
         case '?':
@@ -850,8 +853,11 @@ void motionFunc(int x, int y)
 
 void timerEvent(int value)
 {
-    glutPostRedisplay();
-    glutTimerFunc(REFRESH_DELAY, timerEvent, 0);
+    if (glutGetWindow())
+    {
+        glutPostRedisplay();
+        glutTimerFunc(REFRESH_DELAY, timerEvent, 0);
+    }
 }
 
 void mainMenu(int i)
@@ -942,11 +948,6 @@ void initOpenGLBuffers(int w, int h)
     {
         return;
     }
-    else if(h==0)
-    {
-        // keeping height non null
-        h = 1;
-    }
 
     // allocate new buffers
     h_Src = (uchar4 *)malloc(w * h * 4);
@@ -1016,9 +1017,8 @@ void initGL(int *argc, char **argv)
     glutTimerFunc(REFRESH_DELAY, timerEvent, 0);
     initMenus();
 
-    printf("Loading extensions: %s\n", glewGetErrorString(glewInit()));
-
-    if (!glewIsSupported("GL_VERSION_1_5 GL_ARB_vertex_buffer_object GL_ARB_pixel_buffer_object"))
+    if (!isGLVersionSupported(1,5) ||
+        !areGLExtensionsSupported("GL_ARB_vertex_buffer_object GL_ARB_pixel_buffer_object"))
     {
         fprintf(stderr, "Error: failed to get minimal extensions for demo\n");
         fprintf(stderr, "This sample requires:\n");
@@ -1295,12 +1295,6 @@ int main(int argc, char **argv)
         // We run the Automated Testing code path
         runSingleTest(argc, argv);
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(g_TotalErrors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
     }
     else if (checkCmdLineFlag(argc, (const char **)argv, "benchmark"))
@@ -1318,12 +1312,6 @@ int main(int argc, char **argv)
         // We run the Automated Performance Test
         runBenchmark(argc, argv);
 
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(g_TotalErrors == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
     }
     // use command-line specified CUDA device, otherwise use device with highest Gflops/s
@@ -1343,13 +1331,6 @@ int main(int argc, char **argv)
     // If the GPU does not meet SM1.1 capabilities, we quit
     if (!checkCudaCapabilities(1,1))
     {
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
         exit(EXIT_SUCCESS);
     }
 
@@ -1387,9 +1368,9 @@ int main(int argc, char **argv)
     sdkStartTimer(&hTimer);
 
 #if defined (__APPLE__) || defined(MACOSX)
-        atexit(cleanup);
+    atexit(cleanup);
 #else
-        glutCloseFunc(cleanup);
+    glutCloseFunc(cleanup);
 #endif
 
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
@@ -1397,11 +1378,4 @@ int main(int argc, char **argv)
 #endif
 
     glutMainLoop();
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 } // main

@@ -42,9 +42,9 @@ ifeq ("$(TARGET_OS)","linux")
    ifeq ("$(DISTRO)","")
      # second search and parse /etc/issue
      DISTRO = $(shell more /etc/issue | awk '{print $$1}' | sed '1!d' | sed -e "/^$$/d" 2>/dev/null | tr "[:upper:]" "[:lower:]")
-     DISTVER= $(shell more /etc/issue | awk '{print $$2}' | sed '1!d' 2>/dev/null
+     DISTVER= $(shell more /etc/issue | awk '{print $$2}' | sed '1!d' 2>/dev/null)
      # ensure data from /etc/issue is valid
-     ifneq (,$(filter-out $(DISTRO),ubuntu fedora red rhel centos suse))
+     ifeq (,$(filter $(DISTRO),ubuntu fedora red rhel centos suse))
        DISTRO = 
      endif
      ifeq ("$(DISTRO)","")
@@ -58,7 +58,7 @@ endif
 ifeq ("$(TARGET_OS)","linux")
     # $(info) >> findgllib.mk -> LINUX path <<<)
     # Each set of Linux Distros have different paths for where to find their OpenGL libraries reside
-    UBUNTU_PKG_NAME = "nvidia-346"
+    UBUNTU_PKG_NAME = "nvidia-367"
         UBUNTU = $(shell echo $(DISTRO) | grep -i ubuntu      >/dev/null 2>&1; echo $$?)
         FEDORA = $(shell echo $(DISTRO) | grep -i fedora      >/dev/null 2>&1; echo $$?)
         RHEL   = $(shell echo $(DISTRO) | grep -i 'red\|rhel' >/dev/null 2>&1; echo $$?)
@@ -108,8 +108,6 @@ ifeq ("$(TARGET_OS)","linux")
   GLLIB  := $(shell find -L $(GLPATH) $(DFLT_PATH) -name libGL.so  -print 2>/dev/null)
   GLULIB := $(shell find -L $(GLPATH) $(DFLT_PATH) -name libGLU.so -print 2>/dev/null)
   X11LIB := $(shell find -L $(GLPATH) $(DFLT_PATH) -name libX11.so -print 2>/dev/null)
-  XILIB  := $(shell find -L $(GLPATH) $(DFLT_PATH) -name libXi.so  -print 2>/dev/null)
-  XMULIB := $(shell find -L $(GLPATH) $(DFLT_PATH) -name libXmu.so -print 2>/dev/null)
 
   ifeq ("$(GLLIB)","")
       $(info >>> WARNING - libGL.so not found, refer to CUDA Getting Started Guide for how to find and install them. <<<)
@@ -121,14 +119,6 @@ ifeq ("$(TARGET_OS)","linux")
   endif
   ifeq ("$(X11LIB)","")
       $(info >>> WARNING - libX11.so not found, refer to CUDA Getting Started Guide for how to find and install them. <<<)
-      SAMPLE_ENABLED := 0
-  endif
-  ifeq ("$(XILIB)","")
-      $(info >>> WARNING - libXi.so not found, refer to CUDA Getting Started Guide for how to find and install them. <<<)
-      SAMPLE_ENABLED := 0
-  endif
-  ifeq ("$(XMULIB)","")
-      $(info >>> WARNING - libXmu.so not found, refer to CUDA Getting Started Guide for how to find and install them. <<<)
       SAMPLE_ENABLED := 0
   endif
 

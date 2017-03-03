@@ -191,17 +191,25 @@ void initializeCUDA(int argc, char **argv, int &devID, int &iSizeMultiple, sMatr
     // use a larger block size for Fermi and above
     int block_size = (deviceProp.major < 2) ? 16 : 32;
 
-    matrix_size.uiWA = 2 * block_size * iSizeMultiple;
+    matrix_size.uiWA = 3 * block_size * iSizeMultiple;
     matrix_size.uiHA = 4 * block_size * iSizeMultiple;
     matrix_size.uiWB = 2 * block_size * iSizeMultiple;
-    matrix_size.uiHB = 4 * block_size * iSizeMultiple;
+    matrix_size.uiHB = 3 * block_size * iSizeMultiple;
     matrix_size.uiWC = 2 * block_size * iSizeMultiple;
     matrix_size.uiHC = 4 * block_size * iSizeMultiple;
 
     printf("MatrixA(%u,%u), MatrixB(%u,%u), MatrixC(%u,%u)\n",
-           matrix_size.uiWA, matrix_size.uiHA,
-           matrix_size.uiWB, matrix_size.uiHB,
-           matrix_size.uiWC, matrix_size.uiHC);
+           matrix_size.uiHA, matrix_size.uiWA,
+           matrix_size.uiHB, matrix_size.uiWB,
+           matrix_size.uiHC, matrix_size.uiWC);
+
+    if( matrix_size.uiWA != matrix_size.uiHB ||
+        matrix_size.uiHA != matrix_size.uiHC ||
+        matrix_size.uiWB != matrix_size.uiWC)
+    {
+       printf("ERROR: Matrix sizes do not match!\n");
+       exit(-1);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -269,7 +277,7 @@ int matrixMultiply(int argc, char **argv, int devID, sMatrixSize &matrix_size)
         checkCudaErrors(cublasCreate(&handle));
 
         //Perform warmup operation with cublas
-        checkCudaErrors(cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, matrix_size.uiWB, matrix_size.uiHA, matrix_size.uiWA, &alpha, d_B, matrix_size.uiWB, d_A, matrix_size.uiWA, &beta, d_C, matrix_size.uiWA));
+        checkCudaErrors(cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, matrix_size.uiWB, matrix_size.uiHA, matrix_size.uiWA, &alpha, d_B, matrix_size.uiWB, d_A, matrix_size.uiWA, &beta, d_C, matrix_size.uiWB));
 
         // Allocate CUDA events that we'll use for timing
         checkCudaErrors(cudaEventCreate(&start));
@@ -282,7 +290,7 @@ int matrixMultiply(int argc, char **argv, int devID, sMatrixSize &matrix_size)
         {
             //note cublas is column primary!
             //need to transpose the order
-            checkCudaErrors(cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, matrix_size.uiWB, matrix_size.uiHA, matrix_size.uiWA, &alpha, d_B, matrix_size.uiWB, d_A, matrix_size.uiWA, &beta, d_C, matrix_size.uiWA));
+            checkCudaErrors(cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, matrix_size.uiWB, matrix_size.uiHA, matrix_size.uiWA, &alpha, d_B, matrix_size.uiWB, d_A, matrix_size.uiWA, &beta, d_C, matrix_size.uiWB));
 
         }
 
@@ -299,7 +307,7 @@ int matrixMultiply(int argc, char **argv, int devID, sMatrixSize &matrix_size)
 
         // Compute and print the performance
         float msecPerMatrixMul = msecTotal / nIter;
-        double flopsPerMatrixMul = 2.0 * (double)matrix_size.uiWA * (double)matrix_size.uiHA * (double)matrix_size.uiWB;
+        double flopsPerMatrixMul = 2.0 * (double)matrix_size.uiHC * (double)matrix_size.uiWC * (double)matrix_size.uiHB;
         double gigaFlops = (flopsPerMatrixMul * 1.0e-9f) / (msecPerMatrixMul / 1000.0f);
         printf(
             "Performance= %.2f GFlop/s, Time= %.3f msec, Size= %.0f Ops\n",
@@ -340,13 +348,6 @@ int matrixMultiply(int argc, char **argv, int devID, sMatrixSize &matrix_size)
     checkCudaErrors(cudaFree(d_A));
     checkCudaErrors(cudaFree(d_B));
     checkCudaErrors(cudaFree(d_C));
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
 
     if (resCUBLAS == true)
     {

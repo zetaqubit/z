@@ -1,0 +1,123 @@
+.TH "CUDA_MEMCPY3D" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+CUDA_MEMCPY3D \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "\fBCUarray\fP \fBdstArray\fP"
+.br
+.ti -1c
+.RI "\fBCUdeviceptr\fP \fBdstDevice\fP"
+.br
+.ti -1c
+.RI "size_t \fBdstHeight\fP"
+.br
+.ti -1c
+.RI "void * \fBdstHost\fP"
+.br
+.ti -1c
+.RI "\fBCUmemorytype\fP \fBdstMemoryType\fP"
+.br
+.ti -1c
+.RI "size_t \fBdstPitch\fP"
+.br
+.ti -1c
+.RI "size_t \fBdstXInBytes\fP"
+.br
+.ti -1c
+.RI "void * \fBreserved0\fP"
+.br
+.ti -1c
+.RI "void * \fBreserved1\fP"
+.br
+.ti -1c
+.RI "\fBCUarray\fP \fBsrcArray\fP"
+.br
+.ti -1c
+.RI "\fBCUdeviceptr\fP \fBsrcDevice\fP"
+.br
+.ti -1c
+.RI "size_t \fBsrcHeight\fP"
+.br
+.ti -1c
+.RI "const void * \fBsrcHost\fP"
+.br
+.ti -1c
+.RI "\fBCUmemorytype\fP \fBsrcMemoryType\fP"
+.br
+.ti -1c
+.RI "size_t \fBsrcPitch\fP"
+.br
+.ti -1c
+.RI "size_t \fBsrcXInBytes\fP"
+.br
+.ti -1c
+.RI "size_t \fBWidthInBytes\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+3D memory copy parameters 
+.SH "Field Documentation"
+.PP 
+.SS "\fBCUarray\fP \fBCUDA_MEMCPY3D::dstArray\fP"
+.PP
+Destination array reference 
+.SS "\fBCUdeviceptr\fP \fBCUDA_MEMCPY3D::dstDevice\fP"
+.PP
+Destination device pointer 
+.SS "size_t \fBCUDA_MEMCPY3D::dstHeight\fP"
+.PP
+Destination height (ignored when dst is array; may be 0 if Depth==1) 
+.SS "void* \fBCUDA_MEMCPY3D::dstHost\fP"
+.PP
+Destination host pointer 
+.SS "\fBCUmemorytype\fP \fBCUDA_MEMCPY3D::dstMemoryType\fP"
+.PP
+Destination memory type (host, device, array) 
+.SS "size_t \fBCUDA_MEMCPY3D::dstPitch\fP"
+.PP
+Destination pitch (ignored when dst is array) 
+.SS "size_t \fBCUDA_MEMCPY3D::dstXInBytes\fP"
+.PP
+Destination X in bytes 
+.SS "void* \fBCUDA_MEMCPY3D::reserved0\fP"
+.PP
+Must be NULL 
+.SS "void* \fBCUDA_MEMCPY3D::reserved1\fP"
+.PP
+Must be NULL 
+.SS "\fBCUarray\fP \fBCUDA_MEMCPY3D::srcArray\fP"
+.PP
+Source array reference 
+.SS "\fBCUdeviceptr\fP \fBCUDA_MEMCPY3D::srcDevice\fP"
+.PP
+Source device pointer 
+.SS "size_t \fBCUDA_MEMCPY3D::srcHeight\fP"
+.PP
+Source height (ignored when src is array; may be 0 if Depth==1) 
+.SS "const void* \fBCUDA_MEMCPY3D::srcHost\fP"
+.PP
+Source host pointer 
+.SS "\fBCUmemorytype\fP \fBCUDA_MEMCPY3D::srcMemoryType\fP"
+.PP
+Source memory type (host, device, array) 
+.SS "size_t \fBCUDA_MEMCPY3D::srcPitch\fP"
+.PP
+Source pitch (ignored when src is array) 
+.SS "size_t \fBCUDA_MEMCPY3D::srcXInBytes\fP"
+.PP
+Source X in bytes 
+.SS "size_t \fBCUDA_MEMCPY3D::WidthInBytes\fP"
+.PP
+Width of 3D memory copy in bytes 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

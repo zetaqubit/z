@@ -45,7 +45,7 @@
       <div id="site-content">
          <nav id="site-nav">
             <div class="category closed"><a href="../index.html" title="The root of the site.">CUDA Toolkit
-                  v7.0</a></div>
+                  v8.0</a></div>
             <div class="category"><a href="index.html" title="CUDA Math API">CUDA Math API</a></div>
             <ul>
                <li>
@@ -75,6 +75,32 @@
                      <li>
                         <div class="section-link"><a href="group__CUDA__MATH__INTRINSIC__SIMD.html#group__CUDA__MATH__INTRINSIC__SIMD">1.8.&nbsp;SIMD Intrinsics</a></div>
                      </li>
+                     <li>
+                        <div class="section-link"><a href="group__CUDA__MATH__INTRINSIC__HALF.html#group__CUDA__MATH__INTRINSIC__HALF">1.9.&nbsp;Half Precision Intrinsics</a></div>
+                        <ul>
+                           <li>
+                              <div class="section-link"><a href="group__CUDA__MATH____HALF__ARITHMETIC.html#group__CUDA__MATH____HALF__ARITHMETIC">1.9.1.&nbsp;Half Arithmetic Functions</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="group__CUDA__MATH____HALF2__ARITHMETIC.html#group__CUDA__MATH____HALF2__ARITHMETIC">1.9.2.&nbsp;Half2 Arithmetic Functions</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="group__CUDA__MATH____HALF__COMPARISON.html#group__CUDA__MATH____HALF__COMPARISON">1.9.3.&nbsp;Half Comparison Functions</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="group__CUDA__MATH____HALF2__COMPARISON.html#group__CUDA__MATH____HALF2__COMPARISON">1.9.4.&nbsp;Half2 Comparison Functions</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="group__CUDA__MATH____HALF__MISC.html#group__CUDA__MATH____HALF__MISC">1.9.5.&nbsp;Half Precision Conversion And Data Movement</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="group__CUDA__MATH____HALF__FUNCTIONS.html#group__CUDA__MATH____HALF__FUNCTIONS">1.9.6.&nbsp;Half Math Functions</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="group__CUDA__MATH____HALF2__FUNCTIONS.html#group__CUDA__MATH____HALF2__FUNCTIONS">1.9.7.&nbsp;Half2 Math Functions</a></div>
+                           </li>
+                        </ul>
+                     </li>
                   </ul>
                </li>
                <li>
@@ -102,10 +128,10 @@
                   (<a href="../../pdf/CUDA_Math_API.pdf">PDF</a>)
                   -
                   
-                  v7.0
+                  v8.0
                   (<a href="https://developer.nvidia.com/cuda-toolkit-archive">older</a>)
                   -
-                  Last updated March 5, 2015
+                  Last updated January 12, 2017
                   -
                   <a href="mailto:cudatools@nvidia.com?subject=CUDA Toolkit Documentation Feedback: CUDA Math API">Send Feedback</a>
                   -
@@ -119,11 +145,14 @@
                   </div>
                   <h3 class="fake_sectiontitle member_header">Functions</h3>
                   <dl class="members">
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gf0101c0881b651ea0c389bb3e533ae55" shape="rect">__cosf</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g129ff4afc615da9a5886c77713094c32" shape="rect">__cosf</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the fast approximate cosine of the input argument. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1ga431b6fae8ad4f45b115853975f672f7" shape="rect">__exp10f</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g35e0d360ac27e6eb9cf1065b847d46af" shape="rect">__exp10f</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the fast approximate base 10 exponential of the input argument. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g86aafcdfe60e0ff7c6aae5c620318295" shape="rect">__expf</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g1beeb3ae544cfdde4a0a724ace025aed" shape="rect">__expf</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the fast approximate base   
                            
                            
@@ -132,25 +161,35 @@
                            </math>
                            
                            exponential of the input argument. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1ga9beb4fa3372e43c208eba5cefdd334a" shape="rect">__fadd_rd</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1ga8255ea2b671a8488813d9d3527e661a" shape="rect">__fadd_rd</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Add two floating point values in round-down mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g4642b05d928a07fcbde16182fc02d6f2" shape="rect">__fadd_rn</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g34f8d82135041b06099d7709ff0bbe4e" shape="rect">__fadd_rn</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Add two floating point values in round-to-nearest-even mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1ge04e3e0ed7953b835b0be5c982ae406c" shape="rect">__fadd_ru</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g3ba9e088a1f798c2542fe7d69736ac7e" shape="rect">__fadd_ru</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Add two floating point values in round-up mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g45630c064e6ee74ba406771721c127d6" shape="rect">__fadd_rz</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g8d108dee04b1aa0681fcdfb8f661dc9e" shape="rect">__fadd_rz</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Add two floating point values in round-towards-zero mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g072c2d267208c96182d1c32a6f9085c6" shape="rect">__fdiv_rd</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1ga548a4045aee3b2dce24bccb26f90f82" shape="rect">__fdiv_rd</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Divide two floating point values in round-down mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g8275ee9b1833e68151b660c4448bdea3" shape="rect">__fdiv_rn</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g1bd038de4c10eec819e00991fb5acf7e" shape="rect">__fdiv_rn</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Divide two floating point values in round-to-nearest-even mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g387507fe550ceb08dd8cc4c0eeeae279" shape="rect">__fdiv_ru</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g8089bb061fd076bdb5b08566b4d0e0c2" shape="rect">__fdiv_ru</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Divide two floating point values in round-up mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gd707bf38ea74a89f2797738fdc68bb89" shape="rect">__fdiv_rz</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gb1465a09b2a88d1c2048d0b0f612fb5c" shape="rect">__fdiv_rz</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Divide two floating point values in round-towards-zero mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1ga7c7960d32554b9128cb7b35f4199253" shape="rect">__fdividef</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gc996beec34f94f6376d0674a6860e107" shape="rect">__fdividef</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the fast approximate division of the input arguments. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gcff3320e99748b088c19149fe71125df" shape="rect">__fmaf_rd</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g5b12d5103d17eed423f1db706a9c80be" shape="rect">__fmaf_rd</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute   
                            
                            
@@ -163,7 +202,8 @@
                            </math>
                            
                            as a single operation, in round-down mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g5a9e00e253c28edf7f04406026e73451" shape="rect">__fmaf_rn</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g77b36635a8fbdc96a7e08e201d589316" shape="rect">__fmaf_rn</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute   
                            
                            
@@ -176,7 +216,8 @@
                            </math>
                            
                            as a single operation, in round-to-nearest-even mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g587f447d8b220d694f7fe90907774cad" shape="rect">__fmaf_ru</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gfe855a453ea92a580b79ad8a7e72bc49" shape="rect">__fmaf_ru</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute   
                            
                            
@@ -189,7 +230,8 @@
                            </math>
                            
                            as a single operation, in round-up mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g0c4bc8083c3350c0ddf96eac2a31d432" shape="rect">__fmaf_rz</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g42a5f6c99064834ad50b2bfa7aa77731" shape="rect">__fmaf_rz</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute   
                            
                            
@@ -202,15 +244,20 @@
                            </math>
                            
                            as a single operation, in round-towards-zero mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1ga275e380f7bcaa3b25efc3774be9b835" shape="rect">__fmul_rd</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g28d56d8747ca7960860cd9c67cd3fed6" shape="rect">__fmul_rd</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Multiply two floating point values in round-down mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gb6fd41a2f5efcc4e86b554c388f65765" shape="rect">__fmul_rn</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g4b9d2d5cb295c1442b00e6eff5248b97" shape="rect">__fmul_rn</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Multiply two floating point values in round-to-nearest-even mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g9ebe6ed398a95ae7d534381702c2420d" shape="rect">__fmul_ru</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gcd2f8b720306266f6e814345d4cf1b93" shape="rect">__fmul_ru</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Multiply two floating point values in round-up mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g7e601e0126fd110f33fbb18ac5fea663" shape="rect">__fmul_rz</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gff448e40e1e71eb620159a40e5e62705" shape="rect">__fmul_rz</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Multiply two floating point values in round-towards-zero mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g3e4e6c40d1a1097df6cb229a422fe86c" shape="rect">__frcp_rd</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g4f51ca3e41e5f9369bed0bf0c5f42971" shape="rect">__frcp_rd</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute   
                            
                            
@@ -222,7 +269,8 @@
                            </math>
                            
                            in round-down mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gf068bc751accde2416cc88aad6a9e4f7" shape="rect">__frcp_rn</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gba455801af8ac9af405a5d37ef2f077b" shape="rect">__frcp_rn</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute   
                            
                            
@@ -234,7 +282,8 @@
                            </math>
                            
                            in round-to-nearest-even mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g063e879e4bf16f9a435c8ed28f42d965" shape="rect">__frcp_ru</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gd5b3289e40e510c2067c8f7a426aa884" shape="rect">__frcp_ru</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute   
                            
                            
@@ -246,7 +295,8 @@
                            </math>
                            
                            in round-up mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gbb1df46f11310263e7e1acf4e4972b40" shape="rect">__frcp_rz</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g64032913321c328ae72111161af32268" shape="rect">__frcp_rz</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute   
                            
                            
@@ -258,7 +308,8 @@
                            </math>
                            
                            in round-towards-zero mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g4141133bb4d6ed2e39573848aec11f72" shape="rect">__frsqrt_rn</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g71ee45580cbeeea206297f0112aff42c" shape="rect">__frsqrt_rn</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute   
                            
                            
@@ -273,7 +324,8 @@
                            </math>
                            
                            in round-to-nearest-even mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gabae35029e992e9d90b39638ce1a8ab1" shape="rect">__fsqrt_rd</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g59566bdd0638a5b249dbda757f2bb06b" shape="rect">__fsqrt_rd</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute   
                            
                            
@@ -284,7 +336,8 @@
                            </math>
                            
                            in round-down mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g4cfc37d5ed8b8d3b01166fc2a12bd395" shape="rect">__fsqrt_rn</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gf021e85b5e9de141a0fc2ff6fbe85875" shape="rect">__fsqrt_rn</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute   
                            
                            
@@ -295,7 +348,8 @@
                            </math>
                            
                            in round-to-nearest-even mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gda1ee5d15013cb78147d00c8a7ad1cc4" shape="rect">__fsqrt_ru</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gb429e39b1790b4dfae0d0c4926f53fe2" shape="rect">__fsqrt_ru</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute   
                            
                            
@@ -306,7 +360,8 @@
                            </math>
                            
                            in round-up mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g461e6a54638be37db356c90839afa687" shape="rect">__fsqrt_rz</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g094bf489bf492287424b1080569189f1" shape="rect">__fsqrt_rz</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Compute   
                            
                            
@@ -317,19 +372,26 @@
                            </math>
                            
                            in round-towards-zero mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g4075f2d1753497c288175da108b8639a" shape="rect">__fsub_rd</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g78502e666a0e6e7690230e118403df54" shape="rect">__fsub_rd</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Subtract two floating point values in round-down mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g167113bc5d8f5d3b171a3b167fd0e39d" shape="rect">__fsub_rn</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1ge75e42e6637c178cd3c86a6e3774f7cb" shape="rect">__fsub_rn</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Subtract two floating point values in round-to-nearest-even mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g03ca87e6c293de6efc97cf1628314a93" shape="rect">__fsub_ru</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g4adc718465695ee57990318d5a650b1c" shape="rect">__fsub_ru</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Subtract two floating point values in round-up mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g41e00a22316038d961d49f6af968ab9c" shape="rect">__fsub_rz</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gc900725c2921068c2ad4f53039b6bacf" shape="rect">__fsub_rz</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Subtract two floating point values in round-towards-zero mode. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g3cccf41bd9b189e1e3cfadbf2964c1a6" shape="rect">__log10f</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g2b7358a27b8231b592da81ff3143b9a8" shape="rect">__log10f</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the fast approximate base 10 logarithm of the input argument. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g8a22dbf38df9eade8990704fe6225c09" shape="rect">__log2f</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gfcc053f9040d50975aab00e44e7c6093" shape="rect">__log2f</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the fast approximate base 2 logarithm of the input argument. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1ga04ad2a8ed4f3d7498216789208cd81f" shape="rect">__logf</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1ged5cef656578096892f104a27d5287c4" shape="rect">__logf</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the fast approximate base   
                            
                            
@@ -338,7 +400,8 @@
                            </math>
                            
                            logarithm of the input argument. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gbebfc39fdf9f41076cf962df0f8e9ea3" shape="rect">__powf</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g2c2b295816185f6ce2423471df529974" shape="rect">__powf</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the fast approximate of   
                            
                            
@@ -349,20 +412,25 @@
                               </msup>
                            </math>
                            . </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g34186848bbf779fc385936147529dca0" shape="rect">__saturatef</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g2c84f08e0db7117a14509d21c3aec04e" shape="rect">__saturatef</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Clamp the input argument to [+0.0, 1.0]. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ void&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gb5357a39a32653bbb1ffde7748eaa521" shape="rect">__sincosf</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float*<span>&nbsp;</span><span class="keyword keyword apiItemName">sptr</span>, float*<span>&nbsp;</span><span class="keyword keyword apiItemName">cptr</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ void&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g96089d6195f9befde96e14afafd931fb" shape="rect">__sincosf</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float*<span>&nbsp;</span><span class="keyword keyword apiItemName">sptr</span>, float*<span>&nbsp;</span><span class="keyword keyword apiItemName">cptr</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the fast approximate of sine and cosine of the first input argument. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g92e7f9c0dedc808162c47b505c170009" shape="rect">__sinf</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1gfa0ea4b2cee94521792ead0deb03addb" shape="rect">__sinf</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the fast approximate sine of the input argument. </span></dd>
-                     <dt><span class="member_long_type">__DEVICE_FUNCTIONS_DECL__ float&nbsp;</span><span class="member_name_long_type"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1ge28e5e91979a13357c366d918e5b25e8" shape="rect">__tanf</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                     <dt><span class="member_type"><span class="keyword keyword apiItemName">__device__</span>
+                           ​ float&nbsp;</span><span class="member_name"><a href="#group__CUDA__MATH__INTRINSIC__SINGLE_1g4fc8b7c67526a0195b9cb47287b5c121" shape="rect">__tanf</a> (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Calculate the fast approximate tangent of the input argument. </span></dd>
                   </dl>
                   <div class="description">
                      <h3 class="sectiontitle">Functions</h3>
                      <dl class="description">
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gf0101c0881b651ea0c389bb3e533ae55" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gf0101c0881b651ea0c389bb3e533ae55" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __cosf (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g129ff4afc615da9a5886c77713094c32" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g129ff4afc615da9a5886c77713094c32" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __cosf (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the fast approximate cosine of the input argument. </div>
                            <div class="section">
@@ -389,8 +457,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1ga431b6fae8ad4f45b115853975f672f7" id="group__CUDA__MATH__INTRINSIC__SINGLE_1ga431b6fae8ad4f45b115853975f672f7" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __exp10f (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g35e0d360ac27e6eb9cf1065b847d46af" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g35e0d360ac27e6eb9cf1065b847d46af" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __exp10f (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the fast approximate base 10 exponential of the input argument. </div>
                            <div class="section">
@@ -435,8 +504,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g86aafcdfe60e0ff7c6aae5c620318295" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g86aafcdfe60e0ff7c6aae5c620318295" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __expf (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g1beeb3ae544cfdde4a0a724ace025aed" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g1beeb3ae544cfdde4a0a724ace025aed" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __expf (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the fast approximate base   
                               
@@ -496,8 +566,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1ga9beb4fa3372e43c208eba5cefdd334a" id="group__CUDA__MATH__INTRINSIC__SINGLE_1ga9beb4fa3372e43c208eba5cefdd334a" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fadd_rd (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1ga8255ea2b671a8488813d9d3527e661a" id="group__CUDA__MATH__INTRINSIC__SINGLE_1ga8255ea2b671a8488813d9d3527e661a" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fadd_rd (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Add two floating point values in round-down mode. </div>
                            <div class="section">
@@ -524,8 +595,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g4642b05d928a07fcbde16182fc02d6f2" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g4642b05d928a07fcbde16182fc02d6f2" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fadd_rn (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g34f8d82135041b06099d7709ff0bbe4e" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g34f8d82135041b06099d7709ff0bbe4e" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fadd_rn (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Add two floating point values in round-to-nearest-even mode. </div>
                            <div class="section">
@@ -552,8 +624,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1ge04e3e0ed7953b835b0be5c982ae406c" id="group__CUDA__MATH__INTRINSIC__SINGLE_1ge04e3e0ed7953b835b0be5c982ae406c" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fadd_ru (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g3ba9e088a1f798c2542fe7d69736ac7e" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g3ba9e088a1f798c2542fe7d69736ac7e" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fadd_ru (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Add two floating point values in round-up mode. </div>
                            <div class="section">
@@ -580,8 +653,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g45630c064e6ee74ba406771721c127d6" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g45630c064e6ee74ba406771721c127d6" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fadd_rz (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g8d108dee04b1aa0681fcdfb8f661dc9e" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g8d108dee04b1aa0681fcdfb8f661dc9e" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fadd_rz (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Add two floating point values in round-towards-zero mode. </div>
                            <div class="section">
@@ -608,8 +682,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g072c2d267208c96182d1c32a6f9085c6" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g072c2d267208c96182d1c32a6f9085c6" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fdiv_rd (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1ga548a4045aee3b2dce24bccb26f90f82" id="group__CUDA__MATH__INTRINSIC__SINGLE_1ga548a4045aee3b2dce24bccb26f90f82" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fdiv_rd (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Divide two floating point values in round-down mode. </div>
                            <div class="section">
@@ -629,8 +704,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g8275ee9b1833e68151b660c4448bdea3" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g8275ee9b1833e68151b660c4448bdea3" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fdiv_rn (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g1bd038de4c10eec819e00991fb5acf7e" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g1bd038de4c10eec819e00991fb5acf7e" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fdiv_rn (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Divide two floating point values in round-to-nearest-even mode. </div>
                            <div class="section">
@@ -650,8 +726,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g387507fe550ceb08dd8cc4c0eeeae279" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g387507fe550ceb08dd8cc4c0eeeae279" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fdiv_ru (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g8089bb061fd076bdb5b08566b4d0e0c2" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g8089bb061fd076bdb5b08566b4d0e0c2" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fdiv_ru (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Divide two floating point values in round-up mode. </div>
                            <div class="section">
@@ -671,8 +748,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gd707bf38ea74a89f2797738fdc68bb89" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gd707bf38ea74a89f2797738fdc68bb89" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fdiv_rz (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gb1465a09b2a88d1c2048d0b0f612fb5c" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gb1465a09b2a88d1c2048d0b0f612fb5c" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fdiv_rz (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Divide two floating point values in round-towards-zero mode. </div>
                            <div class="section">
@@ -692,8 +770,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1ga7c7960d32554b9128cb7b35f4199253" id="group__CUDA__MATH__INTRINSIC__SINGLE_1ga7c7960d32554b9128cb7b35f4199253" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fdividef (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gc996beec34f94f6376d0674a6860e107" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gc996beec34f94f6376d0674a6860e107" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fdividef (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the fast approximate division of the input arguments. </div>
                            <div class="section">
@@ -776,8 +855,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gcff3320e99748b088c19149fe71125df" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gcff3320e99748b088c19149fe71125df" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fmaf_rd (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g5b12d5103d17eed423f1db706a9c80be" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g5b12d5103d17eed423f1db706a9c80be" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fmaf_rd (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute   
                               
@@ -922,8 +1002,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g5a9e00e253c28edf7f04406026e73451" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g5a9e00e253c28edf7f04406026e73451" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fmaf_rn (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g77b36635a8fbdc96a7e08e201d589316" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g77b36635a8fbdc96a7e08e201d589316" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fmaf_rn (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute   
                               
@@ -1068,8 +1149,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g587f447d8b220d694f7fe90907774cad" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g587f447d8b220d694f7fe90907774cad" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fmaf_ru (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gfe855a453ea92a580b79ad8a7e72bc49" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gfe855a453ea92a580b79ad8a7e72bc49" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fmaf_ru (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute   
                               
@@ -1214,8 +1296,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g0c4bc8083c3350c0ddf96eac2a31d432" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g0c4bc8083c3350c0ddf96eac2a31d432" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fmaf_rz (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g42a5f6c99064834ad50b2bfa7aa77731" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g42a5f6c99064834ad50b2bfa7aa77731" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fmaf_rz (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">z</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute   
                               
@@ -1360,8 +1443,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1ga275e380f7bcaa3b25efc3774be9b835" id="group__CUDA__MATH__INTRINSIC__SINGLE_1ga275e380f7bcaa3b25efc3774be9b835" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fmul_rd (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g28d56d8747ca7960860cd9c67cd3fed6" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g28d56d8747ca7960860cd9c67cd3fed6" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fmul_rd (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Multiply two floating point values in round-down mode. </div>
                            <div class="section">
@@ -1388,8 +1472,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gb6fd41a2f5efcc4e86b554c388f65765" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gb6fd41a2f5efcc4e86b554c388f65765" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fmul_rn (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g4b9d2d5cb295c1442b00e6eff5248b97" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g4b9d2d5cb295c1442b00e6eff5248b97" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fmul_rn (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Multiply two floating point values in round-to-nearest-even mode. </div>
                            <div class="section">
@@ -1416,8 +1501,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g9ebe6ed398a95ae7d534381702c2420d" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g9ebe6ed398a95ae7d534381702c2420d" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fmul_ru (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gcd2f8b720306266f6e814345d4cf1b93" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gcd2f8b720306266f6e814345d4cf1b93" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fmul_ru (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Multiply two floating point values in round-up mode. </div>
                            <div class="section">
@@ -1444,8 +1530,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g7e601e0126fd110f33fbb18ac5fea663" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g7e601e0126fd110f33fbb18ac5fea663" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fmul_rz (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gff448e40e1e71eb620159a40e5e62705" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gff448e40e1e71eb620159a40e5e62705" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fmul_rz (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Multiply two floating point values in round-towards-zero mode. </div>
                            <div class="section">
@@ -1472,8 +1559,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g3e4e6c40d1a1097df6cb229a422fe86c" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g3e4e6c40d1a1097df6cb229a422fe86c" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __frcp_rd (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g4f51ca3e41e5f9369bed0bf0c5f42971" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g4f51ca3e41e5f9369bed0bf0c5f42971" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __frcp_rd (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute   
                               
@@ -1513,8 +1601,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gf068bc751accde2416cc88aad6a9e4f7" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gf068bc751accde2416cc88aad6a9e4f7" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __frcp_rn (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gba455801af8ac9af405a5d37ef2f077b" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gba455801af8ac9af405a5d37ef2f077b" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __frcp_rn (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute   
                               
@@ -1554,8 +1643,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g063e879e4bf16f9a435c8ed28f42d965" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g063e879e4bf16f9a435c8ed28f42d965" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __frcp_ru (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gd5b3289e40e510c2067c8f7a426aa884" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gd5b3289e40e510c2067c8f7a426aa884" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __frcp_ru (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute   
                               
@@ -1595,8 +1685,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gbb1df46f11310263e7e1acf4e4972b40" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gbb1df46f11310263e7e1acf4e4972b40" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __frcp_rz (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g64032913321c328ae72111161af32268" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g64032913321c328ae72111161af32268" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __frcp_rz (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute   
                               
@@ -1636,8 +1727,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g4141133bb4d6ed2e39573848aec11f72" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g4141133bb4d6ed2e39573848aec11f72" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __frsqrt_rn (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g71ee45580cbeeea206297f0112aff42c" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g71ee45580cbeeea206297f0112aff42c" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __frsqrt_rn (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute   
                               
@@ -1683,8 +1775,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gabae35029e992e9d90b39638ce1a8ab1" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gabae35029e992e9d90b39638ce1a8ab1" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fsqrt_rd (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g59566bdd0638a5b249dbda757f2bb06b" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g59566bdd0638a5b249dbda757f2bb06b" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fsqrt_rd (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute   
                               
@@ -1722,8 +1815,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g4cfc37d5ed8b8d3b01166fc2a12bd395" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g4cfc37d5ed8b8d3b01166fc2a12bd395" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fsqrt_rn (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gf021e85b5e9de141a0fc2ff6fbe85875" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gf021e85b5e9de141a0fc2ff6fbe85875" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fsqrt_rn (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute   
                               
@@ -1761,8 +1855,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gda1ee5d15013cb78147d00c8a7ad1cc4" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gda1ee5d15013cb78147d00c8a7ad1cc4" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fsqrt_ru (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gb429e39b1790b4dfae0d0c4926f53fe2" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gb429e39b1790b4dfae0d0c4926f53fe2" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fsqrt_ru (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute   
                               
@@ -1800,8 +1895,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g461e6a54638be37db356c90839afa687" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g461e6a54638be37db356c90839afa687" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fsqrt_rz (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g094bf489bf492287424b1080569189f1" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g094bf489bf492287424b1080569189f1" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fsqrt_rz (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Compute   
                               
@@ -1839,8 +1935,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g4075f2d1753497c288175da108b8639a" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g4075f2d1753497c288175da108b8639a" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fsub_rd (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g78502e666a0e6e7690230e118403df54" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g78502e666a0e6e7690230e118403df54" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fsub_rd (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Subtract two floating point values in round-down mode. </div>
                            <div class="section">
@@ -1867,8 +1964,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g167113bc5d8f5d3b171a3b167fd0e39d" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g167113bc5d8f5d3b171a3b167fd0e39d" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fsub_rn (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1ge75e42e6637c178cd3c86a6e3774f7cb" id="group__CUDA__MATH__INTRINSIC__SINGLE_1ge75e42e6637c178cd3c86a6e3774f7cb" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fsub_rn (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Subtract two floating point values in round-to-nearest-even mode. </div>
                            <div class="section">
@@ -1895,8 +1993,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g03ca87e6c293de6efc97cf1628314a93" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g03ca87e6c293de6efc97cf1628314a93" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fsub_ru (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g4adc718465695ee57990318d5a650b1c" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g4adc718465695ee57990318d5a650b1c" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fsub_ru (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Subtract two floating point values in round-up mode. </div>
                            <div class="section">
@@ -1923,8 +2022,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g41e00a22316038d961d49f6af968ab9c" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g41e00a22316038d961d49f6af968ab9c" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __fsub_rz (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gc900725c2921068c2ad4f53039b6bacf" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gc900725c2921068c2ad4f53039b6bacf" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __fsub_rz (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Subtract two floating point values in round-towards-zero mode. </div>
                            <div class="section">
@@ -1951,8 +2051,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g3cccf41bd9b189e1e3cfadbf2964c1a6" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g3cccf41bd9b189e1e3cfadbf2964c1a6" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __log10f (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g2b7358a27b8231b592da81ff3143b9a8" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g2b7358a27b8231b592da81ff3143b9a8" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __log10f (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the fast approximate base 10 logarithm of the input argument. </div>
                            <div class="section">
@@ -1994,8 +2095,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g8a22dbf38df9eade8990704fe6225c09" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g8a22dbf38df9eade8990704fe6225c09" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __log2f (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gfcc053f9040d50975aab00e44e7c6093" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gfcc053f9040d50975aab00e44e7c6093" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __log2f (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the fast approximate base 2 logarithm of the input argument. </div>
                            <div class="section">
@@ -2035,8 +2137,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1ga04ad2a8ed4f3d7498216789208cd81f" id="group__CUDA__MATH__INTRINSIC__SINGLE_1ga04ad2a8ed4f3d7498216789208cd81f" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __logf (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1ged5cef656578096892f104a27d5287c4" id="group__CUDA__MATH__INTRINSIC__SINGLE_1ged5cef656578096892f104a27d5287c4" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __logf (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the fast approximate base   
                               
@@ -2091,8 +2194,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gbebfc39fdf9f41076cf962df0f8e9ea3" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gbebfc39fdf9f41076cf962df0f8e9ea3" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __powf (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g2c2b295816185f6ce2423471df529974" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g2c2b295816185f6ce2423471df529974" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __powf (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float <span>&nbsp;</span><span class="keyword keyword apiItemName">y</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the fast approximate of   
                               
@@ -2147,8 +2251,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g34186848bbf779fc385936147529dca0" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g34186848bbf779fc385936147529dca0" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __saturatef (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g2c84f08e0db7117a14509d21c3aec04e" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g2c84f08e0db7117a14509d21c3aec04e" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __saturatef (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Clamp the input argument to [+0.0, 1.0]. </div>
                            <div class="section">
@@ -2182,8 +2287,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gb5357a39a32653bbb1ffde7748eaa521" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gb5357a39a32653bbb1ffde7748eaa521" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ void __sincosf (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float*<span>&nbsp;</span><span class="keyword keyword apiItemName">sptr</span>, float*<span>&nbsp;</span><span class="keyword keyword apiItemName">cptr</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g96089d6195f9befde96e14afafd931fb" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g96089d6195f9befde96e14afafd931fb" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ void __sincosf (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span>, float*<span>&nbsp;</span><span class="keyword keyword apiItemName">sptr</span>, float*<span>&nbsp;</span><span class="keyword keyword apiItemName">cptr</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the fast approximate of sine and cosine of the first input argument. </div>
                            <div class="section">
@@ -2213,8 +2319,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g92e7f9c0dedc808162c47b505c170009" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g92e7f9c0dedc808162c47b505c170009" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __sinf (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1gfa0ea4b2cee94521792ead0deb03addb" id="group__CUDA__MATH__INTRINSIC__SINGLE_1gfa0ea4b2cee94521792ead0deb03addb" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __sinf (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the fast approximate sine of the input argument. </div>
                            <div class="section">
@@ -2241,8 +2348,9 @@
                               <p class="p"></p>
                            </div>
                         </dd>
-                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1ge28e5e91979a13357c366d918e5b25e8" id="group__CUDA__MATH__INTRINSIC__SINGLE_1ge28e5e91979a13357c366d918e5b25e8" shape="rect">
-                              <!-- --></a><span>__DEVICE_FUNCTIONS_DECL__ float __tanf (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
+                        <dt class="description"><a name="group__CUDA__MATH__INTRINSIC__SINGLE_1g4fc8b7c67526a0195b9cb47287b5c121" id="group__CUDA__MATH__INTRINSIC__SINGLE_1g4fc8b7c67526a0195b9cb47287b5c121" shape="rect">
+                              <!-- --></a><span><span class="keyword keyword apiItemName">__device__</span>
+                              ​ float __tanf (  float <span>&nbsp;</span><span class="keyword keyword apiItemName">x</span> ) </span></dt>
                         <dd class="description">
                            <div class="section">Calculate the fast approximate tangent of the input argument. </div>
                            <div class="section">
@@ -2261,7 +2369,7 @@
                                           <p class="p">For accuracy information for this function see the CUDA C Programming Guide, Appendix D.2, Table 9. </p>
                                        </li>
                                        <li class="li">
-                                          <p class="p">The result is computed as the fast divide of <a class="xref" href="group__CUDA__MATH__INTRINSIC__SINGLE.html#group__CUDA__MATH__INTRINSIC__SINGLE_1g92e7f9c0dedc808162c47b505c170009" title="Calculate the fast approximate sine of the input argument." shape="rect">__sinf()</a> by <a class="xref" href="group__CUDA__MATH__INTRINSIC__SINGLE.html#group__CUDA__MATH__INTRINSIC__SINGLE_1gf0101c0881b651ea0c389bb3e533ae55" title="Calculate the fast approximate cosine of the input argument." shape="rect">__cosf()</a>. Denormal input and output are flushed to sign-preserving 0.0 at each step of the computation. 
+                                          <p class="p">The result is computed as the fast divide of <a class="xref" href="group__CUDA__MATH__INTRINSIC__SINGLE.html#group__CUDA__MATH__INTRINSIC__SINGLE_1gfa0ea4b2cee94521792ead0deb03addb" title="Calculate the fast approximate sine of the input argument." shape="rect">__sinf()</a> by <a class="xref" href="group__CUDA__MATH__INTRINSIC__SINGLE.html#group__CUDA__MATH__INTRINSIC__SINGLE_1g129ff4afc615da9a5886c77713094c32" title="Calculate the fast approximate cosine of the input argument." shape="rect">__cosf()</a>. Denormal input and output are flushed to sign-preserving 0.0 at each step of the computation. 
                                           </p>
                                        </li>
                                     </ul>

@@ -45,7 +45,7 @@
       <div id="site-content">
          <nav id="site-nav">
             <div class="category closed"><a href="../index.html" title="The root of the site.">CUDA Toolkit
-                  v7.0</a></div>
+                  v8.0</a></div>
             <div class="category"><a href="index.html" title="libNVVM API">libNVVM API</a></div>
             <ul>
                <li>
@@ -81,10 +81,10 @@
                   (<a href="../../pdf/libNVVM_API.pdf">PDF</a>)
                   -
                   
-                  v7.0
+                  v8.0
                   (<a href="https://developer.nvidia.com/cuda-toolkit-archive">older</a>)
                   -
-                  Last updated March 5, 2015
+                  Last updated January 12, 2017
                   -
                   <a href="mailto:cudatools@nvidia.com?subject=CUDA Toolkit Documentation Feedback: libNVVM API">Send Feedback</a>
                   -
@@ -98,12 +98,48 @@
                   </div>
                   <h3 class="fake_sectiontitle member_header">Functions</h3>
                   <dl class="members">
+                     <dt><span class="member_type"><a href="group__error.html#group__error_1gf2c5dc3a2ff02166a0c39f4bf4ece2a1" title="NVVM API call result code. " shape="rect">nvvmResult</a>&nbsp;</span><span class="member_name"><a href="#group__query_1g0894677934db095b3c40d4f8e2578cc5" shape="rect">nvvmIRVersion</a> (  int*<span>&nbsp;</span><span class="keyword keyword apiItemName">majorIR</span>, int*<span>&nbsp;</span><span class="keyword keyword apiItemName">minorIR</span>, int*<span>&nbsp;</span><span class="keyword keyword apiItemName">majorDbg</span>, int*<span>&nbsp;</span><span class="keyword keyword apiItemName">minorDbg</span> ) </span></dt>
+                     <dd class="shortdesc"><span></span><span class="desc">Get the NVVM IR version. </span></dd>
                      <dt><span class="member_type"><a href="group__error.html#group__error_1gf2c5dc3a2ff02166a0c39f4bf4ece2a1" title="NVVM API call result code. " shape="rect">nvvmResult</a>&nbsp;</span><span class="member_name"><a href="#group__query_1gcdd062f26078d20ded68f1017e999246" shape="rect">nvvmVersion</a> (  int*<span>&nbsp;</span><span class="keyword keyword apiItemName">major</span>, int*<span>&nbsp;</span><span class="keyword keyword apiItemName">minor</span> ) </span></dt>
                      <dd class="shortdesc"><span></span><span class="desc">Get the NVVM version. </span></dd>
                   </dl>
                   <div class="description">
                      <h3 class="sectiontitle">Functions</h3>
                      <dl class="description">
+                        <dt class="description"><a name="group__query_1g0894677934db095b3c40d4f8e2578cc5" id="group__query_1g0894677934db095b3c40d4f8e2578cc5" shape="rect">
+                              <!-- --></a><span><a href="group__error.html#group__error_1gf2c5dc3a2ff02166a0c39f4bf4ece2a1" title="NVVM API call result code. " shape="rect">nvvmResult</a> nvvmIRVersion (  int*<span>&nbsp;</span><span class="keyword keyword apiItemName">majorIR</span>, int*<span>&nbsp;</span><span class="keyword keyword apiItemName">minorIR</span>, int*<span>&nbsp;</span><span class="keyword keyword apiItemName">majorDbg</span>, int*<span>&nbsp;</span><span class="keyword keyword apiItemName">minorDbg</span> ) </span></dt>
+                        <dd class="description">
+                           <div class="section">Get the NVVM IR version. </div>
+                           <div class="section">
+                              <h6 class="parameter_header">
+                                 Parameters
+                                 
+                              </h6>
+                              <dl class="table-display-params">
+                                 <dt><tt class="code"><span class="keyword keyword apiItemName">majorIR</span></tt></dt>
+                                 <dd>NVVM IR major version number. </dd>
+                                 <dt><tt class="code"><span class="keyword keyword apiItemName">minorIR</span></tt></dt>
+                                 <dd>NVVM IR minor version number. </dd>
+                                 <dt><tt class="code"><span class="keyword keyword apiItemName">majorDbg</span></tt></dt>
+                                 <dd>NVVM IR debug metadata major version number. </dd>
+                                 <dt><tt class="code"><span class="keyword keyword apiItemName">minorDbg</span></tt></dt>
+                                 <dd>NVVM IR debug metadata minor version number. </dd>
+                              </dl>
+                           </div>
+                           <div class="section">
+                              <h6 class="return_header">Returns</h6>
+                              <p class="return">
+                                 <ul>
+                                    <li><a class="xref" href="group__error.html#group__error_1gf2c5dc3a2ff02166a0c39f4bf4ece2a1" title="NVVM API call result code." shape="rect">NVVM_SUCCESS</a></li>
+                                 </ul>
+                              </p>
+                           </div>
+                           <div class="section">
+                              <h6 class="description_header">Description</h6>
+                              <p></p>
+                              <p class="p"></p>
+                           </div>
+                        </dd>
                         <dt class="description"><a name="group__query_1gcdd062f26078d20ded68f1017e999246" id="group__query_1gcdd062f26078d20ded68f1017e999246" shape="rect">
                               <!-- --></a><span><a href="group__error.html#group__error_1gf2c5dc3a2ff02166a0c39f4bf4ece2a1" title="NVVM API call result code. " shape="rect">nvvmResult</a> nvvmVersion (  int*<span>&nbsp;</span><span class="keyword keyword apiItemName">major</span>, int*<span>&nbsp;</span><span class="keyword keyword apiItemName">minor</span> ) </span></dt>
                         <dd class="description">

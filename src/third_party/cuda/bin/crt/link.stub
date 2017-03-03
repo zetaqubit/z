@@ -1,5 +1,31 @@
+/*
+ * NVIDIA_COPYRIGHT_BEGIN
+ *
+ * Copyright (c) 2011-2016, NVIDIA CORPORATION.  All rights reserved.
+ *
+ * NVIDIA CORPORATION and its licensors retain all intellectual property
+ * and proprietary rights in and to this software, related documentation
+ * and any modifications thereto.  Any use, reproduction, disclosure or
+ * distribution of this software and related documentation without an express
+ * license agreement from NVIDIA CORPORATION is strictly prohibited.
+ *
+ * NVIDIA_COPYRIGHT_END
+ */
+
 #include <stddef.h> /* for size_t */
 #include "host_defines.h"
+
+#if defined(__GNUC__)
+#if defined(__clang__) || (!defined(__PGIC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)))
+#pragma GCC diagnostic push
+#endif
+#if defined(__clang__) || (!defined(__PGIC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 2)))
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
+#endif
 
 static void **__cudaFatCubinHandle;
 extern "C" {
@@ -55,7 +81,7 @@ extern const __fatBinC_Wrapper_t __FATIDNAME(id); \
 static const unsigned char __DEFSTRNAME(id) [] __attribute__((aligned(1))) __attribute__((section ("__NV_CUDA,__nv_module_id"))) = "def " __TO_STRING(id); \
 void __REGISTERFUNCNAME(id) (void (*callback_fp)(void **), void *prelinked_fatbinc, void *, void (*dummy_ref)(void *)) \
 { \
-  volatile static const unsigned char *__p __attribute__((unused)); \
+  volatile static const unsigned char *__p; \
   __p = __DEFSTRNAME(id); \
   dummy_ref((void *)&__p); \
  __cudaRegisterLinkedBinary(&__FATIDNAME(id), callback_fp, (void *)&__DEFSTRNAME(id)); \
@@ -66,7 +92,7 @@ extern const __fatBinC_Wrapper_t __FATIDNAME(id); \
 static const unsigned char __DEFSTRNAME(id) [] __attribute__((aligned(1))) __attribute__((section ("__nv_module_id"))) = "def " __TO_STRING(id); \
 void __REGISTERFUNCNAME(id) (void (*callback_fp)(void **), void *prelinked_fatbinc, void *, void (*dummy_ref)(void *)) \
 { \
-  volatile static const unsigned char *__p __attribute__((unused)); \
+  volatile static const unsigned char *__p; \
   __p = __DEFSTRNAME(id); \
   dummy_ref((void *)&__p); \
   __cudaRegisterLinkedBinary(&__FATIDNAME(id), callback_fp, (void *)&__DEFSTRNAME(id)); \
@@ -109,3 +135,9 @@ static inline void __cudaRegisterLinkedBinary (
     }
   }
 }
+
+#if defined(__GNUC__)
+#if defined(__clang__) || (!defined(__PGIC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)))
+#pragma GCC diagnostic pop
+#endif
+#endif

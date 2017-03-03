@@ -1,6 +1,6 @@
 
 /*
- *  Copyright 2010 NVIDIA Corporation.  All rights reserved.
+ *  Copyright 2010-2016 NVIDIA Corporation.  All rights reserved.
  *
  *  NOTICE TO USER: The source code, and related code and software
  *  ("Code"), is copyrighted under U.S. and international laws.
@@ -31,6 +31,10 @@
 #include <stddef.h> /* for size_t */
 #endif
 #include "fatbinary.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* 
  * These are routines for controlling the fat binary.
@@ -66,6 +70,7 @@ extern fatBinaryCtlError_t fatBinaryCtl (void* data, int request, ...);
                                     * size_t* size */
 #define FBCTL_GET_IDENTIFIER    11 /* char* * */
 #define FBCTL_HAS_DEBUG         12 /* Bool * */
+#define FBCTL_GET_PTXAS_OPTIONS 13 /* char** */
 
 typedef enum {
   fatBinary_PreferBestCode,  /* default */
@@ -123,5 +128,9 @@ typedef struct {
 #endif
 /* section for pre-linked relocatable fatbin data */
 #define FATBIN_PRELINK_DATA_SECTION_NAME "__nv_relfatbin"
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* fatbinaryctl_INCLUDED */

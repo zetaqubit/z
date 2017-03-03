@@ -59,7 +59,7 @@
 
 #else /* __APPLE__ */
 
-#if defined(__arm__)
+#if defined(__arm__) || defined(__aarch64__)
 #ifndef GL_VERSION
 #error Please include the appropriate gl headers before including cuda_gl_interop.h
 #endif
@@ -117,6 +117,7 @@ enum cudaGLDeviceList
  * \return
  * ::cudaSuccess,
  * ::cudaErrorNoDevice,
+ * ::cudaErrorInvalidGraphicsContext,
  * ::cudaErrorUnknown
  *
  * \note This function is not supported on Mac OS X.

@@ -48,7 +48,7 @@
       <div id="site-content">
          <nav id="site-nav">
             <div class="category closed"><a href="../index.html" title="The root of the site.">CUDA Toolkit
-                  v7.0</a></div>
+                  v8.0</a></div>
             <div class="category"><a href="index.html" title="Inline PTX Assembly">Inline PTX Assembly</a></div>
             <ul>
                <li>
@@ -101,10 +101,10 @@
                   (<a href="../../pdf/Inline_PTX_Assembly.pdf">PDF</a>)
                   -
                   
-                  v7.0
+                  v8.0
                   (<a href="https://developer.nvidia.com/cuda-toolkit-archive">older</a>)
                   -
-                  Last updated March 5, 2015
+                  Last updated January 12, 2017
                   -
                   <a href="mailto:cudatools@nvidia.com?subject=CUDA Toolkit Documentation Feedback: Inline PTX Assembly">Send Feedback</a>
                   -
@@ -184,6 +184,18 @@ st.s32 [i], r3;</pre><p class="p">This is where the distinction between input an
       <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">" mul.lo.u32 %0, t1, %1;"</span>        <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-comment">// y = t1 * x</span>
       : <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">"=r"</span>(y) : <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">"r"</span> (x));
   <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-keyword">return</span> y;
+}</pre><p class="p">If an output operand is conditionally updated by the asm instructions, then the "+" modifier
+                              should be used. There is an implicit use of the output operand in such a case. For example, 
+                           </p><pre xml:space="preserve"><span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-attribute">__device__</span> <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-keyword">int</span> cond (<span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-keyword">int</span> x)
+{
+  <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-keyword">int</span> y = 0;
+  asm(<span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">"{\n\t"</span>
+      <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">" .reg .pred %p;\n\t"</span>
+      <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">" setp.eq.s32 %p, %1, 34;\n\t"</span> <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-comment">// x == 34?</span>
+      <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">" @%p mov.s32 %0, 1;\n\t"</span>      <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-comment">// set y to 1 if true</span>
+      <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">"}"</span>                            <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-comment">// conceptually y = (x==34)?1:y</span>
+      : <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">"+r"</span>(y) : <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">"r"</span> (x));          
+  <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-keyword">return</span> y;
 }</pre></div>
                      </div>
                      <div class="topic concept nested2" id="constraints"><a name="constraints" shape="rect">
@@ -251,12 +263,12 @@ st.f32 [x], f1;</pre><p class="p">Note that there are some constraints supported
                            <!-- --></a><h3 class="title topictitle2"><a href="#incorrect-optimization" name="incorrect-optimization" shape="rect">1.2.3.&nbsp;Incorrect Optimization</a></h3>
                         <div class="body conbody">
                            <p class="p">The compiler assumes that an <samp class="ph codeph">asm()</samp> statement has no side effects except
-                              to change the output operands.  To ensure that the asm is not deleted or moved, you
+                              to change the output operands.  To ensure that the asm is not deleted or moved during generation of PTX, you
                               should use the volatile keyword, e.g.:
                            </p><pre xml:space="preserve">asm <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-keyword">volatile</span> (<span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">"mov.u32 %0, %%clock;"</span> : <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">"=r"</span>(x));</pre><p class="p">Normally any memory that is written to will be specified as an out operand, but if there
                               is a hidden side effect on user memory (for example, indirect access of a memory
                               location via an operand), or if you want to stop any memory optimizations around the
-                              <samp class="ph codeph">asm()</samp> statement, you can add a "memory" clobbers specification
+                              <samp class="ph codeph">asm()</samp> statement performed during generation of PTX, you can add a "memory" clobbers specification
                               after a 3rd colon, e.g.:
                            </p><pre xml:space="preserve">asm <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-keyword">volatile</span> (<span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">"mov.u32 %0, %%clock;"</span> : <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">"=r"</span>(x) :: <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">"memory"</span>);
 asm (<span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">"st.u32 [%0], %1;"</span> : <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">"=r"</span>(p), <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">"=r"</span>(x) :: <span xmlns:xslthl="http://xslthl.sf.net" class="xslthl-string">"memory"</span>);
@@ -355,7 +367,7 @@ ci = temp;</pre></div>
                      <div class="body refbody">
                         <div class="section">
                            <h3 class="title sectiontitle">Copyright</h3>
-                           <p class="p">© <span class="ph">2012</span>-<span class="ph">2015</span> NVIDIA
+                           <p class="p">© <span class="ph">2012</span>-<span class="ph">2017</span> NVIDIA
                               Corporation. All rights reserved.
                            </p>
                            <p class="p">This product includes software developed by the Syncro Soft SRL (http://www.sync.ro/).</p>

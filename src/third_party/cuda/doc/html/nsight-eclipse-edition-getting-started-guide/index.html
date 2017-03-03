@@ -48,7 +48,7 @@
       <div id="site-content">
          <nav id="site-nav">
             <div class="category closed"><a href="../index.html" title="The root of the site.">CUDA Toolkit
-                  v7.0</a></div>
+                  v8.0</a></div>
             <div class="category"><a href="index.html" title="Nsight Eclipse Edition">Nsight Eclipse Edition</a></div>
             <ul>
                <li>
@@ -63,16 +63,19 @@
                   <div class="section-link"><a href="#release-notes">2.&nbsp;New and Noteworthy</a></div>
                   <ul>
                      <li>
-                        <div class="section-link"><a href="#past-release-notes">2.1.&nbsp;New in Nsight Eclipse Edition 7.0</a></div>
+                        <div class="section-link"><a href="#past-release-notes">2.1.&nbsp;New in Nsight Eclipse Edition 7.5</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#unique_1323144626">2.2.&nbsp;New in Nsight Eclipse Edition 6.5</a></div>
+                        <div class="section-link"><a href="#unique_1888794045">2.2.&nbsp;New in Nsight Eclipse Edition 7.0</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#unique_1271455928">2.3.&nbsp;New in Nsight Eclipse Edition 6.0</a></div>
+                        <div class="section-link"><a href="#unique_1229297647">2.3.&nbsp;New in Nsight Eclipse Edition 6.5</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#unique_1026542733">2.4.&nbsp;New in Nsight Eclipse Edition 5.5</a></div>
+                        <div class="section-link"><a href="#unique_1771547720">2.4.&nbsp;New in Nsight Eclipse Edition 6.0</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="#unique_1186950079">2.5.&nbsp;New in Nsight Eclipse Edition 5.5</a></div>
                      </li>
                   </ul>
                </li>
@@ -80,7 +83,7 @@
                   <div class="section-link"><a href="#using-nsight">3.&nbsp;Using Nsight Eclipse Edition</a></div>
                   <ul>
                      <li>
-                        <div class="section-link"><a href="#unique_33166747">3.1.&nbsp;Installing Nsight Eclipse Edition</a></div>
+                        <div class="section-link"><a href="#unique_173589028">3.1.&nbsp;Installing Nsight Eclipse Edition</a></div>
                         <ul>
                            <li>
                               <div class="section-link"><a href="#installation-instructions">3.1.1.&nbsp;Installing CUDA Toolkit</a></div>
@@ -98,6 +101,11 @@
                      </li>
                      <li>
                         <div class="section-link"><a href="#import-sample">3.4.&nbsp;Importing CUDA Samples</a></div>
+                        <ul>
+                           <li>
+                              <div class="section-link"><a href="#unique_1854025660">3.4.1.&nbsp;cuHook Sample</a></div>
+                           </li>
+                        </ul>
                      </li>
                      <li>
                         <div class="section-link"><a href="#debugging">3.5.&nbsp;Debugging CUDA Applications</a></div>
@@ -120,7 +128,7 @@
                   <div class="section-link"><a href="#platform-requirements">A.&nbsp;Platform Requirements</a></div>
                </li>
                <li>
-                  <div class="section-link"><a href="#unique_1275367516">B.&nbsp;Known Issues</a></div>
+                  <div class="section-link"><a href="#unique_542731155">B.&nbsp;Known Issues</a></div>
                </li>
             </ul>
          </nav>
@@ -136,10 +144,10 @@
                   (<a href="../../pdf/Nsight_Eclipse_Edition_Getting_Started.pdf">PDF</a>)
                   -
                   
-                  v7.0
+                  v8.0
                   (<a href="https://developer.nvidia.com/cuda-toolkit-archive">older</a>)
                   -
-                  Last updated March 5, 2015
+                  Last updated January 12, 2017
                   -
                   <a href="mailto:cudatools@nvidia.com?subject=CUDA Toolkit Documentation Feedback: Nsight Eclipse Edition">Send Feedback</a>
                   -
@@ -218,7 +226,34 @@
                <div class="topic reference nested0" id="release-notes"><a name="release-notes" shape="rect">
                      <!-- --></a><h2 class="title topictitle1"><a href="#release-notes" name="release-notes" shape="rect">2.&nbsp;New and Noteworthy</a></h2>
                   <div class="topic reference nested1" id="past-release-notes"><a name="past-release-notes" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#past-release-notes" name="past-release-notes" shape="rect">New in Nsight Eclipse Edition 7.0</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#past-release-notes" name="past-release-notes" shape="rect">New in Nsight Eclipse Edition 7.5</a></h3>
+                     <div class="body refbody">
+                        <div class="section">
+                           <dl class="dl">
+                              <dt class="dt dlterm">Multiple Toolkit support</dt>
+                              <dd class="dd">
+                                 Nsight Eclipse Edition is now capable of creating new CUDA that would use
+                                 compiler/debugger from CUDA-6.5 or CUDA-7.0 toolkits.
+                                 This feature would be mostly useful for remote-development on CUDA-capable Tegra products, like Jetson TK1 DevKit.
+                                 Please note, that regardless of what toolkit was selected for compilation/debugging, profiling would always be performed using
+                                 the most recent version of nvprof.
+                                 
+                              </dd>
+                              <dt class="dt dlterm">Based on Eclipse-4.4 platform</dt>
+                              <dd class="dd">
+                                 Nsight Eclipse Edition is now based on Eclipse-4.4 platform.
+                                 This update is expected to fix multiple compatibility issues,
+                                 like inability to remotely debug/profile application running
+                                 on the OpenSSH-6.8p1 or later, as well as enhance C++11 code
+                                 analysis capabilities.
+                                 
+                              </dd>
+                           </dl>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="topic reference nested1" id="unique_1888794045"><a name="unique_1888794045" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_1888794045" name="unique_1888794045" shape="rect">New in Nsight Eclipse Edition 7.0</a></h3>
                      <div class="body refbody">
                         <div class="section">
                            <dl class="dl">
@@ -255,8 +290,8 @@
                         </div>
                      </div>
                   </div>
-                  <div class="topic reference nested1" id="unique_1323144626"><a name="unique_1323144626" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_1323144626" name="unique_1323144626" shape="rect">New in Nsight Eclipse Edition 6.5</a></h3>
+                  <div class="topic reference nested1" id="unique_1229297647"><a name="unique_1229297647" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_1229297647" name="unique_1229297647" shape="rect">New in Nsight Eclipse Edition 6.5</a></h3>
                      <div class="body refbody">
                         <div class="section">
                            <dl class="dl">
@@ -271,8 +306,8 @@
                         </div>
                      </div>
                   </div>
-                  <div class="topic reference nested1" id="unique_1271455928"><a name="unique_1271455928" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_1271455928" name="unique_1271455928" shape="rect">New in Nsight Eclipse Edition 6.0</a></h3>
+                  <div class="topic reference nested1" id="unique_1771547720"><a name="unique_1771547720" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_1771547720" name="unique_1771547720" shape="rect">New in Nsight Eclipse Edition 6.0</a></h3>
                      <div class="body refbody">
                         <div class="section">
                            <dl class="dl">
@@ -339,8 +374,8 @@
                         </div>
                      </div>
                   </div>
-                  <div class="topic reference nested1" id="unique_1026542733"><a name="unique_1026542733" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_1026542733" name="unique_1026542733" shape="rect">New in Nsight Eclipse Edition 5.5</a></h3>
+                  <div class="topic reference nested1" id="unique_1186950079"><a name="unique_1186950079" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_1186950079" name="unique_1186950079" shape="rect">New in Nsight Eclipse Edition 5.5</a></h3>
                      <div class="body refbody">
                         <div class="section">
                            <dl class="dl">
@@ -413,8 +448,8 @@
                </div>
                <div class="topic concept nested0" id="using-nsight"><a name="using-nsight" shape="rect">
                      <!-- --></a><h2 class="title topictitle1"><a href="#using-nsight" name="using-nsight" shape="rect">Using Nsight Eclipse Edition</a></h2>
-                  <div class="topic concept nested1" id="unique_33166747"><a name="unique_33166747" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_33166747" name="unique_33166747" shape="rect">Installing Nsight Eclipse Edition</a></h3>
+                  <div class="topic concept nested1" id="unique_173589028"><a name="unique_173589028" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_173589028" name="unique_173589028" shape="rect">Installing Nsight Eclipse Edition</a></h3>
                      <div class="body conbody">
                         <p class="p">Nsight Eclipse Edition is installed as a part of the CUDA Toolkit
                            			package.
@@ -610,6 +645,72 @@
                                  					toolbar.
                                  				</span></li>
                         </ol>
+                     </div>
+                     <div class="topic task nested2" id="unique_1854025660"><a name="unique_1854025660" shape="rect">
+                           <!-- --></a><h3 class="title topictitle2"><a href="#unique_1854025660" name="unique_1854025660" shape="rect">cuHook Sample</a></h3>
+                        <div class="body taskbody">
+                           <div class="section prereq p">
+                              			cuHook sample builds both the library and the executable. cuHook sample should be imported as the "makefile" project using
+                              the following steps.
+                              		
+                           </div>
+                           <ol class="ol steps">
+                              <li class="li step"><span class="ph cmd">
+                                    					From the main menu, open the new project wizard -
+                                    					<span class="ph uicontrol">File</span>
+                                    					&gt;
+                                    					<span class="ph uicontrol">New...</span>
+                                    					&gt;
+                                    					<span class="ph uicontrol">CUDA C/C++ Project</span></span></li>
+                              <li class="li step"><span class="ph cmd">
+                                    					Select project type "Makefile project" and choose "Empty Project"
+                                    				</span></li>
+                              <li class="li step"><span class="ph cmd">
+                                    					Specify the project name and project files location.
+                                    				</span></li>
+                              <li class="li step"><span class="ph cmd">Complete the wizard.</span>
+                                 				 
+                                 					The project will be shown in the
+                                 					<span class="ph uicontrol">Project Explorer</span>
+                                 					view.
+                                 				
+                                 			
+                              </li>
+                              <li class="li step"><span class="ph cmd">
+                                    					Right click on the project -
+                                    					<span class="ph uicontrol">Import...</span>
+                                    					&gt;
+                                    					<span class="ph uicontrol">General</span>
+                                    					&gt;
+                                    					<span class="ph uicontrol">File System</span></span></li>
+                              <li class="li step"><span class="ph cmd">
+                                    					On the next wizard page, select the location of cuHook sample(Samples/7_CUDALibraries/cuHook)
+                                    				</span></li>
+                              <li class="li step"><span class="ph cmd">
+                                    					Select all the source files and makefile and Finish the wizard
+                                    				</span></li>
+                              <li class="li step"><span class="ph cmd">Build the project by clicking on the hammer button on the main
+                                    					toolbar.
+                                    				</span></li>
+                              <li class="li step"><span class="ph cmd">
+                                    					To run the sample, from the main menu -
+                                    					<span class="ph uicontrol">Run</span>
+                                    					&gt;
+                                    					<span class="ph uicontrol">Run Configurations...</span>
+                                    					&gt;
+                                    					Select the executable
+                                    					&gt;
+                                    					Go to Environment tab
+                                    					&gt;
+                                    					<span class="ph uicontrol">New...</span>
+                                    					&gt;
+                                    					enter Name=LD_PRELOAD, Value=./libcuhook.so.1
+                                    					&gt;
+                                    					<span class="ph uicontrol">Run</span>
+                                    					will execute the sample
+                                    				</span></li>
+                           </ol>
+                        </div>
                      </div>
                   </div>
                   <div class="topic task nested1" id="debugging"><a name="debugging" shape="rect">
@@ -875,7 +976,7 @@
                <div class="topic concept nested0" id="platform-requirements"><a name="platform-requirements" shape="rect">
                      <!-- --></a><h2 class="title topictitle1"><a href="#platform-requirements" name="platform-requirements" shape="rect">A.&nbsp;Platform Requirements</a></h2>
                   <div class="body conbody">
-                     <p class="p">Nsight Eclipse Edition is supported on all <a class="xref" href="http://docs.nvidia.com/cuda/cuda-getting-started-guide-for-linux/index.html#system-requirements" target="_blank" shape="rect">Linux x86 and POWER versions</a> and <a class="xref" href="http://docs.nvidia.com/cuda/cuda-getting-started-guide-for-mac-os-x/index.html#system-requirements" target="_blank" shape="rect">Mac OS X versions</a> supported by
+                     <p class="p">Nsight Eclipse Edition is supported on all <a class="xref" href="http://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#system-requirements" target="_blank" shape="rect">Linux x86 and POWER versions</a> and <a class="xref" href="http://docs.nvidia.com/cuda/cuda-installation-guide-mac-os-x/index.html#system-requirements" target="_blank" shape="rect">Mac OS X versions</a> supported by
                         the CUDA Toolkit.
                      </p>
                      <p class="p">A CUDA-capable GPU is not required for writing and compiling your
@@ -890,8 +991,8 @@
                      </p>
                   </div>
                </div>
-               <div class="topic reference nested0" id="unique_1275367516"><a name="unique_1275367516" shape="rect">
-                     <!-- --></a><h2 class="title topictitle1"><a href="#unique_1275367516" name="unique_1275367516" shape="rect">Known Issues</a></h2>
+               <div class="topic reference nested0" id="unique_542731155"><a name="unique_542731155" shape="rect">
+                     <!-- --></a><h2 class="title topictitle1"><a href="#unique_542731155" name="unique_542731155" shape="rect">Known Issues</a></h2>
                   <div class="body refbody">
                      <div class="section">
                         <h2 class="title sectiontitle">Executable must exist in order to start debug session
@@ -974,7 +1075,7 @@
                      <div class="body refbody">
                         <div class="section">
                            <h3 class="title sectiontitle">Copyright</h3>
-                           <p class="p">© 2007-<span class="ph">2015</span> NVIDIA Corporation. All rights reserved.
+                           <p class="p">© 2007-<span class="ph">2017</span> NVIDIA Corporation. All rights reserved.
                            </p>
                            <p class="p">This product includes software developed by the Syncro Soft SRL (http://www.sync.ro/).</p>
                         </div>

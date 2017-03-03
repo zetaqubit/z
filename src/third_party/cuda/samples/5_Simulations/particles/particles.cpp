@@ -21,7 +21,7 @@
 */
 
 // OpenGL Graphics includes
-#include <GL/glew.h>
+#include <helper_gl.h>
 #if defined (WIN32)
 #include <GL/wglew.h>
 #endif
@@ -148,12 +148,6 @@ void cleanup()
     {
         delete psystem;
     }
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     return;
 }
 
@@ -165,9 +159,8 @@ void initGL(int *argc, char **argv)
     glutInitWindowSize(width, height);
     glutCreateWindow("CUDA Particles");
 
-    glewInit();
-
-    if (!glewIsSupported("GL_VERSION_2_0 GL_VERSION_1_5 GL_ARB_multitexture GL_ARB_vertex_buffer_object"))
+    if (!isGLVersionSupported(2,0) ||
+        !areGLExtensionsSupported("GL_ARB_multitexture GL_ARB_vertex_buffer_object"))
     {
         fprintf(stderr, "Required OpenGL extensions missing.");
         exit(EXIT_FAILURE);
@@ -397,7 +390,7 @@ void mouse(int button, int state, int x, int y)
     glutPostRedisplay();
 }
 
-// transfrom vector by matrix
+// transform vector by matrix
 void xform(float *v, float *r, GLfloat *m)
 {
     r[0] = v[0]*m[0] + v[1]*m[4] + v[2]*m[8] + m[12];
@@ -797,12 +790,6 @@ main(int argc, char **argv)
         delete psystem;
     }
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(g_TotalErrors > 0 ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 

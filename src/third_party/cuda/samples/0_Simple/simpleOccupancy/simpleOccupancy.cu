@@ -187,9 +187,6 @@ static int test(bool automaticLaunchConfig, const int count = 1000000)
             return 1;
         }
     }
-
-    checkCudaErrors(cudaDeviceReset());
-
     delete[] array;
 
     return 0;

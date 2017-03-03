@@ -174,8 +174,10 @@ nvvmResult nvvmDestroyProgram(nvvmProgram *prog);
  * \ingroup compilation
  * \brief   Add a module level NVVM IR to a program. 
  *
- * The buffer should contain an NVVM IR module either in the bitcode
- * representation or in the text representation. Support for reading the text
+ * The buffer should contain an NVVM IR module. The module may have NVVM IR
+ * version 1.3 in LLVM 3.8 bitcode format. Alternatively, the module may
+ * have NVVM IR version 1.2 either in the LLVM 3.4 bitcode representation or
+ * in the LLVM 3.4 text representation. Support for reading the text
  * representation of NVVM IR is deprecated and may be removed in a later
  * version.
  *
@@ -213,7 +215,12 @@ nvvmResult nvvmAddModuleToProgram(nvvmProgram prog, const char *buffer, size_t s
  *   - -arch=
  *     - compute_20 (default)
  *     - compute_30
+ *     - compute_32
  *     - compute_35
+ *     - compute_37
+ *     - compute_50
+ *     - compute_52
+ *     - compute_53
  *   - -ftz=
  *     - 0 (default, preserve denormal values, when performing
  *          single-precision floating-point operations)

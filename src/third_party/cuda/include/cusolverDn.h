@@ -54,37 +54,25 @@
 #if !defined(CUSOLVERDN_H_)
 #define CUSOLVERDN_H_
 
-#ifndef CUDENSEAPI
-#ifdef _WIN32
-#define CUDENSEAPI __stdcall
-#else
-#define CUDENSEAPI 
-#endif
-#endif
-
 #include "driver_types.h"
 #include "cuComplex.h"   /* import complex data type */
 #include "cublas_v2.h"
+#include "cusolver_common.h"
 
 #if defined(__cplusplus)
 extern "C" {
 #endif /* __cplusplus */
 
-#ifndef CUSOLVER_COMMON
-#define CUSOLVER_COMMON
-#include "cusolver_common.h"
-#endif // CUSOLVER_COMMON
-
 struct cusolverDnContext;
 typedef struct cusolverDnContext *cusolverDnHandle_t;
 
-cusolverStatus_t CUDENSEAPI cusolverDnCreate(cusolverDnHandle_t *handle);
-cusolverStatus_t CUDENSEAPI cusolverDnDestroy(cusolverDnHandle_t handle);
-cusolverStatus_t CUDENSEAPI cusolverDnSetStream (cusolverDnHandle_t handle, cudaStream_t streamId);
-cusolverStatus_t CUDENSEAPI cusolverDnGetStream(cusolverDnHandle_t handle, cudaStream_t *streamId);
+cusolverStatus_t CUSOLVERAPI cusolverDnCreate(cusolverDnHandle_t *handle);
+cusolverStatus_t CUSOLVERAPI cusolverDnDestroy(cusolverDnHandle_t handle);
+cusolverStatus_t CUSOLVERAPI cusolverDnSetStream (cusolverDnHandle_t handle, cudaStream_t streamId);
+cusolverStatus_t CUSOLVERAPI cusolverDnGetStream(cusolverDnHandle_t handle, cudaStream_t *streamId);
 
 /* Cholesky factorization and its solver */
-cusolverStatus_t CUDENSEAPI cusolverDnSpotrf_bufferSize( 
+cusolverStatus_t CUSOLVERAPI cusolverDnSpotrf_bufferSize( 
     cusolverDnHandle_t handle, 
     cublasFillMode_t uplo, 
     int n, 
@@ -92,7 +80,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnSpotrf_bufferSize(
     int lda, 
     int *Lwork );
 
-cusolverStatus_t CUDENSEAPI cusolverDnDpotrf_bufferSize( 
+cusolverStatus_t CUSOLVERAPI cusolverDnDpotrf_bufferSize( 
     cusolverDnHandle_t handle, 
     cublasFillMode_t uplo, 
     int n, 
@@ -100,7 +88,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnDpotrf_bufferSize(
     int lda, 
     int *Lwork );
 
-cusolverStatus_t CUDENSEAPI cusolverDnCpotrf_bufferSize( 
+cusolverStatus_t CUSOLVERAPI cusolverDnCpotrf_bufferSize( 
     cusolverDnHandle_t handle, 
     cublasFillMode_t uplo, 
     int n, 
@@ -108,7 +96,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnCpotrf_bufferSize(
     int lda, 
     int *Lwork );
 
-cusolverStatus_t CUDENSEAPI cusolverDnZpotrf_bufferSize( 
+cusolverStatus_t CUSOLVERAPI cusolverDnZpotrf_bufferSize( 
     cusolverDnHandle_t handle, 
     cublasFillMode_t uplo, 
     int n, 
@@ -116,7 +104,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnZpotrf_bufferSize(
     int lda, 
     int *Lwork);
 
-cusolverStatus_t CUDENSEAPI cusolverDnSpotrf( 
+cusolverStatus_t CUSOLVERAPI cusolverDnSpotrf( 
     cusolverDnHandle_t handle, 
     cublasFillMode_t uplo, 
     int n, 
@@ -126,7 +114,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnSpotrf(
     int Lwork, 
     int *devInfo );
 
-cusolverStatus_t CUDENSEAPI cusolverDnDpotrf( 
+cusolverStatus_t CUSOLVERAPI cusolverDnDpotrf( 
     cusolverDnHandle_t handle, 
     cublasFillMode_t uplo, 
     int n, 
@@ -136,7 +124,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnDpotrf(
     int Lwork, 
     int *devInfo );
 
-cusolverStatus_t CUDENSEAPI cusolverDnCpotrf( 
+cusolverStatus_t CUSOLVERAPI cusolverDnCpotrf( 
     cusolverDnHandle_t handle, 
     cublasFillMode_t uplo, 
     int n, 
@@ -146,7 +134,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnCpotrf(
     int Lwork, 
     int *devInfo );
 
-cusolverStatus_t CUDENSEAPI cusolverDnZpotrf( 
+cusolverStatus_t CUSOLVERAPI cusolverDnZpotrf( 
     cusolverDnHandle_t handle, 
     cublasFillMode_t uplo, 
     int n, 
@@ -157,7 +145,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnZpotrf(
     int *devInfo );
 
 
-cusolverStatus_t CUDENSEAPI cusolverDnSpotrs(
+cusolverStatus_t CUSOLVERAPI cusolverDnSpotrs(
     cusolverDnHandle_t handle,
     cublasFillMode_t uplo,
     int n,
@@ -168,7 +156,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnSpotrs(
     int ldb,
     int *devInfo);
 
-cusolverStatus_t CUDENSEAPI cusolverDnDpotrs(
+cusolverStatus_t CUSOLVERAPI cusolverDnDpotrs(
     cusolverDnHandle_t handle,
     cublasFillMode_t uplo,
     int n,
@@ -179,7 +167,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnDpotrs(
     int ldb,
     int *devInfo);
 
-cusolverStatus_t CUDENSEAPI cusolverDnCpotrs(
+cusolverStatus_t CUSOLVERAPI cusolverDnCpotrs(
     cusolverDnHandle_t handle,
     cublasFillMode_t uplo,
     int n,
@@ -190,7 +178,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnCpotrs(
     int ldb,
     int *devInfo);
 
-cusolverStatus_t CUDENSEAPI cusolverDnZpotrs(
+cusolverStatus_t CUSOLVERAPI cusolverDnZpotrs(
     cusolverDnHandle_t handle,
     cublasFillMode_t uplo,
     int n,
@@ -203,7 +191,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnZpotrs(
 
 
 /* LU Factorization */
-cusolverStatus_t CUDENSEAPI cusolverDnSgetrf_bufferSize(
+cusolverStatus_t CUSOLVERAPI cusolverDnSgetrf_bufferSize(
     cusolverDnHandle_t handle,
     int m,
     int n,
@@ -211,7 +199,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnSgetrf_bufferSize(
     int lda,
     int *Lwork );
 
-cusolverStatus_t CUDENSEAPI cusolverDnDgetrf_bufferSize(
+cusolverStatus_t CUSOLVERAPI cusolverDnDgetrf_bufferSize(
     cusolverDnHandle_t handle,
     int m,
     int n,
@@ -219,7 +207,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnDgetrf_bufferSize(
     int lda,
     int *Lwork );
 
-cusolverStatus_t CUDENSEAPI cusolverDnCgetrf_bufferSize(
+cusolverStatus_t CUSOLVERAPI cusolverDnCgetrf_bufferSize(
     cusolverDnHandle_t handle,
     int m,
     int n,
@@ -227,7 +215,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnCgetrf_bufferSize(
     int lda,
     int *Lwork );
 
-cusolverStatus_t CUDENSEAPI cusolverDnZgetrf_bufferSize(
+cusolverStatus_t CUSOLVERAPI cusolverDnZgetrf_bufferSize(
     cusolverDnHandle_t handle,
     int m,
     int n,
@@ -236,7 +224,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnZgetrf_bufferSize(
     int *Lwork );
 
 
-cusolverStatus_t CUDENSEAPI cusolverDnSgetrf( 
+cusolverStatus_t CUSOLVERAPI cusolverDnSgetrf( 
     cusolverDnHandle_t handle, 
     int m, 
     int n, 
@@ -246,7 +234,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnSgetrf(
     int *devIpiv, 
     int *devInfo );
 
-cusolverStatus_t CUDENSEAPI cusolverDnDgetrf( 
+cusolverStatus_t CUSOLVERAPI cusolverDnDgetrf( 
     cusolverDnHandle_t handle, 
     int m, 
     int n, 
@@ -256,7 +244,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnDgetrf(
     int *devIpiv, 
     int *devInfo );
 
-cusolverStatus_t CUDENSEAPI cusolverDnCgetrf( 
+cusolverStatus_t CUSOLVERAPI cusolverDnCgetrf( 
     cusolverDnHandle_t handle, 
     int m, 
     int n, 
@@ -266,7 +254,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnCgetrf(
     int *devIpiv, 
     int *devInfo );
 
-cusolverStatus_t CUDENSEAPI cusolverDnZgetrf( 
+cusolverStatus_t CUSOLVERAPI cusolverDnZgetrf( 
     cusolverDnHandle_t handle, 
     int m, 
     int n, 
@@ -277,7 +265,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnZgetrf(
     int *devInfo );
 
 /* Row pivoting */
-cusolverStatus_t CUDENSEAPI cusolverDnSlaswp( 
+cusolverStatus_t CUSOLVERAPI cusolverDnSlaswp( 
     cusolverDnHandle_t handle, 
     int n, 
     float *A, 
@@ -287,7 +275,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnSlaswp(
     const int *devIpiv, 
     int incx);
 
-cusolverStatus_t CUDENSEAPI cusolverDnDlaswp( 
+cusolverStatus_t CUSOLVERAPI cusolverDnDlaswp( 
     cusolverDnHandle_t handle, 
     int n, 
     double *A, 
@@ -297,7 +285,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnDlaswp(
     const int *devIpiv, 
     int incx);
 
-cusolverStatus_t CUDENSEAPI cusolverDnClaswp( 
+cusolverStatus_t CUSOLVERAPI cusolverDnClaswp( 
     cusolverDnHandle_t handle, 
     int n, 
     cuComplex *A, 
@@ -307,7 +295,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnClaswp(
     const int *devIpiv, 
     int incx);
 
-cusolverStatus_t CUDENSEAPI cusolverDnZlaswp( 
+cusolverStatus_t CUSOLVERAPI cusolverDnZlaswp( 
     cusolverDnHandle_t handle, 
     int n, 
     cuDoubleComplex *A, 
@@ -318,7 +306,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnZlaswp(
     int incx);
 
 /* LU solve */
-cusolverStatus_t CUDENSEAPI cusolverDnSgetrs( 
+cusolverStatus_t CUSOLVERAPI cusolverDnSgetrs( 
     cusolverDnHandle_t handle, 
     cublasOperation_t trans, 
     int n, 
@@ -330,7 +318,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnSgetrs(
     int ldb, 
     int *devInfo );
 
-cusolverStatus_t CUDENSEAPI cusolverDnDgetrs( 
+cusolverStatus_t CUSOLVERAPI cusolverDnDgetrs( 
     cusolverDnHandle_t handle, 
     cublasOperation_t trans, 
     int n, 
@@ -342,7 +330,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnDgetrs(
     int ldb, 
     int *devInfo );
 
-cusolverStatus_t CUDENSEAPI cusolverDnCgetrs( 
+cusolverStatus_t CUSOLVERAPI cusolverDnCgetrs( 
     cusolverDnHandle_t handle, 
     cublasOperation_t trans, 
     int n, 
@@ -354,7 +342,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnCgetrs(
     int ldb, 
     int *devInfo );
 
-cusolverStatus_t CUDENSEAPI cusolverDnZgetrs( 
+cusolverStatus_t CUSOLVERAPI cusolverDnZgetrs( 
     cusolverDnHandle_t handle, 
     cublasOperation_t trans, 
     int n, 
@@ -366,8 +354,41 @@ cusolverStatus_t CUDENSEAPI cusolverDnZgetrs(
     int ldb, 
     int *devInfo );
 
+
 /* QR factorization */
-cusolverStatus_t CUDENSEAPI cusolverDnSgeqrf( 
+cusolverStatus_t CUSOLVERAPI cusolverDnSgeqrf_bufferSize(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
+    float *A,
+    int lda,
+    int *lwork );
+
+cusolverStatus_t CUSOLVERAPI cusolverDnDgeqrf_bufferSize(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
+    double *A,
+    int lda,
+    int *lwork );
+
+cusolverStatus_t CUSOLVERAPI cusolverDnCgeqrf_bufferSize(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
+    cuComplex *A,
+    int lda,
+    int *lwork );
+
+cusolverStatus_t CUSOLVERAPI cusolverDnZgeqrf_bufferSize(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
+    cuDoubleComplex *A,
+    int lda,
+    int *lwork );
+
+cusolverStatus_t CUSOLVERAPI cusolverDnSgeqrf( 
     cusolverDnHandle_t handle, 
     int m, 
     int n, 
@@ -378,7 +399,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnSgeqrf(
     int Lwork, 
     int *devInfo );
 
-cusolverStatus_t CUDENSEAPI cusolverDnDgeqrf( 
+cusolverStatus_t CUSOLVERAPI cusolverDnDgeqrf( 
     cusolverDnHandle_t handle, 
     int m, 
     int n, 
@@ -389,7 +410,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnDgeqrf(
     int Lwork, 
     int *devInfo );
 
-cusolverStatus_t CUDENSEAPI cusolverDnCgeqrf( 
+cusolverStatus_t CUSOLVERAPI cusolverDnCgeqrf( 
     cusolverDnHandle_t handle, 
     int m, 
     int n, 
@@ -400,7 +421,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnCgeqrf(
     int Lwork, 
     int *devInfo );
 
-cusolverStatus_t CUDENSEAPI cusolverDnZgeqrf( 
+cusolverStatus_t CUSOLVERAPI cusolverDnZgeqrf( 
     cusolverDnHandle_t handle, 
     int m, 
     int n, 
@@ -411,7 +432,156 @@ cusolverStatus_t CUDENSEAPI cusolverDnZgeqrf(
     int Lwork, 
     int *devInfo );
 
-cusolverStatus_t CUDENSEAPI cusolverDnSormqr(
+
+/* generate unitary matrix Q from QR factorization */
+cusolverStatus_t CUSOLVERAPI cusolverDnSorgqr_bufferSize(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
+    int k,
+    const float *A,
+    int lda,
+    const float *tau,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnDorgqr_bufferSize(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
+    int k,
+    const double *A,
+    int lda,
+    const double *tau,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnCungqr_bufferSize(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
+    int k,
+    const cuComplex *A,
+    int lda,
+    const cuComplex *tau,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnZungqr_bufferSize(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
+    int k,
+    const cuDoubleComplex *A,
+    int lda,
+    const cuDoubleComplex *tau,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnSorgqr(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
+    int k,
+    float *A,
+    int lda,
+    const float *tau,
+    float *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnDorgqr(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
+    int k,
+    double *A,
+    int lda,
+    const double *tau,
+    double *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnCungqr(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
+    int k,
+    cuComplex *A,
+    int lda,
+    const cuComplex *tau,
+    cuComplex *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnZungqr(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
+    int k,
+    cuDoubleComplex *A,
+    int lda,
+    const cuDoubleComplex *tau,
+    cuDoubleComplex *work,
+    int lwork,
+    int *info);
+
+
+
+/* compute Q**T*b in solve min||A*x = b|| */
+cusolverStatus_t CUSOLVERAPI cusolverDnSormqr_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side,
+    cublasOperation_t trans,
+    int m,
+    int n,
+    int k,
+    const float *A,
+    int lda,
+    const float *tau,
+    const float *C,
+    int ldc,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnDormqr_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side,
+    cublasOperation_t trans,
+    int m,
+    int n,
+    int k,
+    const double *A,
+    int lda,
+    const double *tau,
+    const double *C,
+    int ldc,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnCunmqr_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side,
+    cublasOperation_t trans,
+    int m,
+    int n,
+    int k,
+    const cuComplex *A,
+    int lda,
+    const cuComplex *tau,
+    const cuComplex *C,
+    int ldc,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnZunmqr_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side,
+    cublasOperation_t trans,
+    int m,
+    int n,
+    int k,
+    const cuDoubleComplex *A,
+    int lda,
+    const cuDoubleComplex *tau,
+    const cuDoubleComplex *C,
+    int ldc,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnSormqr(
     cusolverDnHandle_t handle,
     cublasSideMode_t side,
     cublasOperation_t trans,
@@ -427,7 +597,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnSormqr(
     int lwork,
     int *devInfo);
 
-cusolverStatus_t CUDENSEAPI cusolverDnDormqr(
+cusolverStatus_t CUSOLVERAPI cusolverDnDormqr(
     cusolverDnHandle_t handle,
     cublasSideMode_t side,
     cublasOperation_t trans,
@@ -443,7 +613,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnDormqr(
     int lwork,
     int *devInfo);
 
-cusolverStatus_t CUDENSEAPI cusolverDnCunmqr(
+cusolverStatus_t CUSOLVERAPI cusolverDnCunmqr(
     cusolverDnHandle_t handle,
     cublasSideMode_t side,
     cublasOperation_t trans,
@@ -459,7 +629,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnCunmqr(
     int lwork,
     int *devInfo);
 
-cusolverStatus_t CUDENSEAPI cusolverDnZunmqr(
+cusolverStatus_t CUSOLVERAPI cusolverDnZunmqr(
     cusolverDnHandle_t handle,
     cublasSideMode_t side,
     cublasOperation_t trans,
@@ -476,42 +646,106 @@ cusolverStatus_t CUDENSEAPI cusolverDnZunmqr(
     int *devInfo);
 
 
-/* QR factorization workspace query */
-cusolverStatus_t CUDENSEAPI cusolverDnSgeqrf_bufferSize( 
-    cusolverDnHandle_t handle, 
-    int m, 
-    int n, 
-    float *A, 
-    int lda, 
+/* L*D*L**T,U*D*U**T factorization */
+cusolverStatus_t CUSOLVERAPI cusolverDnSsytrf_bufferSize(
+    cusolverDnHandle_t handle,
+    int n,
+    float *A,
+    int lda,
+    int *lwork );
+
+cusolverStatus_t CUSOLVERAPI cusolverDnDsytrf_bufferSize(
+    cusolverDnHandle_t handle,
+    int n,
+    double *A,
+    int lda,
+    int *lwork );
+
+cusolverStatus_t CUSOLVERAPI cusolverDnCsytrf_bufferSize(
+    cusolverDnHandle_t handle,
+    int n,
+    cuComplex *A,
+    int lda,
+    int *lwork );
+
+cusolverStatus_t CUSOLVERAPI cusolverDnZsytrf_bufferSize(
+    cusolverDnHandle_t handle,
+    int n,
+    cuDoubleComplex *A,
+    int lda,
+    int *lwork );
+
+cusolverStatus_t CUSOLVERAPI cusolverDnSsytrf(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo,
+    int n,
+    float *A,
+    int lda,
+    int *ipiv,
+    float *work,
+    int lwork,
+    int *info );
+
+cusolverStatus_t CUSOLVERAPI cusolverDnDsytrf(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo,
+    int n,
+    double *A,
+    int lda,
+    int *ipiv,
+    double *work,
+    int lwork,
+    int *info );
+
+cusolverStatus_t CUSOLVERAPI cusolverDnCsytrf(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo,
+    int n,
+    cuComplex *A,
+    int lda,
+    int *ipiv,
+    cuComplex *work,
+    int lwork,
+    int *info );
+
+cusolverStatus_t CUSOLVERAPI cusolverDnZsytrf(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo,
+    int n,
+    cuDoubleComplex *A,
+    int lda,
+    int *ipiv,
+    cuDoubleComplex *work,
+    int lwork,
+    int *info );
+
+
+/* bidiagonal factorization */
+cusolverStatus_t CUSOLVERAPI cusolverDnSgebrd_bufferSize(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
     int *Lwork );
 
-cusolverStatus_t CUDENSEAPI cusolverDnDgeqrf_bufferSize( 
-    cusolverDnHandle_t handle, 
-    int m, 
-    int n, 
-    double *A, 
-    int lda, 
+cusolverStatus_t CUSOLVERAPI cusolverDnDgebrd_bufferSize(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
     int *Lwork );
 
-cusolverStatus_t CUDENSEAPI cusolverDnCgeqrf_bufferSize( 
-    cusolverDnHandle_t handle, 
-    int m, 
-    int n, 
-    cuComplex *A, 
-    int lda, 
+cusolverStatus_t CUSOLVERAPI cusolverDnCgebrd_bufferSize(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
     int *Lwork );
 
-cusolverStatus_t CUDENSEAPI cusolverDnZgeqrf_bufferSize( 
-    cusolverDnHandle_t handle, 
-    int m, 
-    int n, 
-    cuDoubleComplex *A, 
-    int lda, 
+cusolverStatus_t CUSOLVERAPI cusolverDnZgebrd_bufferSize(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
     int *Lwork );
 
-
-/* bidiagonal */
-cusolverStatus_t CUDENSEAPI cusolverDnSgebrd( 
+cusolverStatus_t CUSOLVERAPI cusolverDnSgebrd( 
     cusolverDnHandle_t handle, 
     int m, 
     int n, 
@@ -525,7 +759,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnSgebrd(
     int Lwork, 
     int *devInfo );
 
-cusolverStatus_t CUDENSEAPI cusolverDnDgebrd( 
+cusolverStatus_t CUSOLVERAPI cusolverDnDgebrd( 
     cusolverDnHandle_t handle, 
     int m, 
     int n, 
@@ -539,7 +773,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnDgebrd(
     int Lwork, 
     int *devInfo );
 
-cusolverStatus_t CUDENSEAPI cusolverDnCgebrd( 
+cusolverStatus_t CUSOLVERAPI cusolverDnCgebrd( 
     cusolverDnHandle_t handle, 
     int m, 
     int n, 
@@ -553,7 +787,7 @@ cusolverStatus_t CUDENSEAPI cusolverDnCgebrd(
     int Lwork, 
     int *devInfo );
 
-cusolverStatus_t CUDENSEAPI cusolverDnZgebrd( 
+cusolverStatus_t CUSOLVERAPI cusolverDnZgebrd( 
     cusolverDnHandle_t handle, 
     int m, 
     int n, 
@@ -567,66 +801,439 @@ cusolverStatus_t CUDENSEAPI cusolverDnZgebrd(
     int Lwork, 
     int *devInfo );
 
+/* generates one of the unitary matrices Q or P**T determined by GEBRD*/
+cusolverStatus_t CUSOLVERAPI cusolverDnSorgbr_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side, 
+    int m,
+    int n,
+    int k,
+    const float *A,
+    int lda,
+    const float *tau,
+    int *lwork);
 
-cusolverStatus_t CUDENSEAPI cusolverDnSsytrd (cusolverDnHandle_t handle, char uplo, int n, float *A, int
-        lda, float *D, float *E, float *tau, float *Work, int Lwork, int *info);
-cusolverStatus_t CUDENSEAPI cusolverDnDsytrd (cusolverDnHandle_t handle, char uplo, int n, double *A, int
-        lda, double *D, double *E, double *tau, double *Work, int Lwork, int
-        *info);
-/* bidiagonal factorization workspace query */
-cusolverStatus_t CUDENSEAPI cusolverDnSgebrd_bufferSize( 
-    cusolverDnHandle_t handle, 
-    int m, 
-    int n, 
-    int *Lwork );
+cusolverStatus_t CUSOLVERAPI cusolverDnDorgbr_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side, 
+    int m,
+    int n,
+    int k,
+    const double *A,
+    int lda,
+    const double *tau,
+    int *lwork);
 
-cusolverStatus_t CUDENSEAPI cusolverDnDgebrd_bufferSize( 
-    cusolverDnHandle_t handle, 
-    int m, 
-    int n, 
-    int *Lwork );
+cusolverStatus_t CUSOLVERAPI cusolverDnCungbr_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side, 
+    int m,
+    int n,
+    int k,
+    const cuComplex *A,
+    int lda,
+    const cuComplex *tau,
+    int *lwork);
 
-cusolverStatus_t CUDENSEAPI cusolverDnCgebrd_bufferSize( 
-    cusolverDnHandle_t handle, 
-    int m, 
-    int n, 
-    int *Lwork );
+cusolverStatus_t CUSOLVERAPI cusolverDnZungbr_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side, 
+    int m,
+    int n,
+    int k,
+    const cuDoubleComplex *A,
+    int lda,
+    const cuDoubleComplex *tau,
+    int *lwork);
 
-cusolverStatus_t CUDENSEAPI cusolverDnZgebrd_bufferSize( 
-    cusolverDnHandle_t handle, 
-    int m, 
-    int n, 
-    int *Lwork );
+cusolverStatus_t CUSOLVERAPI cusolverDnSorgbr(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side, 
+    int m,
+    int n,
+    int k,
+    float *A,
+    int lda,
+    const float *tau,
+    float *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnDorgbr(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side, 
+    int m,
+    int n,
+    int k,
+    double *A,
+    int lda,
+    const double *tau,
+    double *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnCungbr(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side, 
+    int m,
+    int n,
+    int k,
+    cuComplex *A,
+    int lda,
+    const cuComplex *tau,
+    cuComplex *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnZungbr(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side, 
+    int m,
+    int n,
+    int k,
+    cuDoubleComplex *A,
+    int lda,
+    const cuDoubleComplex *tau,
+    cuDoubleComplex *work,
+    int lwork,
+    int *info);
+
+
+/* tridiagonal factorization */
+cusolverStatus_t CUSOLVERAPI cusolverDnSsytrd_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo,
+    int n,
+    const float *A,
+    int lda,
+    const float *d,
+    const float *e,
+    const float *tau,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnDsytrd_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo,
+    int n,
+    const double *A,
+    int lda,
+    const double *d,
+    const double *e,
+    const double *tau,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnChetrd_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo,
+    int n,
+    const cuComplex *A,
+    int lda,
+    const float *d,
+    const float *e,
+    const cuComplex *tau,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnZhetrd_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo,
+    int n,
+    const cuDoubleComplex *A,
+    int lda,
+    const double *d,
+    const double *e,
+    const cuDoubleComplex *tau,
+    int *lwork);
+
+
+cusolverStatus_t CUSOLVERAPI cusolverDnSsytrd(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo,
+    int n,
+    float *A,
+    int lda,
+    float *d,
+    float *e,
+    float *tau,
+    float *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnDsytrd(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo,
+    int n,
+    double *A,
+    int lda,
+    double *d,
+    double *e,
+    double *tau,
+    double *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnChetrd(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo,
+    int n,
+    cuComplex *A,
+    int lda,
+    float *d,
+    float *e,
+    cuComplex *tau,
+    cuComplex *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnZhetrd(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo,
+    int n,
+    cuDoubleComplex *A,
+    int lda,
+    double *d,
+    double *e,
+    cuDoubleComplex *tau,
+    cuDoubleComplex *work,
+    int lwork,
+    int *info);
+
+
+
+/* generate unitary Q comes from sytrd */
+cusolverStatus_t CUSOLVERAPI cusolverDnSorgtr_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo, 
+    int n,
+    const float *A,
+    int lda,
+    const float *tau,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnDorgtr_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo,
+    int n,
+    const double *A,
+    int lda,
+    const double *tau,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnCungtr_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo, 
+    int n,
+    const cuComplex *A,
+    int lda,
+    const cuComplex *tau,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnZungtr_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo, 
+    int n,
+    const cuDoubleComplex *A,
+    int lda,
+    const cuDoubleComplex *tau,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnSorgtr(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo, 
+    int n,
+    float *A,
+    int lda,
+    const float *tau,
+    float *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnDorgtr(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo, 
+    int n,
+    double *A,
+    int lda,
+    const double *tau,
+    double *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnCungtr(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo, 
+    int n,
+    cuComplex *A,
+    int lda,
+    const cuComplex *tau,
+    cuComplex *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnZungtr(
+    cusolverDnHandle_t handle,
+    cublasFillMode_t uplo, 
+    int n,
+    cuDoubleComplex *A,
+    int lda,
+    const cuDoubleComplex *tau,
+    cuDoubleComplex *work,
+    int lwork,
+    int *info);
+
+
+
+/* compute op(Q)*C or C*op(Q) where Q comes from sytrd */
+cusolverStatus_t CUSOLVERAPI cusolverDnSormtr_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side,
+    cublasFillMode_t uplo,
+    cublasOperation_t trans,
+    int m,
+    int n,
+    const float *A,
+    int lda,
+    const float *tau,
+    const float *C,
+    int ldc,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnDormtr_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side,
+    cublasFillMode_t uplo,
+    cublasOperation_t trans,
+    int m,
+    int n,
+    const double *A,
+    int lda,
+    const double *tau,
+    const double *C,
+    int ldc,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnCunmtr_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side,
+    cublasFillMode_t uplo,
+    cublasOperation_t trans,
+    int m,
+    int n,
+    const cuComplex *A,
+    int lda,
+    const cuComplex *tau,
+    const cuComplex *C,
+    int ldc,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnZunmtr_bufferSize(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side,
+    cublasFillMode_t uplo,
+    cublasOperation_t trans,
+    int m,
+    int n,
+    const cuDoubleComplex *A,
+    int lda,
+    const cuDoubleComplex *tau,
+    const cuDoubleComplex *C,
+    int ldc,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnSormtr(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side,
+    cublasFillMode_t uplo,
+    cublasOperation_t trans,
+    int m,
+    int n,
+    float *A,
+    int lda,
+    float *tau,
+    float *C,
+    int ldc,
+    float *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnDormtr(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side,
+    cublasFillMode_t uplo,
+    cublasOperation_t trans,
+    int m,
+    int n,
+    double *A,
+    int lda,
+    double *tau,
+    double *C,
+    int ldc,
+    double *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnCunmtr(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side,
+    cublasFillMode_t uplo,
+    cublasOperation_t trans,
+    int m,
+    int n,
+    cuComplex *A,
+    int lda,
+    cuComplex *tau,
+    cuComplex *C,
+    int ldc,
+    cuComplex *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnZunmtr(
+    cusolverDnHandle_t handle,
+    cublasSideMode_t side,
+    cublasFillMode_t uplo,
+    cublasOperation_t trans,
+    int m,
+    int n,
+    cuDoubleComplex *A,
+    int lda,
+    cuDoubleComplex *tau,
+    cuDoubleComplex *C,
+    int ldc,
+    cuDoubleComplex *work,
+    int lwork,
+    int *info);
+
+
 
 /* singular value decomposition, A = U * Sigma * V^H */
-cusolverStatus_t CUDENSEAPI cusolverDnSgesvd_bufferSize( 
-    cusolverDnHandle_t handle, 
-    int m, 
-    int n, 
-    int *Lwork );
+cusolverStatus_t CUSOLVERAPI cusolverDnSgesvd_bufferSize(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
+    int *lwork );
 
-cusolverStatus_t CUDENSEAPI cusolverDnDgesvd_bufferSize( 
-    cusolverDnHandle_t handle, 
-    int m, 
-    int n, 
-    int *Lwork );
+cusolverStatus_t CUSOLVERAPI cusolverDnDgesvd_bufferSize(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
+    int *lwork );
 
-cusolverStatus_t CUDENSEAPI cusolverDnCgesvd_bufferSize( 
-    cusolverDnHandle_t handle, 
-    int m, 
-    int n, 
-    int *Lwork );
+cusolverStatus_t CUSOLVERAPI cusolverDnCgesvd_bufferSize(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
+    int *lwork );
 
-cusolverStatus_t CUDENSEAPI cusolverDnZgesvd_bufferSize( 
-    cusolverDnHandle_t handle, 
-    int m, 
-    int n, 
-    int *Lwork );
+cusolverStatus_t CUSOLVERAPI cusolverDnZgesvd_bufferSize(
+    cusolverDnHandle_t handle,
+    int m,
+    int n,
+    int *lwork );
 
-cusolverStatus_t CUDENSEAPI cusolverDnSgesvd (
+cusolverStatus_t CUSOLVERAPI cusolverDnSgesvd (
     cusolverDnHandle_t handle, 
-    char jobu, 
-    char jobvt, 
+    signed char jobu, 
+    signed char jobvt, 
     int m, 
     int n, 
     float *A, 
@@ -636,15 +1243,15 @@ cusolverStatus_t CUDENSEAPI cusolverDnSgesvd (
     int ldu, 
     float *VT, 
     int ldvt, 
-    float *Work, 
-    int Lwork, 
+    float *work, 
+    int lwork, 
     float *rwork, 
-    int  *devInfo );
+    int  *info );
 
-cusolverStatus_t CUDENSEAPI cusolverDnDgesvd (
+cusolverStatus_t CUSOLVERAPI cusolverDnDgesvd (
     cusolverDnHandle_t handle, 
-    char jobu, 
-    char jobvt, 
+    signed char jobu, 
+    signed char jobvt, 
     int m, 
     int n, 
     double *A, 
@@ -654,15 +1261,15 @@ cusolverStatus_t CUDENSEAPI cusolverDnDgesvd (
     int ldu, 
     double *VT, 
     int ldvt, 
-    double *Work,
-    int Lwork, 
+    double *work,
+    int lwork, 
     double *rwork, 
-    int *devInfo );
+    int *info );
 
-cusolverStatus_t CUDENSEAPI cusolverDnCgesvd (
+cusolverStatus_t CUSOLVERAPI cusolverDnCgesvd (
     cusolverDnHandle_t handle, 
-    char jobu, 
-    char jobvt, 
+    signed char jobu, 
+    signed char jobvt, 
     int m, 
     int n, 
     cuComplex *A,
@@ -672,15 +1279,15 @@ cusolverStatus_t CUDENSEAPI cusolverDnCgesvd (
     int ldu, 
     cuComplex *VT, 
     int ldvt,
-    cuComplex *Work, 
-    int Lwork, 
+    cuComplex *work, 
+    int lwork, 
     float *rwork, 
-    int *devInfo );
+    int *info );
 
-cusolverStatus_t CUDENSEAPI cusolverDnZgesvd (
+cusolverStatus_t CUSOLVERAPI cusolverDnZgesvd (
     cusolverDnHandle_t handle, 
-    char jobu, 
-    char jobvt, 
+    signed char jobu, 
+    signed char jobvt, 
     int m, 
     int n, 
     cuDoubleComplex *A, 
@@ -690,84 +1297,217 @@ cusolverStatus_t CUDENSEAPI cusolverDnZgesvd (
     int ldu, 
     cuDoubleComplex *VT, 
     int ldvt, 
-    cuDoubleComplex *Work, 
-    int Lwork, 
-    double *rwork, 
-    int *devInfo );
-
-/* LDLT,UDUT factorization */
-cusolverStatus_t CUDENSEAPI cusolverDnSsytrf( 
-    cusolverDnHandle_t handle, 
-    cublasFillMode_t uplo, 
-    int n, 
-    float *A, 
-    int lda, 
-    int *ipiv, 
-    float *work, 
-    int lwork, 
-    int *devInfo );
-
-cusolverStatus_t CUDENSEAPI cusolverDnDsytrf( 
-    cusolverDnHandle_t handle, 
-    cublasFillMode_t uplo, 
-    int n, 
-    double *A, 
-    int lda, 
-    int *ipiv, 
-    double *work, 
-    int lwork, 
-    int *devInfo );
-
-cusolverStatus_t CUDENSEAPI cusolverDnCsytrf( 
-    cusolverDnHandle_t handle, 
-    cublasFillMode_t uplo, 
-    int n, 
-    cuComplex *A, 
-    int lda, 
-    int *ipiv, 
-    cuComplex *work, 
-    int lwork, 
-    int *devInfo );
-
-cusolverStatus_t CUDENSEAPI cusolverDnZsytrf( 
-    cusolverDnHandle_t handle, 
-    cublasFillMode_t uplo, 
-    int n, 
-    cuDoubleComplex *A, 
-    int lda, 
-    int *ipiv, 
     cuDoubleComplex *work, 
     int lwork, 
-    int *devInfo );
+    double *rwork, 
+    int *info );
 
-/* SYTRF factorization workspace query */
-cusolverStatus_t CUDENSEAPI cusolverDnSsytrf_bufferSize( 
-    cusolverDnHandle_t handle, 
-    int n, 
+
+/* standard symmetric eigenvalue solver, A*x = lambda*x, by divide-and-conquer  */
+cusolverStatus_t CUSOLVERAPI cusolverDnSsyevd_bufferSize(
+    cusolverDnHandle_t handle,
+    cusolverEigMode_t jobz, 
+    cublasFillMode_t uplo, 
+    int n,
+    const float *A,
+    int lda,
+    const float *W,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnDsyevd_bufferSize(
+    cusolverDnHandle_t handle,
+    cusolverEigMode_t jobz, 
+    cublasFillMode_t uplo, 
+    int n,
+    const double *A,
+    int lda,
+    const double *W,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnCheevd_bufferSize(
+    cusolverDnHandle_t handle,
+    cusolverEigMode_t jobz, 
+    cublasFillMode_t uplo, 
+    int n,
+    const cuComplex *A,
+    int lda,
+    const float *W,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnZheevd_bufferSize(
+    cusolverDnHandle_t handle,
+    cusolverEigMode_t jobz, 
+    cublasFillMode_t uplo, 
+    int n,
+    const cuDoubleComplex *A,
+    int lda,
+    const double *W,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnSsyevd(
+    cusolverDnHandle_t handle,
+    cusolverEigMode_t jobz, 
+    cublasFillMode_t uplo, 
+    int n,
+    float *A,
+    int lda,
+    float *W, 
+    float *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnDsyevd(
+    cusolverDnHandle_t handle,
+    cusolverEigMode_t jobz, 
+    cublasFillMode_t uplo, 
+    int n,
+    double *A,
+    int lda,
+    double *W, 
+    double *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnCheevd(
+    cusolverDnHandle_t handle,
+    cusolverEigMode_t jobz, 
+    cublasFillMode_t uplo, 
+    int n,
+    cuComplex *A,
+    int lda,
+    float *W, 
+    cuComplex *work,
+    int lwork,
+    int *info);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnZheevd(
+    cusolverDnHandle_t handle,
+    cusolverEigMode_t jobz, 
+    cublasFillMode_t uplo, 
+    int n,
+    cuDoubleComplex *A,
+    int lda,
+    double *W, 
+    cuDoubleComplex *work,
+    int lwork,
+    int *info);
+
+
+/* generalized symmetric eigenvalue solver, A*x = lambda*B*x, by divide-and-conquer  */
+cusolverStatus_t CUSOLVERAPI cusolverDnSsygvd_bufferSize(
+    cusolverDnHandle_t handle,
+    cusolverEigType_t itype,
+    cusolverEigMode_t jobz,
+    cublasFillMode_t uplo, 
+    int n,
+    const float *A, 
+    int lda,
+    const float *B, 
+    int ldb,
+    const float *W,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnDsygvd_bufferSize(
+    cusolverDnHandle_t handle,
+    cusolverEigType_t itype, 
+    cusolverEigMode_t jobz,  
+    cublasFillMode_t uplo,  
+    int n,
+    const double *A, 
+    int lda,
+    const double *B, 
+    int ldb,
+    const double *W,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnChegvd_bufferSize(
+    cusolverDnHandle_t handle,
+    cusolverEigType_t itype, 
+    cusolverEigMode_t jobz,  
+    cublasFillMode_t uplo,  
+    int n,
+    const cuComplex *A, 
+    int lda,
+    const cuComplex *B, 
+    int ldb,
+    const float *W,
+    int *lwork);
+
+cusolverStatus_t CUSOLVERAPI cusolverDnZhegvd_bufferSize(
+    cusolverDnHandle_t handle,
+    cusolverEigType_t itype,   
+    cusolverEigMode_t jobz, 
+    cublasFillMode_t uplo,  
+    int n,
+    const cuDoubleComplex *A,
+    int lda,
+    const cuDoubleComplex *B, 
+    int ldb,
+    const double *W,
+    int *lwork);
+
+
+cusolverStatus_t CUSOLVERAPI cusolverDnSsygvd(
+    cusolverDnHandle_t handle,
+    cusolverEigType_t itype,   
+    cusolverEigMode_t jobz,  
+    cublasFillMode_t uplo,  
+    int n,
     float *A, 
-    int lda, 
-    int *Lwork );
+    int lda,
+    float *B, 
+    int ldb,
+    float *W, 
+    float *work,
+    int lwork,
+    int *info);
 
-cusolverStatus_t CUDENSEAPI cusolverDnDsytrf_bufferSize( 
-    cusolverDnHandle_t handle, 
-    int n, 
+cusolverStatus_t CUSOLVERAPI cusolverDnDsygvd(
+    cusolverDnHandle_t handle,
+    cusolverEigType_t itype,  
+    cusolverEigMode_t jobz,  
+    cublasFillMode_t uplo,  
+    int n,
     double *A, 
-    int lda, 
-    int *Lwork );
+    int lda,
+    double *B, 
+    int ldb,
+    double *W, 
+    double *work,
+    int lwork,
+    int *info);
 
-cusolverStatus_t CUDENSEAPI cusolverDnCsytrf_bufferSize( 
-    cusolverDnHandle_t handle, 
-    int n, 
-    cuComplex *A, 
-    int lda, 
-    int *Lwork );
+cusolverStatus_t CUSOLVERAPI cusolverDnChegvd(
+    cusolverDnHandle_t handle,
+    cusolverEigType_t itype,   
+    cusolverEigMode_t jobz,  
+    cublasFillMode_t uplo,  
+    int n,
+    cuComplex *A,
+    int lda,
+    cuComplex *B, 
+    int ldb,
+    float *W, 
+    cuComplex *work,
+    int lwork,
+    int *info);
 
-cusolverStatus_t CUDENSEAPI cusolverDnZsytrf_bufferSize( 
-    cusolverDnHandle_t handle, 
-    int n, 
+cusolverStatus_t CUSOLVERAPI cusolverDnZhegvd(
+    cusolverDnHandle_t handle,
+    cusolverEigType_t itype,   
+    cusolverEigMode_t jobz,  
+    cublasFillMode_t uplo,  
+    int n,
     cuDoubleComplex *A, 
-    int lda, 
-    int *Lwork );
+    int lda,
+    cuDoubleComplex *B, 
+    int ldb,
+    double *W, 
+    cuDoubleComplex *work,
+    int lwork,
+    int *info);
+
+
 
 #if defined(__cplusplus)
 }

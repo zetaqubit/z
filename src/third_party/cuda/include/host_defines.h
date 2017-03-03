@@ -142,16 +142,22 @@
 
 #endif /* __GNUC__ || __CUDA_LIBDEVICE__ || __CUDACC_RTC__ */
 
-#if !defined(__GNUC__) || __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 3 && !defined(__clang__) )
+#if (defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 3 && !defined(__clang__)))) || \
+    (defined(_MSC_VER) && _MSC_VER < 1900) || \
+    (!defined(__GNUC__) && !defined(_MSC_VER))
 
 #define __specialization_static \
         static
 
-#else /* !__GNUC__ || __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 3) */
+#else /* (__GNUC__ && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 3 && !__clang__))) ||
+         (_MSC_VER && _MSC_VER < 1900) ||
+         (!__GNUC__ && !_MSC_VER) */
 
 #define __specialization_static
 
-#endif /* !__GNUC__ || __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 3) */
+#endif /* (__GNUC__ && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 3 && !__clang__))) ||
+         (_MSC_VER && _MSC_VER < 1900) ||
+         (!__GNUC__ && !_MSC_VER) */
 
 #if !defined(__CUDACC__) && !defined(__CUDABE__)
 
@@ -190,12 +196,12 @@
 #define __managed__ \
         __location__(managed)
         
-#if defined(__CUDABE__) || !defined(__CUDACC__)
+#if (defined(__CUDABE__) && !defined(__CUDACC_INTEGRATED__)) || !defined(__CUDACC__)
 #define __device_builtin__
 #define __device_builtin_texture_type__
 #define __device_builtin_surface_type__
 #define __cudart_builtin__
-#else /* __CUDABE__  || !__CUDACC__ */
+#else /* (defined(__CUDABE__) && !defined(__CUDACC_INTEGRATED__))  || !__CUDACC__ */
 #define __device_builtin__ \
         __location__(device_builtin)
 #define __device_builtin_texture_type__ \
@@ -204,7 +210,7 @@
         __location__(device_builtin_surface_type)
 #define __cudart_builtin__ \
         __location__(cudart_builtin)
-#endif /* __CUDABE__ || !__CUDACC__ */
+#endif /* (defined(__CUDABE__) && !defined(__CUDACC_INTEGRATED__))  || !__CUDACC__ */
 
 #if defined(__CUDACC__) && defined(__clang__)
 
@@ -212,7 +218,7 @@
 #error --- !!! The Clang version does not support __has_feature !!! ---
 #endif /* !__has_feature */
 
-#if __has_feature(cxx_atomic)
+#if defined(__cplusplus) && defined(__CUDACC__)
 #if (__has_feature(cxx_noexcept))
 #define NV_CLANG_ATOMIC_NOEXCEPT noexcept
 #define NV_CLANG_ATOMIC_NOEXCEPT_(x) noexcept(x)
@@ -227,7 +233,7 @@ template <typename T> struct __nv_clang_atomic_t {
   operator T() NV_CLANG_ATOMIC_NOEXCEPT;
 };
 #define _Atomic(X) __nv_clang_atomic_t<X>
-#endif /* __has_feature(cxx_atomic) */
+#endif /* defined(__cplusplus) && defined(__CUDACC__) */
 
 #endif /* __CUDACC__ && __clang__ */
 

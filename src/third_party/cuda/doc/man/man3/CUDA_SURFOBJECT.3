@@ -1,0 +1,97 @@
+.TH "Surface Object Management" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Surface Object Management \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCUresult\fP \fBcuSurfObjectCreate\fP (\fBCUsurfObject\fP *pSurfObject, const \fBCUDA_RESOURCE_DESC\fP *pResDesc)"
+.br
+.RI "\fICreates a surface object. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuSurfObjectDestroy\fP (\fBCUsurfObject\fP surfObject)"
+.br
+.RI "\fIDestroys a surface object. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuSurfObjectGetResourceDesc\fP (\fBCUDA_RESOURCE_DESC\fP *pResDesc, \fBCUsurfObject\fP surfObject)"
+.br
+.RI "\fIReturns a surface object's resource descriptor. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief surface object management functions of the low-level CUDA driver API (\fBcuda.h\fP)
+.PP
+This section describes the surface object management functions of the low-level CUDA driver application programming interface. The surface object API is only supported on devices of compute capability 3.0 or higher. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBCUresult\fP cuSurfObjectCreate (\fBCUsurfObject\fP * pSurfObject, const \fBCUDA_RESOURCE_DESC\fP * pResDesc)"
+.PP
+Creates a surface object and returns it in \fCpSurfObject\fP. \fCpResDesc\fP describes the data to perform surface load/stores on. \fBCUDA_RESOURCE_DESC::resType\fP must be \fBCU_RESOURCE_TYPE_ARRAY\fP and CUDA_RESOURCE_DESC::res::array::hArray must be set to a valid CUDA array handle. CUDA_RESOURCE_DESC::flags must be set to zero.
+.PP
+Surface objects are only supported on devices of compute capability 3.0 or higher. Additionally, a surface object is an opaque value, and, as such, should only be accessed through CUDA API calls.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpSurfObject\fP - Surface object to create 
+.br
+\fIpResDesc\fP - Resource descriptor
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuSurfObjectDestroy\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuSurfObjectDestroy (\fBCUsurfObject\fP surfObject)"
+.PP
+Destroys the surface object specified by \fCsurfObject\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsurfObject\fP - Surface object to destroy
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuSurfObjectCreate\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuSurfObjectGetResourceDesc (\fBCUDA_RESOURCE_DESC\fP * pResDesc, \fBCUsurfObject\fP surfObject)"
+.PP
+Returns the resource descriptor for the surface object specified by \fCsurfObject\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpResDesc\fP - Resource descriptor 
+.br
+\fIsurfObject\fP - Surface object
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuSurfObjectCreate\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

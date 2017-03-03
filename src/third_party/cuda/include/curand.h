@@ -432,6 +432,23 @@ curandStatus_t CURANDAPI
 curandGetVersion(int *version);
 
 /**
+* \brief Return the value of the curand property.
+*
+* Return in \p *value the number for the property described by \p type of the
+* dynamically linked CURAND library.
+*
+* \param type - CUDA library property
+* \param value - integer value for the requested property
+*
+* \return
+* - CURAND_STATUS_SUCCESS if the property value was successfully returned \n
+* - CURAND_STATUS_OUT_OF_RANGE if the property type is not recognized \n
+*/
+curandStatus_t CURANDAPI
+curandGetProperty(libraryPropertyType type, int *value);
+
+
+/**
  * \brief Set the current stream for CURAND kernel launches.
  *
  * Set the current stream for CURAND kernel launches.  All library functions
@@ -907,6 +924,17 @@ curandGeneratePoisson(curandGenerator_t generator, unsigned int *outputPtr,
 curandStatus_t CURANDAPI
 curandGeneratePoissonMethod(curandGenerator_t generator, unsigned int *outputPtr,
                      size_t n, double lambda, curandMethod_t method);
+
+
+curandStatus_t CURANDAPI
+curandGenerateBinomial(curandGenerator_t generator, unsigned int *outputPtr,
+                       size_t num, unsigned int n, double p);
+// just for internal usage
+curandStatus_t CURANDAPI
+curandGenerateBinomialMethod(curandGenerator_t generator,
+                             unsigned int *outputPtr,
+                             size_t num, unsigned int n, double p,
+                             curandMethod_t method);
 
 
 /**

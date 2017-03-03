@@ -15,7 +15,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <GL/glew.h>
+#define HELPERGL_EXTERN_GL_FUNC_IMPLEMENTATION
+#include <helper_gl.h>
 #include <cuda_runtime.h>
 #include <cuda_gl_interop.h>
 #include <helper_cuda.h>

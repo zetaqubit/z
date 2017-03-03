@@ -70,13 +70,13 @@ void cutWaitForThreads(const CUTThread *threads, int num);
 //Create barrier.
 CUTBarrier cutCreateBarrier(int releaseCount);
 
-//Increment barrier. (excution continues)
+//Increment barrier. (execution continues)
 void cutIncrementBarrier(CUTBarrier *barrier);
 
 //Wait for barrier release.
 void cutWaitForBarrier(CUTBarrier *barrier);
 
-//Destory barrier
+//Destroy barrier
 void cutDestroyBarrier(CUTBarrier *barrier);
 
 

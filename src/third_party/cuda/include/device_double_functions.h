@@ -66,7 +66,9 @@
 
 #if defined(__CUDACC_RTC__)
 #define __DEVICE_DOUBLE_FUNCTIONS_DECL__ __host__ __device__
-#else /* __CUDACC_RTC__ */
+#elif defined(__CUDACC_INTEGRATED__)
+#define __DEVICE_DOUBLE_FUNCTIONS_DECL__ static __inline__ __device__
+#else
 #define __DEVICE_DOUBLE_FUNCTIONS_DECL__ static __inline__ __device__
 #endif /* __CUDACC_RTC__ */
 
@@ -1171,7 +1173,9 @@ __DEVICE_DOUBLE_FUNCTIONS_DECL__ double float2double(float a, enum cudaRoundMode
 
 #if defined(__CUDACC_RTC__)
 #define __DEVICE_DOUBLE_FUNCTIONS_DECL__ __device__
-#else /* __CUDACC_RTC__ */
+#elif defined(__CUDACC_INTEGRATED__)
+#define __DEVICE_DOUBLE_FUNCTIONS_DECL__ __host__ __device__ __cudart_builtin__
+#else
 #define __DEVICE_DOUBLE_FUNCTIONS_DECL__ static __forceinline__
 #endif /* __CUDACC_RTC__ */
 

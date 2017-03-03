@@ -1,0 +1,3339 @@
+.TH "Memory Management" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Memory Management \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCUresult\fP \fBcuArray3DCreate\fP (\fBCUarray\fP *pHandle, const \fBCUDA_ARRAY3D_DESCRIPTOR\fP *pAllocateArray)"
+.br
+.RI "\fICreates a 3D CUDA array. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuArray3DGetDescriptor\fP (\fBCUDA_ARRAY3D_DESCRIPTOR\fP *pArrayDescriptor, \fBCUarray\fP hArray)"
+.br
+.RI "\fIGet a 3D CUDA array descriptor. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuArrayCreate\fP (\fBCUarray\fP *pHandle, const \fBCUDA_ARRAY_DESCRIPTOR\fP *pAllocateArray)"
+.br
+.RI "\fICreates a 1D or 2D CUDA array. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuArrayDestroy\fP (\fBCUarray\fP hArray)"
+.br
+.RI "\fIDestroys a CUDA array. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuArrayGetDescriptor\fP (\fBCUDA_ARRAY_DESCRIPTOR\fP *pArrayDescriptor, \fBCUarray\fP hArray)"
+.br
+.RI "\fIGet a 1D or 2D CUDA array descriptor. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuDeviceGetByPCIBusId\fP (\fBCUdevice\fP *dev, const char *pciBusId)"
+.br
+.RI "\fIReturns a handle to a compute device. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuDeviceGetPCIBusId\fP (char *pciBusId, int len, \fBCUdevice\fP dev)"
+.br
+.RI "\fIReturns a PCI Bus Id string for the device. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuIpcCloseMemHandle\fP (\fBCUdeviceptr\fP dptr)"
+.br
+.RI "\fIClose memory mapped with \fBcuIpcOpenMemHandle\fP. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuIpcGetEventHandle\fP (\fBCUipcEventHandle\fP *pHandle, \fBCUevent\fP event)"
+.br
+.RI "\fIGets an interprocess handle for a previously allocated event. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuIpcGetMemHandle\fP (\fBCUipcMemHandle\fP *pHandle, \fBCUdeviceptr\fP dptr)"
+.br
+.RI "\fIGets an interprocess memory handle for an existing device memory allocation. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuIpcOpenEventHandle\fP (\fBCUevent\fP *phEvent, \fBCUipcEventHandle\fP handle)"
+.br
+.RI "\fIOpens an interprocess event handle for use in the current process. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuIpcOpenMemHandle\fP (\fBCUdeviceptr\fP *pdptr, \fBCUipcMemHandle\fP handle, unsigned int Flags)"
+.br
+.RI "\fIOpens an interprocess memory handle exported from another process and returns a device pointer usable in the local process. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemAlloc\fP (\fBCUdeviceptr\fP *dptr, size_t bytesize)"
+.br
+.RI "\fIAllocates device memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemAllocHost\fP (void **pp, size_t bytesize)"
+.br
+.RI "\fIAllocates page-locked host memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemAllocManaged\fP (\fBCUdeviceptr\fP *dptr, size_t bytesize, unsigned int flags)"
+.br
+.RI "\fIAllocates memory that will be automatically managed by the Unified Memory system. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemAllocPitch\fP (\fBCUdeviceptr\fP *dptr, size_t *pPitch, size_t WidthInBytes, size_t Height, unsigned int ElementSizeBytes)"
+.br
+.RI "\fIAllocates pitched device memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpy\fP (\fBCUdeviceptr\fP dst, \fBCUdeviceptr\fP src, size_t ByteCount)"
+.br
+.RI "\fICopies memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpy2D\fP (const \fBCUDA_MEMCPY2D\fP *pCopy)"
+.br
+.RI "\fICopies memory for 2D arrays. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpy2DAsync\fP (const \fBCUDA_MEMCPY2D\fP *pCopy, \fBCUstream\fP hStream)"
+.br
+.RI "\fICopies memory for 2D arrays. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpy2DUnaligned\fP (const \fBCUDA_MEMCPY2D\fP *pCopy)"
+.br
+.RI "\fICopies memory for 2D arrays. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpy3D\fP (const \fBCUDA_MEMCPY3D\fP *pCopy)"
+.br
+.RI "\fICopies memory for 3D arrays. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpy3DAsync\fP (const \fBCUDA_MEMCPY3D\fP *pCopy, \fBCUstream\fP hStream)"
+.br
+.RI "\fICopies memory for 3D arrays. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpy3DPeer\fP (const \fBCUDA_MEMCPY3D_PEER\fP *pCopy)"
+.br
+.RI "\fICopies memory between contexts. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpy3DPeerAsync\fP (const \fBCUDA_MEMCPY3D_PEER\fP *pCopy, \fBCUstream\fP hStream)"
+.br
+.RI "\fICopies memory between contexts asynchronously. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpyAsync\fP (\fBCUdeviceptr\fP dst, \fBCUdeviceptr\fP src, size_t ByteCount, \fBCUstream\fP hStream)"
+.br
+.RI "\fICopies memory asynchronously. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpyAtoA\fP (\fBCUarray\fP dstArray, size_t dstOffset, \fBCUarray\fP srcArray, size_t srcOffset, size_t ByteCount)"
+.br
+.RI "\fICopies memory from Array to Array. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpyAtoD\fP (\fBCUdeviceptr\fP dstDevice, \fBCUarray\fP srcArray, size_t srcOffset, size_t ByteCount)"
+.br
+.RI "\fICopies memory from Array to Device. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpyAtoH\fP (void *dstHost, \fBCUarray\fP srcArray, size_t srcOffset, size_t ByteCount)"
+.br
+.RI "\fICopies memory from Array to Host. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpyAtoHAsync\fP (void *dstHost, \fBCUarray\fP srcArray, size_t srcOffset, size_t ByteCount, \fBCUstream\fP hStream)"
+.br
+.RI "\fICopies memory from Array to Host. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpyDtoA\fP (\fBCUarray\fP dstArray, size_t dstOffset, \fBCUdeviceptr\fP srcDevice, size_t ByteCount)"
+.br
+.RI "\fICopies memory from Device to Array. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpyDtoD\fP (\fBCUdeviceptr\fP dstDevice, \fBCUdeviceptr\fP srcDevice, size_t ByteCount)"
+.br
+.RI "\fICopies memory from Device to Device. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpyDtoDAsync\fP (\fBCUdeviceptr\fP dstDevice, \fBCUdeviceptr\fP srcDevice, size_t ByteCount, \fBCUstream\fP hStream)"
+.br
+.RI "\fICopies memory from Device to Device. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpyDtoH\fP (void *dstHost, \fBCUdeviceptr\fP srcDevice, size_t ByteCount)"
+.br
+.RI "\fICopies memory from Device to Host. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpyDtoHAsync\fP (void *dstHost, \fBCUdeviceptr\fP srcDevice, size_t ByteCount, \fBCUstream\fP hStream)"
+.br
+.RI "\fICopies memory from Device to Host. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpyHtoA\fP (\fBCUarray\fP dstArray, size_t dstOffset, const void *srcHost, size_t ByteCount)"
+.br
+.RI "\fICopies memory from Host to Array. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpyHtoAAsync\fP (\fBCUarray\fP dstArray, size_t dstOffset, const void *srcHost, size_t ByteCount, \fBCUstream\fP hStream)"
+.br
+.RI "\fICopies memory from Host to Array. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpyHtoD\fP (\fBCUdeviceptr\fP dstDevice, const void *srcHost, size_t ByteCount)"
+.br
+.RI "\fICopies memory from Host to Device. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpyHtoDAsync\fP (\fBCUdeviceptr\fP dstDevice, const void *srcHost, size_t ByteCount, \fBCUstream\fP hStream)"
+.br
+.RI "\fICopies memory from Host to Device. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpyPeer\fP (\fBCUdeviceptr\fP dstDevice, \fBCUcontext\fP dstContext, \fBCUdeviceptr\fP srcDevice, \fBCUcontext\fP srcContext, size_t ByteCount)"
+.br
+.RI "\fICopies device memory between two contexts. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemcpyPeerAsync\fP (\fBCUdeviceptr\fP dstDevice, \fBCUcontext\fP dstContext, \fBCUdeviceptr\fP srcDevice, \fBCUcontext\fP srcContext, size_t ByteCount, \fBCUstream\fP hStream)"
+.br
+.RI "\fICopies device memory between two contexts asynchronously. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemFree\fP (\fBCUdeviceptr\fP dptr)"
+.br
+.RI "\fIFrees device memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemFreeHost\fP (void *p)"
+.br
+.RI "\fIFrees page-locked host memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemGetAddressRange\fP (\fBCUdeviceptr\fP *pbase, size_t *psize, \fBCUdeviceptr\fP dptr)"
+.br
+.RI "\fIGet information on memory allocations. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemGetInfo\fP (size_t *free, size_t *total)"
+.br
+.RI "\fIGets free and total memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemHostAlloc\fP (void **pp, size_t bytesize, unsigned int Flags)"
+.br
+.RI "\fIAllocates page-locked host memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemHostGetDevicePointer\fP (\fBCUdeviceptr\fP *pdptr, void *p, unsigned int Flags)"
+.br
+.RI "\fIPasses back device pointer of mapped pinned memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemHostGetFlags\fP (unsigned int *pFlags, void *p)"
+.br
+.RI "\fIPasses back flags that were used for a pinned allocation. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemHostRegister\fP (void *p, size_t bytesize, unsigned int Flags)"
+.br
+.RI "\fIRegisters an existing host memory range for use by CUDA. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemHostUnregister\fP (void *p)"
+.br
+.RI "\fIUnregisters a memory range that was registered with cuMemHostRegister. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemsetD16\fP (\fBCUdeviceptr\fP dstDevice, unsigned short us, size_t N)"
+.br
+.RI "\fIInitializes device memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemsetD16Async\fP (\fBCUdeviceptr\fP dstDevice, unsigned short us, size_t N, \fBCUstream\fP hStream)"
+.br
+.RI "\fISets device memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemsetD2D16\fP (\fBCUdeviceptr\fP dstDevice, size_t dstPitch, unsigned short us, size_t Width, size_t Height)"
+.br
+.RI "\fIInitializes device memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemsetD2D16Async\fP (\fBCUdeviceptr\fP dstDevice, size_t dstPitch, unsigned short us, size_t Width, size_t Height, \fBCUstream\fP hStream)"
+.br
+.RI "\fISets device memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemsetD2D32\fP (\fBCUdeviceptr\fP dstDevice, size_t dstPitch, unsigned int ui, size_t Width, size_t Height)"
+.br
+.RI "\fIInitializes device memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemsetD2D32Async\fP (\fBCUdeviceptr\fP dstDevice, size_t dstPitch, unsigned int ui, size_t Width, size_t Height, \fBCUstream\fP hStream)"
+.br
+.RI "\fISets device memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemsetD2D8\fP (\fBCUdeviceptr\fP dstDevice, size_t dstPitch, unsigned char uc, size_t Width, size_t Height)"
+.br
+.RI "\fIInitializes device memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemsetD2D8Async\fP (\fBCUdeviceptr\fP dstDevice, size_t dstPitch, unsigned char uc, size_t Width, size_t Height, \fBCUstream\fP hStream)"
+.br
+.RI "\fISets device memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemsetD32\fP (\fBCUdeviceptr\fP dstDevice, unsigned int ui, size_t N)"
+.br
+.RI "\fIInitializes device memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemsetD32Async\fP (\fBCUdeviceptr\fP dstDevice, unsigned int ui, size_t N, \fBCUstream\fP hStream)"
+.br
+.RI "\fISets device memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemsetD8\fP (\fBCUdeviceptr\fP dstDevice, unsigned char uc, size_t N)"
+.br
+.RI "\fIInitializes device memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMemsetD8Async\fP (\fBCUdeviceptr\fP dstDevice, unsigned char uc, size_t N, \fBCUstream\fP hStream)"
+.br
+.RI "\fISets device memory. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMipmappedArrayCreate\fP (\fBCUmipmappedArray\fP *pHandle, const \fBCUDA_ARRAY3D_DESCRIPTOR\fP *pMipmappedArrayDesc, unsigned int numMipmapLevels)"
+.br
+.RI "\fICreates a CUDA mipmapped array. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMipmappedArrayDestroy\fP (\fBCUmipmappedArray\fP hMipmappedArray)"
+.br
+.RI "\fIDestroys a CUDA mipmapped array. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuMipmappedArrayGetLevel\fP (\fBCUarray\fP *pLevelArray, \fBCUmipmappedArray\fP hMipmappedArray, unsigned int level)"
+.br
+.RI "\fIGets a mipmap level of a CUDA mipmapped array. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief memory management functions of the low-level CUDA driver API (\fBcuda.h\fP)
+.PP
+This section describes the memory management functions of the low-level CUDA driver application programming interface. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBCUresult\fP cuArray3DCreate (\fBCUarray\fP * pHandle, const \fBCUDA_ARRAY3D_DESCRIPTOR\fP * pAllocateArray)"
+.PP
+Creates a CUDA array according to the \fBCUDA_ARRAY3D_DESCRIPTOR\fP structure \fCpAllocateArray\fP and returns a handle to the new CUDA array in \fC*pHandle\fP. The \fBCUDA_ARRAY3D_DESCRIPTOR\fP is defined as:
+.PP
+.PP
+.nf
+    typedef struct {
+        unsigned int Width;
+        unsigned int Height;
+        unsigned int Depth;
+        CUarray_format Format;
+        unsigned int NumChannels;
+        unsigned int Flags;
+    } CUDA_ARRAY3D_DESCRIPTOR;
+.fi
+.PP
+ where:
+.PP
+.IP "\(bu" 2
+\fCWidth\fP, \fCHeight\fP, and \fCDepth\fP are the width, height, and depth of the CUDA array (in elements); the following types of CUDA arrays can be allocated:
+.IP "  \(bu" 4
+A 1D array is allocated if \fCHeight\fP and \fCDepth\fP extents are both zero.
+.IP "  \(bu" 4
+A 2D array is allocated if only \fCDepth\fP extent is zero.
+.IP "  \(bu" 4
+A 3D array is allocated if all three extents are non-zero.
+.IP "  \(bu" 4
+A 1D layered CUDA array is allocated if only \fCHeight\fP is zero and the \fBCUDA_ARRAY3D_LAYERED\fP flag is set. Each layer is a 1D array. The number of layers is determined by the depth extent.
+.IP "  \(bu" 4
+A 2D layered CUDA array is allocated if all three extents are non-zero and the \fBCUDA_ARRAY3D_LAYERED\fP flag is set. Each layer is a 2D array. The number of layers is determined by the depth extent.
+.IP "  \(bu" 4
+A cubemap CUDA array is allocated if all three extents are non-zero and the \fBCUDA_ARRAY3D_CUBEMAP\fP flag is set. \fCWidth\fP must be equal to \fCHeight\fP, and \fCDepth\fP must be six. A cubemap is a special type of 2D layered CUDA array, where the six layers represent the six faces of a cube. The order of the six layers in memory is the same as that listed in \fBCUarray_cubemap_face\fP.
+.IP "  \(bu" 4
+A cubemap layered CUDA array is allocated if all three extents are non-zero, and both, \fBCUDA_ARRAY3D_CUBEMAP\fP and \fBCUDA_ARRAY3D_LAYERED\fP flags are set. \fCWidth\fP must be equal to \fCHeight\fP, and \fCDepth\fP must be a multiple of six. A cubemap layered CUDA array is a special type of 2D layered CUDA array that consists of a collection of cubemaps. The first six layers represent the first cubemap, the next six layers form the second cubemap, and so on.
+.PP
+
+.PP
+.PP
+.IP "\(bu" 2
+Format specifies the format of the elements; \fBCUarray_format\fP is defined as: 
+.PP
+.nf
+    typedef enum CUarray_format_enum {
+        CU_AD_FORMAT_UNSIGNED_INT8 = 0x01,
+        CU_AD_FORMAT_UNSIGNED_INT16 = 0x02,
+        CU_AD_FORMAT_UNSIGNED_INT32 = 0x03,
+        CU_AD_FORMAT_SIGNED_INT8 = 0x08,
+        CU_AD_FORMAT_SIGNED_INT16 = 0x09,
+        CU_AD_FORMAT_SIGNED_INT32 = 0x0a,
+        CU_AD_FORMAT_HALF = 0x10,
+        CU_AD_FORMAT_FLOAT = 0x20
+    } CUarray_format;
+
+.fi
+.PP
+
+.PP
+.PP
+.IP "\(bu" 2
+\fCNumChannels\fP specifies the number of packed components per CUDA array element; it may be 1, 2, or 4;
+.PP
+.PP
+.IP "\(bu" 2
+Flags may be set to
+.IP "  \(bu" 4
+\fBCUDA_ARRAY3D_LAYERED\fP to enable creation of layered CUDA arrays. If this flag is set, \fCDepth\fP specifies the number of layers, not the depth of a 3D array.
+.IP "  \(bu" 4
+\fBCUDA_ARRAY3D_SURFACE_LDST\fP to enable surface references to be bound to the CUDA array. If this flag is not set, \fBcuSurfRefSetArray\fP will fail when attempting to bind the CUDA array to a surface reference.
+.IP "  \(bu" 4
+\fBCUDA_ARRAY3D_CUBEMAP\fP to enable creation of cubemaps. If this flag is set, \fCWidth\fP must be equal to \fCHeight\fP, and \fCDepth\fP must be six. If the \fBCUDA_ARRAY3D_LAYERED\fP flag is also set, then \fCDepth\fP must be a multiple of six.
+.IP "  \(bu" 4
+\fBCUDA_ARRAY3D_TEXTURE_GATHER\fP to indicate that the CUDA array will be used for texture gather. Texture gather can only be performed on 2D CUDA arrays.
+.PP
+
+.PP
+.PP
+\fCWidth\fP, \fCHeight\fP and \fCDepth\fP must meet certain size requirements as listed in the following table. All values are specified in elements. Note that for brevity's sake, the full name of the device attribute is not specified. For ex., TEXTURE1D_WIDTH refers to the device attribute \fBCU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_WIDTH\fP.
+.PP
+Note that 2D CUDA arrays have different size requirements if the \fBCUDA_ARRAY3D_TEXTURE_GATHER\fP flag is set. \fCWidth\fP and \fCHeight\fP must not be greater than \fBCU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_GATHER_WIDTH\fP and \fBCU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_GATHER_HEIGHT\fP respectively, in that case.
+.PP
+\fBCUDA array type\fP \fBValid extents that must always be met
+.br
+{(width range in elements), (height range), (depth range)}\fP \fBValid extents with CUDA_ARRAY3D_SURFACE_LDST set
+.br
+ {(width range in elements), (height range), (depth range)}\fP 1D { (1,TEXTURE1D_WIDTH), 0, 0 } { (1,SURFACE1D_WIDTH), 0, 0 } 2D { (1,TEXTURE2D_WIDTH), (1,TEXTURE2D_HEIGHT), 0 } { (1,SURFACE2D_WIDTH), (1,SURFACE2D_HEIGHT), 0 } 3D { (1,TEXTURE3D_WIDTH), (1,TEXTURE3D_HEIGHT), (1,TEXTURE3D_DEPTH) } 
+.br
+OR
+.br
+{ (1,TEXTURE3D_WIDTH_ALTERNATE), (1,TEXTURE3D_HEIGHT_ALTERNATE), (1,TEXTURE3D_DEPTH_ALTERNATE) } { (1,SURFACE3D_WIDTH), (1,SURFACE3D_HEIGHT), (1,SURFACE3D_DEPTH) } 1D Layered { (1,TEXTURE1D_LAYERED_WIDTH), 0, (1,TEXTURE1D_LAYERED_LAYERS) } { (1,SURFACE1D_LAYERED_WIDTH), 0, (1,SURFACE1D_LAYERED_LAYERS) } 2D Layered { (1,TEXTURE2D_LAYERED_WIDTH), (1,TEXTURE2D_LAYERED_HEIGHT), (1,TEXTURE2D_LAYERED_LAYERS) } { (1,SURFACE2D_LAYERED_WIDTH), (1,SURFACE2D_LAYERED_HEIGHT), (1,SURFACE2D_LAYERED_LAYERS) } Cubemap { (1,TEXTURECUBEMAP_WIDTH), (1,TEXTURECUBEMAP_WIDTH), 6 } { (1,SURFACECUBEMAP_WIDTH), (1,SURFACECUBEMAP_WIDTH), 6 } Cubemap Layered { (1,TEXTURECUBEMAP_LAYERED_WIDTH), (1,TEXTURECUBEMAP_LAYERED_WIDTH), (1,TEXTURECUBEMAP_LAYERED_LAYERS) } { (1,SURFACECUBEMAP_LAYERED_WIDTH), (1,SURFACECUBEMAP_LAYERED_WIDTH), (1,SURFACECUBEMAP_LAYERED_LAYERS) } 
+.PP
+Here are examples of CUDA array descriptions:
+.PP
+Description for a CUDA array of 2048 floats: 
+.PP
+.nf
+    CUDA_ARRAY3D_DESCRIPTOR desc;
+    desc.Format = CU_AD_FORMAT_FLOAT;
+    desc.NumChannels = 1;
+    desc.Width = 2048;
+    desc.Height = 0;
+    desc.Depth = 0;
+
+.fi
+.PP
+.PP
+Description for a 64 x 64 CUDA array of floats: 
+.PP
+.nf
+    CUDA_ARRAY3D_DESCRIPTOR desc;
+    desc.Format = CU_AD_FORMAT_FLOAT;
+    desc.NumChannels = 1;
+    desc.Width = 64;
+    desc.Height = 64;
+    desc.Depth = 0;
+
+.fi
+.PP
+.PP
+Description for a \fCwidth\fP x \fCheight\fP x \fCdepth\fP CUDA array of 64-bit, 4x16-bit float16's: 
+.PP
+.nf
+    CUDA_ARRAY3D_DESCRIPTOR desc;
+    desc.FormatFlags = CU_AD_FORMAT_HALF;
+    desc.NumChannels = 4;
+    desc.Width = width;
+    desc.Height = height;
+    desc.Depth = depth;
+
+.fi
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpHandle\fP - Returned array 
+.br
+\fIpAllocateArray\fP - 3D array descriptor
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_OUT_OF_MEMORY\fP, \fBCUDA_ERROR_UNKNOWN\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuArray3DGetDescriptor (\fBCUDA_ARRAY3D_DESCRIPTOR\fP * pArrayDescriptor, \fBCUarray\fP hArray)"
+.PP
+Returns in \fC*pArrayDescriptor\fP a descriptor containing information on the format and dimensions of the CUDA array \fChArray\fP. It is useful for subroutines that have been passed a CUDA array, but need to know the CUDA array parameters for validation or other purposes.
+.PP
+This function may be called on 1D and 2D arrays, in which case the \fCHeight\fP and/or \fCDepth\fP members of the descriptor struct will be set to 0.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpArrayDescriptor\fP - Returned 3D array descriptor 
+.br
+\fIhArray\fP - 3D array to get descriptor of
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuArrayCreate (\fBCUarray\fP * pHandle, const \fBCUDA_ARRAY_DESCRIPTOR\fP * pAllocateArray)"
+.PP
+Creates a CUDA array according to the \fBCUDA_ARRAY_DESCRIPTOR\fP structure \fCpAllocateArray\fP and returns a handle to the new CUDA array in \fC*pHandle\fP. The \fBCUDA_ARRAY_DESCRIPTOR\fP is defined as:
+.PP
+.PP
+.nf
+    typedef struct {
+        unsigned int Width;
+        unsigned int Height;
+        CUarray_format Format;
+        unsigned int NumChannels;
+    } CUDA_ARRAY_DESCRIPTOR;
+.fi
+.PP
+ where:
+.PP
+.IP "\(bu" 2
+\fCWidth\fP, and \fCHeight\fP are the width, and height of the CUDA array (in elements); the CUDA array is one-dimensional if height is 0, two-dimensional otherwise;
+.IP "\(bu" 2
+Format specifies the format of the elements; \fBCUarray_format\fP is defined as: 
+.PP
+.nf
+    typedef enum CUarray_format_enum {
+        CU_AD_FORMAT_UNSIGNED_INT8 = 0x01,
+        CU_AD_FORMAT_UNSIGNED_INT16 = 0x02,
+        CU_AD_FORMAT_UNSIGNED_INT32 = 0x03,
+        CU_AD_FORMAT_SIGNED_INT8 = 0x08,
+        CU_AD_FORMAT_SIGNED_INT16 = 0x09,
+        CU_AD_FORMAT_SIGNED_INT32 = 0x0a,
+        CU_AD_FORMAT_HALF = 0x10,
+        CU_AD_FORMAT_FLOAT = 0x20
+    } CUarray_format;
+
+.fi
+.PP
+
+.IP "\(bu" 2
+\fCNumChannels\fP specifies the number of packed components per CUDA array element; it may be 1, 2, or 4;
+.PP
+.PP
+Here are examples of CUDA array descriptions:
+.PP
+Description for a CUDA array of 2048 floats: 
+.PP
+.nf
+    CUDA_ARRAY_DESCRIPTOR desc;
+    desc.Format = CU_AD_FORMAT_FLOAT;
+    desc.NumChannels = 1;
+    desc.Width = 2048;
+    desc.Height = 1;
+
+.fi
+.PP
+.PP
+Description for a 64 x 64 CUDA array of floats: 
+.PP
+.nf
+    CUDA_ARRAY_DESCRIPTOR desc;
+    desc.Format = CU_AD_FORMAT_FLOAT;
+    desc.NumChannels = 1;
+    desc.Width = 64;
+    desc.Height = 64;
+
+.fi
+.PP
+.PP
+Description for a \fCwidth\fP x \fCheight\fP CUDA array of 64-bit, 4x16-bit float16's: 
+.PP
+.nf
+    CUDA_ARRAY_DESCRIPTOR desc;
+    desc.FormatFlags = CU_AD_FORMAT_HALF;
+    desc.NumChannels = 4;
+    desc.Width = width;
+    desc.Height = height;
+
+.fi
+.PP
+.PP
+Description for a \fCwidth\fP x \fCheight\fP CUDA array of 16-bit elements, each of which is two 8-bit unsigned chars: 
+.PP
+.nf
+    CUDA_ARRAY_DESCRIPTOR arrayDesc;
+    desc.FormatFlags = CU_AD_FORMAT_UNSIGNED_INT8;
+    desc.NumChannels = 2;
+    desc.Width = width;
+    desc.Height = height;
+
+.fi
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpHandle\fP - Returned array 
+.br
+\fIpAllocateArray\fP - Array descriptor
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_OUT_OF_MEMORY\fP, \fBCUDA_ERROR_UNKNOWN\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuArrayDestroy (\fBCUarray\fP hArray)"
+.PP
+Destroys the CUDA array \fChArray\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhArray\fP - Array to destroy
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_ARRAY_IS_MAPPED\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuArrayGetDescriptor (\fBCUDA_ARRAY_DESCRIPTOR\fP * pArrayDescriptor, \fBCUarray\fP hArray)"
+.PP
+Returns in \fC*pArrayDescriptor\fP a descriptor containing information on the format and dimensions of the CUDA array \fChArray\fP. It is useful for subroutines that have been passed a CUDA array, but need to know the CUDA array parameters for validation or other purposes.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpArrayDescriptor\fP - Returned array descriptor 
+.br
+\fIhArray\fP - Array to get descriptor of
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuDeviceGetByPCIBusId (\fBCUdevice\fP * dev, const char * pciBusId)"
+.PP
+Returns in \fC*device\fP a device handle given a PCI bus ID string.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdev\fP - Returned device handle
+.br
+\fIpciBusId\fP - String in one of the following forms: [domain]:[bus]:[device].[function] [domain]:[bus]:[device] [bus]:[device].[function] where \fCdomain\fP, \fCbus\fP, \fCdevice\fP, and \fCfunction\fP are all hexadecimal values
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_INVALID_DEVICE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuDeviceGet\fP, \fBcuDeviceGetAttribute\fP, \fBcuDeviceGetPCIBusId\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuDeviceGetPCIBusId (char * pciBusId, int len, \fBCUdevice\fP dev)"
+.PP
+Returns an ASCII string identifying the device \fCdev\fP in the NULL-terminated string pointed to by \fCpciBusId\fP. \fClen\fP specifies the maximum length of the string that may be returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpciBusId\fP - Returned identifier string for the device in the following format [domain]:[bus]:[device].[function] where \fCdomain\fP, \fCbus\fP, \fCdevice\fP, and \fCfunction\fP are all hexadecimal values. pciBusId should be large enough to store 13 characters including the NULL-terminator.
+.br
+\fIlen\fP - Maximum length of string to store in \fCname\fP 
+.br
+\fIdev\fP - Device to get identifier string for
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_INVALID_DEVICE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuDeviceGet\fP, \fBcuDeviceGetAttribute\fP, \fBcuDeviceGetByPCIBusId\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuIpcCloseMemHandle (\fBCUdeviceptr\fP dptr)"
+.PP
+Unmaps memory returnd by \fBcuIpcOpenMemHandle\fP. The original allocation in the exporting process as well as imported mappings in other processes will be unaffected.
+.PP
+Any resources used to enable peer access will be freed if this is the last mapping using them.
+.PP
+IPC functionality is restricted to devices with support for unified addressing on Linux operating systems.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdptr\fP - Device pointer returned by \fBcuIpcOpenMemHandle\fP
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_MAP_FAILED\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP,
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuMemAlloc\fP, \fBcuMemFree\fP, \fBcuIpcGetEventHandle\fP, \fBcuIpcOpenEventHandle\fP, \fBcuIpcGetMemHandle\fP, \fBcuIpcOpenMemHandle\fP, 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuIpcGetEventHandle (\fBCUipcEventHandle\fP * pHandle, \fBCUevent\fP event)"
+.PP
+Takes as input a previously allocated event. This event must have been created with the \fBCU_EVENT_INTERPROCESS\fP and \fBCU_EVENT_DISABLE_TIMING\fP flags set. This opaque handle may be copied into other processes and opened with \fBcuIpcOpenEventHandle\fP to allow efficient hardware synchronization between GPU work in different processes.
+.PP
+After the event has been opened in the importing process, \fBcuEventRecord\fP, \fBcuEventSynchronize\fP, \fBcuStreamWaitEvent\fP and \fBcuEventQuery\fP may be used in either process. Performing operations on the imported event after the exported event has been freed with \fBcuEventDestroy\fP will result in undefined behavior.
+.PP
+IPC functionality is restricted to devices with support for unified addressing on Linux operating systems.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpHandle\fP - Pointer to a user allocated \fBCUipcEventHandle\fP in which to return the opaque event handle 
+.br
+\fIevent\fP - Event allocated with \fBCU_EVENT_INTERPROCESS\fP and \fBCU_EVENT_DISABLE_TIMING\fP flags.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_OUT_OF_MEMORY\fP, \fBCUDA_ERROR_MAP_FAILED\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEventCreate\fP, \fBcuEventDestroy\fP, \fBcuEventSynchronize\fP, \fBcuEventQuery\fP, \fBcuStreamWaitEvent\fP, \fBcuIpcOpenEventHandle\fP, \fBcuIpcGetMemHandle\fP, \fBcuIpcOpenMemHandle\fP, \fBcuIpcCloseMemHandle\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuIpcGetMemHandle (\fBCUipcMemHandle\fP * pHandle, \fBCUdeviceptr\fP dptr)"
+.PP
+Takes a pointer to the base of an existing device memory allocation created with \fBcuMemAlloc\fP and exports it for use in another process. This is a lightweight operation and may be called multiple times on an allocation without adverse effects.
+.PP
+If a region of memory is freed with \fBcuMemFree\fP and a subsequent call to \fBcuMemAlloc\fP returns memory with the same device address, \fBcuIpcGetMemHandle\fP will return a unique handle for the new memory.
+.PP
+IPC functionality is restricted to devices with support for unified addressing on Linux operating systems.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpHandle\fP - Pointer to user allocated \fBCUipcMemHandle\fP to return the handle in. 
+.br
+\fIdptr\fP - Base pointer to previously allocated device memory
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_OUT_OF_MEMORY\fP, \fBCUDA_ERROR_MAP_FAILED\fP,
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuMemAlloc\fP, \fBcuMemFree\fP, \fBcuIpcGetEventHandle\fP, \fBcuIpcOpenEventHandle\fP, \fBcuIpcOpenMemHandle\fP, \fBcuIpcCloseMemHandle\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuIpcOpenEventHandle (\fBCUevent\fP * phEvent, \fBCUipcEventHandle\fP handle)"
+.PP
+Opens an interprocess event handle exported from another process with \fBcuIpcGetEventHandle\fP. This function returns a \fBCUevent\fP that behaves like a locally created event with the \fBCU_EVENT_DISABLE_TIMING\fP flag specified. This event must be freed with \fBcuEventDestroy\fP.
+.PP
+Performing operations on the imported event after the exported event has been freed with \fBcuEventDestroy\fP will result in undefined behavior.
+.PP
+IPC functionality is restricted to devices with support for unified addressing on Linux operating systems.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIphEvent\fP - Returns the imported event 
+.br
+\fIhandle\fP - Interprocess handle to open
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_MAP_FAILED\fP, \fBCUDA_ERROR_PEER_ACCESS_UNSUPPORTED\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEventCreate\fP, \fBcuEventDestroy\fP, \fBcuEventSynchronize\fP, \fBcuEventQuery\fP, \fBcuStreamWaitEvent\fP, \fBcuIpcGetEventHandle\fP, \fBcuIpcGetMemHandle\fP, \fBcuIpcOpenMemHandle\fP, \fBcuIpcCloseMemHandle\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuIpcOpenMemHandle (\fBCUdeviceptr\fP * pdptr, \fBCUipcMemHandle\fP handle, unsigned int Flags)"
+.PP
+Maps memory exported from another process with \fBcuIpcGetMemHandle\fP into the current device address space. For contexts on different devices \fBcuIpcOpenMemHandle\fP can attempt to enable peer access between the devices as if the user called \fBcuCtxEnablePeerAccess\fP. This behavior is controlled by the \fBCU_IPC_MEM_LAZY_ENABLE_PEER_ACCESS\fP flag. \fBcuDeviceCanAccessPeer\fP can determine if a mapping is possible.
+.PP
+Contexts that may open CUipcMemHandles are restricted in the following way. CUipcMemHandles from each \fBCUdevice\fP in a given process may only be opened by one \fBCUcontext\fP per \fBCUdevice\fP per other process.
+.PP
+Memory returned from \fBcuIpcOpenMemHandle\fP must be freed with \fBcuIpcCloseMemHandle\fP.
+.PP
+Calling \fBcuMemFree\fP on an exported memory region before calling \fBcuIpcCloseMemHandle\fP in the importing context will result in undefined behavior.
+.PP
+IPC functionality is restricted to devices with support for unified addressing on Linux operating systems.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpdptr\fP - Returned device pointer 
+.br
+\fIhandle\fP - \fBCUipcMemHandle\fP to open 
+.br
+\fIFlags\fP - Flags for this operation. Must be specified as \fBCU_IPC_MEM_LAZY_ENABLE_PEER_ACCESS\fP
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_MAP_FAILED\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_TOO_MANY_PEERS\fP
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+No guarantees are made about the address returned in \fC*pdptr\fP. In particular, multiple processes may not receive the same address for the same \fChandle\fP.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuMemAlloc\fP, \fBcuMemFree\fP, \fBcuIpcGetEventHandle\fP, \fBcuIpcOpenEventHandle\fP, \fBcuIpcGetMemHandle\fP, \fBcuIpcCloseMemHandle\fP, \fBcuCtxEnablePeerAccess\fP, \fBcuDeviceCanAccessPeer\fP, 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemAlloc (\fBCUdeviceptr\fP * dptr, size_t bytesize)"
+.PP
+Allocates \fCbytesize\fP bytes of linear memory on the device and returns in \fC*dptr\fP a pointer to the allocated memory. The allocated memory is suitably aligned for any kind of variable. The memory is not cleared. If \fCbytesize\fP is 0, \fBcuMemAlloc()\fP returns \fBCUDA_ERROR_INVALID_VALUE\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdptr\fP - Returned device pointer 
+.br
+\fIbytesize\fP - Requested allocation size in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_OUT_OF_MEMORY\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemAllocHost (void ** pp, size_t bytesize)"
+.PP
+Allocates \fCbytesize\fP bytes of host memory that is page-locked and accessible to the device. The driver tracks the virtual memory ranges allocated with this function and automatically accelerates calls to functions such as \fBcuMemcpy()\fP. Since the memory can be accessed directly by the device, it can be read or written with much higher bandwidth than pageable memory obtained with functions such as malloc(). Allocating excessive amounts of memory with \fBcuMemAllocHost()\fP may degrade system performance, since it reduces the amount of memory available to the system for paging. As a result, this function is best used sparingly to allocate staging areas for data exchange between host and device.
+.PP
+Note all host memory allocated using \fBcuMemHostAlloc()\fP will automatically be immediately accessible to all contexts on all devices which support unified addressing (as may be queried using \fBCU_DEVICE_ATTRIBUTE_UNIFIED_ADDRESSING\fP). The device pointer that may be used to access this host memory from those contexts is always equal to the returned host pointer \fC*pp\fP. See \fBUnified Addressing\fP for additional details.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpp\fP - Returned host pointer to page-locked memory 
+.br
+\fIbytesize\fP - Requested allocation size in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_OUT_OF_MEMORY\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemAllocManaged (\fBCUdeviceptr\fP * dptr, size_t bytesize, unsigned int flags)"
+.PP
+Allocates \fCbytesize\fP bytes of managed memory on the device and returns in \fC*dptr\fP a pointer to the allocated memory. If the device doesn't support allocating managed memory, \fBCUDA_ERROR_NOT_SUPPORTED\fP is returned. Support for managed memory can be queried using the device attribute \fBCU_DEVICE_ATTRIBUTE_MANAGED_MEMORY\fP. The allocated memory is suitably aligned for any kind of variable. The memory is not cleared. If \fCbytesize\fP is 0, \fBcuMemAllocManaged\fP returns \fBCUDA_ERROR_INVALID_VALUE\fP. The pointer is valid on the CPU and on all GPUs in the system that support managed memory. All accesses to this pointer must obey the Unified Memory programming model.
+.PP
+\fCflags\fP specifies the default stream association for this allocation. \fCflags\fP must be one of \fBCU_MEM_ATTACH_GLOBAL\fP or \fBCU_MEM_ATTACH_HOST\fP. If \fBCU_MEM_ATTACH_GLOBAL\fP is specified, then this memory is accessible from any stream on any device. If \fBCU_MEM_ATTACH_HOST\fP is specified, then the allocation should not be accessed from devices that have a zero value for the device attribute \fBCU_DEVICE_ATTRIBUTE_CONCURRENT_MANAGED_ACCESS\fP; an explicit call to \fBcuStreamAttachMemAsync\fP will be required to enable access on such devices.
+.PP
+If the association is later changed via \fBcuStreamAttachMemAsync\fP to a single stream, the default association as specifed during \fBcuMemAllocManaged\fP is restored when that stream is destroyed. For __managed__ variables, the default association is always \fBCU_MEM_ATTACH_GLOBAL\fP. Note that destroying a stream is an asynchronous operation, and as a result, the change to default association won't happen until all work in the stream has completed.
+.PP
+Memory allocated with \fBcuMemAllocManaged\fP should be released with \fBcuMemFree\fP.
+.PP
+Device memory oversubscription is possible for GPUs that have a non-zero value for the device attribute \fBCU_DEVICE_ATTRIBUTE_CONCURRENT_MANAGED_ACCESS\fP. Managed memory on such GPUs may be evicted from device memory to host memory at any time by the Unified Memory driver in order to make room for other allocations.
+.PP
+In a multi-GPU system where all GPUs have a non-zero value for the device attribute \fBCU_DEVICE_ATTRIBUTE_CONCURRENT_MANAGED_ACCESS\fP, managed memory may not be populated when this API returns and instead may be populated on access. In such systems, managed memory can migrate to any processor's memory at any time. The Unified Memory driver will employ heuristics to maintain data locality and prevent excessive page faults to the extent possible. The application can also guide the driver about memory usage patterns via \fBcuMemAdvise\fP. The application can also explicitly migrate memory to a desired processor's memory via \fBcuMemPrefetchAsync\fP.
+.PP
+In a multi-GPU system where all of the GPUs have a zero value for the device attribute \fBCU_DEVICE_ATTRIBUTE_CONCURRENT_MANAGED_ACCESS\fP and all the GPUs have peer-to-peer support with each other, the physical storage for managed memory is created on the GPU which is active at the time \fBcuMemAllocManaged\fP is called. All other GPUs will reference the data at reduced bandwidth via peer mappings over the PCIe bus. The Unified Memory driver does not migrate memory among such GPUs.
+.PP
+In a multi-GPU system where not all GPUs have peer-to-peer support with each other and where the value of the device attribute \fBCU_DEVICE_ATTRIBUTE_CONCURRENT_MANAGED_ACCESS\fP is zero for at least one of those GPUs, the location chosen for physical storage of managed memory is system-dependent.
+.IP "\(bu" 2
+On Linux, the location chosen will be device memory as long as the current set of active contexts are on devices that either have peer-to-peer support with each other or have a non-zero value for the device attribute \fBCU_DEVICE_ATTRIBUTE_CONCURRENT_MANAGED_ACCESS\fP. If there is an active context on a GPU that does not have a non-zero value for that device attribute and it does not have peer-to-peer support with the other devices that have active contexts on them, then the location for physical storage will be 'zero-copy' or host memory. Note that this means that managed memory that is located in device memory is migrated to host memory if a new context is created on a GPU that doesn't have a non-zero value for the device attribute and does not support peer-to-peer with at least one of the other devices that has an active context. This in turn implies that context creation may fail if there is insufficient host memory to migrate all managed allocations.
+.IP "\(bu" 2
+On Windows, the physical storage is always created in 'zero-copy' or host memory. All GPUs will reference the data at reduced bandwidth over the PCIe bus. In these circumstances, use of the environment variable CUDA_VISIBLE_DEVICES is recommended to restrict CUDA to only use those GPUs that have peer-to-peer support. Alternatively, users can also set CUDA_MANAGED_FORCE_DEVICE_ALLOC to a non-zero value to force the driver to always use device memory for physical storage. When this environment variable is set to a non-zero value, all contexts created in that process on devices that support managed memory have to be peer-to-peer compatible with each other. Context creation will fail if a context is created on a device that supports managed memory and is not peer-to-peer compatible with any of the other managed memory supporting devices on which contexts were previously created, even if those contexts have been destroyed. These environment variables are described in the CUDA programming guide under the 'CUDA environment variables' section.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdptr\fP - Returned device pointer 
+.br
+\fIbytesize\fP - Requested allocation size in bytes 
+.br
+\fIflags\fP - Must be one of \fBCU_MEM_ATTACH_GLOBAL\fP or \fBCU_MEM_ATTACH_HOST\fP
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_NOT_SUPPORTED\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_OUT_OF_MEMORY\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP, \fBcuDeviceGetAttribute\fP, \fBcuStreamAttachMemAsync\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemAllocPitch (\fBCUdeviceptr\fP * dptr, size_t * pPitch, size_t WidthInBytes, size_t Height, unsigned int ElementSizeBytes)"
+.PP
+Allocates at least \fCWidthInBytes\fP * \fCHeight\fP bytes of linear memory on the device and returns in \fC*dptr\fP a pointer to the allocated memory. The function may pad the allocation to ensure that corresponding pointers in any given row will continue to meet the alignment requirements for coalescing as the address is updated from row to row. \fCElementSizeBytes\fP specifies the size of the largest reads and writes that will be performed on the memory range. \fCElementSizeBytes\fP may be 4, 8 or 16 (since coalesced memory transactions are not possible on other data sizes). If \fCElementSizeBytes\fP is smaller than the actual read/write size of a kernel, the kernel will run correctly, but possibly at reduced speed. The pitch returned in \fC*pPitch\fP by \fBcuMemAllocPitch()\fP is the width in bytes of the allocation. The intended usage of pitch is as a separate parameter of the allocation, used to compute addresses within the 2D array. Given the row and column of an array element of type \fBT\fP, the address is computed as: 
+.PP
+.nf
+   T* pElement = (T*)((char*)BaseAddress + Row * Pitch) + Column;
+
+.fi
+.PP
+.PP
+The pitch returned by \fBcuMemAllocPitch()\fP is guaranteed to work with \fBcuMemcpy2D()\fP under all circumstances. For allocations of 2D arrays, it is recommended that programmers consider performing pitch allocations using \fBcuMemAllocPitch()\fP. Due to alignment restrictions in the hardware, this is especially true if the application will be performing 2D memory copies between different regions of device memory (whether linear memory or CUDA arrays).
+.PP
+The byte alignment of the pitch returned by \fBcuMemAllocPitch()\fP is guaranteed to match or exceed the alignment requirement for texture binding with \fBcuTexRefSetAddress2D()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdptr\fP - Returned device pointer 
+.br
+\fIpPitch\fP - Returned pitch of allocation in bytes 
+.br
+\fIWidthInBytes\fP - Requested allocation width in bytes 
+.br
+\fIHeight\fP - Requested allocation height in rows 
+.br
+\fIElementSizeBytes\fP - Size of largest reads/writes for range
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_OUT_OF_MEMORY\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpy (\fBCUdeviceptr\fP dst, \fBCUdeviceptr\fP src, size_t ByteCount)"
+.PP
+Copies data between two pointers. \fCdst\fP and \fCsrc\fP are base pointers of the destination and source, respectively. \fCByteCount\fP specifies the number of bytes to copy. Note that this function infers the type of the transfer (host to host, host to device, device to device, or device to host) from the pointer values. This function is only allowed in contexts which support unified addressing.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination unified virtual address space pointer 
+.br
+\fIsrc\fP - Source unified virtual address space pointer 
+.br
+\fIByteCount\fP - Size of memory copy in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpy2D (const \fBCUDA_MEMCPY2D\fP * pCopy)"
+.PP
+Perform a 2D memory copy according to the parameters specified in \fCpCopy\fP. The \fBCUDA_MEMCPY2D\fP structure is defined as:
+.PP
+.PP
+.nf
+   typedef struct CUDA_MEMCPY2D_st {
+      unsigned int srcXInBytes, srcY;
+      CUmemorytype srcMemoryType;
+          const void *srcHost;
+          CUdeviceptr srcDevice;
+          CUarray srcArray;
+          unsigned int srcPitch;
+
+      unsigned int dstXInBytes, dstY;
+      CUmemorytype dstMemoryType;
+          void *dstHost;
+          CUdeviceptr dstDevice;
+          CUarray dstArray;
+          unsigned int dstPitch;
+
+      unsigned int WidthInBytes;
+      unsigned int Height;
+   } CUDA_MEMCPY2D;
+.fi
+.PP
+ where:
+.IP "\(bu" 2
+srcMemoryType and dstMemoryType specify the type of memory of the source and destination, respectively; CUmemorytype_enum is defined as:
+.PP
+.PP
+.PP
+.nf
+   typedef enum CUmemorytype_enum {
+      CU_MEMORYTYPE_HOST = 0x01,
+      CU_MEMORYTYPE_DEVICE = 0x02,
+      CU_MEMORYTYPE_ARRAY = 0x03,
+      CU_MEMORYTYPE_UNIFIED = 0x04
+   } CUmemorytype;
+.fi
+.PP
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_UNIFIED\fP, srcDevice and srcPitch specify the (unified virtual address space) base address of the source data and the bytes per row to apply. srcArray is ignored. This value may be used only if unified addressing is supported in the calling context.
+.RE
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_HOST\fP, srcHost and srcPitch specify the (host) base address of the source data and the bytes per row to apply. srcArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_DEVICE\fP, srcDevice and srcPitch specify the (device) base address of the source data and the bytes per row to apply. srcArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_ARRAY\fP, srcArray specifies the handle of the source data. srcHost, srcDevice and srcPitch are ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_HOST\fP, dstHost and dstPitch specify the (host) base address of the destination data and the bytes per row to apply. dstArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_UNIFIED\fP, dstDevice and dstPitch specify the (unified virtual address space) base address of the source data and the bytes per row to apply. dstArray is ignored. This value may be used only if unified addressing is supported in the calling context.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_DEVICE\fP, dstDevice and dstPitch specify the (device) base address of the destination data and the bytes per row to apply. dstArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_ARRAY\fP, dstArray specifies the handle of the destination data. dstHost, dstDevice and dstPitch are ignored.
+.RE
+.PP
+.IP "\(bu" 2
+srcXInBytes and srcY specify the base address of the source data for the copy.
+.PP
+.PP
+\fB\fP.RS 4
+For host pointers, the starting address is 
+.PP
+.nf
+  void* Start = (void*)((char*)srcHost+srcY*srcPitch + srcXInBytes);
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For device pointers, the starting address is 
+.PP
+.nf
+  CUdeviceptr Start = srcDevice+srcY*srcPitch+srcXInBytes;
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For CUDA arrays, srcXInBytes must be evenly divisible by the array element size.
+.RE
+.PP
+.IP "\(bu" 2
+dstXInBytes and dstY specify the base address of the destination data for the copy.
+.PP
+.PP
+\fB\fP.RS 4
+For host pointers, the base address is 
+.PP
+.nf
+  void* dstStart = (void*)((char*)dstHost+dstY*dstPitch + dstXInBytes);
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For device pointers, the starting address is 
+.PP
+.nf
+  CUdeviceptr dstStart = dstDevice+dstY*dstPitch+dstXInBytes;
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For CUDA arrays, dstXInBytes must be evenly divisible by the array element size.
+.RE
+.PP
+.IP "\(bu" 2
+WidthInBytes and Height specify the width (in bytes) and height of the 2D copy being performed.
+.IP "\(bu" 2
+If specified, srcPitch must be greater than or equal to WidthInBytes + srcXInBytes, and dstPitch must be greater than or equal to WidthInBytes + dstXInBytes.
+.PP
+.PP
+\fB\fP.RS 4
+\fBcuMemcpy2D()\fP returns an error if any pitch is greater than the maximum allowed (\fBCU_DEVICE_ATTRIBUTE_MAX_PITCH\fP). \fBcuMemAllocPitch()\fP passes back pitches that always work with \fBcuMemcpy2D()\fP. On intra-device memory copies (device to device, CUDA array to device, CUDA array to CUDA array), \fBcuMemcpy2D()\fP may fail for pitches not computed by \fBcuMemAllocPitch()\fP. \fBcuMemcpy2DUnaligned()\fP does not have this restriction, but may run significantly slower in the cases where \fBcuMemcpy2D()\fP would have returned an error code.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpCopy\fP - Parameters for the memory copy
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpy2DAsync (const \fBCUDA_MEMCPY2D\fP * pCopy, \fBCUstream\fP hStream)"
+.PP
+Perform a 2D memory copy according to the parameters specified in \fCpCopy\fP. The \fBCUDA_MEMCPY2D\fP structure is defined as:
+.PP
+.PP
+.nf
+   typedef struct CUDA_MEMCPY2D_st {
+      unsigned int srcXInBytes, srcY;
+      CUmemorytype srcMemoryType;
+      const void *srcHost;
+      CUdeviceptr srcDevice;
+      CUarray srcArray;
+      unsigned int srcPitch;
+      unsigned int dstXInBytes, dstY;
+      CUmemorytype dstMemoryType;
+      void *dstHost;
+      CUdeviceptr dstDevice;
+      CUarray dstArray;
+      unsigned int dstPitch;
+      unsigned int WidthInBytes;
+      unsigned int Height;
+   } CUDA_MEMCPY2D;
+.fi
+.PP
+ where:
+.IP "\(bu" 2
+srcMemoryType and dstMemoryType specify the type of memory of the source and destination, respectively; CUmemorytype_enum is defined as:
+.PP
+.PP
+.PP
+.nf
+   typedef enum CUmemorytype_enum {
+      CU_MEMORYTYPE_HOST = 0x01,
+      CU_MEMORYTYPE_DEVICE = 0x02,
+      CU_MEMORYTYPE_ARRAY = 0x03,
+      CU_MEMORYTYPE_UNIFIED = 0x04
+   } CUmemorytype;
+.fi
+.PP
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_HOST\fP, srcHost and srcPitch specify the (host) base address of the source data and the bytes per row to apply. srcArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_UNIFIED\fP, srcDevice and srcPitch specify the (unified virtual address space) base address of the source data and the bytes per row to apply. srcArray is ignored. This value may be used only if unified addressing is supported in the calling context.
+.RE
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_DEVICE\fP, srcDevice and srcPitch specify the (device) base address of the source data and the bytes per row to apply. srcArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_ARRAY\fP, srcArray specifies the handle of the source data. srcHost, srcDevice and srcPitch are ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_UNIFIED\fP, dstDevice and dstPitch specify the (unified virtual address space) base address of the source data and the bytes per row to apply. dstArray is ignored. This value may be used only if unified addressing is supported in the calling context.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_HOST\fP, dstHost and dstPitch specify the (host) base address of the destination data and the bytes per row to apply. dstArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_DEVICE\fP, dstDevice and dstPitch specify the (device) base address of the destination data and the bytes per row to apply. dstArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_ARRAY\fP, dstArray specifies the handle of the destination data. dstHost, dstDevice and dstPitch are ignored.
+.RE
+.PP
+.IP "\(bu" 2
+srcXInBytes and srcY specify the base address of the source data for the copy.
+.PP
+.PP
+\fB\fP.RS 4
+For host pointers, the starting address is 
+.PP
+.nf
+  void* Start = (void*)((char*)srcHost+srcY*srcPitch + srcXInBytes);
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For device pointers, the starting address is 
+.PP
+.nf
+  CUdeviceptr Start = srcDevice+srcY*srcPitch+srcXInBytes;
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For CUDA arrays, srcXInBytes must be evenly divisible by the array element size.
+.RE
+.PP
+.IP "\(bu" 2
+dstXInBytes and dstY specify the base address of the destination data for the copy.
+.PP
+.PP
+\fB\fP.RS 4
+For host pointers, the base address is 
+.PP
+.nf
+  void* dstStart = (void*)((char*)dstHost+dstY*dstPitch + dstXInBytes);
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For device pointers, the starting address is 
+.PP
+.nf
+  CUdeviceptr dstStart = dstDevice+dstY*dstPitch+dstXInBytes;
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For CUDA arrays, dstXInBytes must be evenly divisible by the array element size.
+.RE
+.PP
+.IP "\(bu" 2
+WidthInBytes and Height specify the width (in bytes) and height of the 2D copy being performed.
+.IP "\(bu" 2
+If specified, srcPitch must be greater than or equal to WidthInBytes + srcXInBytes, and dstPitch must be greater than or equal to WidthInBytes + dstXInBytes.
+.IP "\(bu" 2
+If specified, srcPitch must be greater than or equal to WidthInBytes + srcXInBytes, and dstPitch must be greater than or equal to WidthInBytes + dstXInBytes.
+.IP "\(bu" 2
+If specified, srcHeight must be greater than or equal to Height + srcY, and dstHeight must be greater than or equal to Height + dstY.
+.PP
+.PP
+\fB\fP.RS 4
+\fBcuMemcpy2DAsync()\fP returns an error if any pitch is greater than the maximum allowed (\fBCU_DEVICE_ATTRIBUTE_MAX_PITCH\fP). \fBcuMemAllocPitch()\fP passes back pitches that always work with \fBcuMemcpy2D()\fP. On intra-device memory copies (device to device, CUDA array to device, CUDA array to CUDA array), \fBcuMemcpy2DAsync()\fP may fail for pitches not computed by \fBcuMemAllocPitch()\fP.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpCopy\fP - Parameters for the memory copy 
+.br
+\fIhStream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpy2DUnaligned (const \fBCUDA_MEMCPY2D\fP * pCopy)"
+.PP
+Perform a 2D memory copy according to the parameters specified in \fCpCopy\fP. The \fBCUDA_MEMCPY2D\fP structure is defined as:
+.PP
+.PP
+.nf
+   typedef struct CUDA_MEMCPY2D_st {
+      unsigned int srcXInBytes, srcY;
+      CUmemorytype srcMemoryType;
+      const void *srcHost;
+      CUdeviceptr srcDevice;
+      CUarray srcArray;
+      unsigned int srcPitch;
+      unsigned int dstXInBytes, dstY;
+      CUmemorytype dstMemoryType;
+      void *dstHost;
+      CUdeviceptr dstDevice;
+      CUarray dstArray;
+      unsigned int dstPitch;
+      unsigned int WidthInBytes;
+      unsigned int Height;
+   } CUDA_MEMCPY2D;
+.fi
+.PP
+ where:
+.IP "\(bu" 2
+srcMemoryType and dstMemoryType specify the type of memory of the source and destination, respectively; CUmemorytype_enum is defined as:
+.PP
+.PP
+.PP
+.nf
+   typedef enum CUmemorytype_enum {
+      CU_MEMORYTYPE_HOST = 0x01,
+      CU_MEMORYTYPE_DEVICE = 0x02,
+      CU_MEMORYTYPE_ARRAY = 0x03,
+      CU_MEMORYTYPE_UNIFIED = 0x04
+   } CUmemorytype;
+.fi
+.PP
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_UNIFIED\fP, srcDevice and srcPitch specify the (unified virtual address space) base address of the source data and the bytes per row to apply. srcArray is ignored. This value may be used only if unified addressing is supported in the calling context.
+.RE
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_HOST\fP, srcHost and srcPitch specify the (host) base address of the source data and the bytes per row to apply. srcArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_DEVICE\fP, srcDevice and srcPitch specify the (device) base address of the source data and the bytes per row to apply. srcArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_ARRAY\fP, srcArray specifies the handle of the source data. srcHost, srcDevice and srcPitch are ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_UNIFIED\fP, dstDevice and dstPitch specify the (unified virtual address space) base address of the source data and the bytes per row to apply. dstArray is ignored. This value may be used only if unified addressing is supported in the calling context.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_HOST\fP, dstHost and dstPitch specify the (host) base address of the destination data and the bytes per row to apply. dstArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_DEVICE\fP, dstDevice and dstPitch specify the (device) base address of the destination data and the bytes per row to apply. dstArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_ARRAY\fP, dstArray specifies the handle of the destination data. dstHost, dstDevice and dstPitch are ignored.
+.RE
+.PP
+.IP "\(bu" 2
+srcXInBytes and srcY specify the base address of the source data for the copy.
+.PP
+.PP
+\fB\fP.RS 4
+For host pointers, the starting address is 
+.PP
+.nf
+  void* Start = (void*)((char*)srcHost+srcY*srcPitch + srcXInBytes);
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For device pointers, the starting address is 
+.PP
+.nf
+  CUdeviceptr Start = srcDevice+srcY*srcPitch+srcXInBytes;
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For CUDA arrays, srcXInBytes must be evenly divisible by the array element size.
+.RE
+.PP
+.IP "\(bu" 2
+dstXInBytes and dstY specify the base address of the destination data for the copy.
+.PP
+.PP
+\fB\fP.RS 4
+For host pointers, the base address is 
+.PP
+.nf
+  void* dstStart = (void*)((char*)dstHost+dstY*dstPitch + dstXInBytes);
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For device pointers, the starting address is 
+.PP
+.nf
+  CUdeviceptr dstStart = dstDevice+dstY*dstPitch+dstXInBytes;
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For CUDA arrays, dstXInBytes must be evenly divisible by the array element size.
+.RE
+.PP
+.IP "\(bu" 2
+WidthInBytes and Height specify the width (in bytes) and height of the 2D copy being performed.
+.IP "\(bu" 2
+If specified, srcPitch must be greater than or equal to WidthInBytes + srcXInBytes, and dstPitch must be greater than or equal to WidthInBytes + dstXInBytes.
+.PP
+.PP
+\fB\fP.RS 4
+\fBcuMemcpy2D()\fP returns an error if any pitch is greater than the maximum allowed (\fBCU_DEVICE_ATTRIBUTE_MAX_PITCH\fP). \fBcuMemAllocPitch()\fP passes back pitches that always work with \fBcuMemcpy2D()\fP. On intra-device memory copies (device to device, CUDA array to device, CUDA array to CUDA array), \fBcuMemcpy2D()\fP may fail for pitches not computed by \fBcuMemAllocPitch()\fP. \fBcuMemcpy2DUnaligned()\fP does not have this restriction, but may run significantly slower in the cases where \fBcuMemcpy2D()\fP would have returned an error code.
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpCopy\fP - Parameters for the memory copy
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpy3D (const \fBCUDA_MEMCPY3D\fP * pCopy)"
+.PP
+Perform a 3D memory copy according to the parameters specified in \fCpCopy\fP. The \fBCUDA_MEMCPY3D\fP structure is defined as:
+.PP
+.PP
+.nf
+        typedef struct CUDA_MEMCPY3D_st {
+
+            unsigned int srcXInBytes, srcY, srcZ;
+            unsigned int srcLOD;
+            CUmemorytype srcMemoryType;
+                const void *srcHost;
+                CUdeviceptr srcDevice;
+                CUarray srcArray;
+                unsigned int srcPitch;  // ignored when src is array
+                unsigned int srcHeight; // ignored when src is array; may be 0 if Depth==1
+
+            unsigned int dstXInBytes, dstY, dstZ;
+            unsigned int dstLOD;
+            CUmemorytype dstMemoryType;
+                void *dstHost;
+                CUdeviceptr dstDevice;
+                CUarray dstArray;
+                unsigned int dstPitch;  // ignored when dst is array
+                unsigned int dstHeight; // ignored when dst is array; may be 0 if Depth==1
+
+            unsigned int WidthInBytes;
+            unsigned int Height;
+            unsigned int Depth;
+        } CUDA_MEMCPY3D;
+.fi
+.PP
+ where:
+.IP "\(bu" 2
+srcMemoryType and dstMemoryType specify the type of memory of the source and destination, respectively; CUmemorytype_enum is defined as:
+.PP
+.PP
+.PP
+.nf
+   typedef enum CUmemorytype_enum {
+      CU_MEMORYTYPE_HOST = 0x01,
+      CU_MEMORYTYPE_DEVICE = 0x02,
+      CU_MEMORYTYPE_ARRAY = 0x03,
+      CU_MEMORYTYPE_UNIFIED = 0x04
+   } CUmemorytype;
+.fi
+.PP
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_UNIFIED\fP, srcDevice and srcPitch specify the (unified virtual address space) base address of the source data and the bytes per row to apply. srcArray is ignored. This value may be used only if unified addressing is supported in the calling context.
+.RE
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_HOST\fP, srcHost, srcPitch and srcHeight specify the (host) base address of the source data, the bytes per row, and the height of each 2D slice of the 3D array. srcArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_DEVICE\fP, srcDevice, srcPitch and srcHeight specify the (device) base address of the source data, the bytes per row, and the height of each 2D slice of the 3D array. srcArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_ARRAY\fP, srcArray specifies the handle of the source data. srcHost, srcDevice, srcPitch and srcHeight are ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_UNIFIED\fP, dstDevice and dstPitch specify the (unified virtual address space) base address of the source data and the bytes per row to apply. dstArray is ignored. This value may be used only if unified addressing is supported in the calling context.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_HOST\fP, dstHost and dstPitch specify the (host) base address of the destination data, the bytes per row, and the height of each 2D slice of the 3D array. dstArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_DEVICE\fP, dstDevice and dstPitch specify the (device) base address of the destination data, the bytes per row, and the height of each 2D slice of the 3D array. dstArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_ARRAY\fP, dstArray specifies the handle of the destination data. dstHost, dstDevice, dstPitch and dstHeight are ignored.
+.RE
+.PP
+.IP "\(bu" 2
+srcXInBytes, srcY and srcZ specify the base address of the source data for the copy.
+.PP
+.PP
+\fB\fP.RS 4
+For host pointers, the starting address is 
+.PP
+.nf
+  void* Start = (void*)((char*)srcHost+(srcZ*srcHeight+srcY)*srcPitch + srcXInBytes);
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For device pointers, the starting address is 
+.PP
+.nf
+  CUdeviceptr Start = srcDevice+(srcZ*srcHeight+srcY)*srcPitch+srcXInBytes;
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For CUDA arrays, srcXInBytes must be evenly divisible by the array element size.
+.RE
+.PP
+.IP "\(bu" 2
+dstXInBytes, dstY and dstZ specify the base address of the destination data for the copy.
+.PP
+.PP
+\fB\fP.RS 4
+For host pointers, the base address is 
+.PP
+.nf
+  void* dstStart = (void*)((char*)dstHost+(dstZ*dstHeight+dstY)*dstPitch + dstXInBytes);
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For device pointers, the starting address is 
+.PP
+.nf
+  CUdeviceptr dstStart = dstDevice+(dstZ*dstHeight+dstY)*dstPitch+dstXInBytes;
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For CUDA arrays, dstXInBytes must be evenly divisible by the array element size.
+.RE
+.PP
+.IP "\(bu" 2
+WidthInBytes, Height and Depth specify the width (in bytes), height and depth of the 3D copy being performed.
+.IP "\(bu" 2
+If specified, srcPitch must be greater than or equal to WidthInBytes + srcXInBytes, and dstPitch must be greater than or equal to WidthInBytes + dstXInBytes.
+.IP "\(bu" 2
+If specified, srcHeight must be greater than or equal to Height + srcY, and dstHeight must be greater than or equal to Height + dstY.
+.PP
+.PP
+\fB\fP.RS 4
+\fBcuMemcpy3D()\fP returns an error if any pitch is greater than the maximum allowed (\fBCU_DEVICE_ATTRIBUTE_MAX_PITCH\fP).
+.RE
+.PP
+The srcLOD and dstLOD members of the \fBCUDA_MEMCPY3D\fP structure must be set to 0.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpCopy\fP - Parameters for the memory copy
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpy3DAsync (const \fBCUDA_MEMCPY3D\fP * pCopy, \fBCUstream\fP hStream)"
+.PP
+Perform a 3D memory copy according to the parameters specified in \fCpCopy\fP. The \fBCUDA_MEMCPY3D\fP structure is defined as:
+.PP
+.PP
+.nf
+        typedef struct CUDA_MEMCPY3D_st {
+
+            unsigned int srcXInBytes, srcY, srcZ;
+            unsigned int srcLOD;
+            CUmemorytype srcMemoryType;
+                const void *srcHost;
+                CUdeviceptr srcDevice;
+                CUarray srcArray;
+                unsigned int srcPitch;  // ignored when src is array
+                unsigned int srcHeight; // ignored when src is array; may be 0 if Depth==1
+
+            unsigned int dstXInBytes, dstY, dstZ;
+            unsigned int dstLOD;
+            CUmemorytype dstMemoryType;
+                void *dstHost;
+                CUdeviceptr dstDevice;
+                CUarray dstArray;
+                unsigned int dstPitch;  // ignored when dst is array
+                unsigned int dstHeight; // ignored when dst is array; may be 0 if Depth==1
+
+            unsigned int WidthInBytes;
+            unsigned int Height;
+            unsigned int Depth;
+        } CUDA_MEMCPY3D;
+.fi
+.PP
+ where:
+.IP "\(bu" 2
+srcMemoryType and dstMemoryType specify the type of memory of the source and destination, respectively; CUmemorytype_enum is defined as:
+.PP
+.PP
+.PP
+.nf
+   typedef enum CUmemorytype_enum {
+      CU_MEMORYTYPE_HOST = 0x01,
+      CU_MEMORYTYPE_DEVICE = 0x02,
+      CU_MEMORYTYPE_ARRAY = 0x03,
+      CU_MEMORYTYPE_UNIFIED = 0x04
+   } CUmemorytype;
+.fi
+.PP
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_UNIFIED\fP, srcDevice and srcPitch specify the (unified virtual address space) base address of the source data and the bytes per row to apply. srcArray is ignored. This value may be used only if unified addressing is supported in the calling context.
+.RE
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_HOST\fP, srcHost, srcPitch and srcHeight specify the (host) base address of the source data, the bytes per row, and the height of each 2D slice of the 3D array. srcArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_DEVICE\fP, srcDevice, srcPitch and srcHeight specify the (device) base address of the source data, the bytes per row, and the height of each 2D slice of the 3D array. srcArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If srcMemoryType is \fBCU_MEMORYTYPE_ARRAY\fP, srcArray specifies the handle of the source data. srcHost, srcDevice, srcPitch and srcHeight are ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_UNIFIED\fP, dstDevice and dstPitch specify the (unified virtual address space) base address of the source data and the bytes per row to apply. dstArray is ignored. This value may be used only if unified addressing is supported in the calling context.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_HOST\fP, dstHost and dstPitch specify the (host) base address of the destination data, the bytes per row, and the height of each 2D slice of the 3D array. dstArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_DEVICE\fP, dstDevice and dstPitch specify the (device) base address of the destination data, the bytes per row, and the height of each 2D slice of the 3D array. dstArray is ignored.
+.RE
+.PP
+\fB\fP.RS 4
+If dstMemoryType is \fBCU_MEMORYTYPE_ARRAY\fP, dstArray specifies the handle of the destination data. dstHost, dstDevice, dstPitch and dstHeight are ignored.
+.RE
+.PP
+.IP "\(bu" 2
+srcXInBytes, srcY and srcZ specify the base address of the source data for the copy.
+.PP
+.PP
+\fB\fP.RS 4
+For host pointers, the starting address is 
+.PP
+.nf
+  void* Start = (void*)((char*)srcHost+(srcZ*srcHeight+srcY)*srcPitch + srcXInBytes);
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For device pointers, the starting address is 
+.PP
+.nf
+  CUdeviceptr Start = srcDevice+(srcZ*srcHeight+srcY)*srcPitch+srcXInBytes;
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For CUDA arrays, srcXInBytes must be evenly divisible by the array element size.
+.RE
+.PP
+.IP "\(bu" 2
+dstXInBytes, dstY and dstZ specify the base address of the destination data for the copy.
+.PP
+.PP
+\fB\fP.RS 4
+For host pointers, the base address is 
+.PP
+.nf
+  void* dstStart = (void*)((char*)dstHost+(dstZ*dstHeight+dstY)*dstPitch + dstXInBytes);
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For device pointers, the starting address is 
+.PP
+.nf
+  CUdeviceptr dstStart = dstDevice+(dstZ*dstHeight+dstY)*dstPitch+dstXInBytes;
+
+.fi
+.PP
+.RE
+.PP
+\fB\fP.RS 4
+For CUDA arrays, dstXInBytes must be evenly divisible by the array element size.
+.RE
+.PP
+.IP "\(bu" 2
+WidthInBytes, Height and Depth specify the width (in bytes), height and depth of the 3D copy being performed.
+.IP "\(bu" 2
+If specified, srcPitch must be greater than or equal to WidthInBytes + srcXInBytes, and dstPitch must be greater than or equal to WidthInBytes + dstXInBytes.
+.IP "\(bu" 2
+If specified, srcHeight must be greater than or equal to Height + srcY, and dstHeight must be greater than or equal to Height + dstY.
+.PP
+.PP
+\fB\fP.RS 4
+\fBcuMemcpy3DAsync()\fP returns an error if any pitch is greater than the maximum allowed (\fBCU_DEVICE_ATTRIBUTE_MAX_PITCH\fP).
+.RE
+.PP
+The srcLOD and dstLOD members of the \fBCUDA_MEMCPY3D\fP structure must be set to 0.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpCopy\fP - Parameters for the memory copy 
+.br
+\fIhStream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpy3DPeer (const \fBCUDA_MEMCPY3D_PEER\fP * pCopy)"
+.PP
+Perform a 3D memory copy according to the parameters specified in \fCpCopy\fP. See the definition of the \fBCUDA_MEMCPY3D_PEER\fP structure for documentation of its parameters.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpCopy\fP - Parameters for the memory copy
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuMemcpyDtoD\fP, \fBcuMemcpyPeer\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyPeerAsync\fP, \fBcuMemcpy3DPeerAsync\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpy3DPeerAsync (const \fBCUDA_MEMCPY3D_PEER\fP * pCopy, \fBCUstream\fP hStream)"
+.PP
+Perform a 3D memory copy according to the parameters specified in \fCpCopy\fP. See the definition of the \fBCUDA_MEMCPY3D_PEER\fP structure for documentation of its parameters.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpCopy\fP - Parameters for the memory copy 
+.br
+\fIhStream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuMemcpyDtoD\fP, \fBcuMemcpyPeer\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyPeerAsync\fP, \fBcuMemcpy3DPeerAsync\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpyAsync (\fBCUdeviceptr\fP dst, \fBCUdeviceptr\fP src, size_t ByteCount, \fBCUstream\fP hStream)"
+.PP
+Copies data between two pointers. \fCdst\fP and \fCsrc\fP are base pointers of the destination and source, respectively. \fCByteCount\fP specifies the number of bytes to copy. Note that this function infers the type of the transfer (host to host, host to device, device to device, or device to host) from the pointer values. This function is only allowed in contexts which support unified addressing.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination unified virtual address space pointer 
+.br
+\fIsrc\fP - Source unified virtual address space pointer 
+.br
+\fIByteCount\fP - Size of memory copy in bytes 
+.br
+\fIhStream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpyAtoA (\fBCUarray\fP dstArray, size_t dstOffset, \fBCUarray\fP srcArray, size_t srcOffset, size_t ByteCount)"
+.PP
+Copies from one 1D CUDA array to another. \fCdstArray\fP and \fCsrcArray\fP specify the handles of the destination and source CUDA arrays for the copy, respectively. \fCdstOffset\fP and \fCsrcOffset\fP specify the destination and source offsets in bytes into the CUDA arrays. \fCByteCount\fP is the number of bytes to be copied. The size of the elements in the CUDA arrays need not be the same format, but the elements must be the same size; and count must be evenly divisible by that size.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstArray\fP - Destination array 
+.br
+\fIdstOffset\fP - Offset in bytes of destination array 
+.br
+\fIsrcArray\fP - Source array 
+.br
+\fIsrcOffset\fP - Offset in bytes of source array 
+.br
+\fIByteCount\fP - Size of memory copy in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpyAtoD (\fBCUdeviceptr\fP dstDevice, \fBCUarray\fP srcArray, size_t srcOffset, size_t ByteCount)"
+.PP
+Copies from one 1D CUDA array to device memory. \fCdstDevice\fP specifies the base pointer of the destination and must be naturally aligned with the CUDA array elements. \fCsrcArray\fP and \fCsrcOffset\fP specify the CUDA array handle and the offset in bytes into the array where the copy is to begin. \fCByteCount\fP specifies the number of bytes to copy and must be evenly divisible by the array element size.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIsrcArray\fP - Source array 
+.br
+\fIsrcOffset\fP - Offset in bytes of source array 
+.br
+\fIByteCount\fP - Size of memory copy in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpyAtoH (void * dstHost, \fBCUarray\fP srcArray, size_t srcOffset, size_t ByteCount)"
+.PP
+Copies from one 1D CUDA array to host memory. \fCdstHost\fP specifies the base pointer of the destination. \fCsrcArray\fP and \fCsrcOffset\fP specify the CUDA array handle and starting offset in bytes of the source data. \fCByteCount\fP specifies the number of bytes to copy.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstHost\fP - Destination device pointer 
+.br
+\fIsrcArray\fP - Source array 
+.br
+\fIsrcOffset\fP - Offset in bytes of source array 
+.br
+\fIByteCount\fP - Size of memory copy in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpyAtoHAsync (void * dstHost, \fBCUarray\fP srcArray, size_t srcOffset, size_t ByteCount, \fBCUstream\fP hStream)"
+.PP
+Copies from one 1D CUDA array to host memory. \fCdstHost\fP specifies the base pointer of the destination. \fCsrcArray\fP and \fCsrcOffset\fP specify the CUDA array handle and starting offset in bytes of the source data. \fCByteCount\fP specifies the number of bytes to copy.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstHost\fP - Destination pointer 
+.br
+\fIsrcArray\fP - Source array 
+.br
+\fIsrcOffset\fP - Offset in bytes of source array 
+.br
+\fIByteCount\fP - Size of memory copy in bytes 
+.br
+\fIhStream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpyDtoA (\fBCUarray\fP dstArray, size_t dstOffset, \fBCUdeviceptr\fP srcDevice, size_t ByteCount)"
+.PP
+Copies from device memory to a 1D CUDA array. \fCdstArray\fP and \fCdstOffset\fP specify the CUDA array handle and starting index of the destination data. \fCsrcDevice\fP specifies the base pointer of the source. \fCByteCount\fP specifies the number of bytes to copy.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstArray\fP - Destination array 
+.br
+\fIdstOffset\fP - Offset in bytes of destination array 
+.br
+\fIsrcDevice\fP - Source device pointer 
+.br
+\fIByteCount\fP - Size of memory copy in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpyDtoD (\fBCUdeviceptr\fP dstDevice, \fBCUdeviceptr\fP srcDevice, size_t ByteCount)"
+.PP
+Copies from device memory to device memory. \fCdstDevice\fP and \fCsrcDevice\fP are the base pointers of the destination and source, respectively. \fCByteCount\fP specifies the number of bytes to copy.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIsrcDevice\fP - Source device pointer 
+.br
+\fIByteCount\fP - Size of memory copy in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpyDtoDAsync (\fBCUdeviceptr\fP dstDevice, \fBCUdeviceptr\fP srcDevice, size_t ByteCount, \fBCUstream\fP hStream)"
+.PP
+Copies from device memory to device memory. \fCdstDevice\fP and \fCsrcDevice\fP are the base pointers of the destination and source, respectively. \fCByteCount\fP specifies the number of bytes to copy.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIsrcDevice\fP - Source device pointer 
+.br
+\fIByteCount\fP - Size of memory copy in bytes 
+.br
+\fIhStream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpyDtoH (void * dstHost, \fBCUdeviceptr\fP srcDevice, size_t ByteCount)"
+.PP
+Copies from device to host memory. \fCdstHost\fP and \fCsrcDevice\fP specify the base pointers of the destination and source, respectively. \fCByteCount\fP specifies the number of bytes to copy.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstHost\fP - Destination host pointer 
+.br
+\fIsrcDevice\fP - Source device pointer 
+.br
+\fIByteCount\fP - Size of memory copy in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpyDtoHAsync (void * dstHost, \fBCUdeviceptr\fP srcDevice, size_t ByteCount, \fBCUstream\fP hStream)"
+.PP
+Copies from device to host memory. \fCdstHost\fP and \fCsrcDevice\fP specify the base pointers of the destination and source, respectively. \fCByteCount\fP specifies the number of bytes to copy.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstHost\fP - Destination host pointer 
+.br
+\fIsrcDevice\fP - Source device pointer 
+.br
+\fIByteCount\fP - Size of memory copy in bytes 
+.br
+\fIhStream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpyHtoA (\fBCUarray\fP dstArray, size_t dstOffset, const void * srcHost, size_t ByteCount)"
+.PP
+Copies from host memory to a 1D CUDA array. \fCdstArray\fP and \fCdstOffset\fP specify the CUDA array handle and starting offset in bytes of the destination data. \fCpSrc\fP specifies the base address of the source. \fCByteCount\fP specifies the number of bytes to copy.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstArray\fP - Destination array 
+.br
+\fIdstOffset\fP - Offset in bytes of destination array 
+.br
+\fIsrcHost\fP - Source host pointer 
+.br
+\fIByteCount\fP - Size of memory copy in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpyHtoAAsync (\fBCUarray\fP dstArray, size_t dstOffset, const void * srcHost, size_t ByteCount, \fBCUstream\fP hStream)"
+.PP
+Copies from host memory to a 1D CUDA array. \fCdstArray\fP and \fCdstOffset\fP specify the CUDA array handle and starting offset in bytes of the destination data. \fCsrcHost\fP specifies the base address of the source. \fCByteCount\fP specifies the number of bytes to copy.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstArray\fP - Destination array 
+.br
+\fIdstOffset\fP - Offset in bytes of destination array 
+.br
+\fIsrcHost\fP - Source host pointer 
+.br
+\fIByteCount\fP - Size of memory copy in bytes 
+.br
+\fIhStream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpyHtoD (\fBCUdeviceptr\fP dstDevice, const void * srcHost, size_t ByteCount)"
+.PP
+Copies from host memory to device memory. \fCdstDevice\fP and \fCsrcHost\fP are the base addresses of the destination and source, respectively. \fCByteCount\fP specifies the number of bytes to copy.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIsrcHost\fP - Source host pointer 
+.br
+\fIByteCount\fP - Size of memory copy in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpyHtoDAsync (\fBCUdeviceptr\fP dstDevice, const void * srcHost, size_t ByteCount, \fBCUstream\fP hStream)"
+.PP
+Copies from host memory to device memory. \fCdstDevice\fP and \fCsrcHost\fP are the base addresses of the destination and source, respectively. \fCByteCount\fP specifies the number of bytes to copy.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIsrcHost\fP - Source host pointer 
+.br
+\fIByteCount\fP - Size of memory copy in bytes 
+.br
+\fIhStream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpyPeer (\fBCUdeviceptr\fP dstDevice, \fBCUcontext\fP dstContext, \fBCUdeviceptr\fP srcDevice, \fBCUcontext\fP srcContext, size_t ByteCount)"
+.PP
+Copies from device memory in one context to device memory in another context. \fCdstDevice\fP is the base device pointer of the destination memory and \fCdstContext\fP is the destination context. \fCsrcDevice\fP is the base device pointer of the source memory and \fCsrcContext\fP is the source pointer. \fCByteCount\fP specifies the number of bytes to copy.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIdstContext\fP - Destination context 
+.br
+\fIsrcDevice\fP - Source device pointer 
+.br
+\fIsrcContext\fP - Source context 
+.br
+\fIByteCount\fP - Size of memory copy in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuMemcpyDtoD\fP, \fBcuMemcpy3DPeer\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyPeerAsync\fP, \fBcuMemcpy3DPeerAsync\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemcpyPeerAsync (\fBCUdeviceptr\fP dstDevice, \fBCUcontext\fP dstContext, \fBCUdeviceptr\fP srcDevice, \fBCUcontext\fP srcContext, size_t ByteCount, \fBCUstream\fP hStream)"
+.PP
+Copies from device memory in one context to device memory in another context. \fCdstDevice\fP is the base device pointer of the destination memory and \fCdstContext\fP is the destination context. \fCsrcDevice\fP is the base device pointer of the source memory and \fCsrcContext\fP is the source pointer. \fCByteCount\fP specifies the number of bytes to copy.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIdstContext\fP - Destination context 
+.br
+\fIsrcDevice\fP - Source device pointer 
+.br
+\fIsrcContext\fP - Source context 
+.br
+\fIByteCount\fP - Size of memory copy in bytes 
+.br
+\fIhStream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuMemcpyDtoD\fP, \fBcuMemcpyPeer\fP, \fBcuMemcpy3DPeer\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpy3DPeerAsync\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemFree (\fBCUdeviceptr\fP dptr)"
+.PP
+Frees the memory space pointed to by \fCdptr\fP, which must have been returned by a previous call to \fBcuMemAlloc()\fP or \fBcuMemAllocPitch()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdptr\fP - Pointer to memory to free
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemFreeHost (void * p)"
+.PP
+Frees the memory space pointed to by \fCp\fP, which must have been returned by a previous call to \fBcuMemAllocHost()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIp\fP - Pointer to memory to free
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemGetAddressRange (\fBCUdeviceptr\fP * pbase, size_t * psize, \fBCUdeviceptr\fP dptr)"
+.PP
+Returns the base address in \fC*pbase\fP and size in \fC*psize\fP of the allocation by \fBcuMemAlloc()\fP or \fBcuMemAllocPitch()\fP that contains the input pointer \fCdptr\fP. Both parameters \fCpbase\fP and \fCpsize\fP are optional. If one of them is NULL, it is ignored.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpbase\fP - Returned base address 
+.br
+\fIpsize\fP - Returned size of device memory allocation 
+.br
+\fIdptr\fP - Device pointer to query
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemGetInfo (size_t * free, size_t * total)"
+.PP
+Returns in \fC*free\fP and \fC*total\fP respectively, the free and total amount of memory available for allocation by the CUDA context, in bytes.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfree\fP - Returned free memory in bytes 
+.br
+\fItotal\fP - Returned total memory in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemHostAlloc (void ** pp, size_t bytesize, unsigned int Flags)"
+.PP
+Allocates \fCbytesize\fP bytes of host memory that is page-locked and accessible to the device. The driver tracks the virtual memory ranges allocated with this function and automatically accelerates calls to functions such as \fBcuMemcpyHtoD()\fP. Since the memory can be accessed directly by the device, it can be read or written with much higher bandwidth than pageable memory obtained with functions such as malloc(). Allocating excessive amounts of pinned memory may degrade system performance, since it reduces the amount of memory available to the system for paging. As a result, this function is best used sparingly to allocate staging areas for data exchange between host and device.
+.PP
+The \fCFlags\fP parameter enables different options to be specified that affect the allocation, as follows.
+.PP
+.IP "\(bu" 2
+\fBCU_MEMHOSTALLOC_PORTABLE\fP: The memory returned by this call will be considered as pinned memory by all CUDA contexts, not just the one that performed the allocation.
+.PP
+.PP
+.IP "\(bu" 2
+\fBCU_MEMHOSTALLOC_DEVICEMAP\fP: Maps the allocation into the CUDA address space. The device pointer to the memory may be obtained by calling \fBcuMemHostGetDevicePointer()\fP. This feature is available only on GPUs with compute capability greater than or equal to 1.1.
+.PP
+.PP
+.IP "\(bu" 2
+\fBCU_MEMHOSTALLOC_WRITECOMBINED\fP: Allocates the memory as write-combined (WC). WC memory can be transferred across the PCI Express bus more quickly on some system configurations, but cannot be read efficiently by most CPUs. WC memory is a good option for buffers that will be written by the CPU and read by the GPU via mapped pinned memory or host->device transfers.
+.PP
+.PP
+All of these flags are orthogonal to one another: a developer may allocate memory that is portable, mapped and/or write-combined with no restrictions.
+.PP
+The CUDA context must have been created with the \fBCU_CTX_MAP_HOST\fP flag in order for the \fBCU_MEMHOSTALLOC_DEVICEMAP\fP flag to have any effect.
+.PP
+The \fBCU_MEMHOSTALLOC_DEVICEMAP\fP flag may be specified on CUDA contexts for devices that do not support mapped pinned memory. The failure is deferred to \fBcuMemHostGetDevicePointer()\fP because the memory may be mapped into other CUDA contexts via the \fBCU_MEMHOSTALLOC_PORTABLE\fP flag.
+.PP
+The memory allocated by this function must be freed with \fBcuMemFreeHost()\fP.
+.PP
+Note all host memory allocated using \fBcuMemHostAlloc()\fP will automatically be immediately accessible to all contexts on all devices which support unified addressing (as may be queried using \fBCU_DEVICE_ATTRIBUTE_UNIFIED_ADDRESSING\fP). Unless the flag \fBCU_MEMHOSTALLOC_WRITECOMBINED\fP is specified, the device pointer that may be used to access this host memory from those contexts is always equal to the returned host pointer \fC*pp\fP. If the flag \fBCU_MEMHOSTALLOC_WRITECOMBINED\fP is specified, then the function \fBcuMemHostGetDevicePointer()\fP must be used to query the device pointer, even if the context supports unified addressing. See \fBUnified Addressing\fP for additional details.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpp\fP - Returned host pointer to page-locked memory 
+.br
+\fIbytesize\fP - Requested allocation size in bytes 
+.br
+\fIFlags\fP - Flags for allocation request
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_OUT_OF_MEMORY\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemHostGetDevicePointer (\fBCUdeviceptr\fP * pdptr, void * p, unsigned int Flags)"
+.PP
+Passes back the device pointer \fCpdptr\fP corresponding to the mapped, pinned host buffer \fCp\fP allocated by \fBcuMemHostAlloc\fP.
+.PP
+\fBcuMemHostGetDevicePointer()\fP will fail if the \fBCU_MEMHOSTALLOC_DEVICEMAP\fP flag was not specified at the time the memory was allocated, or if the function is called on a GPU that does not support mapped pinned memory.
+.PP
+For devices that have a non-zero value for the device attribute \fBCU_DEVICE_ATTRIBUTE_CAN_USE_HOST_POINTER_FOR_REGISTERED_MEM\fP, the memory can also be accessed from the device using the host pointer \fCp\fP. The device pointer returned by \fBcuMemHostGetDevicePointer()\fP may or may not match the original host pointer \fCp\fP and depends on the devices visible to the application. If all devices visible to the application have a non-zero value for the device attribute, the device pointer returned by \fBcuMemHostGetDevicePointer()\fP will match the original pointer \fCp\fP. If any device visible to the application has a zero value for the device attribute, the device pointer returned by \fBcuMemHostGetDevicePointer()\fP will not match the original host pointer \fCp\fP, but it will be suitable for use on all devices provided Unified Virtual Addressing is enabled. In such systems, it is valid to access the memory using either pointer on devices that have a non-zero value for the device attribute. Note however that such devices should access the memory using only of the two pointers and not both.
+.PP
+\fCFlags\fP provides for future releases. For now, it must be set to 0.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpdptr\fP - Returned device pointer 
+.br
+\fIp\fP - Host pointer 
+.br
+\fIFlags\fP - Options (must be 0)
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemHostGetFlags (unsigned int * pFlags, void * p)"
+.PP
+Passes back the flags \fCpFlags\fP that were specified when allocating the pinned host buffer \fCp\fP allocated by \fBcuMemHostAlloc\fP.
+.PP
+\fBcuMemHostGetFlags()\fP will fail if the pointer does not reside in an allocation performed by \fBcuMemAllocHost()\fP or \fBcuMemHostAlloc()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpFlags\fP - Returned flags word 
+.br
+\fIp\fP - Host pointer
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuMemAllocHost\fP, \fBcuMemHostAlloc\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemHostRegister (void * p, size_t bytesize, unsigned int Flags)"
+.PP
+Page-locks the memory range specified by \fCp\fP and \fCbytesize\fP and maps it for the device(s) as specified by \fCFlags\fP. This memory range also is added to the same tracking mechanism as \fBcuMemHostAlloc\fP to automatically accelerate calls to functions such as \fBcuMemcpyHtoD()\fP. Since the memory can be accessed directly by the device, it can be read or written with much higher bandwidth than pageable memory that has not been registered. Page-locking excessive amounts of memory may degrade system performance, since it reduces the amount of memory available to the system for paging. As a result, this function is best used sparingly to register staging areas for data exchange between host and device.
+.PP
+This function has limited support on Mac OS X. OS 10.7 or higher is required.
+.PP
+The \fCFlags\fP parameter enables different options to be specified that affect the allocation, as follows.
+.PP
+.IP "\(bu" 2
+\fBCU_MEMHOSTREGISTER_PORTABLE\fP: The memory returned by this call will be considered as pinned memory by all CUDA contexts, not just the one that performed the allocation.
+.PP
+.PP
+.IP "\(bu" 2
+\fBCU_MEMHOSTREGISTER_DEVICEMAP\fP: Maps the allocation into the CUDA address space. The device pointer to the memory may be obtained by calling \fBcuMemHostGetDevicePointer()\fP. This feature is available only on GPUs with compute capability greater than or equal to 1.1.
+.PP
+.PP
+.IP "\(bu" 2
+\fBCU_MEMHOSTREGISTER_IOMEMORY\fP: The pointer is treated as pointing to some I/O memory space, e.g. the PCI Express resource of a 3rd party device.
+.PP
+.PP
+All of these flags are orthogonal to one another: a developer may page-lock memory that is portable or mapped with no restrictions.
+.PP
+The CUDA context must have been created with the \fBCU_CTX_MAP_HOST\fP flag in order for the \fBCU_MEMHOSTREGISTER_DEVICEMAP\fP flag to have any effect.
+.PP
+The \fBCU_MEMHOSTREGISTER_DEVICEMAP\fP flag may be specified on CUDA contexts for devices that do not support mapped pinned memory. The failure is deferred to \fBcuMemHostGetDevicePointer()\fP because the memory may be mapped into other CUDA contexts via the \fBCU_MEMHOSTREGISTER_PORTABLE\fP flag.
+.PP
+For devices that have a non-zero value for the device attribute \fBCU_DEVICE_ATTRIBUTE_CAN_USE_HOST_POINTER_FOR_REGISTERED_MEM\fP, the memory can also be accessed from the device using the host pointer \fCp\fP. The device pointer returned by \fBcuMemHostGetDevicePointer()\fP may or may not match the original host pointer \fCptr\fP and depends on the devices visible to the application. If all devices visible to the application have a non-zero value for the device attribute, the device pointer returned by \fBcuMemHostGetDevicePointer()\fP will match the original pointer \fCptr\fP. If any device visible to the application has a zero value for the device attribute, the device pointer returned by \fBcuMemHostGetDevicePointer()\fP will not match the original host pointer \fCptr\fP, but it will be suitable for use on all devices provided Unified Virtual Addressing is enabled. In such systems, it is valid to access the memory using either pointer on devices that have a non-zero value for the device attribute. Note however that such devices should access the memory using only of the two pointers and not both.
+.PP
+The memory page-locked by this function must be unregistered with \fBcuMemHostUnregister()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIp\fP - Host pointer to memory to page-lock 
+.br
+\fIbytesize\fP - Size in bytes of the address range to page-lock 
+.br
+\fIFlags\fP - Flags for allocation request
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_OUT_OF_MEMORY\fP, \fBCUDA_ERROR_HOST_MEMORY_ALREADY_REGISTERED\fP, \fBCUDA_ERROR_NOT_PERMITTED\fP, \fBCUDA_ERROR_NOT_SUPPORTED\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuMemHostUnregister\fP, \fBcuMemHostGetFlags\fP, \fBcuMemHostGetDevicePointer\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemHostUnregister (void * p)"
+.PP
+Unmaps the memory range whose base address is specified by \fCp\fP, and makes it pageable again.
+.PP
+The base address must be the same one specified to \fBcuMemHostRegister()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIp\fP - Host pointer to memory to unregister
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_OUT_OF_MEMORY\fP, \fBCUDA_ERROR_HOST_MEMORY_NOT_REGISTERED\fP, 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuMemHostRegister\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemsetD16 (\fBCUdeviceptr\fP dstDevice, unsigned short us, size_t N)"
+.PP
+Sets the memory range of \fCN\fP 16-bit values to the specified value \fCus\fP. The \fCdstDevice\fP pointer must be two byte aligned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIus\fP - Value to set 
+.br
+\fIN\fP - Number of elements
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also .
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemsetD16Async (\fBCUdeviceptr\fP dstDevice, unsigned short us, size_t N, \fBCUstream\fP hStream)"
+.PP
+Sets the memory range of \fCN\fP 16-bit values to the specified value \fCus\fP. The \fCdstDevice\fP pointer must be two byte aligned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIus\fP - Value to set 
+.br
+\fIN\fP - Number of elements 
+.br
+\fIhStream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also . 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemsetD2D16 (\fBCUdeviceptr\fP dstDevice, size_t dstPitch, unsigned short us, size_t Width, size_t Height)"
+.PP
+Sets the 2D memory range of \fCWidth\fP 16-bit values to the specified value \fCus\fP. \fCHeight\fP specifies the number of rows to set, and \fCdstPitch\fP specifies the number of bytes between each row. The \fCdstDevice\fP pointer and \fCdstPitch\fP offset must be two byte aligned. This function performs fastest when the pitch is one that has been passed back by \fBcuMemAllocPitch()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIdstPitch\fP - Pitch of destination device pointer 
+.br
+\fIus\fP - Value to set 
+.br
+\fIWidth\fP - Width of row 
+.br
+\fIHeight\fP - Number of rows
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also .
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemsetD2D16Async (\fBCUdeviceptr\fP dstDevice, size_t dstPitch, unsigned short us, size_t Width, size_t Height, \fBCUstream\fP hStream)"
+.PP
+Sets the 2D memory range of \fCWidth\fP 16-bit values to the specified value \fCus\fP. \fCHeight\fP specifies the number of rows to set, and \fCdstPitch\fP specifies the number of bytes between each row. The \fCdstDevice\fP pointer and \fCdstPitch\fP offset must be two byte aligned. This function performs fastest when the pitch is one that has been passed back by \fBcuMemAllocPitch()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIdstPitch\fP - Pitch of destination device pointer 
+.br
+\fIus\fP - Value to set 
+.br
+\fIWidth\fP - Width of row 
+.br
+\fIHeight\fP - Number of rows 
+.br
+\fIhStream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also . 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemsetD2D32 (\fBCUdeviceptr\fP dstDevice, size_t dstPitch, unsigned int ui, size_t Width, size_t Height)"
+.PP
+Sets the 2D memory range of \fCWidth\fP 32-bit values to the specified value \fCui\fP. \fCHeight\fP specifies the number of rows to set, and \fCdstPitch\fP specifies the number of bytes between each row. The \fCdstDevice\fP pointer and \fCdstPitch\fP offset must be four byte aligned. This function performs fastest when the pitch is one that has been passed back by \fBcuMemAllocPitch()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIdstPitch\fP - Pitch of destination device pointer 
+.br
+\fIui\fP - Value to set 
+.br
+\fIWidth\fP - Width of row 
+.br
+\fIHeight\fP - Number of rows
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also .
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemsetD2D32Async (\fBCUdeviceptr\fP dstDevice, size_t dstPitch, unsigned int ui, size_t Width, size_t Height, \fBCUstream\fP hStream)"
+.PP
+Sets the 2D memory range of \fCWidth\fP 32-bit values to the specified value \fCui\fP. \fCHeight\fP specifies the number of rows to set, and \fCdstPitch\fP specifies the number of bytes between each row. The \fCdstDevice\fP pointer and \fCdstPitch\fP offset must be four byte aligned. This function performs fastest when the pitch is one that has been passed back by \fBcuMemAllocPitch()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIdstPitch\fP - Pitch of destination device pointer 
+.br
+\fIui\fP - Value to set 
+.br
+\fIWidth\fP - Width of row 
+.br
+\fIHeight\fP - Number of rows 
+.br
+\fIhStream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also . 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemsetD2D8 (\fBCUdeviceptr\fP dstDevice, size_t dstPitch, unsigned char uc, size_t Width, size_t Height)"
+.PP
+Sets the 2D memory range of \fCWidth\fP 8-bit values to the specified value \fCuc\fP. \fCHeight\fP specifies the number of rows to set, and \fCdstPitch\fP specifies the number of bytes between each row. This function performs fastest when the pitch is one that has been passed back by \fBcuMemAllocPitch()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIdstPitch\fP - Pitch of destination device pointer 
+.br
+\fIuc\fP - Value to set 
+.br
+\fIWidth\fP - Width of row 
+.br
+\fIHeight\fP - Number of rows
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also .
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemsetD2D8Async (\fBCUdeviceptr\fP dstDevice, size_t dstPitch, unsigned char uc, size_t Width, size_t Height, \fBCUstream\fP hStream)"
+.PP
+Sets the 2D memory range of \fCWidth\fP 8-bit values to the specified value \fCuc\fP. \fCHeight\fP specifies the number of rows to set, and \fCdstPitch\fP specifies the number of bytes between each row. This function performs fastest when the pitch is one that has been passed back by \fBcuMemAllocPitch()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIdstPitch\fP - Pitch of destination device pointer 
+.br
+\fIuc\fP - Value to set 
+.br
+\fIWidth\fP - Width of row 
+.br
+\fIHeight\fP - Number of rows 
+.br
+\fIhStream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also . 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemsetD32 (\fBCUdeviceptr\fP dstDevice, unsigned int ui, size_t N)"
+.PP
+Sets the memory range of \fCN\fP 32-bit values to the specified value \fCui\fP. The \fCdstDevice\fP pointer must be four byte aligned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIui\fP - Value to set 
+.br
+\fIN\fP - Number of elements
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also .
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemsetD32Async (\fBCUdeviceptr\fP dstDevice, unsigned int ui, size_t N, \fBCUstream\fP hStream)"
+.PP
+Sets the memory range of \fCN\fP 32-bit values to the specified value \fCui\fP. The \fCdstDevice\fP pointer must be four byte aligned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIui\fP - Value to set 
+.br
+\fIN\fP - Number of elements 
+.br
+\fIhStream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also . 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemsetD8 (\fBCUdeviceptr\fP dstDevice, unsigned char uc, size_t N)"
+.PP
+Sets the memory range of \fCN\fP 8-bit values to the specified value \fCuc\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIuc\fP - Value to set 
+.br
+\fIN\fP - Number of elements
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also .
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8Async\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMemsetD8Async (\fBCUdeviceptr\fP dstDevice, unsigned char uc, size_t N, \fBCUstream\fP hStream)"
+.PP
+Sets the memory range of \fCN\fP 8-bit values to the specified value \fCuc\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdstDevice\fP - Destination device pointer 
+.br
+\fIuc\fP - Value to set 
+.br
+\fIN\fP - Number of elements 
+.br
+\fIhStream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also . 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuArray3DCreate\fP, \fBcuArray3DGetDescriptor\fP, \fBcuArrayCreate\fP, \fBcuArrayDestroy\fP, \fBcuArrayGetDescriptor\fP, \fBcuMemAlloc\fP, \fBcuMemAllocHost\fP, \fBcuMemAllocPitch\fP, \fBcuMemcpy2D\fP, \fBcuMemcpy2DAsync\fP, \fBcuMemcpy2DUnaligned\fP, \fBcuMemcpy3D\fP, \fBcuMemcpy3DAsync\fP, \fBcuMemcpyAtoA\fP, \fBcuMemcpyAtoD\fP, \fBcuMemcpyAtoH\fP, \fBcuMemcpyAtoHAsync\fP, \fBcuMemcpyDtoA\fP, \fBcuMemcpyDtoD\fP, \fBcuMemcpyDtoDAsync\fP, \fBcuMemcpyDtoH\fP, \fBcuMemcpyDtoHAsync\fP, \fBcuMemcpyHtoA\fP, \fBcuMemcpyHtoAAsync\fP, \fBcuMemcpyHtoD\fP, \fBcuMemcpyHtoDAsync\fP, \fBcuMemFree\fP, \fBcuMemFreeHost\fP, \fBcuMemGetAddressRange\fP, \fBcuMemGetInfo\fP, \fBcuMemHostAlloc\fP, \fBcuMemHostGetDevicePointer\fP, \fBcuMemsetD2D8\fP, \fBcuMemsetD2D8Async\fP, \fBcuMemsetD2D16\fP, \fBcuMemsetD2D16Async\fP, \fBcuMemsetD2D32\fP, \fBcuMemsetD2D32Async\fP, \fBcuMemsetD8\fP, \fBcuMemsetD16\fP, \fBcuMemsetD16Async\fP, \fBcuMemsetD32\fP, \fBcuMemsetD32Async\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMipmappedArrayCreate (\fBCUmipmappedArray\fP * pHandle, const \fBCUDA_ARRAY3D_DESCRIPTOR\fP * pMipmappedArrayDesc, unsigned int numMipmapLevels)"
+.PP
+Creates a CUDA mipmapped array according to the \fBCUDA_ARRAY3D_DESCRIPTOR\fP structure \fCpMipmappedArrayDesc\fP and returns a handle to the new CUDA mipmapped array in \fC*pHandle\fP. \fCnumMipmapLevels\fP specifies the number of mipmap levels to be allocated. This value is clamped to the range [1, 1 + floor(log2(max(width, height, depth)))].
+.PP
+The \fBCUDA_ARRAY3D_DESCRIPTOR\fP is defined as:
+.PP
+.PP
+.nf
+    typedef struct {
+        unsigned int Width;
+        unsigned int Height;
+        unsigned int Depth;
+        CUarray_format Format;
+        unsigned int NumChannels;
+        unsigned int Flags;
+    } CUDA_ARRAY3D_DESCRIPTOR;
+.fi
+.PP
+ where:
+.PP
+.IP "\(bu" 2
+\fCWidth\fP, \fCHeight\fP, and \fCDepth\fP are the width, height, and depth of the CUDA array (in elements); the following types of CUDA arrays can be allocated:
+.IP "  \(bu" 4
+A 1D mipmapped array is allocated if \fCHeight\fP and \fCDepth\fP extents are both zero.
+.IP "  \(bu" 4
+A 2D mipmapped array is allocated if only \fCDepth\fP extent is zero.
+.IP "  \(bu" 4
+A 3D mipmapped array is allocated if all three extents are non-zero.
+.IP "  \(bu" 4
+A 1D layered CUDA mipmapped array is allocated if only \fCHeight\fP is zero and the \fBCUDA_ARRAY3D_LAYERED\fP flag is set. Each layer is a 1D array. The number of layers is determined by the depth extent.
+.IP "  \(bu" 4
+A 2D layered CUDA mipmapped array is allocated if all three extents are non-zero and the \fBCUDA_ARRAY3D_LAYERED\fP flag is set. Each layer is a 2D array. The number of layers is determined by the depth extent.
+.IP "  \(bu" 4
+A cubemap CUDA mipmapped array is allocated if all three extents are non-zero and the \fBCUDA_ARRAY3D_CUBEMAP\fP flag is set. \fCWidth\fP must be equal to \fCHeight\fP, and \fCDepth\fP must be six. A cubemap is a special type of 2D layered CUDA array, where the six layers represent the six faces of a cube. The order of the six layers in memory is the same as that listed in \fBCUarray_cubemap_face\fP.
+.IP "  \(bu" 4
+A cubemap layered CUDA mipmapped array is allocated if all three extents are non-zero, and both, \fBCUDA_ARRAY3D_CUBEMAP\fP and \fBCUDA_ARRAY3D_LAYERED\fP flags are set. \fCWidth\fP must be equal to \fCHeight\fP, and \fCDepth\fP must be a multiple of six. A cubemap layered CUDA array is a special type of 2D layered CUDA array that consists of a collection of cubemaps. The first six layers represent the first cubemap, the next six layers form the second cubemap, and so on.
+.PP
+
+.PP
+.PP
+.IP "\(bu" 2
+Format specifies the format of the elements; \fBCUarray_format\fP is defined as: 
+.PP
+.nf
+    typedef enum CUarray_format_enum {
+        CU_AD_FORMAT_UNSIGNED_INT8 = 0x01,
+        CU_AD_FORMAT_UNSIGNED_INT16 = 0x02,
+        CU_AD_FORMAT_UNSIGNED_INT32 = 0x03,
+        CU_AD_FORMAT_SIGNED_INT8 = 0x08,
+        CU_AD_FORMAT_SIGNED_INT16 = 0x09,
+        CU_AD_FORMAT_SIGNED_INT32 = 0x0a,
+        CU_AD_FORMAT_HALF = 0x10,
+        CU_AD_FORMAT_FLOAT = 0x20
+    } CUarray_format;
+
+.fi
+.PP
+
+.PP
+.PP
+.IP "\(bu" 2
+\fCNumChannels\fP specifies the number of packed components per CUDA array element; it may be 1, 2, or 4;
+.PP
+.PP
+.IP "\(bu" 2
+Flags may be set to
+.IP "  \(bu" 4
+\fBCUDA_ARRAY3D_LAYERED\fP to enable creation of layered CUDA mipmapped arrays. If this flag is set, \fCDepth\fP specifies the number of layers, not the depth of a 3D array.
+.IP "  \(bu" 4
+\fBCUDA_ARRAY3D_SURFACE_LDST\fP to enable surface references to be bound to individual mipmap levels of the CUDA mipmapped array. If this flag is not set, \fBcuSurfRefSetArray\fP will fail when attempting to bind a mipmap level of the CUDA mipmapped array to a surface reference.
+.IP "  \(bu" 4
+\fBCUDA_ARRAY3D_CUBEMAP\fP to enable creation of mipmapped cubemaps. If this flag is set, \fCWidth\fP must be equal to \fCHeight\fP, and \fCDepth\fP must be six. If the \fBCUDA_ARRAY3D_LAYERED\fP flag is also set, then \fCDepth\fP must be a multiple of six.
+.IP "  \(bu" 4
+\fBCUDA_ARRAY3D_TEXTURE_GATHER\fP to indicate that the CUDA mipmapped array will be used for texture gather. Texture gather can only be performed on 2D CUDA mipmapped arrays.
+.PP
+
+.PP
+.PP
+\fCWidth\fP, \fCHeight\fP and \fCDepth\fP must meet certain size requirements as listed in the following table. All values are specified in elements. Note that for brevity's sake, the full name of the device attribute is not specified. For ex., TEXTURE1D_MIPMAPPED_WIDTH refers to the device attribute \fBCU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_MIPMAPPED_WIDTH\fP.
+.PP
+\fBCUDA array type\fP \fBValid extents that must always be met
+.br
+{(width range in elements), (height range), (depth range)}\fP 1D { (1,TEXTURE1D_MIPMAPPED_WIDTH), 0, 0 } 2D { (1,TEXTURE2D_MIPMAPPED_WIDTH), (1,TEXTURE2D_MIPMAPPED_HEIGHT), 0 } 3D { (1,TEXTURE3D_WIDTH), (1,TEXTURE3D_HEIGHT), (1,TEXTURE3D_DEPTH) } 
+.br
+OR
+.br
+{ (1,TEXTURE3D_WIDTH_ALTERNATE), (1,TEXTURE3D_HEIGHT_ALTERNATE), (1,TEXTURE3D_DEPTH_ALTERNATE) } 1D Layered { (1,TEXTURE1D_LAYERED_WIDTH), 0, (1,TEXTURE1D_LAYERED_LAYERS) } 2D Layered { (1,TEXTURE2D_LAYERED_WIDTH), (1,TEXTURE2D_LAYERED_HEIGHT), (1,TEXTURE2D_LAYERED_LAYERS) } Cubemap { (1,TEXTURECUBEMAP_WIDTH), (1,TEXTURECUBEMAP_WIDTH), 6 } Cubemap Layered { (1,TEXTURECUBEMAP_LAYERED_WIDTH), (1,TEXTURECUBEMAP_LAYERED_WIDTH), (1,TEXTURECUBEMAP_LAYERED_LAYERS) } 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpHandle\fP - Returned mipmapped array 
+.br
+\fIpMipmappedArrayDesc\fP - mipmapped array descriptor 
+.br
+\fInumMipmapLevels\fP - Number of mipmap levels
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_OUT_OF_MEMORY\fP, \fBCUDA_ERROR_UNKNOWN\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuMipmappedArrayDestroy\fP, \fBcuMipmappedArrayGetLevel\fP, \fBcuArrayCreate\fP, 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMipmappedArrayDestroy (\fBCUmipmappedArray\fP hMipmappedArray)"
+.PP
+Destroys the CUDA mipmapped array \fChMipmappedArray\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhMipmappedArray\fP - Mipmapped array to destroy
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_ARRAY_IS_MAPPED\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuMipmappedArrayCreate\fP, \fBcuMipmappedArrayGetLevel\fP, \fBcuArrayCreate\fP, 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuMipmappedArrayGetLevel (\fBCUarray\fP * pLevelArray, \fBCUmipmappedArray\fP hMipmappedArray, unsigned int level)"
+.PP
+Returns in \fC*pLevelArray\fP a CUDA array that represents a single mipmap level of the CUDA mipmapped array \fChMipmappedArray\fP.
+.PP
+If \fClevel\fP is greater than the maximum number of levels in this mipmapped array, \fBCUDA_ERROR_INVALID_VALUE\fP is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpLevelArray\fP - Returned mipmap level CUDA array 
+.br
+\fIhMipmappedArray\fP - CUDA mipmapped array 
+.br
+\fIlevel\fP - Mipmap level
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuMipmappedArrayCreate\fP, \fBcuMipmappedArrayDestroy\fP, \fBcuArrayCreate\fP, 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

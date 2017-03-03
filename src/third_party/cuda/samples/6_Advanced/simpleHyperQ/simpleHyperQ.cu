@@ -27,13 +27,25 @@ const char *sSDKsample = "hyperQ";
 // of clock ticks.
 __device__ void clock_block(clock_t *d_o, clock_t clock_count)
 {
-    clock_t start_clock = clock();
+     unsigned int start_clock = (unsigned int) clock();
 
     clock_t clock_offset = 0;
 
     while (clock_offset < clock_count)
     {
-        clock_offset = clock() - start_clock;
+        unsigned int end_clock = (unsigned int) clock();
+
+        // The code below should work like 
+        // this (thanks to modular arithmetics): 
+        // 
+        // clock_offset = (clock_t) (end_clock > start_clock ? 
+        //                           end_clock - start_clock : 
+        //                           end_clock + (0xffffffffu - start_clock));
+        //
+        // Indeed, let m = 2^32 then
+        // end - start = end + m - start (mod m).
+
+        clock_offset = (clock_t) (end_clock - start_clock);
     }
 
     d_o[0] = clock_offset;
@@ -148,7 +160,12 @@ int main(int argc, char **argv)
 
     // Target time per kernel is kernel_time ms, clockRate is in KHz
     // Target number of clocks = target time * clock frequency
+#if defined(__arm__) || defined(__aarch64__)
+    // the kernel takes more time than the channel reset time on arm archs, so to prevent hangs reduce time_clocks.
+    clock_t time_clocks = (clock_t)(kernel_time * (deviceProp.clockRate / 1000));
+#else
     clock_t time_clocks = (clock_t)(kernel_time * deviceProp.clockRate);
+#endif
     clock_t total_clocks = 0;
 
     // Start the clock
@@ -197,11 +214,5 @@ int main(int argc, char **argv)
     cudaFreeHost(a);
     cudaFree(d_a);
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(bTestResult ? EXIT_SUCCESS : EXIT_FAILURE);
 }

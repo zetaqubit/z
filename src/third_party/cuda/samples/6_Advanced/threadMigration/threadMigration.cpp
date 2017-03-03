@@ -16,9 +16,8 @@
 *   Description:
 *     Simple sample demonstrating multi-GPU/multithread functionality using
 *     the CUDA Context Management API.  This API allows the a CUDA context to be
-*     associated with a CPU process.  CUDA Contexts have a one-to-one correspondence
-*     with host threads.  A host thread may have only one device context current
-*     at a time.
+*     associated with a CPU process. A host thread may have only one device context 
+*     current at a time.
 *
 *    Refer to the CUDA programming guide 4.5.3.3 on Context Management
 *
@@ -160,8 +159,7 @@ InitCUDAContext(CUDAContext *pContext, CUdevice hcuDevice, int deviceID, char **
 
     if (CUDA_SUCCESS != status)
     {
-        fprintf(stderr, "cuCtxCreate for <Thread=%d> failed %d\n",
-                pContext->threadNum, status);
+        fprintf(stderr, "cuCtxCreate for <deviceID=%d> failed %d\n", deviceID, status);
         CLEANUP_ON_ERROR(dptr, hcuModule, hcuContext, status);
     }
 
@@ -229,14 +227,6 @@ InitCUDAContext(CUDAContext *pContext, CUdevice hcuDevice, int deviceID, char **
         CLEANUP_ON_ERROR(dptr, hcuModule, hcuContext, status);
     }
 
-    status = cuMemAlloc(&dptr, NUM_INTS*sizeof(int));
-
-    if (CUDA_SUCCESS != status)
-    {
-        fprintf(stderr, "cuMemAlloc failed %d\n", status);
-        CLEANUP_ON_ERROR(dptr, hcuModule, hcuContext, status);
-    }
-
     // Here we must release the CUDA context from the thread context
     status = cuCtxPopCurrent(NULL);
 
@@ -249,7 +239,6 @@ InitCUDAContext(CUDAContext *pContext, CUdevice hcuDevice, int deviceID, char **
     pContext->hcuContext  = hcuContext;
     pContext->hcuModule   = hcuModule;
     pContext->hcuFunction = hcuFunction;
-    pContext->dptr        = dptr;
     pContext->deviceID    = deviceID;
 
     return CUDA_SUCCESS;
@@ -278,6 +267,7 @@ void *ThreadProc(CUDAContext *pParams)
     {
         THREAD_QUIT;
     }
+    checkCudaErrors(cuMemAlloc(&pParams->dptr, NUM_INTS*sizeof(int)));
 
     // There are two ways to launch CUDA kernels via the Driver API.
     // In this CUDA Sample, we illustrate both ways to pass parameters
@@ -358,10 +348,10 @@ void *ThreadProc(CUDAContext *pParams)
 
     free(pInt);
     fflush(stdout);
-    cuMemFree(pParams->dptr);
+    checkCudaErrors(cuMemFree(pParams->dptr));
 
     // cuCtxPopCurrent: Detach the current CUDA context from the calling thread.
-    cuCtxPopCurrent(NULL);
+    checkCudaErrors(cuCtxPopCurrent(NULL));
 
     printf("<CUDA Device=%d, Context=%p, Thread=%d> - ThreadProc() Finished!\n\n",
            pParams->deviceID, pParams->hcuContext, pParams->threadNum);
@@ -369,7 +359,7 @@ void *ThreadProc(CUDAContext *pParams)
     return 0;
 }
 
-bool FinalErrorCheck(int ThreadIndex, int NumThreads, int deviceCount)
+bool FinalErrorCheck(CUDAContext *pContext, int NumThreads, int deviceCount)
 {
     if (ThreadLaunchCount != NumThreads*deviceCount)
     {
@@ -379,17 +369,11 @@ bool FinalErrorCheck(int ThreadIndex, int NumThreads, int deviceCount)
     }
     else
     {
-        // destroy floating contexts while unattached to threads
-        ThreadIndex = 0;
-
         for (int iDevice = 0; iDevice < deviceCount; iDevice++)
         {
-            for (int iThread = 0; iThread < NumThreads; iThread++, ThreadIndex++)
-            {
-                // cuCtxDestroy called on current context or a floating context
-                if (CUDA_SUCCESS != cuCtxDestroy(g_ThreadParams[ThreadIndex].hcuContext))
-                    return false;
-            }
+            // cuCtxDestroy called on current context or a floating context
+            if (CUDA_SUCCESS != cuCtxDestroy(pContext[iDevice].hcuContext))
+                return false;
         }
 
         return true;
@@ -462,6 +446,8 @@ runTest(int argc, char **argv)
     int ihThread = 0;
     int ThreadIndex = 0;
 
+    CUDAContext *pContext = (CUDAContext*) malloc(sizeof(CUDAContext)*deviceCount);
+
     for (int iDevice = 0; iDevice < deviceCount; iDevice++)
     {
         char szName[256];
@@ -489,17 +475,19 @@ runTest(int argc, char **argv)
             printf("\n");
         }
 
-        for (int iThread = 0; iThread < NumThreads; iThread++, ihThread++)
+        if (CUDA_SUCCESS != InitCUDAContext(&pContext[iDevice], hcuDevice, iDevice, argv))
         {
-            g_ThreadParams[ThreadIndex].threadNum = iThread;
-
-            if (CUDA_SUCCESS != InitCUDAContext(&g_ThreadParams[ThreadIndex],
-                                                hcuDevice, iDevice, argv))
+            return FinalErrorCheck(pContext, NumThreads, deviceCount);
+        }
+        else
+        {
+            for (int iThread = 0; iThread < NumThreads; iThread++, ihThread++)
             {
-                return FinalErrorCheck(ThreadIndex, NumThreads, deviceCount);
-            }
-            else
-            {
+                g_ThreadParams[ThreadIndex].hcuContext = pContext[iDevice].hcuContext;
+                g_ThreadParams[ThreadIndex].hcuModule = pContext[iDevice].hcuModule;
+                g_ThreadParams[ThreadIndex].hcuFunction = pContext[iDevice].hcuFunction;
+                g_ThreadParams[ThreadIndex].deviceID = pContext[iDevice].deviceID;
+                g_ThreadParams[ThreadIndex].threadNum = iThread;
                 // Launch (NumThreads) for each CUDA context
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
                 rghThreads[ThreadIndex] = CreateThread(NULL, 0,
@@ -527,18 +515,7 @@ runTest(int argc, char **argv)
 
 #endif
 
-    // Reset the CUDA Device
-    for (int iDevice = 0; iDevice < deviceCount; iDevice++)
-    {
-        cudaSetDevice(iDevice);
-
-        // cudaDeviceReset causes the driver to clean up all state. While
-        // not mandatory in normal operation, it is good practice.  It is also
-        // needed to ensure correct operation when the application is being
-        // profiled. Calling cudaDeviceReset causes all profile data to be
-        // flushed before the application exits
-        cudaDeviceReset();
-    }
-
-    return FinalErrorCheck(ThreadIndex, NumThreads, deviceCount);
+    bool ret_status = FinalErrorCheck(pContext, NumThreads, deviceCount);
+    free(pContext);
+    return ret_status;
 }

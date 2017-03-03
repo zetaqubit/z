@@ -1,0 +1,401 @@
+.TH "EGL Interoperability" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+EGL Interoperability \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCUresult\fP \fBcuEGLStreamConsumerAcquireFrame\fP (\fBCUeglStreamConnection\fP *conn, \fBCUgraphicsResource\fP *pCudaResource, \fBCUstream\fP *pStream, unsigned int timeout)"
+.br
+.RI "\fIAcquire an image frame from the EGLStream with CUDA as a consumer. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuEGLStreamConsumerConnect\fP (\fBCUeglStreamConnection\fP *conn, EGLStreamKHR stream)"
+.br
+.RI "\fIConnect CUDA to EGLStream as a consumer. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuEGLStreamConsumerConnectWithFlags\fP (\fBCUeglStreamConnection\fP *conn, EGLStreamKHR stream, unsigned int flags)"
+.br
+.RI "\fIConnect CUDA to EGLStream as a consumer with given flags. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuEGLStreamConsumerDisconnect\fP (\fBCUeglStreamConnection\fP *conn)"
+.br
+.RI "\fIDisconnect CUDA as a consumer to EGLStream . \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuEGLStreamConsumerReleaseFrame\fP (\fBCUeglStreamConnection\fP *conn, \fBCUgraphicsResource\fP pCudaResource, \fBCUstream\fP *pStream)"
+.br
+.RI "\fIReleases the last frame acquired from the EGLStream. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuEGLStreamProducerConnect\fP (\fBCUeglStreamConnection\fP *conn, EGLStreamKHR stream, EGLint width, EGLint height)"
+.br
+.RI "\fIConnect CUDA to EGLStream as a producer. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuEGLStreamProducerDisconnect\fP (\fBCUeglStreamConnection\fP *conn)"
+.br
+.RI "\fIDisconnect CUDA as a producer to EGLStream . \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuEGLStreamProducerPresentFrame\fP (\fBCUeglStreamConnection\fP *conn, \fBCUeglFrame\fP eglframe, \fBCUstream\fP *pStream)"
+.br
+.RI "\fIPresent a CUDA eglFrame to the EGLStream with CUDA as a producer. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuEGLStreamProducerReturnFrame\fP (\fBCUeglStreamConnection\fP *conn, \fBCUeglFrame\fP *eglframe, \fBCUstream\fP *pStream)"
+.br
+.RI "\fIReturn the CUDA eglFrame to the EGLStream released by the consumer. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuGraphicsEGLRegisterImage\fP (\fBCUgraphicsResource\fP *pCudaResource, EGLImageKHR image, unsigned int flags)"
+.br
+.RI "\fIRegisters an EGL image. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuGraphicsResourceGetMappedEglFrame\fP (\fBCUeglFrame\fP *eglFrame, \fBCUgraphicsResource\fP resource, unsigned int index, unsigned int mipLevel)"
+.br
+.RI "\fIGet an eglFrame through which to access a registered EGL graphics resource. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief EGL interoperability functions of the low-level CUDA driver API (\fBcudaEGL.h\fP)
+.PP
+This section describes the EGL interoperability functions of the low-level CUDA driver application programming interface. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBCUresult\fP cuEGLStreamConsumerAcquireFrame (\fBCUeglStreamConnection\fP * conn, \fBCUgraphicsResource\fP * pCudaResource, \fBCUstream\fP * pStream, unsigned int timeout)"
+.PP
+Acquire an image frame from EGLStreamKHR. \fBcuGraphicsResourceGetMappedEglFrame\fP can be called on \fCpCudaResource\fP to get \fBCUeglFrame\fP. The EGLStreamKHR is an EGL object that transfers a sequence of image frames from one API to another.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconn\fP - Connection on which to acquire 
+.br
+\fIpCudaResource\fP - CUDA resource on which the stream frame will be mapped for use. 
+.br
+\fIpStream\fP - CUDA stream on which acquire will be done. 
+.br
+\fItimeout\fP - Desired timeout in usec.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP,
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEGLStreamConsumerConnect\fP, \fBcuEGLStreamConsumerDisconnect\fP, \fBcuEGLStreamConsumerAcquireFrame\fP, \fBcuEGLStreamConsumerReleaseFrame\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuEGLStreamConsumerConnect (\fBCUeglStreamConnection\fP * conn, EGLStreamKHR stream)"
+.PP
+Connect CUDA as a consumer to EGLStreamKHR specified by \fCstream\fP.
+.PP
+The EGLStreamKHR is an EGL object that transfers a sequence of image frames from one API to another.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconn\fP - Pointer to the returned connection handle 
+.br
+\fIstream\fP - EGLStreamKHR handle
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP,
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEGLStreamConsumerConnect\fP, \fBcuEGLStreamConsumerDisconnect\fP, \fBcuEGLStreamConsumerAcquireFrame\fP, \fBcuEGLStreamConsumerReleaseFrame\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuEGLStreamConsumerConnectWithFlags (\fBCUeglStreamConnection\fP * conn, EGLStreamKHR stream, unsigned int flags)"
+.PP
+Connect CUDA as a consumer to EGLStreamKHR specified by \fCstream\fP with specified \fCflags\fP.
+.PP
+The flags specify whether the consumer will be on system or video memory. By default the consumer is on vidmem. For applications having producer running on system and consumer running on video, internal copies will be involved to move data from system to video memory. API to another. The surfaces's intented location is specified using \fCflags\fP, as follows:
+.PP
+.IP "\(bu" 2
+\fBCU_EGL_RESOURCE_LOCATION_SYSMEM\fP: Resource location sysmem.
+.IP "\(bu" 2
+\fBCU_EGL_RESOURCE_LOCATION_VIDMEM\fP: Resource location vidmem.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconn\fP - Pointer to the returned connection handle 
+.br
+\fIstream\fP - EGLStreamKHR handle 
+.br
+\fIflags\fP - Flags denote intended location - system or video.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP,
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEGLStreamConsumerConnect\fP, \fBcuEGLStreamConsumerDisconnect\fP, \fBcuEGLStreamConsumerAcquireFrame\fP, \fBcuEGLStreamConsumerReleaseFrame\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuEGLStreamConsumerDisconnect (\fBCUeglStreamConnection\fP * conn)"
+.PP
+Disconnect CUDA as a consumer to EGLStreamKHR.
+.PP
+The EGLStreamKHR is an EGL object that transfers a sequence of image frames from one API to another.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconn\fP - Conection to disconnect.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP,
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEGLStreamConsumerConnect\fP, \fBcuEGLStreamConsumerDisconnect\fP, \fBcuEGLStreamConsumerAcquireFrame\fP, \fBcuEGLStreamConsumerReleaseFrame\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuEGLStreamConsumerReleaseFrame (\fBCUeglStreamConnection\fP * conn, \fBCUgraphicsResource\fP pCudaResource, \fBCUstream\fP * pStream)"
+.PP
+Release the acquired image frame specified by \fCpCudaResource\fP to EGLStreamKHR.
+.PP
+The EGLStreamKHR is an EGL object that transfers a sequence of image frames from one API to another.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconn\fP - Connection on which to release 
+.br
+\fIpCudaResource\fP - CUDA resource whose corresponding frame is to be released 
+.br
+\fIpStream\fP - CUDA stream on which release will be done.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP,
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEGLStreamConsumerConnect\fP, \fBcuEGLStreamConsumerDisconnect\fP, \fBcuEGLStreamConsumerAcquireFrame\fP, \fBcuEGLStreamConsumerReleaseFrame\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuEGLStreamProducerConnect (\fBCUeglStreamConnection\fP * conn, EGLStreamKHR stream, EGLint width, EGLint height)"
+.PP
+Connect CUDA as a producer to EGLStreamKHR specified by \fCstream\fP.
+.PP
+The EGLStreamKHR is an EGL object that transfers a sequence of image frames from one API to another.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconn\fP - Pointer to the returned connection handle 
+.br
+\fIstream\fP - EGLStreamKHR handle 
+.br
+\fIwidth\fP - width of the image to be submitted to the stream 
+.br
+\fIheight\fP - height of the image to be submitted to the stream
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP,
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEGLStreamProducerConnect\fP, \fBcuEGLStreamProducerDisconnect\fP, \fBcuEGLStreamProducerPresentFrame\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuEGLStreamProducerDisconnect (\fBCUeglStreamConnection\fP * conn)"
+.PP
+Disconnect CUDA as a producer to EGLStreamKHR.
+.PP
+The EGLStreamKHR is an EGL object that transfers a sequence of image frames from one API to another.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconn\fP - Conection to disconnect.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP,
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEGLStreamProducerConnect\fP, \fBcuEGLStreamProducerDisconnect\fP, \fBcuEGLStreamProducerPresentFrame\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuEGLStreamProducerPresentFrame (\fBCUeglStreamConnection\fP * conn, \fBCUeglFrame\fP eglframe, \fBCUstream\fP * pStream)"
+.PP
+The EGLStreamKHR is an EGL object that transfers a sequence of image frames from one API to another.
+.PP
+The \fBCUeglFrame\fP is defined as: 
+.PP
+.nf
+ typedef struct CUeglFrame_st {
+     union {
+         CUarray pArray[MAX_PLANES];
+         void*   pPitch[MAX_PLANES];
+     } frame;
+     unsigned int width;
+     unsigned int height;
+     unsigned int depth;
+     unsigned int pitch;
+     unsigned int planeCount;
+     unsigned int numChannels;
+     CUeglFrameType frameType;
+     CUeglColorFormat eglColorFormat;
+     CUarray_format cuFormat;
+ } CUeglFrame;
+
+.fi
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconn\fP - Connection on which to present the CUDA array 
+.br
+\fIeglframe\fP - CUDA Eglstream Proucer Frame handle to be sent to the consumer over EglStream. 
+.br
+\fIpStream\fP - CUDA stream on which to present the frame.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP,
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEGLStreamProducerConnect\fP, \fBcuEGLStreamProducerDisconnect\fP, \fBcuEGLStreamProducerReturnFrame\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuEGLStreamProducerReturnFrame (\fBCUeglStreamConnection\fP * conn, \fBCUeglFrame\fP * eglframe, \fBCUstream\fP * pStream)"
+.PP
+The EGLStreamKHR is an EGL object that transfers a sequence of image frames from one API to another.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIconn\fP - Connection on which to return 
+.br
+\fIeglframe\fP - CUDA Eglstream Proucer Frame handle returned from the consumer over EglStream. 
+.br
+\fIpStream\fP - CUDA stream on which to return the frame.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP,
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEGLStreamProducerConnect\fP, \fBcuEGLStreamProducerDisconnect\fP, \fBcuEGLStreamProducerPresentFrame\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuGraphicsEGLRegisterImage (\fBCUgraphicsResource\fP * pCudaResource, EGLImageKHR image, unsigned int flags)"
+.PP
+Registers the EGLImageKHR specified by \fCimage\fP for access by CUDA. A handle to the registered object is returned as \fCpCudaResource\fP. Additional Mapping/Unmapping is not required for the registered resource and \fBcuGraphicsResourceGetMappedEglFrame\fP can be directly called on the \fCpCudaResource\fP.
+.PP
+The application will be responsible for synchronizing access to shared objects. The application must ensure that any pending operation which access the objects have completed before passing control to CUDA. This may be accomplished by issuing and waiting for glFinish command on all GLcontexts (for OpenGL and likewise for other APIs). The application will be also responsible for ensuring that any pending operation on the registered CUDA resource has completed prior to executing subsequent commands in other APIs accesing the same memory objects. This can be accomplished by calling cuCtxSynchronize or cuEventSynchronize (preferably).
+.PP
+The surface's intended usage is specified using \fCflags\fP, as follows:
+.PP
+.IP "\(bu" 2
+CU_GRAPHICS_MAP_RESOURCE_FLAGS_NONE: Specifies no hints about how this resource will be used. It is therefore assumed that this resource will be read from and written to by CUDA. This is the default value.
+.IP "\(bu" 2
+CU_GRAPHICS_MAP_RESOURCE_FLAGS_READ_ONLY: Specifies that CUDA will not write to this resource.
+.IP "\(bu" 2
+CU_GRAPHICS_MAP_RESOURCE_FLAGS_WRITE_DISCARD: Specifies that CUDA will not read from this resource and will write over the entire contents of the resource, so none of the data previously stored in the resource will be preserved.
+.PP
+.PP
+The EGLImageKHR is an object which can be used to create EGLImage target resource. It is defined as a void pointer. typedef void* EGLImageKHR
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpCudaResource\fP - Pointer to the returned object handle 
+.br
+\fIimage\fP - An EGLImageKHR image which can be used to create target resource. 
+.br
+\fIflags\fP - Map flags
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_ALREADY_MAPPED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP,
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuGraphicsEGLRegisterImage\fP, \fBcuGraphicsUnregisterResource\fP, \fBcuGraphicsResourceSetMapFlags\fP, \fBcuGraphicsMapResources\fP, \fBcuGraphicsUnmapResources\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuGraphicsResourceGetMappedEglFrame (\fBCUeglFrame\fP * eglFrame, \fBCUgraphicsResource\fP resource, unsigned int index, unsigned int mipLevel)"
+.PP
+Returns in \fC*eglFrame\fP an eglFrame pointer through which the registered graphics resource \fCresource\fP may be accessed. This API can only be called for EGL graphics resources.
+.PP
+The \fBCUeglFrame\fP is defined as: 
+.PP
+.nf
+ typedef struct CUeglFrame_st {
+     union {
+         CUarray pArray[MAX_PLANES];
+         void*   pPitch[MAX_PLANES];
+     } frame;
+     unsigned int width;
+     unsigned int height;
+     unsigned int depth;
+     unsigned int pitch;
+     unsigned int planeCount;
+     unsigned int numChannels;
+     CUeglFrameType frameType;
+     CUeglColorFormat eglColorFormat;
+     CUarray_format cuFormat;
+ } CUeglFrame;
+
+.fi
+.PP
+.PP
+If \fCresource\fP is not registered then \fBCUDA_ERROR_NOT_MAPPED\fP is returned. * 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIeglFrame\fP - Returned eglFrame. 
+.br
+\fIresource\fP - Registered resource to access. 
+.br
+\fIindex\fP - Index for cubemap surfaces. 
+.br
+\fImipLevel\fP - Mipmap level for the subresource to access.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_NOT_MAPPED\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuGraphicsMapResources\fP, \fBcuGraphicsSubResourceGetMappedArray\fP, \fBcuGraphicsResourceGetMappedPointer\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

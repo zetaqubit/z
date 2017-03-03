@@ -1,0 +1,347 @@
+.TH "Event Management" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Event Management \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCUresult\fP \fBcuEventCreate\fP (\fBCUevent\fP *phEvent, unsigned int Flags)"
+.br
+.RI "\fICreates an event. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuEventDestroy\fP (\fBCUevent\fP hEvent)"
+.br
+.RI "\fIDestroys an event. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuEventElapsedTime\fP (float *pMilliseconds, \fBCUevent\fP hStart, \fBCUevent\fP hEnd)"
+.br
+.RI "\fIComputes the elapsed time between two events. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuEventQuery\fP (\fBCUevent\fP hEvent)"
+.br
+.RI "\fIQueries an event's status. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuEventRecord\fP (\fBCUevent\fP hEvent, \fBCUstream\fP hStream)"
+.br
+.RI "\fIRecords an event. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuEventSynchronize\fP (\fBCUevent\fP hEvent)"
+.br
+.RI "\fIWaits for an event to complete. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuStreamBatchMemOp\fP (\fBCUstream\fP stream, unsigned int count, \fBCUstreamBatchMemOpParams\fP *paramArray, unsigned int flags)"
+.br
+.RI "\fIBatch operations to synchronize the stream via memory operations. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuStreamWaitValue32\fP (\fBCUstream\fP stream, \fBCUdeviceptr\fP addr, cuuint32_t value, unsigned int flags)"
+.br
+.RI "\fIWait on a memory location. \fP"
+.ti -1c
+.RI "\fBCUresult\fP \fBcuStreamWriteValue32\fP (\fBCUstream\fP stream, \fBCUdeviceptr\fP addr, cuuint32_t value, unsigned int flags)"
+.br
+.RI "\fIWrite a value to memory. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief event management functions of the low-level CUDA driver API (\fBcuda.h\fP)
+.PP
+This section describes the event management functions of the low-level CUDA driver application programming interface. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBCUresult\fP cuEventCreate (\fBCUevent\fP * phEvent, unsigned int Flags)"
+.PP
+Creates an event *phEvent with the flags specified via \fCFlags\fP. Valid flags include:
+.IP "\(bu" 2
+\fBCU_EVENT_DEFAULT\fP: Default event creation flag.
+.IP "\(bu" 2
+\fBCU_EVENT_BLOCKING_SYNC\fP: Specifies that the created event should use blocking synchronization. A CPU thread that uses \fBcuEventSynchronize()\fP to wait on an event created with this flag will block until the event has actually been recorded.
+.IP "\(bu" 2
+\fBCU_EVENT_DISABLE_TIMING\fP: Specifies that the created event does not need to record timing data. Events created with this flag specified and the \fBCU_EVENT_BLOCKING_SYNC\fP flag not specified will provide the best performance when used with \fBcuStreamWaitEvent()\fP and \fBcuEventQuery()\fP.
+.IP "\(bu" 2
+\fBCU_EVENT_INTERPROCESS\fP: Specifies that the created event may be used as an interprocess event by \fBcuIpcGetEventHandle()\fP. \fBCU_EVENT_INTERPROCESS\fP must be specified along with \fBCU_EVENT_DISABLE_TIMING\fP.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIphEvent\fP - Returns newly created event 
+.br
+\fIFlags\fP - Event creation flags
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_OUT_OF_MEMORY\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEventRecord\fP, \fBcuEventQuery\fP, \fBcuEventSynchronize\fP, \fBcuEventDestroy\fP, \fBcuEventElapsedTime\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuEventDestroy (\fBCUevent\fP hEvent)"
+.PP
+Destroys the event specified by \fChEvent\fP.
+.PP
+In case \fChEvent\fP has been recorded but has not yet been completed when \fBcuEventDestroy()\fP is called, the function will return immediately and the resources associated with \fChEvent\fP will be released automatically once the device has completed \fChEvent\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhEvent\fP - Event to destroy
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEventCreate\fP, \fBcuEventRecord\fP, \fBcuEventQuery\fP, \fBcuEventSynchronize\fP, \fBcuEventElapsedTime\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuEventElapsedTime (float * pMilliseconds, \fBCUevent\fP hStart, \fBCUevent\fP hEnd)"
+.PP
+Computes the elapsed time between two events (in milliseconds with a resolution of around 0.5 microseconds).
+.PP
+If either event was last recorded in a non-NULL stream, the resulting time may be greater than expected (even if both used the same stream handle). This happens because the \fBcuEventRecord()\fP operation takes place asynchronously and there is no guarantee that the measured latency is actually just between the two events. Any number of other different stream operations could execute in between the two measured events, thus altering the timing in a significant way.
+.PP
+If \fBcuEventRecord()\fP has not been called on either event then \fBCUDA_ERROR_INVALID_HANDLE\fP is returned. If \fBcuEventRecord()\fP has been called on both events but one or both of them has not yet been completed (that is, \fBcuEventQuery()\fP would return \fBCUDA_ERROR_NOT_READY\fP on at least one of the events), \fBCUDA_ERROR_NOT_READY\fP is returned. If either event was created with the \fBCU_EVENT_DISABLE_TIMING\fP flag, then this function will return \fBCUDA_ERROR_INVALID_HANDLE\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpMilliseconds\fP - Time between \fChStart\fP and \fChEnd\fP in ms 
+.br
+\fIhStart\fP - Starting event 
+.br
+\fIhEnd\fP - Ending event
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_NOT_READY\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEventCreate\fP, \fBcuEventRecord\fP, \fBcuEventQuery\fP, \fBcuEventSynchronize\fP, \fBcuEventDestroy\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuEventQuery (\fBCUevent\fP hEvent)"
+.PP
+Query the status of all device work preceding the most recent call to \fBcuEventRecord()\fP (in the appropriate compute streams, as specified by the arguments to \fBcuEventRecord()\fP).
+.PP
+If this work has successfully been completed by the device, or if \fBcuEventRecord()\fP has not been called on \fChEvent\fP, then \fBCUDA_SUCCESS\fP is returned. If this work has not yet been completed by the device then \fBCUDA_ERROR_NOT_READY\fP is returned.
+.PP
+For the purposes of Unified Memory, a return value of \fBCUDA_SUCCESS\fP is equivalent to having called \fBcuEventSynchronize()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhEvent\fP - Event to query
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_NOT_READY\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEventCreate\fP, \fBcuEventRecord\fP, \fBcuEventSynchronize\fP, \fBcuEventDestroy\fP, \fBcuEventElapsedTime\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuEventRecord (\fBCUevent\fP hEvent, \fBCUstream\fP hStream)"
+.PP
+Records an event. See note on NULL stream behavior. Since operation is asynchronous, \fBcuEventQuery\fP or \fBcuEventSynchronize()\fP must be used to determine when the event has actually been recorded.
+.PP
+If \fBcuEventRecord()\fP has previously been called on \fChEvent\fP, then this call will overwrite any existing state in \fChEvent\fP. Any subsequent calls which examine the status of \fChEvent\fP will only examine the completion of this most recent call to \fBcuEventRecord()\fP.
+.PP
+It is necessary that \fChEvent\fP and \fChStream\fP be created on the same context.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhEvent\fP - Event to record 
+.br
+\fIhStream\fP - Stream to record event for
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP, \fBCUDA_ERROR_INVALID_VALUE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+This function uses standard  semantics. 
+.PP
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEventCreate\fP, \fBcuEventQuery\fP, \fBcuEventSynchronize\fP, \fBcuStreamWaitEvent\fP, \fBcuEventDestroy\fP, \fBcuEventElapsedTime\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuEventSynchronize (\fBCUevent\fP hEvent)"
+.PP
+Wait until the completion of all device work preceding the most recent call to \fBcuEventRecord()\fP (in the appropriate compute streams, as specified by the arguments to \fBcuEventRecord()\fP).
+.PP
+If \fBcuEventRecord()\fP has not been called on \fChEvent\fP, \fBCUDA_SUCCESS\fP is returned immediately.
+.PP
+Waiting for an event that was created with the \fBCU_EVENT_BLOCKING_SYNC\fP flag will cause the calling CPU thread to block until the event has been completed by the device. If the \fBCU_EVENT_BLOCKING_SYNC\fP flag has not been set, then the CPU thread will busy-wait until the event has been completed by the device.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIhEvent\fP - Event to wait for
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_DEINITIALIZED\fP, \fBCUDA_ERROR_NOT_INITIALIZED\fP, \fBCUDA_ERROR_INVALID_CONTEXT\fP, \fBCUDA_ERROR_INVALID_HANDLE\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuEventCreate\fP, \fBcuEventRecord\fP, \fBcuEventQuery\fP, \fBcuEventDestroy\fP, \fBcuEventElapsedTime\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuStreamBatchMemOp (\fBCUstream\fP stream, unsigned int count, \fBCUstreamBatchMemOpParams\fP * paramArray, unsigned int flags)"
+.PP
+This is a batch version of \fBcuStreamWaitValue32()\fP and \fBcuStreamWriteValue32()\fP. Batching operations may avoid some performance overhead in both the API call and the device execution versus adding them to the stream in separate API calls. The operations are enqueued in the order they appear in the array.
+.PP
+See \fBCUstreamBatchMemOpType\fP for the full set of supported operations, and \fBcuStreamWaitValue32()\fP and \fBcuStreamWriteValue32()\fP for details of specific operations.
+.PP
+On Windows, the device must be using TCC, or this call is not supported. See \fBcuDeviceGetAttribute()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstream\fP The stream to enqueue the operations in. 
+.br
+\fIcount\fP The number of operations in the array. Must be less than 256. 
+.br
+\fIparamArray\fP The types and parameters of the individual operations. 
+.br
+\fIflags\fP Reserved for future expansion; must be 0.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_NOT_SUPPORTED\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuStreamWaitValue32\fP, \fBcuStreamWriteValue32\fP, \fBcuMemHostRegister\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuStreamWaitValue32 (\fBCUstream\fP stream, \fBCUdeviceptr\fP addr, cuuint32_t value, unsigned int flags)"
+.PP
+Enqueues a synchronization of the stream on the given memory location. Work ordered after the operation will block until the given condition on the memory is satisfied. By default, the condition is to wait for (int32_t)(*addr - value) >= 0, a cyclic greater-or-equal. Other condition types can be specified via \fCflags\fP.
+.PP
+If the memory was registered via \fBcuMemHostRegister()\fP, the device pointer should be obtained with \fBcuMemHostGetDevicePointer()\fP. This function cannot be used with managed memory (\fBcuMemAllocManaged\fP).
+.PP
+On Windows, the device must be using TCC, or the operation is not supported. See cuDeviceGetAttributes().
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstream\fP The stream to synchronize on the memory location. 
+.br
+\fIaddr\fP The memory location to wait on. 
+.br
+\fIvalue\fP The value to compare with the memory location. 
+.br
+\fIflags\fP See \fBCUstreamWaitValue_flags\fP.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_NOT_SUPPORTED\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuStreamWriteValue32\fP, \fBcuStreamBatchMemOp\fP, \fBcuMemHostRegister\fP, \fBcuStreamWaitEvent\fP 
+.RE
+.PP
+
+.SS "\fBCUresult\fP cuStreamWriteValue32 (\fBCUstream\fP stream, \fBCUdeviceptr\fP addr, cuuint32_t value, unsigned int flags)"
+.PP
+Write a value to memory. Unless the \fBCU_STREAM_WRITE_VALUE_NO_MEMORY_BARRIER\fP flag is passed, the write is preceded by a system-wide memory fence, equivalent to a __threadfence_system() but scoped to the stream rather than a CUDA thread.
+.PP
+If the memory was registered via \fBcuMemHostRegister()\fP, the device pointer should be obtained with \fBcuMemHostGetDevicePointer()\fP. This function cannot be used with managed memory (\fBcuMemAllocManaged\fP).
+.PP
+On Windows, the device must be using TCC, or the operation is not supported. See \fBcuDeviceGetAttribute()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstream\fP The stream to do the write in. 
+.br
+\fIaddr\fP The device address to write to. 
+.br
+\fIvalue\fP The value to write. 
+.br
+\fIflags\fP See \fBCUstreamWriteValue_flags\fP.
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBCUDA_SUCCESS\fP, \fBCUDA_ERROR_INVALID_VALUE\fP, \fBCUDA_ERROR_NOT_SUPPORTED\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcuStreamWaitValue32\fP, \fBcuStreamBatchMemOp\fP, \fBcuMemHostRegister\fP, \fBcuEventRecord\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

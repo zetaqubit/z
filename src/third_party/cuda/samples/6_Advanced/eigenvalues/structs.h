@@ -70,7 +70,7 @@ struct ResultDataLarge
     unsigned int *g_num_one;
 
     // number of (thread) blocks of intervals containing multiple eigenvalues
-    // after the first steo
+    // after the first step
     unsigned int *g_num_blocks_mult;
 
     //! left interval limits of intervals containing one eigenvalue after the

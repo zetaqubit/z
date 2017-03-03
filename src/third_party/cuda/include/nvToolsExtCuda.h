@@ -1,5 +1,5 @@
 /*
-* Copyright 2009-2012  NVIDIA Corporation.  All rights reserved.
+* Copyright 2009-2016  NVIDIA Corporation.  All rights reserved.
 *
 * NOTICE TO USER:
 *
@@ -57,6 +57,26 @@ extern "C" {
  *
  * @{
  */
+
+/*  ------------------------------------------------------------------------- */
+/* \cond SHOW_HIDDEN 
+* \brief Used to build a non-colliding value for resource types separated class
+* \version \NVTX_VERSION_2
+*/
+#define NVTX_RESOURCE_CLASS_CUDA  4
+/** \endcond */
+
+/*  ------------------------------------------------------------------------- */
+/** \brief Resource types for CUDA
+*/
+typedef enum nvtxResourceCUDAType_t
+{
+    NVTX_RESOURCE_TYPE_CUDA_DEVICE = NVTX_RESOURCE_MAKE_TYPE(CUDA, 1), /* CUdevice */
+    NVTX_RESOURCE_TYPE_CUDA_CONTEXT = NVTX_RESOURCE_MAKE_TYPE(CUDA, 2), /* CUcontext */
+    NVTX_RESOURCE_TYPE_CUDA_STREAM = NVTX_RESOURCE_MAKE_TYPE(CUDA, 3), /* CUstream */
+    NVTX_RESOURCE_TYPE_CUDA_EVENT = NVTX_RESOURCE_MAKE_TYPE(CUDA, 4), /* CUevent */
+} nvtxResourceCUDAType_t;
+
 
 /* ------------------------------------------------------------------------- */
 /** \brief Annotates a CUDA device.

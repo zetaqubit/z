@@ -1,5 +1,5 @@
 /*
- * Copyright 1993-2010 NVIDIA Corporation.  All rights reserved.
+ * Copyright 1993-2016 NVIDIA Corporation.  All rights reserved.
  *
  * NOTICE TO USER:   
  *
@@ -75,12 +75,14 @@ typedef __device_builtin_surface_type__ const void *__surface_type__;
 #define __storage_extern_unsized__shared__ \
         extern
 #define __cxa_vec_ctor(n, num, size, c, d) \
-        ({ int i; for (i = 0; i < num; i++) c((void*)((unsigned char *)n + i*size)); (void)0; })
+        ({ if (c) { int i; for (i = 0; i < num; i++) c((void*)((unsigned char *)n + i*size)); (void)0; }})
 #define __cxa_vec_cctor(dest, src, num, size, c, d) \
-        ({ int i; for (i = 0; i < num; i++) \
-          c((void*)((unsigned char *)dest + i*size), (void*)((unsigned char *)src + i*size)); (void)0; })
+        ({ if (c) { int i; for (i = 0; i < num; i++) \
+          c((void*)((unsigned char *)dest + i*size), (void*)((unsigned char *)src + i*size)); (void)0; }})
 #define __cxa_vec_dtor(n, num, size, d) \
-        { int i; for (i = num-1; i >= 0; i--) d((void*)((unsigned char *)n + i*size)); }
+        { if (d) { int i; for (i = num-1; i >= 0; i--) d((void*)((unsigned char *)n + i*size)); }}
+#define __cxa_vec_new(num, size, pad, c, d) \
+        __cxa_vec_new2(num, size, pad, c, d, malloc, free)
 #define __cxa_vec_new2(num, size, pad, c, d, m, f) \
         ({unsigned char *t = m(num*size + pad); *(size_t*)t = num; \
           (void)__cxa_vec_ctor((void *)(t+pad), num, size, c, d); (void *)(t+pad);})
@@ -174,11 +176,30 @@ typedef __device_builtin_surface_type__ const void *__surface_type__;
         free
 #define _ZdaPv \
         free
+#define _ZdlPvm \
+        __nv_sized_free
+#define _ZdlPvy \
+        __nv_sized_free
+#define _ZdaPvm \
+        __nv_sized_array_free
+#define _ZdaPvy \
+        __nv_sized_array_free
 #define __cxa_pure_virtual \
         0
 
+#if defined(_MSC_VER)
 extern __device__ void* malloc(size_t);
 extern __device__ void free(void*);
+static __device__ void __nv_sized_free(void *p, size_t sz) { free(p); }
+static __device__ void __nv_sized_array_free(void *p, size_t sz) { free(p); }
+#else /* !_MSC_VER */
+extern __device__ __attribute__((used)) void* malloc(size_t);
+extern __device__ __attribute__((used)) void free(void*);
+/* Don't add used attribute for the following two functions, which should
+   be kept only if they are actually used. */
+static __device__ void __nv_sized_free(void *p, size_t sz) { free(p); }
+static __device__ void __nv_sized_array_free(void *p, size_t sz) { free(p); }
+#endif /* _MSC_VER */
 
 extern __device__ void __assertfail(
   const void  *message,

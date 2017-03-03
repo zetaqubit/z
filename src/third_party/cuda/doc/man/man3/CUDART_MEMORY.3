@@ -1,0 +1,2625 @@
+.TH "Memory Management" 3 "12 Jan 2017" "Version 6.0" "Doxygen" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Memory Management \- 
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaArrayGetInfo\fP (struct \fBcudaChannelFormatDesc\fP *desc, struct \fBcudaExtent\fP *extent, unsigned int *flags, \fBcudaArray_t\fP array)"
+.br
+.RI "\fIGets info about the specified cudaArray. \fP"
+.ti -1c
+.RI "__cudart_builtin__ \fBcudaError_t\fP \fBcudaFree\fP (void *devPtr)"
+.br
+.RI "\fIFrees memory on the device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaFreeArray\fP (\fBcudaArray_t\fP array)"
+.br
+.RI "\fIFrees an array on the device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaFreeHost\fP (void *ptr)"
+.br
+.RI "\fIFrees page-locked memory. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaFreeMipmappedArray\fP (\fBcudaMipmappedArray_t\fP mipmappedArray)"
+.br
+.RI "\fIFrees a mipmapped array on the device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaGetMipmappedArrayLevel\fP (\fBcudaArray_t\fP *levelArray, \fBcudaMipmappedArray_const_t\fP mipmappedArray, unsigned int level)"
+.br
+.RI "\fIGets a mipmap level of a CUDA mipmapped array. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaGetSymbolAddress\fP (void **devPtr, const void *symbol)"
+.br
+.RI "\fIFinds the address associated with a CUDA symbol. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaGetSymbolSize\fP (size_t *size, const void *symbol)"
+.br
+.RI "\fIFinds the size of the object associated with a CUDA symbol. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaHostAlloc\fP (void **pHost, size_t size, unsigned int flags)"
+.br
+.RI "\fIAllocates page-locked memory on the host. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaHostGetDevicePointer\fP (void **pDevice, void *pHost, unsigned int flags)"
+.br
+.RI "\fIPasses back device pointer of mapped host memory allocated by cudaHostAlloc or registered by cudaHostRegister. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaHostGetFlags\fP (unsigned int *pFlags, void *pHost)"
+.br
+.RI "\fIPasses back flags used to allocate pinned host memory allocated by cudaHostAlloc. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaHostRegister\fP (void *ptr, size_t size, unsigned int flags)"
+.br
+.RI "\fIRegisters an existing host memory range for use by CUDA. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaHostUnregister\fP (void *ptr)"
+.br
+.RI "\fIUnregisters a memory range that was registered with cudaHostRegister. \fP"
+.ti -1c
+.RI "__cudart_builtin__ \fBcudaError_t\fP \fBcudaMalloc\fP (void **devPtr, size_t size)"
+.br
+.RI "\fIAllocate memory on the device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMalloc3D\fP (struct \fBcudaPitchedPtr\fP *pitchedDevPtr, struct \fBcudaExtent\fP extent)"
+.br
+.RI "\fIAllocates logical 1D, 2D, or 3D memory objects on the device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMalloc3DArray\fP (\fBcudaArray_t\fP *array, const struct \fBcudaChannelFormatDesc\fP *desc, struct \fBcudaExtent\fP extent, unsigned int flags=0)"
+.br
+.RI "\fIAllocate an array on the device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMallocArray\fP (\fBcudaArray_t\fP *array, const struct \fBcudaChannelFormatDesc\fP *desc, size_t width, size_t height=0, unsigned int flags=0)"
+.br
+.RI "\fIAllocate an array on the device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMallocHost\fP (void **ptr, size_t size)"
+.br
+.RI "\fIAllocates page-locked memory on the host. \fP"
+.ti -1c
+.RI "__cudart_builtin__ \fBcudaError_t\fP \fBcudaMallocManaged\fP (void **devPtr, size_t size, unsigned int flags=0x01)"
+.br
+.RI "\fIAllocates memory that will be automatically managed by the Unified Memory system. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMallocMipmappedArray\fP (\fBcudaMipmappedArray_t\fP *mipmappedArray, const struct \fBcudaChannelFormatDesc\fP *desc, struct \fBcudaExtent\fP extent, unsigned int numLevels, unsigned int flags=0)"
+.br
+.RI "\fIAllocate a mipmapped array on the device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMallocPitch\fP (void **devPtr, size_t *pitch, size_t width, size_t height)"
+.br
+.RI "\fIAllocates pitched memory on the device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemAdvise\fP (const void *devPtr, size_t count, enum \fBcudaMemoryAdvise\fP advice, int device)"
+.br
+.RI "\fIAdvise about the usage of a given memory range. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpy\fP (void *dst, const void *src, size_t count, enum \fBcudaMemcpyKind\fP kind)"
+.br
+.RI "\fICopies data between host and device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpy2D\fP (void *dst, size_t dpitch, const void *src, size_t spitch, size_t width, size_t height, enum \fBcudaMemcpyKind\fP kind)"
+.br
+.RI "\fICopies data between host and device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpy2DArrayToArray\fP (\fBcudaArray_t\fP dst, size_t wOffsetDst, size_t hOffsetDst, \fBcudaArray_const_t\fP src, size_t wOffsetSrc, size_t hOffsetSrc, size_t width, size_t height, enum \fBcudaMemcpyKind\fP kind=cudaMemcpyDeviceToDevice)"
+.br
+.RI "\fICopies data between host and device. \fP"
+.ti -1c
+.RI "__cudart_builtin__ \fBcudaError_t\fP \fBcudaMemcpy2DAsync\fP (void *dst, size_t dpitch, const void *src, size_t spitch, size_t width, size_t height, enum \fBcudaMemcpyKind\fP kind, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fICopies data between host and device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpy2DFromArray\fP (void *dst, size_t dpitch, \fBcudaArray_const_t\fP src, size_t wOffset, size_t hOffset, size_t width, size_t height, enum \fBcudaMemcpyKind\fP kind)"
+.br
+.RI "\fICopies data between host and device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpy2DFromArrayAsync\fP (void *dst, size_t dpitch, \fBcudaArray_const_t\fP src, size_t wOffset, size_t hOffset, size_t width, size_t height, enum \fBcudaMemcpyKind\fP kind, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fICopies data between host and device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpy2DToArray\fP (\fBcudaArray_t\fP dst, size_t wOffset, size_t hOffset, const void *src, size_t spitch, size_t width, size_t height, enum \fBcudaMemcpyKind\fP kind)"
+.br
+.RI "\fICopies data between host and device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpy2DToArrayAsync\fP (\fBcudaArray_t\fP dst, size_t wOffset, size_t hOffset, const void *src, size_t spitch, size_t width, size_t height, enum \fBcudaMemcpyKind\fP kind, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fICopies data between host and device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpy3D\fP (const struct \fBcudaMemcpy3DParms\fP *p)"
+.br
+.RI "\fICopies data between 3D objects. \fP"
+.ti -1c
+.RI "__cudart_builtin__ \fBcudaError_t\fP \fBcudaMemcpy3DAsync\fP (const struct \fBcudaMemcpy3DParms\fP *p, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fICopies data between 3D objects. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpy3DPeer\fP (const struct \fBcudaMemcpy3DPeerParms\fP *p)"
+.br
+.RI "\fICopies memory between devices. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpy3DPeerAsync\fP (const struct \fBcudaMemcpy3DPeerParms\fP *p, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fICopies memory between devices asynchronously. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpyArrayToArray\fP (\fBcudaArray_t\fP dst, size_t wOffsetDst, size_t hOffsetDst, \fBcudaArray_const_t\fP src, size_t wOffsetSrc, size_t hOffsetSrc, size_t count, enum \fBcudaMemcpyKind\fP kind=cudaMemcpyDeviceToDevice)"
+.br
+.RI "\fICopies data between host and device. \fP"
+.ti -1c
+.RI "__cudart_builtin__ \fBcudaError_t\fP \fBcudaMemcpyAsync\fP (void *dst, const void *src, size_t count, enum \fBcudaMemcpyKind\fP kind, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fICopies data between host and device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpyFromArray\fP (void *dst, \fBcudaArray_const_t\fP src, size_t wOffset, size_t hOffset, size_t count, enum \fBcudaMemcpyKind\fP kind)"
+.br
+.RI "\fICopies data between host and device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpyFromArrayAsync\fP (void *dst, \fBcudaArray_const_t\fP src, size_t wOffset, size_t hOffset, size_t count, enum \fBcudaMemcpyKind\fP kind, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fICopies data between host and device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpyFromSymbol\fP (void *dst, const void *symbol, size_t count, size_t offset=0, enum \fBcudaMemcpyKind\fP kind=cudaMemcpyDeviceToHost)"
+.br
+.RI "\fICopies data from the given symbol on the device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpyFromSymbolAsync\fP (void *dst, const void *symbol, size_t count, size_t offset, enum \fBcudaMemcpyKind\fP kind, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fICopies data from the given symbol on the device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpyPeer\fP (void *dst, int dstDevice, const void *src, int srcDevice, size_t count)"
+.br
+.RI "\fICopies memory between two devices. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpyPeerAsync\fP (void *dst, int dstDevice, const void *src, int srcDevice, size_t count, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fICopies memory between two devices asynchronously. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpyToArray\fP (\fBcudaArray_t\fP dst, size_t wOffset, size_t hOffset, const void *src, size_t count, enum \fBcudaMemcpyKind\fP kind)"
+.br
+.RI "\fICopies data between host and device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpyToArrayAsync\fP (\fBcudaArray_t\fP dst, size_t wOffset, size_t hOffset, const void *src, size_t count, enum \fBcudaMemcpyKind\fP kind, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fICopies data between host and device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpyToSymbol\fP (const void *symbol, const void *src, size_t count, size_t offset=0, enum \fBcudaMemcpyKind\fP kind=cudaMemcpyHostToDevice)"
+.br
+.RI "\fICopies data to the given symbol on the device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemcpyToSymbolAsync\fP (const void *symbol, const void *src, size_t count, size_t offset, enum \fBcudaMemcpyKind\fP kind, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fICopies data to the given symbol on the device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemGetInfo\fP (size_t *free, size_t *total)"
+.br
+.RI "\fIGets free and total device memory. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemPrefetchAsync\fP (const void *devPtr, size_t count, int dstDevice, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fIPrefetches memory to the specified destination device. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemRangeGetAttribute\fP (void *data, size_t dataSize, enum \fBcudaMemRangeAttribute\fP attribute, const void *devPtr, size_t count)"
+.br
+.RI "\fIQuery an attribute of a given memory range. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemRangeGetAttributes\fP (void **data, size_t *dataSizes, enum \fBcudaMemRangeAttribute\fP *attributes, size_t numAttributes, const void *devPtr, size_t count)"
+.br
+.RI "\fIQuery attributes of a given memory range. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemset\fP (void *devPtr, int value, size_t count)"
+.br
+.RI "\fIInitializes or sets device memory to a value. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemset2D\fP (void *devPtr, size_t pitch, int value, size_t width, size_t height)"
+.br
+.RI "\fIInitializes or sets device memory to a value. \fP"
+.ti -1c
+.RI "__cudart_builtin__ \fBcudaError_t\fP \fBcudaMemset2DAsync\fP (void *devPtr, size_t pitch, int value, size_t width, size_t height, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fIInitializes or sets device memory to a value. \fP"
+.ti -1c
+.RI "\fBcudaError_t\fP \fBcudaMemset3D\fP (struct \fBcudaPitchedPtr\fP pitchedDevPtr, int value, struct \fBcudaExtent\fP extent)"
+.br
+.RI "\fIInitializes or sets device memory to a value. \fP"
+.ti -1c
+.RI "__cudart_builtin__ \fBcudaError_t\fP \fBcudaMemset3DAsync\fP (struct \fBcudaPitchedPtr\fP pitchedDevPtr, int value, struct \fBcudaExtent\fP extent, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fIInitializes or sets device memory to a value. \fP"
+.ti -1c
+.RI "__cudart_builtin__ \fBcudaError_t\fP \fBcudaMemsetAsync\fP (void *devPtr, int value, size_t count, \fBcudaStream_t\fP stream=0)"
+.br
+.RI "\fIInitializes or sets device memory to a value. \fP"
+.ti -1c
+.RI "struct \fBcudaExtent\fP \fBmake_cudaExtent\fP (size_t w, size_t h, size_t d)"
+.br
+.RI "\fIReturns a \fBcudaExtent\fP based on input parameters. \fP"
+.ti -1c
+.RI "struct \fBcudaPitchedPtr\fP \fBmake_cudaPitchedPtr\fP (void *d, size_t p, size_t xsz, size_t ysz)"
+.br
+.RI "\fIReturns a \fBcudaPitchedPtr\fP based on input parameters. \fP"
+.ti -1c
+.RI "struct \fBcudaPos\fP \fBmake_cudaPos\fP (size_t x, size_t y, size_t z)"
+.br
+.RI "\fIReturns a \fBcudaPos\fP based on input parameters. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+\\brief memory management functions of the CUDA runtime API (cuda_runtime_api.h)
+.PP
+This section describes the memory management functions of the CUDA runtime application programming interface.
+.PP
+Some functions have overloaded C++ API template versions documented separately in the \fBC++ API Routines\fP module. 
+.SH "Function Documentation"
+.PP 
+.SS "\fBcudaError_t\fP cudaArrayGetInfo (struct \fBcudaChannelFormatDesc\fP * desc, struct \fBcudaExtent\fP * extent, unsigned int * flags, \fBcudaArray_t\fP array)"
+.PP
+Returns in \fC*desc\fP, \fC*extent\fP and \fC*flags\fP respectively, the type, shape and flags of \fCarray\fP.
+.PP
+Any of \fC*desc\fP, \fC*extent\fP and \fC*flags\fP may be specified as NULL.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdesc\fP - Returned array type 
+.br
+\fIextent\fP - Returned array shape. 2D arrays will have depth of zero 
+.br
+\fIflags\fP - Returned array flags 
+.br
+\fIarray\fP - The cudaArray to get info for
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.RE
+.PP
+
+.SS "__cudart_builtin__ \fBcudaError_t\fP cudaFree (void * devPtr)"
+.PP
+Frees the memory space pointed to by \fCdevPtr\fP, which must have been returned by a previous call to \fBcudaMalloc()\fP or \fBcudaMallocPitch()\fP. Otherwise, or if \fBcudaFree\fP(\fCdevPtr\fP) has already been called before, an error is returned. If \fCdevPtr\fP is 0, no operation is performed. \fBcudaFree()\fP returns \fBcudaErrorInvalidDevicePointer\fP in case of failure.
+.PP
+The device version of \fBcudaFree\fP cannot be used with a \fC*devPtr\fP allocated using the host API, and vice versa.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevPtr\fP - Device pointer to memory to free
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInitializationError\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMalloc\fP, \fBcudaMallocPitch\fP, \fBcudaMallocArray\fP, \fBcudaFreeArray\fP, \fBcudaMallocHost (C API)\fP, \fBcudaFreeHost\fP, \fBcudaMalloc3D\fP, \fBcudaMalloc3DArray\fP, \fBcudaHostAlloc\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaFreeArray (\fBcudaArray_t\fP array)"
+.PP
+Frees the CUDA array \fCarray\fP, which must have been * returned by a previous call to \fBcudaMallocArray()\fP. If \fBcudaFreeArray\fP(\fCarray\fP) has already been called before, \fBcudaErrorInvalidValue\fP is returned. If \fCdevPtr\fP is 0, no operation is performed.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIarray\fP - Pointer to array to free
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInitializationError\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMalloc\fP, \fBcudaMallocPitch\fP, \fBcudaFree\fP, \fBcudaMallocArray\fP, \fBcudaMallocHost (C API)\fP, \fBcudaFreeHost\fP, \fBcudaHostAlloc\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaFreeHost (void * ptr)"
+.PP
+Frees the memory space pointed to by \fChostPtr\fP, which must have been returned by a previous call to \fBcudaMallocHost()\fP or \fBcudaHostAlloc()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIptr\fP - Pointer to memory to free
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInitializationError\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMalloc\fP, \fBcudaMallocPitch\fP, \fBcudaFree\fP, \fBcudaMallocArray\fP, \fBcudaFreeArray\fP, \fBcudaMallocHost (C API)\fP, \fBcudaMalloc3D\fP, \fBcudaMalloc3DArray\fP, \fBcudaHostAlloc\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaFreeMipmappedArray (\fBcudaMipmappedArray_t\fP mipmappedArray)"
+.PP
+Frees the CUDA mipmapped array \fCmipmappedArray\fP, which must have been returned by a previous call to \fBcudaMallocMipmappedArray()\fP. If \fBcudaFreeMipmappedArray\fP(\fCmipmappedArray\fP) has already been called before, \fBcudaErrorInvalidValue\fP is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fImipmappedArray\fP - Pointer to mipmapped array to free
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInitializationError\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMalloc\fP, \fBcudaMallocPitch\fP, \fBcudaFree\fP, \fBcudaMallocArray\fP, \fBcudaMallocHost (C API)\fP, \fBcudaFreeHost\fP, \fBcudaHostAlloc\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaGetMipmappedArrayLevel (\fBcudaArray_t\fP * levelArray, \fBcudaMipmappedArray_const_t\fP mipmappedArray, unsigned int level)"
+.PP
+Returns in \fC*levelArray\fP a CUDA array that represents a single mipmap level of the CUDA mipmapped array \fCmipmappedArray\fP.
+.PP
+If \fClevel\fP is greater than the maximum number of levels in this mipmapped array, \fBcudaErrorInvalidValue\fP is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIlevelArray\fP - Returned mipmap level CUDA array 
+.br
+\fImipmappedArray\fP - CUDA mipmapped array 
+.br
+\fIlevel\fP - Mipmap level
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMalloc3D\fP, \fBcudaMalloc\fP, \fBcudaMallocPitch\fP, \fBcudaFree\fP, \fBcudaFreeArray\fP, \fBcudaMallocHost (C API)\fP, \fBcudaFreeHost\fP, \fBcudaHostAlloc\fP, \fBmake_cudaExtent\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaGetSymbolAddress (void ** devPtr, const void * symbol)"
+.PP
+Returns in \fC*devPtr\fP the address of symbol \fCsymbol\fP on the device. \fCsymbol\fP is a variable that resides in global or constant memory space. If \fCsymbol\fP cannot be found, or if \fCsymbol\fP is not declared in the global or constant memory space, \fC*devPtr\fP is unchanged and the error \fBcudaErrorInvalidSymbol\fP is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevPtr\fP - Return device pointer associated with symbol 
+.br
+\fIsymbol\fP - Device symbol address
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidSymbol\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+Use of a string naming a variable as the \fCsymbol\fP paramater was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaGetSymbolAddress (C++ API)\fP, \fBcudaGetSymbolSize (C API)\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaGetSymbolSize (size_t * size, const void * symbol)"
+.PP
+Returns in \fC*size\fP the size of symbol \fCsymbol\fP. \fCsymbol\fP is a variable that resides in global or constant memory space. If \fCsymbol\fP cannot be found, or if \fCsymbol\fP is not declared in global or constant memory space, \fC*size\fP is unchanged and the error \fBcudaErrorInvalidSymbol\fP is returned.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsize\fP - Size of object associated with symbol 
+.br
+\fIsymbol\fP - Device symbol address
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidSymbol\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+Use of a string naming a variable as the \fCsymbol\fP paramater was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaGetSymbolAddress (C API)\fP, \fBcudaGetSymbolSize (C++ API)\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaHostAlloc (void ** pHost, size_t size, unsigned int flags)"
+.PP
+Allocates \fCsize\fP bytes of host memory that is page-locked and accessible to the device. The driver tracks the virtual memory ranges allocated with this function and automatically accelerates calls to functions such as \fBcudaMemcpy()\fP. Since the memory can be accessed directly by the device, it can be read or written with much higher bandwidth than pageable memory obtained with functions such as malloc(). Allocating excessive amounts of pinned memory may degrade system performance, since it reduces the amount of memory available to the system for paging. As a result, this function is best used sparingly to allocate staging areas for data exchange between host and device.
+.PP
+The \fCflags\fP parameter enables different options to be specified that affect the allocation, as follows.
+.IP "\(bu" 2
+\fBcudaHostAllocDefault\fP: This flag's value is defined to be 0 and causes \fBcudaHostAlloc()\fP to emulate \fBcudaMallocHost()\fP.
+.IP "\(bu" 2
+\fBcudaHostAllocPortable\fP: The memory returned by this call will be considered as pinned memory by all CUDA contexts, not just the one that performed the allocation.
+.IP "\(bu" 2
+\fBcudaHostAllocMapped\fP: Maps the allocation into the CUDA address space. The device pointer to the memory may be obtained by calling \fBcudaHostGetDevicePointer()\fP.
+.IP "\(bu" 2
+\fBcudaHostAllocWriteCombined\fP: Allocates the memory as write-combined (WC). WC memory can be transferred across the PCI Express bus more quickly on some system configurations, but cannot be read efficiently by most CPUs. WC memory is a good option for buffers that will be written by the CPU and read by the device via mapped pinned memory or host->device transfers.
+.PP
+.PP
+All of these flags are orthogonal to one another: a developer may allocate memory that is portable, mapped and/or write-combined with no restrictions.
+.PP
+\fBcudaSetDeviceFlags()\fP must have been called with the \fBcudaDeviceMapHost\fP flag in order for the \fBcudaHostAllocMapped\fP flag to have any effect.
+.PP
+The \fBcudaHostAllocMapped\fP flag may be specified on CUDA contexts for devices that do not support mapped pinned memory. The failure is deferred to \fBcudaHostGetDevicePointer()\fP because the memory may be mapped into other CUDA contexts via the \fBcudaHostAllocPortable\fP flag.
+.PP
+Memory allocated by this function must be freed with \fBcudaFreeHost()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpHost\fP - Device pointer to allocated memory 
+.br
+\fIsize\fP - Requested allocation size in bytes 
+.br
+\fIflags\fP - Requested properties of allocated memory
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorMemoryAllocation\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaSetDeviceFlags\fP, \fBcudaMallocHost (C API)\fP, \fBcudaFreeHost\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaHostGetDevicePointer (void ** pDevice, void * pHost, unsigned int flags)"
+.PP
+Passes back the device pointer corresponding to the mapped, pinned host buffer allocated by \fBcudaHostAlloc()\fP or registered by \fBcudaHostRegister()\fP.
+.PP
+\fBcudaHostGetDevicePointer()\fP will fail if the \fBcudaDeviceMapHost\fP flag was not specified before deferred context creation occurred, or if called on a device that does not support mapped, pinned memory.
+.PP
+For devices that have a non-zero value for the device attribute \fBcudaDevAttrCanUseHostPointerForRegisteredMem\fP, the memory can also be accessed from the device using the host pointer \fCpHost\fP. The device pointer returned by \fBcudaHostGetDevicePointer()\fP may or may not match the original host pointer \fCpHost\fP and depends on the devices visible to the application. If all devices visible to the application have a non-zero value for the device attribute, the device pointer returned by \fBcudaHostGetDevicePointer()\fP will match the original pointer \fCpHost\fP. If any device visible to the application has a zero value for the device attribute, the device pointer returned by \fBcudaHostGetDevicePointer()\fP will not match the original host pointer \fCpHost\fP, but it will be suitable for use on all devices provided Unified Virtual Addressing is enabled. In such systems, it is valid to access the memory using either pointer on devices that have a non-zero value for the device attribute. Note however that such devices should access the memory using only of the two pointers and not both.
+.PP
+\fCflags\fP provides for future releases. For now, it must be set to 0.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpDevice\fP - Returned device pointer for mapped memory 
+.br
+\fIpHost\fP - Requested host pointer mapping 
+.br
+\fIflags\fP - Flags for extensions (must be 0 for now)
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorMemoryAllocation\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaSetDeviceFlags\fP, \fBcudaHostAlloc\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaHostGetFlags (unsigned int * pFlags, void * pHost)"
+.PP
+\fBcudaHostGetFlags()\fP will fail if the input pointer does not reside in an address range allocated by \fBcudaHostAlloc()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpFlags\fP - Returned flags word 
+.br
+\fIpHost\fP - Host pointer
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaHostAlloc\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaHostRegister (void * ptr, size_t size, unsigned int flags)"
+.PP
+Page-locks the memory range specified by \fCptr\fP and \fCsize\fP and maps it for the device(s) as specified by \fCflags\fP. This memory range also is added to the same tracking mechanism as \fBcudaHostAlloc()\fP to automatically accelerate calls to functions such as \fBcudaMemcpy()\fP. Since the memory can be accessed directly by the device, it can be read or written with much higher bandwidth than pageable memory that has not been registered. Page-locking excessive amounts of memory may degrade system performance, since it reduces the amount of memory available to the system for paging. As a result, this function is best used sparingly to register staging areas for data exchange between host and device.
+.PP
+The \fCflags\fP parameter enables different options to be specified that affect the allocation, as follows.
+.PP
+.IP "\(bu" 2
+\fBcudaHostRegisterDefault\fP: On a system with unified virtual addressing, the memory will be both mapped and portable. On a system with no unified virtual addressing, the memory will be neither mapped nor portable.
+.PP
+.PP
+.IP "\(bu" 2
+\fBcudaHostRegisterPortable\fP: The memory returned by this call will be considered as pinned memory by all CUDA contexts, not just the one that performed the allocation.
+.PP
+.PP
+.IP "\(bu" 2
+\fBcudaHostRegisterMapped\fP: Maps the allocation into the CUDA address space. The device pointer to the memory may be obtained by calling \fBcudaHostGetDevicePointer()\fP.
+.PP
+.PP
+.IP "\(bu" 2
+\fBcudaHostRegisterIoMemory\fP: The passed memory pointer is treated as pointing to some memory-mapped I/O space, e.g. belonging to a third-party PCIe device, and it will marked as non cache-coherent and contiguous.
+.PP
+.PP
+All of these flags are orthogonal to one another: a developer may page-lock memory that is portable or mapped with no restrictions.
+.PP
+The CUDA context must have been created with the cudaMapHost flag in order for the \fBcudaHostRegisterMapped\fP flag to have any effect.
+.PP
+The \fBcudaHostRegisterMapped\fP flag may be specified on CUDA contexts for devices that do not support mapped pinned memory. The failure is deferred to \fBcudaHostGetDevicePointer()\fP because the memory may be mapped into other CUDA contexts via the \fBcudaHostRegisterPortable\fP flag.
+.PP
+For devices that have a non-zero value for the device attribute \fBcudaDevAttrCanUseHostPointerForRegisteredMem\fP, the memory can also be accessed from the device using the host pointer \fCptr\fP. The device pointer returned by \fBcudaHostGetDevicePointer()\fP may or may not match the original host pointer \fCptr\fP and depends on the devices visible to the application. If all devices visible to the application have a non-zero value for the device attribute, the device pointer returned by \fBcudaHostGetDevicePointer()\fP will match the original pointer \fCptr\fP. If any device visible to the application has a zero value for the device attribute, the device pointer returned by \fBcudaHostGetDevicePointer()\fP will not match the original host pointer \fCptr\fP, but it will be suitable for use on all devices provided Unified Virtual Addressing is enabled. In such systems, it is valid to access the memory using either pointer on devices that have a non-zero value for the device attribute. Note however that such devices should access the memory using only of the two pointers and not both.
+.PP
+The memory page-locked by this function must be unregistered with \fBcudaHostUnregister()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIptr\fP - Host pointer to memory to page-lock 
+.br
+\fIsize\fP - Size in bytes of the address range to page-lock in bytes 
+.br
+\fIflags\fP - Flags for allocation request
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorMemoryAllocation\fP, \fBcudaErrorHostMemoryAlreadyRegistered\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaHostUnregister\fP, \fBcudaHostGetFlags\fP, \fBcudaHostGetDevicePointer\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaHostUnregister (void * ptr)"
+.PP
+Unmaps the memory range whose base address is specified by \fCptr\fP, and makes it pageable again.
+.PP
+The base address must be the same one specified to \fBcudaHostRegister()\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIptr\fP - Host pointer to memory to unregister
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaHostUnregister\fP 
+.RE
+.PP
+
+.SS "__cudart_builtin__ \fBcudaError_t\fP cudaMalloc (void ** devPtr, size_t size)"
+.PP
+Allocates \fCsize\fP bytes of linear memory on the device and returns in \fC*devPtr\fP a pointer to the allocated memory. The allocated memory is suitably aligned for any kind of variable. The memory is not cleared. \fBcudaMalloc()\fP returns \fBcudaErrorMemoryAllocation\fP in case of failure.
+.PP
+The device version of \fBcudaFree\fP cannot be used with a \fC*devPtr\fP allocated using the host API, and vice versa.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevPtr\fP - Pointer to allocated device memory 
+.br
+\fIsize\fP - Requested allocation size in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorMemoryAllocation\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMallocPitch\fP, \fBcudaFree\fP, \fBcudaMallocArray\fP, \fBcudaFreeArray\fP, \fBcudaMalloc3D\fP, \fBcudaMalloc3DArray\fP, \fBcudaMallocHost (C API)\fP, \fBcudaFreeHost\fP, \fBcudaHostAlloc\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMalloc3D (struct \fBcudaPitchedPtr\fP * pitchedDevPtr, struct \fBcudaExtent\fP extent)"
+.PP
+Allocates at least \fCwidth\fP * \fCheight\fP * \fCdepth\fP bytes of linear memory on the device and returns a \fBcudaPitchedPtr\fP in which \fCptr\fP is a pointer to the allocated memory. The function may pad the allocation to ensure hardware alignment requirements are met. The pitch returned in the \fCpitch\fP field of \fCpitchedDevPtr\fP is the width in bytes of the allocation.
+.PP
+The returned \fBcudaPitchedPtr\fP contains additional fields \fCxsize\fP and \fCysize\fP, the logical width and height of the allocation, which are equivalent to the \fCwidth\fP and \fCheight\fP \fCextent\fP parameters provided by the programmer during allocation.
+.PP
+For allocations of 2D and 3D objects, it is highly recommended that programmers perform allocations using \fBcudaMalloc3D()\fP or \fBcudaMallocPitch()\fP. Due to alignment restrictions in the hardware, this is especially true if the application will be performing memory copies involving 2D or 3D objects (whether linear memory or CUDA arrays).
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpitchedDevPtr\fP - Pointer to allocated pitched device memory 
+.br
+\fIextent\fP - Requested allocation size (\fCwidth\fP field in bytes)
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorMemoryAllocation\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMallocPitch\fP, \fBcudaFree\fP, \fBcudaMemcpy3D\fP, \fBcudaMemset3D\fP, \fBcudaMalloc3DArray\fP, \fBcudaMallocArray\fP, \fBcudaFreeArray\fP, \fBcudaMallocHost (C API)\fP, \fBcudaFreeHost\fP, \fBcudaHostAlloc\fP, \fBmake_cudaPitchedPtr\fP, \fBmake_cudaExtent\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMalloc3DArray (\fBcudaArray_t\fP * array, const struct \fBcudaChannelFormatDesc\fP * desc, struct \fBcudaExtent\fP extent, unsigned int flags = \fC0\fP)"
+.PP
+Allocates a CUDA array according to the \fBcudaChannelFormatDesc\fP structure \fCdesc\fP and returns a handle to the new CUDA array in \fC*array\fP.
+.PP
+The \fBcudaChannelFormatDesc\fP is defined as: 
+.PP
+.nf
+    struct cudaChannelFormatDesc {
+        int x, y, z, w;
+        enum cudaChannelFormatKind f;
+    };
+
+.fi
+.PP
+ where \fBcudaChannelFormatKind\fP is one of \fBcudaChannelFormatKindSigned\fP, \fBcudaChannelFormatKindUnsigned\fP, or \fBcudaChannelFormatKindFloat\fP.
+.PP
+\fBcudaMalloc3DArray()\fP can allocate the following:
+.PP
+.IP "\(bu" 2
+A 1D array is allocated if the height and depth extents are both zero.
+.IP "\(bu" 2
+A 2D array is allocated if only the depth extent is zero.
+.IP "\(bu" 2
+A 3D array is allocated if all three extents are non-zero.
+.IP "\(bu" 2
+A 1D layered CUDA array is allocated if only the height extent is zero and the cudaArrayLayered flag is set. Each layer is a 1D array. The number of layers is determined by the depth extent.
+.IP "\(bu" 2
+A 2D layered CUDA array is allocated if all three extents are non-zero and the cudaArrayLayered flag is set. Each layer is a 2D array. The number of layers is determined by the depth extent.
+.IP "\(bu" 2
+A cubemap CUDA array is allocated if all three extents are non-zero and the cudaArrayCubemap flag is set. Width must be equal to height, and depth must be six. A cubemap is a special type of 2D layered CUDA array, where the six layers represent the six faces of a cube. The order of the six layers in memory is the same as that listed in \fBcudaGraphicsCubeFace\fP.
+.IP "\(bu" 2
+A cubemap layered CUDA array is allocated if all three extents are non-zero, and both, cudaArrayCubemap and cudaArrayLayered flags are set. Width must be equal to height, and depth must be a multiple of six. A cubemap layered CUDA array is a special type of 2D layered CUDA array that consists of a collection of cubemaps. The first six layers represent the first cubemap, the next six layers form the second cubemap, and so on.
+.PP
+.PP
+The \fCflags\fP parameter enables different options to be specified that affect the allocation, as follows.
+.IP "\(bu" 2
+\fBcudaArrayDefault\fP: This flag's value is defined to be 0 and provides default array allocation
+.IP "\(bu" 2
+\fBcudaArrayLayered\fP: Allocates a layered CUDA array, with the depth extent indicating the number of layers
+.IP "\(bu" 2
+\fBcudaArrayCubemap\fP: Allocates a cubemap CUDA array. Width must be equal to height, and depth must be six. If the cudaArrayLayered flag is also set, depth must be a multiple of six.
+.IP "\(bu" 2
+\fBcudaArraySurfaceLoadStore\fP: Allocates a CUDA array that could be read from or written to using a surface reference.
+.IP "\(bu" 2
+\fBcudaArrayTextureGather\fP: This flag indicates that texture gather operations will be performed on the CUDA array. Texture gather can only be performed on 2D CUDA arrays.
+.PP
+.PP
+The width, height and depth extents must meet certain size requirements as listed in the following table. All values are specified in elements.
+.PP
+Note that 2D CUDA arrays have different size requirements if the \fBcudaArrayTextureGather\fP flag is set. In that case, the valid range for (width, height, depth) is ((1,maxTexture2DGather[0]), (1,maxTexture2DGather[1]), 0).
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIarray\fP - Pointer to allocated array in device memory 
+.br
+\fIdesc\fP - Requested channel format 
+.br
+\fIextent\fP - Requested allocation size (\fCwidth\fP field in elements) 
+.br
+\fIflags\fP - Flags for extensions
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorMemoryAllocation\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMalloc3D\fP, \fBcudaMalloc\fP, \fBcudaMallocPitch\fP, \fBcudaFree\fP, \fBcudaFreeArray\fP, \fBcudaMallocHost (C API)\fP, \fBcudaFreeHost\fP, \fBcudaHostAlloc\fP, \fBmake_cudaExtent\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMallocArray (\fBcudaArray_t\fP * array, const struct \fBcudaChannelFormatDesc\fP * desc, size_t width, size_t height = \fC0\fP, unsigned int flags = \fC0\fP)"
+.PP
+Allocates a CUDA array according to the \fBcudaChannelFormatDesc\fP structure \fCdesc\fP and returns a handle to the new CUDA array in \fC*array\fP.
+.PP
+The \fBcudaChannelFormatDesc\fP is defined as: 
+.PP
+.nf
+    struct cudaChannelFormatDesc {
+        int x, y, z, w;
+    enum cudaChannelFormatKind f;
+    };
+
+.fi
+.PP
+ where \fBcudaChannelFormatKind\fP is one of \fBcudaChannelFormatKindSigned\fP, \fBcudaChannelFormatKindUnsigned\fP, or \fBcudaChannelFormatKindFloat\fP.
+.PP
+The \fCflags\fP parameter enables different options to be specified that affect the allocation, as follows.
+.IP "\(bu" 2
+\fBcudaArrayDefault\fP: This flag's value is defined to be 0 and provides default array allocation
+.IP "\(bu" 2
+\fBcudaArraySurfaceLoadStore\fP: Allocates an array that can be read from or written to using a surface reference
+.IP "\(bu" 2
+\fBcudaArrayTextureGather\fP: This flag indicates that texture gather operations will be performed on the array.
+.PP
+.PP
+\fCwidth\fP and \fCheight\fP must meet certain size requirements. See \fBcudaMalloc3DArray()\fP for more details.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIarray\fP - Pointer to allocated array in device memory 
+.br
+\fIdesc\fP - Requested channel format 
+.br
+\fIwidth\fP - Requested array allocation width 
+.br
+\fIheight\fP - Requested array allocation height 
+.br
+\fIflags\fP - Requested properties of allocated array
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorMemoryAllocation\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMalloc\fP, \fBcudaMallocPitch\fP, \fBcudaFree\fP, \fBcudaFreeArray\fP, \fBcudaMallocHost (C API)\fP, \fBcudaFreeHost\fP, \fBcudaMalloc3D\fP, \fBcudaMalloc3DArray\fP, \fBcudaHostAlloc\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMallocHost (void ** ptr, size_t size)"
+.PP
+Allocates \fCsize\fP bytes of host memory that is page-locked and accessible to the device. The driver tracks the virtual memory ranges allocated with this function and automatically accelerates calls to functions such as \fBcudaMemcpy\fP*(). Since the memory can be accessed directly by the device, it can be read or written with much higher bandwidth than pageable memory obtained with functions such as malloc(). Allocating excessive amounts of memory with \fBcudaMallocHost()\fP may degrade system performance, since it reduces the amount of memory available to the system for paging. As a result, this function is best used sparingly to allocate staging areas for data exchange between host and device.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIptr\fP - Pointer to allocated host memory 
+.br
+\fIsize\fP - Requested allocation size in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorMemoryAllocation\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMalloc\fP, \fBcudaMallocPitch\fP, \fBcudaMallocArray\fP, \fBcudaMalloc3D\fP, \fBcudaMalloc3DArray\fP, \fBcudaHostAlloc\fP, \fBcudaFree\fP, \fBcudaFreeArray\fP, \fBcudaMallocHost (C++ API)\fP, \fBcudaFreeHost\fP, \fBcudaHostAlloc\fP 
+.RE
+.PP
+
+.SS "__cudart_builtin__ \fBcudaError_t\fP cudaMallocManaged (void ** devPtr, size_t size, unsigned int flags = \fC0x01\fP)"
+.PP
+Allocates \fCsize\fP bytes of managed memory on the device and returns in \fC*devPtr\fP a pointer to the allocated memory. If the device doesn't support allocating managed memory, \fBcudaErrorNotSupported\fP is returned. Support for managed memory can be queried using the device attribute \fBcudaDevAttrManagedMemory\fP. The allocated memory is suitably aligned for any kind of variable. The memory is not cleared. If \fCsize\fP is 0, \fBcudaMallocManaged\fP returns \fBcudaErrorInvalidValue\fP. The pointer is valid on the CPU and on all GPUs in the system that support managed memory. All accesses to this pointer must obey the Unified Memory programming model.
+.PP
+\fCflags\fP specifies the default stream association for this allocation. \fCflags\fP must be one of \fBcudaMemAttachGlobal\fP or \fBcudaMemAttachHost\fP. The default value for \fCflags\fP is \fBcudaMemAttachGlobal\fP. If \fBcudaMemAttachGlobal\fP is specified, then this memory is accessible from any stream on any device. If \fBcudaMemAttachHost\fP is specified, then the allocation should not be accessed from devices that have a zero value for the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP; an explicit call to \fBcudaStreamAttachMemAsync\fP will be required to enable access on such devices.
+.PP
+If the association is later changed via \fBcudaStreamAttachMemAsync\fP to a single stream, the default association, as specifed during \fBcudaMallocManaged\fP, is restored when that stream is destroyed. For __managed__ variables, the default association is always \fBcudaMemAttachGlobal\fP. Note that destroying a stream is an asynchronous operation, and as a result, the change to default association won't happen until all work in the stream has completed.
+.PP
+Memory allocated with \fBcudaMallocManaged\fP should be released with \fBcudaFree\fP.
+.PP
+Device memory oversubscription is possible for GPUs that have a non-zero value for the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP. Managed memory on such GPUs may be evicted from device memory to host memory at any time by the Unified Memory driver in order to make room for other allocations.
+.PP
+In a multi-GPU system where all GPUs have a non-zero value for the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP, managed memory may not be populated when this API returns and instead may be populated on access. In such systems, managed memory can migrate to any processor's memory at any time. The Unified Memory driver will employ heuristics to maintain data locality and prevent excessive page faults to the extent possible. The application can also guide the driver about memory usage patterns via \fBcudaMemAdvise\fP. The application can also explicitly migrate memory to a desired processor's memory via \fBcudaMemPrefetchAsync\fP.
+.PP
+In a multi-GPU system where all of the GPUs have a zero value for the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP and all the GPUs have peer-to-peer support with each other, the physical storage for managed memory is created on the GPU which is active at the time \fBcudaMallocManaged\fP is called. All other GPUs will reference the data at reduced bandwidth via peer mappings over the PCIe bus. The Unified Memory driver does not migrate memory among such GPUs.
+.PP
+In a multi-GPU system where not all GPUs have peer-to-peer support with each other and where the value of the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP is zero for at least one of those GPUs, the location chosen for physical storage of managed memory is system-dependent.
+.IP "\(bu" 2
+On Linux, the location chosen will be device memory as long as the current set of active contexts are on devices that either have peer-to-peer support with each other or have a non-zero value for the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP. If there is an active context on a GPU that does not have a non-zero value for that device attribute and it does not have peer-to-peer support with the other devices that have active contexts on them, then the location for physical storage will be 'zero-copy' or host memory. Note that this means that managed memory that is located in device memory is migrated to host memory if a new context is created on a GPU that doesn't have a non-zero value for the device attribute and does not support peer-to-peer with at least one of the other devices that has an active context. This in turn implies that context creation may fail if there is insufficient host memory to migrate all managed allocations.
+.IP "\(bu" 2
+On Windows, the physical storage is always created in 'zero-copy' or host memory. All GPUs will reference the data at reduced bandwidth over the PCIe bus. In these circumstances, use of the environment variable CUDA_VISIBLE_DEVICES is recommended to restrict CUDA to only use those GPUs that have peer-to-peer support. Alternatively, users can also set CUDA_MANAGED_FORCE_DEVICE_ALLOC to a non-zero value to force the driver to always use device memory for physical storage. When this environment variable is set to a non-zero value, all devices used in that process that support managed memory have to be peer-to-peer compatible with each other. The error \fBcudaErrorInvalidDevice\fP will be returned if a device that supports managed memory is used and it is not peer-to-peer compatible with any of the other managed memory supporting devices that were previously used in that process, even if \fBcudaDeviceReset\fP has been called on those devices. These environment variables are described in the CUDA programming guide under the 'CUDA environment variables' section.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevPtr\fP - Pointer to allocated device memory 
+.br
+\fIsize\fP - Requested allocation size in bytes 
+.br
+\fIflags\fP - Must be either \fBcudaMemAttachGlobal\fP or \fBcudaMemAttachHost\fP (defaults to \fBcudaMemAttachGlobal\fP)
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorMemoryAllocation\fP \fBcudaErrorNotSupported\fP \fBcudaErrorInvalidValue\fP
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMallocPitch\fP, \fBcudaFree\fP, \fBcudaMallocArray\fP, \fBcudaFreeArray\fP, \fBcudaMalloc3D\fP, \fBcudaMalloc3DArray\fP, \fBcudaMallocHost (C API)\fP, \fBcudaFreeHost\fP, \fBcudaHostAlloc\fP, \fBcudaDeviceGetAttribute\fP, \fBcudaStreamAttachMemAsync\fP 
+.RE
+.PP
+\fBParameters:\fP
+.RS 4
+\fIflags\fP Memory can be accessed by any stream on any device 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMallocMipmappedArray (\fBcudaMipmappedArray_t\fP * mipmappedArray, const struct \fBcudaChannelFormatDesc\fP * desc, struct \fBcudaExtent\fP extent, unsigned int numLevels, unsigned int flags = \fC0\fP)"
+.PP
+Allocates a CUDA mipmapped array according to the \fBcudaChannelFormatDesc\fP structure \fCdesc\fP and returns a handle to the new CUDA mipmapped array in \fC*mipmappedArray\fP. \fCnumLevels\fP specifies the number of mipmap levels to be allocated. This value is clamped to the range [1, 1 + floor(log2(max(width, height, depth)))].
+.PP
+The \fBcudaChannelFormatDesc\fP is defined as: 
+.PP
+.nf
+    struct cudaChannelFormatDesc {
+        int x, y, z, w;
+        enum cudaChannelFormatKind f;
+    };
+
+.fi
+.PP
+ where \fBcudaChannelFormatKind\fP is one of \fBcudaChannelFormatKindSigned\fP, \fBcudaChannelFormatKindUnsigned\fP, or \fBcudaChannelFormatKindFloat\fP.
+.PP
+\fBcudaMallocMipmappedArray()\fP can allocate the following:
+.PP
+.IP "\(bu" 2
+A 1D mipmapped array is allocated if the height and depth extents are both zero.
+.IP "\(bu" 2
+A 2D mipmapped array is allocated if only the depth extent is zero.
+.IP "\(bu" 2
+A 3D mipmapped array is allocated if all three extents are non-zero.
+.IP "\(bu" 2
+A 1D layered CUDA mipmapped array is allocated if only the height extent is zero and the cudaArrayLayered flag is set. Each layer is a 1D mipmapped array. The number of layers is determined by the depth extent.
+.IP "\(bu" 2
+A 2D layered CUDA mipmapped array is allocated if all three extents are non-zero and the cudaArrayLayered flag is set. Each layer is a 2D mipmapped array. The number of layers is determined by the depth extent.
+.IP "\(bu" 2
+A cubemap CUDA mipmapped array is allocated if all three extents are non-zero and the cudaArrayCubemap flag is set. Width must be equal to height, and depth must be six. The order of the six layers in memory is the same as that listed in \fBcudaGraphicsCubeFace\fP.
+.IP "\(bu" 2
+A cubemap layered CUDA mipmapped array is allocated if all three extents are non-zero, and both, cudaArrayCubemap and cudaArrayLayered flags are set. Width must be equal to height, and depth must be a multiple of six. A cubemap layered CUDA mipmapped array is a special type of 2D layered CUDA mipmapped array that consists of a collection of cubemap mipmapped arrays. The first six layers represent the first cubemap mipmapped array, the next six layers form the second cubemap mipmapped array, and so on.
+.PP
+.PP
+The \fCflags\fP parameter enables different options to be specified that affect the allocation, as follows.
+.IP "\(bu" 2
+\fBcudaArrayDefault\fP: This flag's value is defined to be 0 and provides default mipmapped array allocation
+.IP "\(bu" 2
+\fBcudaArrayLayered\fP: Allocates a layered CUDA mipmapped array, with the depth extent indicating the number of layers
+.IP "\(bu" 2
+\fBcudaArrayCubemap\fP: Allocates a cubemap CUDA mipmapped array. Width must be equal to height, and depth must be six. If the cudaArrayLayered flag is also set, depth must be a multiple of six.
+.IP "\(bu" 2
+\fBcudaArraySurfaceLoadStore\fP: This flag indicates that individual mipmap levels of the CUDA mipmapped array will be read from or written to using a surface reference.
+.IP "\(bu" 2
+\fBcudaArrayTextureGather\fP: This flag indicates that texture gather operations will be performed on the CUDA array. Texture gather can only be performed on 2D CUDA mipmapped arrays, and the gather operations are performed only on the most detailed mipmap level.
+.PP
+.PP
+The width, height and depth extents must meet certain size requirements as listed in the following table. All values are specified in elements.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fImipmappedArray\fP - Pointer to allocated mipmapped array in device memory 
+.br
+\fIdesc\fP - Requested channel format 
+.br
+\fIextent\fP - Requested allocation size (\fCwidth\fP field in elements) 
+.br
+\fInumLevels\fP - Number of mipmap levels to allocate 
+.br
+\fIflags\fP - Flags for extensions
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorMemoryAllocation\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMalloc3D\fP, \fBcudaMalloc\fP, \fBcudaMallocPitch\fP, \fBcudaFree\fP, \fBcudaFreeArray\fP, \fBcudaMallocHost (C API)\fP, \fBcudaFreeHost\fP, \fBcudaHostAlloc\fP, \fBmake_cudaExtent\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMallocPitch (void ** devPtr, size_t * pitch, size_t width, size_t height)"
+.PP
+Allocates at least \fCwidth\fP (in bytes) * \fCheight\fP bytes of linear memory on the device and returns in \fC*devPtr\fP a pointer to the allocated memory. The function may pad the allocation to ensure that corresponding pointers in any given row will continue to meet the alignment requirements for coalescing as the address is updated from row to row. The pitch returned in \fC*pitch\fP by \fBcudaMallocPitch()\fP is the width in bytes of the allocation. The intended usage of \fCpitch\fP is as a separate parameter of the allocation, used to compute addresses within the 2D array. Given the row and column of an array element of type \fCT\fP, the address is computed as: 
+.PP
+.nf
+    T* pElement = (T*)((char*)BaseAddress + Row * pitch) + Column;
+
+.fi
+.PP
+.PP
+For allocations of 2D arrays, it is recommended that programmers consider performing pitch allocations using \fBcudaMallocPitch()\fP. Due to pitch alignment restrictions in the hardware, this is especially true if the application will be performing 2D memory copies between different regions of device memory (whether linear memory or CUDA arrays).
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevPtr\fP - Pointer to allocated pitched device memory 
+.br
+\fIpitch\fP - Pitch for allocation 
+.br
+\fIwidth\fP - Requested pitched allocation width (in bytes) 
+.br
+\fIheight\fP - Requested pitched allocation height
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorMemoryAllocation\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMalloc\fP, \fBcudaFree\fP, \fBcudaMallocArray\fP, \fBcudaFreeArray\fP, \fBcudaMallocHost (C API)\fP, \fBcudaFreeHost\fP, \fBcudaMalloc3D\fP, \fBcudaMalloc3DArray\fP, \fBcudaHostAlloc\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemAdvise (const void * devPtr, size_t count, enum \fBcudaMemoryAdvise\fP advice, int device)"
+.PP
+Advise the Unified Memory subsystem about the usage pattern for the memory range starting at \fCdevPtr\fP with a size of \fCcount\fP bytes. The start address and end address of the memory range will be rounded down and rounded up respectively to be aligned to CPU page size before the advice is applied. The memory range must refer to managed memory allocated via \fBcudaMallocManaged\fP or declared via __managed__ variables.
+.PP
+The \fCadvice\fP parameter can take the following values:
+.IP "\(bu" 2
+\fBcudaMemAdviseSetReadMostly\fP: This implies that the data is mostly going to be read from and only occasionally written to. Any read accesses from any processor to this region will create a read-only copy of at least the accessed pages in that processor's memory. Additionally, if \fBcudaMemPrefetchAsync\fP is called on this region, it will create a read-only copy of the data on the destination processor. If any processor writes to this region, all copies of the corresponding page will be invalidated except for the one where the write occurred. The \fCdevice\fP argument is ignored for this advice. Note that for a page to be read-duplicated, the accessing processor must either be the CPU or a GPU that has a non-zero value for the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP. Also, if a context is created on a device that does not have the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP set, then read-duplication will not occur until all such contexts are destroyed.
+.IP "\(bu" 2
+cudaMemAdviceUnsetReadMostly: Undoes the effect of cudaMemAdviceReadMostly and also prevents the Unified Memory driver from attempting heuristic read-duplication on the memory range. Any read-duplicated copies of the data will be collapsed into a single copy. The location for the collapsed copy will be the preferred location if the page has a preferred location and one of the read-duplicated copies was resident at that location. Otherwise, the location chosen is arbitrary.
+.IP "\(bu" 2
+\fBcudaMemAdviseSetPreferredLocation\fP: This advice sets the preferred location for the data to be the memory belonging to \fCdevice\fP. Passing in cudaCpuDeviceId for \fCdevice\fP sets the preferred location as host memory. If \fCdevice\fP is a GPU, then it must have a non-zero value for the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP. Setting the preferred location does not cause data to migrate to that location immediately. Instead, it guides the migration policy when a fault occurs on that memory region. If the data is already in its preferred location and the faulting processor can establish a mapping without requiring the data to be migrated, then data migration will be avoided. On the other hand, if the data is not in its preferred location or if a direct mapping cannot be established, then it will be migrated to the processor accessing it. It is important to note that setting the preferred location does not prevent data prefetching done using \fBcudaMemPrefetchAsync\fP. Having a preferred location can override the page thrash detection and resolution logic in the Unified Memory driver. Normally, if a page is detected to be constantly thrashing between for example host and device memory, the page may eventually be pinned to host memory by the Unified Memory driver. But if the preferred location is set as device memory, then the page will continue to thrash indefinitely. If \fBcudaMemAdviseSetReadMostly\fP is also set on this memory region or any subset of it, then the policies associated with that advice will override the policies of this advice.
+.IP "\(bu" 2
+\fBcudaMemAdviseUnsetPreferredLocation\fP: Undoes the effect of \fBcudaMemAdviseSetPreferredLocation\fP and changes the preferred location to none.
+.IP "\(bu" 2
+\fBcudaMemAdviseSetAccessedBy\fP: This advice implies that the data will be accessed by \fCdevice\fP. Passing in \fBcudaCpuDeviceId\fP for \fCdevice\fP will set the advice for the CPU. If \fCdevice\fP is a GPU, then the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP must be non-zero. This advice does not cause data migration and has no impact on the location of the data per se. Instead, it causes the data to always be mapped in the specified processor's page tables, as long as the location of the data permits a mapping to be established. If the data gets migrated for any reason, the mappings are updated accordingly. This advice is recommended in scenarios where data locality is not important, but avoiding faults is. Consider for example a system containing multiple GPUs with peer-to-peer access enabled, where the data located on one GPU is occasionally accessed by peer GPUs. In such scenarios, migrating data over to the other GPUs is not as important because the accesses are infrequent and the overhead of migration may be too high. But preventing faults can still help improve performance, and so having a mapping set up in advance is useful. Note that on CPU access of this data, the data may be migrated to host memory because the CPU typically cannot access device memory directly. Any GPU that had the cudaMemAdviceSetAccessedBy flag set for this data will now have its mapping updated to point to the page in host memory. If \fBcudaMemAdviseSetReadMostly\fP is also set on this memory region or any subset of it, then the policies associated with that advice will override the policies of this advice. Additionally, if the preferred location of this memory region or any subset of it is also \fCdevice\fP, then the policies associated with \fBcudaMemAdviseSetPreferredLocation\fP will override the policies of this advice.
+.IP "\(bu" 2
+\fBcudaMemAdviseUnsetAccessedBy\fP: Undoes the effect of \fBcudaMemAdviseSetAccessedBy\fP. Any mappings to the data from \fCdevice\fP may be removed at any time causing accesses to result in non-fatal page faults.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevPtr\fP - Pointer to memory to set the advice for 
+.br
+\fIcount\fP - Size in bytes of the memory range 
+.br
+\fIadvice\fP - Advice to be applied for the specified memory range 
+.br
+\fIdevice\fP - Device to apply the advice for
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevice\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpyPeer\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy3DPeerAsync\fP, \fBcudaMemPrefetchAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpy (void * dst, const void * src, size_t count, enum \fBcudaMemcpyKind\fP kind)"
+.PP
+Copies \fCcount\fP bytes from the memory area pointed to by \fCsrc\fP to the memory area pointed to by \fCdst\fP, where \fCkind\fP specifies the direction of the copy, and must be one of \fBcudaMemcpyHostToHost\fP, \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing. Calling \fBcudaMemcpy()\fP with dst and src pointers that do not match the direction of the copy results in an undefined behavior.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIcount\fP - Size in bytes to copy 
+.br
+\fIkind\fP - Type of transfer
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpy2D (void * dst, size_t dpitch, const void * src, size_t spitch, size_t width, size_t height, enum \fBcudaMemcpyKind\fP kind)"
+.PP
+Copies a matrix (\fCheight\fP rows of \fCwidth\fP bytes each) from the memory area pointed to by \fCsrc\fP to the memory area pointed to by \fCdst\fP, where \fCkind\fP specifies the direction of the copy, and must be one of \fBcudaMemcpyHostToHost\fP, \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing. \fCdpitch\fP and \fCspitch\fP are the widths in memory in bytes of the 2D arrays pointed to by \fCdst\fP and \fCsrc\fP, including any padding added to the end of each row. The memory areas may not overlap. \fCwidth\fP must not exceed either \fCdpitch\fP or \fCspitch\fP. Calling \fBcudaMemcpy2D()\fP with \fCdst\fP and \fCsrc\fP pointers that do not match the direction of the copy results in an undefined behavior. \fBcudaMemcpy2D()\fP returns an error if \fCdpitch\fP or \fCspitch\fP exceeds the maximum allowed.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIdpitch\fP - Pitch of destination memory 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIspitch\fP - Pitch of source memory 
+.br
+\fIwidth\fP - Width of matrix transfer (columns in bytes) 
+.br
+\fIheight\fP - Height of matrix transfer (rows) 
+.br
+\fIkind\fP - Type of transfer
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidPitchValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpy2DArrayToArray (\fBcudaArray_t\fP dst, size_t wOffsetDst, size_t hOffsetDst, \fBcudaArray_const_t\fP src, size_t wOffsetSrc, size_t hOffsetSrc, size_t width, size_t height, enum \fBcudaMemcpyKind\fP kind = \fCcudaMemcpyDeviceToDevice\fP)"
+.PP
+Copies a matrix (\fCheight\fP rows of \fCwidth\fP bytes each) from the CUDA array \fCsrcArray\fP starting at the upper left corner (\fCwOffsetSrc\fP, \fChOffsetSrc\fP) to the CUDA array \fCdst\fP starting at the upper left corner (\fCwOffsetDst\fP, \fChOffsetDst\fP), where \fCkind\fP specifies the direction of the copy, and must be one of \fBcudaMemcpyHostToHost\fP, \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing. \fCwOffsetDst\fP + \fCwidth\fP must not exceed the width of the CUDA array \fCdst\fP. \fCwOffsetSrc\fP + \fCwidth\fP must not exceed the width of the CUDA array \fCsrc\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIwOffsetDst\fP - Destination starting X offset 
+.br
+\fIhOffsetDst\fP - Destination starting Y offset 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIwOffsetSrc\fP - Source starting X offset 
+.br
+\fIhOffsetSrc\fP - Source starting Y offset 
+.br
+\fIwidth\fP - Width of matrix transfer (columns in bytes) 
+.br
+\fIheight\fP - Height of matrix transfer (rows) 
+.br
+\fIkind\fP - Type of transfer
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "__cudart_builtin__ \fBcudaError_t\fP cudaMemcpy2DAsync (void * dst, size_t dpitch, const void * src, size_t spitch, size_t width, size_t height, enum \fBcudaMemcpyKind\fP kind, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Copies a matrix (\fCheight\fP rows of \fCwidth\fP bytes each) from the memory area pointed to by \fCsrc\fP to the memory area pointed to by \fCdst\fP, where \fCkind\fP specifies the direction of the copy, and must be one of \fBcudaMemcpyHostToHost\fP, \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing. \fCdpitch\fP and \fCspitch\fP are the widths in memory in bytes of the 2D arrays pointed to by \fCdst\fP and \fCsrc\fP, including any padding added to the end of each row. The memory areas may not overlap. \fCwidth\fP must not exceed either \fCdpitch\fP or \fCspitch\fP.
+.PP
+Calling \fBcudaMemcpy2DAsync()\fP with \fCdst\fP and \fCsrc\fP pointers that do not match the direction of the copy results in an undefined behavior. \fBcudaMemcpy2DAsync()\fP returns an error if \fCdpitch\fP or \fCspitch\fP is greater than the maximum allowed.
+.PP
+\fBcudaMemcpy2DAsync()\fP is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero \fCstream\fP argument. If \fCkind\fP is \fBcudaMemcpyHostToDevice\fP or \fBcudaMemcpyDeviceToHost\fP and \fCstream\fP is non-zero, the copy may overlap with operations in other streams.
+.PP
+The device version of this function only handles device to device copies and cannot be given local or shared pointers.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIdpitch\fP - Pitch of destination memory 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIspitch\fP - Pitch of source memory 
+.br
+\fIwidth\fP - Width of matrix transfer (columns in bytes) 
+.br
+\fIheight\fP - Height of matrix transfer (rows) 
+.br
+\fIkind\fP - Type of transfer 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidPitchValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpy2DFromArray (void * dst, size_t dpitch, \fBcudaArray_const_t\fP src, size_t wOffset, size_t hOffset, size_t width, size_t height, enum \fBcudaMemcpyKind\fP kind)"
+.PP
+Copies a matrix (\fCheight\fP rows of \fCwidth\fP bytes each) from the CUDA array \fCsrcArray\fP starting at the upper left corner (\fCwOffset\fP, \fChOffset\fP) to the memory area pointed to by \fCdst\fP, where \fCkind\fP specifies the direction of the copy, and must be one of \fBcudaMemcpyHostToHost\fP, \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing. \fCdpitch\fP is the width in memory in bytes of the 2D array pointed to by \fCdst\fP, including any padding added to the end of each row. \fCwOffset\fP + \fCwidth\fP must not exceed the width of the CUDA array \fCsrc\fP. \fCwidth\fP must not exceed \fCdpitch\fP. \fBcudaMemcpy2DFromArray()\fP returns an error if \fCdpitch\fP exceeds the maximum allowed.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIdpitch\fP - Pitch of destination memory 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIwOffset\fP - Source starting X offset 
+.br
+\fIhOffset\fP - Source starting Y offset 
+.br
+\fIwidth\fP - Width of matrix transfer (columns in bytes) 
+.br
+\fIheight\fP - Height of matrix transfer (rows) 
+.br
+\fIkind\fP - Type of transfer
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidPitchValue\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpy2DFromArrayAsync (void * dst, size_t dpitch, \fBcudaArray_const_t\fP src, size_t wOffset, size_t hOffset, size_t width, size_t height, enum \fBcudaMemcpyKind\fP kind, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Copies a matrix (\fCheight\fP rows of \fCwidth\fP bytes each) from the CUDA array \fCsrcArray\fP starting at the upper left corner (\fCwOffset\fP, \fChOffset\fP) to the memory area pointed to by \fCdst\fP, where \fCkind\fP specifies the direction of the copy, and must be one of \fBcudaMemcpyHostToHost\fP, \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing. \fCdpitch\fP is the width in memory in bytes of the 2D array pointed to by \fCdst\fP, including any padding added to the end of each row. \fCwOffset\fP + \fCwidth\fP must not exceed the width of the CUDA array \fCsrc\fP. \fCwidth\fP must not exceed \fCdpitch\fP. \fBcudaMemcpy2DFromArrayAsync()\fP returns an error if \fCdpitch\fP exceeds the maximum allowed.
+.PP
+\fBcudaMemcpy2DFromArrayAsync()\fP is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero \fCstream\fP argument. If \fCkind\fP is \fBcudaMemcpyHostToDevice\fP or \fBcudaMemcpyDeviceToHost\fP and \fCstream\fP is non-zero, the copy may overlap with operations in other streams.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIdpitch\fP - Pitch of destination memory 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIwOffset\fP - Source starting X offset 
+.br
+\fIhOffset\fP - Source starting Y offset 
+.br
+\fIwidth\fP - Width of matrix transfer (columns in bytes) 
+.br
+\fIheight\fP - Height of matrix transfer (rows) 
+.br
+\fIkind\fP - Type of transfer 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidPitchValue\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpy2DToArray (\fBcudaArray_t\fP dst, size_t wOffset, size_t hOffset, const void * src, size_t spitch, size_t width, size_t height, enum \fBcudaMemcpyKind\fP kind)"
+.PP
+Copies a matrix (\fCheight\fP rows of \fCwidth\fP bytes each) from the memory area pointed to by \fCsrc\fP to the CUDA array \fCdst\fP starting at the upper left corner (\fCwOffset\fP, \fChOffset\fP) where \fCkind\fP specifies the direction of the copy, and must be one of \fBcudaMemcpyHostToHost\fP, \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing. \fCspitch\fP is the width in memory in bytes of the 2D array pointed to by \fCsrc\fP, including any padding added to the end of each row. \fCwOffset\fP + \fCwidth\fP must not exceed the width of the CUDA array \fCdst\fP. \fCwidth\fP must not exceed \fCspitch\fP. \fBcudaMemcpy2DToArray()\fP returns an error if \fCspitch\fP exceeds the maximum allowed.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIwOffset\fP - Destination starting X offset 
+.br
+\fIhOffset\fP - Destination starting Y offset 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIspitch\fP - Pitch of source memory 
+.br
+\fIwidth\fP - Width of matrix transfer (columns in bytes) 
+.br
+\fIheight\fP - Height of matrix transfer (rows) 
+.br
+\fIkind\fP - Type of transfer
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidPitchValue\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpy2DToArrayAsync (\fBcudaArray_t\fP dst, size_t wOffset, size_t hOffset, const void * src, size_t spitch, size_t width, size_t height, enum \fBcudaMemcpyKind\fP kind, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Copies a matrix (\fCheight\fP rows of \fCwidth\fP bytes each) from the memory area pointed to by \fCsrc\fP to the CUDA array \fCdst\fP starting at the upper left corner (\fCwOffset\fP, \fChOffset\fP) where \fCkind\fP specifies the direction of the copy, and must be one of \fBcudaMemcpyHostToHost\fP, \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing. \fCspitch\fP is the width in memory in bytes of the 2D array pointed to by \fCsrc\fP, including any padding added to the end of each row. \fCwOffset\fP + \fCwidth\fP must not exceed the width of the CUDA array \fCdst\fP. \fCwidth\fP must not exceed \fCspitch\fP. \fBcudaMemcpy2DToArrayAsync()\fP returns an error if \fCspitch\fP exceeds the maximum allowed.
+.PP
+\fBcudaMemcpy2DToArrayAsync()\fP is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero \fCstream\fP argument. If \fCkind\fP is \fBcudaMemcpyHostToDevice\fP or \fBcudaMemcpyDeviceToHost\fP and \fCstream\fP is non-zero, the copy may overlap with operations in other streams.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIwOffset\fP - Destination starting X offset 
+.br
+\fIhOffset\fP - Destination starting Y offset 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIspitch\fP - Pitch of source memory 
+.br
+\fIwidth\fP - Width of matrix transfer (columns in bytes) 
+.br
+\fIheight\fP - Height of matrix transfer (rows) 
+.br
+\fIkind\fP - Type of transfer 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidPitchValue\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpy3D (const struct \fBcudaMemcpy3DParms\fP * p)"
+.PP
+.PP
+.nf
+struct cudaExtent {
+  size_t width;
+  size_t height;
+  size_t depth;
+};
+struct cudaExtent make_cudaExtent(size_t w, size_t h, size_t d);
+
+struct cudaPos {
+  size_t x;
+  size_t y;
+  size_t z;
+};
+struct cudaPos make_cudaPos(size_t x, size_t y, size_t z);
+
+struct cudaMemcpy3DParms {
+  cudaArray_t           srcArray;
+  struct cudaPos        srcPos;
+  struct cudaPitchedPtr srcPtr;
+  cudaArray_t           dstArray;
+  struct cudaPos        dstPos;
+  struct cudaPitchedPtr dstPtr;
+  struct cudaExtent     extent;
+  enum cudaMemcpyKind   kind;
+};
+.fi
+.PP
+.PP
+\fBcudaMemcpy3D()\fP copies data betwen two 3D objects. The source and destination objects may be in either host memory, device memory, or a CUDA array. The source, destination, extent, and kind of copy performed is specified by the \fBcudaMemcpy3DParms\fP struct which should be initialized to zero before use: 
+.PP
+.nf
+cudaMemcpy3DParms myParms = {0};
+
+.fi
+.PP
+.PP
+The struct passed to \fBcudaMemcpy3D()\fP must specify one of \fCsrcArray\fP or \fCsrcPtr\fP and one of \fCdstArray\fP or \fCdstPtr\fP. Passing more than one non-zero source or destination will cause \fBcudaMemcpy3D()\fP to return an error.
+.PP
+The \fCsrcPos\fP and \fCdstPos\fP fields are optional offsets into the source and destination objects and are defined in units of each object's elements. The element for a host or device pointer is assumed to be \fBunsigned char\fP. For CUDA arrays, positions must be in the range [0, 2048) for any dimension.
+.PP
+The \fCextent\fP field defines the dimensions of the transferred area in elements. If a CUDA array is participating in the copy, the extent is defined in terms of that array's elements. If no CUDA array is participating in the copy then the extents are defined in elements of \fBunsigned char\fP.
+.PP
+The \fCkind\fP field defines the direction of the copy. It must be one of \fBcudaMemcpyHostToHost\fP, \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing.
+.PP
+If the source and destination are both arrays, \fBcudaMemcpy3D()\fP will return an error if they do not have the same element size.
+.PP
+The source and destination object may not overlap. If overlapping source and destination objects are specified, undefined behavior will result.
+.PP
+The source object must lie entirely within the region defined by \fCsrcPos\fP and \fCextent\fP. The destination object must lie entirely within the region defined by \fCdstPos\fP and \fCextent\fP.
+.PP
+\fBcudaMemcpy3D()\fP returns an error if the pitch of \fCsrcPtr\fP or \fCdstPtr\fP exceeds the maximum allowed. The pitch of a \fBcudaPitchedPtr\fP allocated with \fBcudaMalloc3D()\fP will always be valid.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIp\fP - 3D memory copy parameters
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidPitchValue\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMalloc3D\fP, \fBcudaMalloc3DArray\fP, \fBcudaMemset3D\fP, \fBcudaMemcpy3DAsync\fP, \fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP, \fBmake_cudaExtent\fP, \fBmake_cudaPos\fP 
+.RE
+.PP
+
+.SS "__cudart_builtin__ \fBcudaError_t\fP cudaMemcpy3DAsync (const struct \fBcudaMemcpy3DParms\fP * p, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+.PP
+.nf
+struct cudaExtent {
+  size_t width;
+  size_t height;
+  size_t depth;
+};
+struct cudaExtent make_cudaExtent(size_t w, size_t h, size_t d);
+
+struct cudaPos {
+  size_t x;
+  size_t y;
+  size_t z;
+};
+struct cudaPos make_cudaPos(size_t x, size_t y, size_t z);
+
+struct cudaMemcpy3DParms {
+  cudaArray_t           srcArray;
+  struct cudaPos        srcPos;
+  struct cudaPitchedPtr srcPtr;
+  cudaArray_t           dstArray;
+  struct cudaPos        dstPos;
+  struct cudaPitchedPtr dstPtr;
+  struct cudaExtent     extent;
+  enum cudaMemcpyKind   kind;
+};
+.fi
+.PP
+.PP
+\fBcudaMemcpy3DAsync()\fP copies data betwen two 3D objects. The source and destination objects may be in either host memory, device memory, or a CUDA array. The source, destination, extent, and kind of copy performed is specified by the \fBcudaMemcpy3DParms\fP struct which should be initialized to zero before use: 
+.PP
+.nf
+cudaMemcpy3DParms myParms = {0};
+
+.fi
+.PP
+.PP
+The struct passed to \fBcudaMemcpy3DAsync()\fP must specify one of \fCsrcArray\fP or \fCsrcPtr\fP and one of \fCdstArray\fP or \fCdstPtr\fP. Passing more than one non-zero source or destination will cause \fBcudaMemcpy3DAsync()\fP to return an error.
+.PP
+The \fCsrcPos\fP and \fCdstPos\fP fields are optional offsets into the source and destination objects and are defined in units of each object's elements. The element for a host or device pointer is assumed to be \fBunsigned char\fP. For CUDA arrays, positions must be in the range [0, 2048) for any dimension.
+.PP
+The \fCextent\fP field defines the dimensions of the transferred area in elements. If a CUDA array is participating in the copy, the extent is defined in terms of that array's elements. If no CUDA array is participating in the copy then the extents are defined in elements of \fBunsigned char\fP.
+.PP
+The \fCkind\fP field defines the direction of the copy. It must be one of \fBcudaMemcpyHostToHost\fP, \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing.
+.PP
+If the source and destination are both arrays, \fBcudaMemcpy3DAsync()\fP will return an error if they do not have the same element size.
+.PP
+The source and destination object may not overlap. If overlapping source and destination objects are specified, undefined behavior will result.
+.PP
+The source object must lie entirely within the region defined by \fCsrcPos\fP and \fCextent\fP. The destination object must lie entirely within the region defined by \fCdstPos\fP and \fCextent\fP.
+.PP
+\fBcudaMemcpy3DAsync()\fP returns an error if the pitch of \fCsrcPtr\fP or \fCdstPtr\fP exceeds the maximum allowed. The pitch of a \fBcudaPitchedPtr\fP allocated with \fBcudaMalloc3D()\fP will always be valid.
+.PP
+\fBcudaMemcpy3DAsync()\fP is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero \fCstream\fP argument. If \fCkind\fP is \fBcudaMemcpyHostToDevice\fP or \fBcudaMemcpyDeviceToHost\fP and \fCstream\fP is non-zero, the copy may overlap with operations in other streams.
+.PP
+The device version of this function only handles device to device copies and cannot be given local or shared pointers.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIp\fP - 3D memory copy parameters 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidPitchValue\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMalloc3D\fP, \fBcudaMalloc3DArray\fP, \fBcudaMemset3D\fP, \fBcudaMemcpy3D\fP, \fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP, \fBmake_cudaExtent\fP, \fBmake_cudaPos\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpy3DPeer (const struct \fBcudaMemcpy3DPeerParms\fP * p)"
+.PP
+Perform a 3D memory copy according to the parameters specified in \fCp\fP. See the definition of the \fBcudaMemcpy3DPeerParms\fP structure for documentation of its parameters.
+.PP
+Note that this function is synchronous with respect to the host only if the source or destination of the transfer is host memory. Note also that this copy is serialized with respect to all pending and future asynchronous work in to the current device, the copy's source device, and the copy's destination device (use \fBcudaMemcpy3DPeerAsync\fP to avoid this synchronization).
+.PP
+\fBParameters:\fP
+.RS 4
+\fIp\fP - Parameters for the memory copy
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevice\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpyPeer\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpyPeerAsync\fP, \fBcudaMemcpy3DPeerAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpy3DPeerAsync (const struct \fBcudaMemcpy3DPeerParms\fP * p, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Perform a 3D memory copy according to the parameters specified in \fCp\fP. See the definition of the \fBcudaMemcpy3DPeerParms\fP structure for documentation of its parameters.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIp\fP - Parameters for the memory copy 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevice\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpyPeer\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpyPeerAsync\fP, \fBcudaMemcpy3DPeerAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpyArrayToArray (\fBcudaArray_t\fP dst, size_t wOffsetDst, size_t hOffsetDst, \fBcudaArray_const_t\fP src, size_t wOffsetSrc, size_t hOffsetSrc, size_t count, enum \fBcudaMemcpyKind\fP kind = \fCcudaMemcpyDeviceToDevice\fP)"
+.PP
+Copies \fCcount\fP bytes from the CUDA array \fCsrc\fP starting at the upper left corner (\fCwOffsetSrc\fP, \fChOffsetSrc\fP) to the CUDA array \fCdst\fP starting at the upper left corner (\fCwOffsetDst\fP, \fChOffsetDst\fP) where \fCkind\fP specifies the direction of the copy, and must be one of \fBcudaMemcpyHostToHost\fP, \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIwOffsetDst\fP - Destination starting X offset 
+.br
+\fIhOffsetDst\fP - Destination starting Y offset 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIwOffsetSrc\fP - Source starting X offset 
+.br
+\fIhOffsetSrc\fP - Source starting Y offset 
+.br
+\fIcount\fP - Size in bytes to copy 
+.br
+\fIkind\fP - Type of transfer
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "__cudart_builtin__ \fBcudaError_t\fP cudaMemcpyAsync (void * dst, const void * src, size_t count, enum \fBcudaMemcpyKind\fP kind, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Copies \fCcount\fP bytes from the memory area pointed to by \fCsrc\fP to the memory area pointed to by \fCdst\fP, where \fCkind\fP specifies the direction of the copy, and must be one of \fBcudaMemcpyHostToHost\fP, \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing.
+.PP
+The memory areas may not overlap. Calling \fBcudaMemcpyAsync()\fP with \fCdst\fP and \fCsrc\fP pointers that do not match the direction of the copy results in an undefined behavior.
+.PP
+\fBcudaMemcpyAsync()\fP is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero \fCstream\fP argument. If \fCkind\fP is \fBcudaMemcpyHostToDevice\fP or \fBcudaMemcpyDeviceToHost\fP and the \fCstream\fP is non-zero, the copy may overlap with operations in other streams.
+.PP
+The device version of this function only handles device to device copies and cannot be given local or shared pointers.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIcount\fP - Size in bytes to copy 
+.br
+\fIkind\fP - Type of transfer 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpyFromArray (void * dst, \fBcudaArray_const_t\fP src, size_t wOffset, size_t hOffset, size_t count, enum \fBcudaMemcpyKind\fP kind)"
+.PP
+Copies \fCcount\fP bytes from the CUDA array \fCsrc\fP starting at the upper left corner (\fCwOffset\fP, hOffset) to the memory area pointed to by \fCdst\fP, where \fCkind\fP specifies the direction of the copy, and must be one of \fBcudaMemcpyHostToHost\fP, \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIwOffset\fP - Source starting X offset 
+.br
+\fIhOffset\fP - Source starting Y offset 
+.br
+\fIcount\fP - Size in bytes to copy 
+.br
+\fIkind\fP - Type of transfer
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpyFromArrayAsync (void * dst, \fBcudaArray_const_t\fP src, size_t wOffset, size_t hOffset, size_t count, enum \fBcudaMemcpyKind\fP kind, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Copies \fCcount\fP bytes from the CUDA array \fCsrc\fP starting at the upper left corner (\fCwOffset\fP, hOffset) to the memory area pointed to by \fCdst\fP, where \fCkind\fP specifies the direction of the copy, and must be one of \fBcudaMemcpyHostToHost\fP, \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing.
+.PP
+\fBcudaMemcpyFromArrayAsync()\fP is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero \fCstream\fP argument. If \fCkind\fP is \fBcudaMemcpyHostToDevice\fP or \fBcudaMemcpyDeviceToHost\fP and \fCstream\fP is non-zero, the copy may overlap with operations in other streams.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIwOffset\fP - Source starting X offset 
+.br
+\fIhOffset\fP - Source starting Y offset 
+.br
+\fIcount\fP - Size in bytes to copy 
+.br
+\fIkind\fP - Type of transfer 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpyFromSymbol (void * dst, const void * symbol, size_t count, size_t offset = \fC0\fP, enum \fBcudaMemcpyKind\fP kind = \fCcudaMemcpyDeviceToHost\fP)"
+.PP
+Copies \fCcount\fP bytes from the memory area pointed to by \fCoffset\fP bytes from the start of symbol \fCsymbol\fP to the memory area pointed to by \fCdst\fP. The memory areas may not overlap. \fCsymbol\fP is a variable that resides in global or constant memory space. \fCkind\fP can be either \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIsymbol\fP - Device symbol address 
+.br
+\fIcount\fP - Size in bytes to copy 
+.br
+\fIoffset\fP - Offset from start of symbol in bytes 
+.br
+\fIkind\fP - Type of transfer
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidSymbol\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+Use of a string naming a variable as the \fCsymbol\fP paramater was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpyFromSymbolAsync (void * dst, const void * symbol, size_t count, size_t offset, enum \fBcudaMemcpyKind\fP kind, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Copies \fCcount\fP bytes from the memory area pointed to by \fCoffset\fP bytes from the start of symbol \fCsymbol\fP to the memory area pointed to by \fCdst\fP. The memory areas may not overlap. \fCsymbol\fP is a variable that resides in global or constant memory space. \fCkind\fP can be either \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing.
+.PP
+\fBcudaMemcpyFromSymbolAsync()\fP is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero \fCstream\fP argument. If \fCkind\fP is \fBcudaMemcpyDeviceToHost\fP and \fCstream\fP is non-zero, the copy may overlap with operations in other streams.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIsymbol\fP - Device symbol address 
+.br
+\fIcount\fP - Size in bytes to copy 
+.br
+\fIoffset\fP - Offset from start of symbol in bytes 
+.br
+\fIkind\fP - Type of transfer 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidSymbol\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics. 
+.PP
+Use of a string naming a variable as the \fCsymbol\fP paramater was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpyPeer (void * dst, int dstDevice, const void * src, int srcDevice, size_t count)"
+.PP
+Copies memory from one device to memory on another device. \fCdst\fP is the base device pointer of the destination memory and \fCdstDevice\fP is the destination device. \fCsrc\fP is the base device pointer of the source memory and \fCsrcDevice\fP is the source device. \fCcount\fP specifies the number of bytes to copy.
+.PP
+Note that this function is asynchronous with respect to the host, but serialized with respect all pending and future asynchronous work in to the current device, \fCsrcDevice\fP, and \fCdstDevice\fP (use \fBcudaMemcpyPeerAsync\fP to avoid this synchronization).
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination device pointer 
+.br
+\fIdstDevice\fP - Destination device 
+.br
+\fIsrc\fP - Source device pointer 
+.br
+\fIsrcDevice\fP - Source device 
+.br
+\fIcount\fP - Size of memory copy in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevice\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpyPeerAsync\fP, \fBcudaMemcpy3DPeerAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpyPeerAsync (void * dst, int dstDevice, const void * src, int srcDevice, size_t count, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Copies memory from one device to memory on another device. \fCdst\fP is the base device pointer of the destination memory and \fCdstDevice\fP is the destination device. \fCsrc\fP is the base device pointer of the source memory and \fCsrcDevice\fP is the source device. \fCcount\fP specifies the number of bytes to copy.
+.PP
+Note that this function is asynchronous with respect to the host and all work on other devices.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination device pointer 
+.br
+\fIdstDevice\fP - Destination device 
+.br
+\fIsrc\fP - Source device pointer 
+.br
+\fIsrcDevice\fP - Source device 
+.br
+\fIcount\fP - Size of memory copy in bytes 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevice\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpyPeer\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy3DPeerAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpyToArray (\fBcudaArray_t\fP dst, size_t wOffset, size_t hOffset, const void * src, size_t count, enum \fBcudaMemcpyKind\fP kind)"
+.PP
+Copies \fCcount\fP bytes from the memory area pointed to by \fCsrc\fP to the CUDA array \fCdst\fP starting at the upper left corner (\fCwOffset\fP, \fChOffset\fP), where \fCkind\fP specifies the direction of the copy, and must be one of \fBcudaMemcpyHostToHost\fP, \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIwOffset\fP - Destination starting X offset 
+.br
+\fIhOffset\fP - Destination starting Y offset 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIcount\fP - Size in bytes to copy 
+.br
+\fIkind\fP - Type of transfer
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpyToArrayAsync (\fBcudaArray_t\fP dst, size_t wOffset, size_t hOffset, const void * src, size_t count, enum \fBcudaMemcpyKind\fP kind, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Copies \fCcount\fP bytes from the memory area pointed to by \fCsrc\fP to the CUDA array \fCdst\fP starting at the upper left corner (\fCwOffset\fP, \fChOffset\fP), where \fCkind\fP specifies the direction of the copy, and must be one of \fBcudaMemcpyHostToHost\fP, \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToHost\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing.
+.PP
+\fBcudaMemcpyToArrayAsync()\fP is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero \fCstream\fP argument. If \fCkind\fP is \fBcudaMemcpyHostToDevice\fP or \fBcudaMemcpyDeviceToHost\fP and \fCstream\fP is non-zero, the copy may overlap with operations in other streams.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdst\fP - Destination memory address 
+.br
+\fIwOffset\fP - Destination starting X offset 
+.br
+\fIhOffset\fP - Destination starting Y offset 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIcount\fP - Size in bytes to copy 
+.br
+\fIkind\fP - Type of transfer 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpyToSymbol (const void * symbol, const void * src, size_t count, size_t offset = \fC0\fP, enum \fBcudaMemcpyKind\fP kind = \fCcudaMemcpyHostToDevice\fP)"
+.PP
+Copies \fCcount\fP bytes from the memory area pointed to by \fCsrc\fP to the memory area pointed to by \fCoffset\fP bytes from the start of symbol \fCsymbol\fP. The memory areas may not overlap. \fCsymbol\fP is a variable that resides in global or constant memory space. \fCkind\fP can be either \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsymbol\fP - Device symbol address 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIcount\fP - Size in bytes to copy 
+.br
+\fIoffset\fP - Offset from start of symbol in bytes 
+.br
+\fIkind\fP - Type of transfer
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidSymbol\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+Use of a string naming a variable as the \fCsymbol\fP paramater was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyToSymbolAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemcpyToSymbolAsync (const void * symbol, const void * src, size_t count, size_t offset, enum \fBcudaMemcpyKind\fP kind, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Copies \fCcount\fP bytes from the memory area pointed to by \fCsrc\fP to the memory area pointed to by \fCoffset\fP bytes from the start of symbol \fCsymbol\fP. The memory areas may not overlap. \fCsymbol\fP is a variable that resides in global or constant memory space. \fCkind\fP can be either \fBcudaMemcpyHostToDevice\fP, \fBcudaMemcpyDeviceToDevice\fP, or \fBcudaMemcpyDefault\fP. Passing \fBcudaMemcpyDefault\fP is recommended, in which case the type of transfer is inferred from the pointer values. However, \fBcudaMemcpyDefault\fP is only allowed on systems that support unified virtual addressing.
+.PP
+\fBcudaMemcpyToSymbolAsync()\fP is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero \fCstream\fP argument. If \fCkind\fP is \fBcudaMemcpyHostToDevice\fP and \fCstream\fP is non-zero, the copy may overlap with operations in other streams.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsymbol\fP - Device symbol address 
+.br
+\fIsrc\fP - Source memory address 
+.br
+\fIcount\fP - Size in bytes to copy 
+.br
+\fIoffset\fP - Offset from start of symbol in bytes 
+.br
+\fIkind\fP - Type of transfer 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidSymbol\fP, \fBcudaErrorInvalidDevicePointer\fP, \fBcudaErrorInvalidMemcpyDirection\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics. 
+.PP
+Use of a string naming a variable as the \fCsymbol\fP paramater was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpy2D\fP, \fBcudaMemcpyToArray\fP, \fBcudaMemcpy2DToArray\fP, \fBcudaMemcpyFromArray\fP, \fBcudaMemcpy2DFromArray\fP, \fBcudaMemcpyArrayToArray\fP, \fBcudaMemcpy2DArrayToArray\fP, \fBcudaMemcpyToSymbol\fP, \fBcudaMemcpyFromSymbol\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy2DAsync\fP, \fBcudaMemcpyToArrayAsync\fP, \fBcudaMemcpy2DToArrayAsync\fP, \fBcudaMemcpyFromArrayAsync\fP, \fBcudaMemcpy2DFromArrayAsync\fP, \fBcudaMemcpyFromSymbolAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemGetInfo (size_t * free, size_t * total)"
+.PP
+Returns in \fC*free\fP and \fC*total\fP respectively, the free and total amount of memory available for allocation by the device in bytes.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfree\fP - Returned free memory in bytes 
+.br
+\fItotal\fP - Returned total memory in bytes
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInitializationError\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorLaunchFailure\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemPrefetchAsync (const void * devPtr, size_t count, int dstDevice, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Prefetches memory to the specified destination device. \fCdevPtr\fP is the base device pointer of the memory to be prefetched and \fCdstDevice\fP is the destination device. \fCcount\fP specifies the number of bytes to copy. \fCstream\fP is the stream in which the operation is enqueued. The memory range must refer to managed memory allocated via \fBcudaMallocManaged\fP or declared via __managed__ variables.
+.PP
+Passing in cudaCpuDeviceId for \fCdstDevice\fP will prefetch the data to host memory. If \fCdstDevice\fP is a GPU, then the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP must be non-zero. Additionally, \fCstream\fP must be associated with a device that has a non-zero value for the device attribute \fBcudaDevAttrConcurrentManagedAccess\fP.
+.PP
+The start address and end address of the memory range will be rounded down and rounded up respectively to be aligned to CPU page size before the prefetch operation is enqueued in the stream.
+.PP
+If no physical memory has been allocated for this region, then this memory region will be populated and mapped on the destination device. If there's insufficient memory to prefetch the desired region, the Unified Memory driver may evict pages from other \fBcudaMallocManaged\fP allocations to host memory in order to make room. Device memory allocated using \fBcudaMalloc\fP or \fBcudaMallocArray\fP will not be evicted.
+.PP
+By default, any mappings to the previous location of the migrated pages are removed and mappings for the new location are only setup on \fCdstDevice\fP. The exact behavior however also depends on the settings applied to this memory range via \fBcudaMemAdvise\fP as described below:
+.PP
+If \fBcudaMemAdviseSetReadMostly\fP was set on any subset of this memory range, then that subset will create a read-only copy of the pages on \fCdstDevice\fP.
+.PP
+If \fBcudaMemAdviseSetPreferredLocation\fP was called on any subset of this memory range, then the pages will be migrated to \fCdstDevice\fP even if \fCdstDevice\fP is not the preferred location of any pages in the memory range.
+.PP
+If \fBcudaMemAdviseSetAccessedBy\fP was called on any subset of this memory range, then mappings to those pages from all the appropriate processors are updated to refer to the new location if establishing such a mapping is possible. Otherwise, those mappings are cleared.
+.PP
+Note that this API is not required for functionality and only serves to improve performance by allowing the application to migrate data to a suitable location before it is accessed. Memory accesses to this range are always coherent and are allowed even when the data is actively being migrated.
+.PP
+Note that this function is asynchronous with respect to the host and all work on other devices.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevPtr\fP - Pointer to be prefetched 
+.br
+\fIcount\fP - Size in bytes 
+.br
+\fIdstDevice\fP - Destination device to prefetch to 
+.br
+\fIstream\fP - Stream to enqueue prefetch operation
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevice\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemcpy\fP, \fBcudaMemcpyPeer\fP, \fBcudaMemcpyAsync\fP, \fBcudaMemcpy3DPeerAsync\fP, \fBcudaMemAdvise\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemRangeGetAttribute (void * data, size_t dataSize, enum \fBcudaMemRangeAttribute\fP attribute, const void * devPtr, size_t count)"
+.PP
+Query an attribute about the memory range starting at \fCdevPtr\fP with a size of \fCcount\fP bytes. The memory range must refer to managed memory allocated via \fBcudaMallocManaged\fP or declared via __managed__ variables.
+.PP
+The \fCattribute\fP parameter can take the following values:
+.IP "\(bu" 2
+\fBcudaMemRangeAttributeReadMostly\fP: If this attribute is specified, \fCdata\fP will be interpreted as a 32-bit integer, and \fCdataSize\fP must be 4. The result returned will be 1 if all pages in the given memory range have read-duplication enabled, or 0 otherwise.
+.IP "\(bu" 2
+\fBcudaMemRangeAttributePreferredLocation\fP: If this attribute is specified, \fCdata\fP will be interpreted as a 32-bit integer, and \fCdataSize\fP must be 4. The result returned will be a GPU device id if all pages in the memory range have that GPU as their preferred location, or it will be cudaCpuDeviceId if all pages in the memory range have the CPU as their preferred location, or it will be cudaInvalidDeviceId if either all the pages don't have the same preferred location or some of the pages don't have a preferred location at all. Note that the actual location of the pages in the memory range at the time of the query may be different from the preferred location.
+.IP "\(bu" 2
+\fBcudaMemRangeAttributeAccessedBy\fP: If this attribute is specified, \fCdata\fP will be interpreted as an array of 32-bit integers, and \fCdataSize\fP must be a non-zero multiple of 4. The result returned will be a list of device ids that had cudaMemAdviceSetAccessedBy set for that entire memory range. If any device does not have that advice set for the entire memory range, that device will not be included. If \fCdata\fP is larger than the number of devices that have that advice set for that memory range, cudaInvalidDeviceId will be returned in all the extra space provided. For ex., if \fCdataSize\fP is 12 (i.e. \fCdata\fP has 3 elements) and only device 0 has the advice set, then the result returned will be { 0, cudaInvalidDeviceId, cudaInvalidDeviceId }. If \fCdata\fP is smaller than the number of devices that have that advice set, then only as many devices will be returned as can fit in the array. There is no guarantee on which specific devices will be returned, however.
+.IP "\(bu" 2
+\fBcudaMemRangeAttributeLastPrefetchLocation\fP: If this attribute is specified, \fCdata\fP will be interpreted as a 32-bit integer, and \fCdataSize\fP must be 4. The result returned will be the last location to which all pages in the memory range were prefetched explicitly via \fBcudaMemPrefetchAsync\fP. This will either be a GPU id or cudaCpuDeviceId depending on whether the last location for prefetch was a GPU or the CPU respectively. If any page in the memory range was never explicitly prefetched or if all pages were not prefetched to the same location, cudaInvalidDeviceId will be returned. Note that this simply returns the last location that the applicaton requested to prefetch the memory range to. It gives no indication as to whether the prefetch operation to that location has completed or even begun.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP - A pointers to a memory location where the result of each attribute query will be written to. 
+.br
+\fIdataSize\fP - Array containing the size of data 
+.br
+\fIattribute\fP - The attribute to query 
+.br
+\fIdevPtr\fP - Start of the range to query 
+.br
+\fIcount\fP - Size of the range to query
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+This function exhibits  behavior for most use cases. 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemRangeGetAttributes\fP, \fBcudaMemPrefetchAsync\fP, \fBcudaMemAdvise\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemRangeGetAttributes (void ** data, size_t * dataSizes, enum \fBcudaMemRangeAttribute\fP * attributes, size_t numAttributes, const void * devPtr, size_t count)"
+.PP
+Query attributes of the memory range starting at \fCdevPtr\fP with a size of \fCcount\fP bytes. The memory range must refer to managed memory allocated via \fBcudaMallocManaged\fP or declared via __managed__ variables. The \fCattributes\fP array will be interpreted to have \fCnumAttributes\fP entries. The \fCdataSizes\fP array will also be interpreted to have \fCnumAttributes\fP entries. The results of the query will be stored in \fCdata\fP.
+.PP
+The list of supported attributes are given below. Please refer to \fBcudaMemRangeGetAttribute\fP for attribute descriptions and restrictions.
+.PP
+.IP "\(bu" 2
+\fBcudaMemRangeAttributeReadMostly\fP
+.IP "\(bu" 2
+\fBcudaMemRangeAttributePreferredLocation\fP
+.IP "\(bu" 2
+\fBcudaMemRangeAttributeAccessedBy\fP
+.IP "\(bu" 2
+\fBcudaMemRangeAttributeLastPrefetchLocation\fP
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdata\fP - A two-dimensional array containing pointers to memory locations where the result of each attribute query will be written to. 
+.br
+\fIdataSizes\fP - Array containing the sizes of each result 
+.br
+\fIattributes\fP - An array of attributes to query (numAttributes and the number of attributes in this array should match) 
+.br
+\fInumAttributes\fP - Number of attributes to query 
+.br
+\fIdevPtr\fP - Start of the range to query 
+.br
+\fIcount\fP - Size of the range to query
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemRangeGetAttribute\fP, \fBcudaMemAdvise\fP \fBcudaMemPrefetchAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemset (void * devPtr, int value, size_t count)"
+.PP
+Fills the first \fCcount\fP bytes of the memory area pointed to by \fCdevPtr\fP with the constant byte value \fCvalue\fP.
+.PP
+Note that this function is asynchronous with respect to the host unless \fCdevPtr\fP refers to pinned host memory.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevPtr\fP - Pointer to device memory 
+.br
+\fIvalue\fP - Value to set for each byte of specified memory 
+.br
+\fIcount\fP - Size in bytes to set
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also .
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemset2D\fP, \fBcudaMemset3D\fP, \fBcudaMemsetAsync\fP, \fBcudaMemset2DAsync\fP, \fBcudaMemset3DAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemset2D (void * devPtr, size_t pitch, int value, size_t width, size_t height)"
+.PP
+Sets to the specified value \fCvalue\fP a matrix (\fCheight\fP rows of \fCwidth\fP bytes each) pointed to by \fCdstPtr\fP. \fCpitch\fP is the width in bytes of the 2D array pointed to by \fCdstPtr\fP, including any padding added to the end of each row. This function performs fastest when the pitch is one that has been passed back by \fBcudaMallocPitch()\fP.
+.PP
+Note that this function is asynchronous with respect to the host unless \fCdevPtr\fP refers to pinned host memory.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevPtr\fP - Pointer to 2D device memory 
+.br
+\fIpitch\fP - Pitch in bytes of 2D device memory 
+.br
+\fIvalue\fP - Value to set for each byte of specified memory 
+.br
+\fIwidth\fP - Width of matrix set (columns in bytes) 
+.br
+\fIheight\fP - Height of matrix set (rows)
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also .
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemset\fP, \fBcudaMemset3D\fP, \fBcudaMemsetAsync\fP, \fBcudaMemset2DAsync\fP, \fBcudaMemset3DAsync\fP 
+.RE
+.PP
+
+.SS "__cudart_builtin__ \fBcudaError_t\fP cudaMemset2DAsync (void * devPtr, size_t pitch, int value, size_t width, size_t height, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Sets to the specified value \fCvalue\fP a matrix (\fCheight\fP rows of \fCwidth\fP bytes each) pointed to by \fCdstPtr\fP. \fCpitch\fP is the width in bytes of the 2D array pointed to by \fCdstPtr\fP, including any padding added to the end of each row. This function performs fastest when the pitch is one that has been passed back by \fBcudaMallocPitch()\fP.
+.PP
+\fBcudaMemset2DAsync()\fP is asynchronous with respect to the host, so the call may return before the memset is complete. The operation can optionally be associated to a stream by passing a non-zero \fCstream\fP argument. If \fCstream\fP is non-zero, the operation may overlap with operations in other streams.
+.PP
+The device version of this function only handles device to device copies and cannot be given local or shared pointers.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevPtr\fP - Pointer to 2D device memory 
+.br
+\fIpitch\fP - Pitch in bytes of 2D device memory 
+.br
+\fIvalue\fP - Value to set for each byte of specified memory 
+.br
+\fIwidth\fP - Width of matrix set (columns in bytes) 
+.br
+\fIheight\fP - Height of matrix set (rows) 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also . 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemset\fP, \fBcudaMemset2D\fP, \fBcudaMemset3D\fP, \fBcudaMemsetAsync\fP, \fBcudaMemset3DAsync\fP 
+.RE
+.PP
+
+.SS "\fBcudaError_t\fP cudaMemset3D (struct \fBcudaPitchedPtr\fP pitchedDevPtr, int value, struct \fBcudaExtent\fP extent)"
+.PP
+Initializes each element of a 3D array to the specified value \fCvalue\fP. The object to initialize is defined by \fCpitchedDevPtr\fP. The \fCpitch\fP field of \fCpitchedDevPtr\fP is the width in memory in bytes of the 3D array pointed to by \fCpitchedDevPtr\fP, including any padding added to the end of each row. The \fCxsize\fP field specifies the logical width of each row in bytes, while the \fCysize\fP field specifies the height of each 2D slice in rows.
+.PP
+The extents of the initialized region are specified as a \fCwidth\fP in bytes, a \fCheight\fP in rows, and a \fCdepth\fP in slices.
+.PP
+Extents with \fCwidth\fP greater than or equal to the \fCxsize\fP of \fCpitchedDevPtr\fP may perform significantly faster than extents narrower than the \fCxsize\fP. Secondarily, extents with \fCheight\fP equal to the \fCysize\fP of \fCpitchedDevPtr\fP will perform faster than when the \fCheight\fP is shorter than the \fCysize\fP.
+.PP
+This function performs fastest when the \fCpitchedDevPtr\fP has been allocated by \fBcudaMalloc3D()\fP.
+.PP
+Note that this function is asynchronous with respect to the host unless \fCpitchedDevPtr\fP refers to pinned host memory.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpitchedDevPtr\fP - Pointer to pitched device memory 
+.br
+\fIvalue\fP - Value to set for each byte of specified memory 
+.br
+\fIextent\fP - Size parameters for where to set device memory (\fCwidth\fP field in bytes)
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also .
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemset\fP, \fBcudaMemset2D\fP, \fBcudaMemsetAsync\fP, \fBcudaMemset2DAsync\fP, \fBcudaMemset3DAsync\fP, \fBcudaMalloc3D\fP, \fBmake_cudaPitchedPtr\fP, \fBmake_cudaExtent\fP 
+.RE
+.PP
+
+.SS "__cudart_builtin__ \fBcudaError_t\fP cudaMemset3DAsync (struct \fBcudaPitchedPtr\fP pitchedDevPtr, int value, struct \fBcudaExtent\fP extent, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Initializes each element of a 3D array to the specified value \fCvalue\fP. The object to initialize is defined by \fCpitchedDevPtr\fP. The \fCpitch\fP field of \fCpitchedDevPtr\fP is the width in memory in bytes of the 3D array pointed to by \fCpitchedDevPtr\fP, including any padding added to the end of each row. The \fCxsize\fP field specifies the logical width of each row in bytes, while the \fCysize\fP field specifies the height of each 2D slice in rows.
+.PP
+The extents of the initialized region are specified as a \fCwidth\fP in bytes, a \fCheight\fP in rows, and a \fCdepth\fP in slices.
+.PP
+Extents with \fCwidth\fP greater than or equal to the \fCxsize\fP of \fCpitchedDevPtr\fP may perform significantly faster than extents narrower than the \fCxsize\fP. Secondarily, extents with \fCheight\fP equal to the \fCysize\fP of \fCpitchedDevPtr\fP will perform faster than when the \fCheight\fP is shorter than the \fCysize\fP.
+.PP
+This function performs fastest when the \fCpitchedDevPtr\fP has been allocated by \fBcudaMalloc3D()\fP.
+.PP
+\fBcudaMemset3DAsync()\fP is asynchronous with respect to the host, so the call may return before the memset is complete. The operation can optionally be associated to a stream by passing a non-zero \fCstream\fP argument. If \fCstream\fP is non-zero, the operation may overlap with operations in other streams.
+.PP
+The device version of this function only handles device to device copies and cannot be given local or shared pointers.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIpitchedDevPtr\fP - Pointer to pitched device memory 
+.br
+\fIvalue\fP - Value to set for each byte of specified memory 
+.br
+\fIextent\fP - Size parameters for where to set device memory (\fCwidth\fP field in bytes) 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also . 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemset\fP, \fBcudaMemset2D\fP, \fBcudaMemset3D\fP, \fBcudaMemsetAsync\fP, \fBcudaMemset2DAsync\fP, \fBcudaMalloc3D\fP, \fBmake_cudaPitchedPtr\fP, \fBmake_cudaExtent\fP 
+.RE
+.PP
+
+.SS "__cudart_builtin__ \fBcudaError_t\fP cudaMemsetAsync (void * devPtr, int value, size_t count, \fBcudaStream_t\fP stream = \fC0\fP)"
+.PP
+Fills the first \fCcount\fP bytes of the memory area pointed to by \fCdevPtr\fP with the constant byte value \fCvalue\fP.
+.PP
+\fBcudaMemsetAsync()\fP is asynchronous with respect to the host, so the call may return before the memset is complete. The operation can optionally be associated to a stream by passing a non-zero \fCstream\fP argument. If \fCstream\fP is non-zero, the operation may overlap with operations in other streams.
+.PP
+The device version of this function only handles device to device copies and cannot be given local or shared pointers.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdevPtr\fP - Pointer to device memory 
+.br
+\fIvalue\fP - Value to set for each byte of specified memory 
+.br
+\fIcount\fP - Size in bytes to set 
+.br
+\fIstream\fP - Stream identifier
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaSuccess\fP, \fBcudaErrorInvalidValue\fP, \fBcudaErrorInvalidDevicePointer\fP 
+.RE
+.PP
+\fBNote:\fP
+.RS 4
+Note that this function may also return error codes from previous, asynchronous launches. 
+.PP
+See also . 
+.PP
+This function uses standard  semantics.
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBcudaMemset\fP, \fBcudaMemset2D\fP, \fBcudaMemset3D\fP, \fBcudaMemset2DAsync\fP, \fBcudaMemset3DAsync\fP 
+.RE
+.PP
+
+.SS "struct \fBcudaExtent\fP make_cudaExtent (size_t w, size_t h, size_t d)\fC [read]\fP"
+.PP
+Returns a \fBcudaExtent\fP based on the specified input parameters \fCw\fP, \fCh\fP, and \fCd\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIw\fP - Width in elements when referring to array memory, in bytes when referring to linear memory 
+.br
+\fIh\fP - Height in elements 
+.br
+\fId\fP - Depth in elements
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaExtent\fP specified by \fCw\fP, \fCh\fP, and \fCd\fP 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBmake_cudaPitchedPtr\fP, \fBmake_cudaPos\fP 
+.RE
+.PP
+
+.SS "struct \fBcudaPitchedPtr\fP make_cudaPitchedPtr (void * d, size_t p, size_t xsz, size_t ysz)\fC [read]\fP"
+.PP
+Returns a \fBcudaPitchedPtr\fP based on the specified input parameters \fCd\fP, \fCp\fP, \fCxsz\fP, and \fCysz\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fId\fP - Pointer to allocated memory 
+.br
+\fIp\fP - Pitch of allocated memory in bytes 
+.br
+\fIxsz\fP - Logical width of allocation in elements 
+.br
+\fIysz\fP - Logical height of allocation in elements
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaPitchedPtr\fP specified by \fCd\fP, \fCp\fP, \fCxsz\fP, and \fCysz\fP 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBmake_cudaExtent\fP, \fBmake_cudaPos\fP 
+.RE
+.PP
+
+.SS "struct \fBcudaPos\fP make_cudaPos (size_t x, size_t y, size_t z)\fC [read]\fP"
+.PP
+Returns a \fBcudaPos\fP based on the specified input parameters \fCx\fP, \fCy\fP, and \fCz\fP.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIx\fP - X position 
+.br
+\fIy\fP - Y position 
+.br
+\fIz\fP - Z position
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBcudaPos\fP specified by \fCx\fP, \fCy\fP, and \fCz\fP 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBmake_cudaExtent\fP, \fBmake_cudaPitchedPtr\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen from the source code.

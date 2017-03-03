@@ -74,7 +74,7 @@ __global__ void NLM(
         clr.y *= sumWeights;
         clr.z *= sumWeights;
 
-        //Choose LERP quotent basing on how many texels
+        //Choose LERP quotient basing on how many texels
         //within the NLM window exceeded the weight threshold
         float lerpQ = (fCount > NLM_LERP_THRESHOLD) ? lerpC : 1.0f - lerpC;
 
@@ -146,7 +146,7 @@ __global__ void NLMdiag(
                 fCount     += (weightIJ > NLM_WEIGHT_THRESHOLD) ? INV_NLM_WINDOW_AREA : 0;
             }
 
-        //Choose LERP quotent basing on how many texels
+        //Choose LERP quotient basing on how many texels
         //within the NLM window exceeded the LERP threshold
         float lerpQ = (fCount > NLM_LERP_THRESHOLD) ? 1.0f : 0;
 

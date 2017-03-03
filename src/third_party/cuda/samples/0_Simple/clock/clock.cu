@@ -10,7 +10,7 @@
  */
 
 // This example shows how to use the clock function to measure the performance of
-// a kernel accurately.
+// block of threads of a kernel accurately.
 //
 // Blocks are executed in parallel and out of order. Since there's no synchronization
 // mechanism between blocks, we measure the clock once for each block. The clock
@@ -18,6 +18,7 @@
 
 // System includes
 #include <stdio.h>
+#include <stdint.h>
 #include <assert.h>
 
 // CUDA runtime
@@ -68,14 +69,6 @@ __global__ static void timedReduction(const float *input, float *output, clock_t
 
     if (tid == 0) timer[bid+gridDim.x] = clock();
 }
-
-
-// This example shows how to use the clock function to measure the performance of
-// a kernel accurately.
-//
-// Blocks are executed in parallel and out of order. Since there's no synchronization
-// mechanism between blocks, we measure the clock once for each block. The clock
-// samples are written to device memory.
 
 #define NUM_BLOCKS    64
 #define NUM_THREADS   256
@@ -130,26 +123,15 @@ int main(int argc, char **argv)
     checkCudaErrors(cudaFree(doutput));
     checkCudaErrors(cudaFree(dtimer));
 
+    long double avgElapsedClocks = 0;
 
-    // Compute the difference between the last block end and the first block start.
-    clock_t minStart = timer[0];
-    clock_t maxEnd = timer[NUM_BLOCKS];
-
-    for (int i = 1; i < NUM_BLOCKS; i++)
+    for (int i = 0; i < NUM_BLOCKS; i++)
     {
-        minStart = timer[i] < minStart ? timer[i] : minStart;
-        maxEnd = timer[NUM_BLOCKS+i] > maxEnd ? timer[NUM_BLOCKS+i] : maxEnd;
+        avgElapsedClocks += (long double) (timer[i + NUM_BLOCKS] - timer[i]);
     }
 
-    printf("Total clocks = %d\n", (int)(maxEnd - minStart));
-
-
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
+    avgElapsedClocks = avgElapsedClocks/NUM_BLOCKS;
+    printf("Average clocks/block = %Lf\n", avgElapsedClocks);
 
     return EXIT_SUCCESS;
 }

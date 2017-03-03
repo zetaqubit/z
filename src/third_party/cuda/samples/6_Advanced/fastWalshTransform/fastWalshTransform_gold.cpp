@@ -57,7 +57,7 @@ extern"C" void slowWTcpu(float *h_Output, float *h_Input, int log2N)
 
         for (int j = 0; j < N; j++)
         {
-            //Walsh-Hadamar quotent
+            //Walsh-Hadamard quotient
             double q = 1.0;
 
             for (int t = i & j; t != 0; t >>= 1)
@@ -74,7 +74,7 @@ extern"C" void slowWTcpu(float *h_Output, float *h_Input, int log2N)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Reference CPU dyadic convolution.
-// Extremly slow because of non-linear memory access patterns (cache thrashing)
+// Extremely slow because of non-linear memory access patterns (cache thrashing)
 ////////////////////////////////////////////////////////////////////////////////
 extern "C" void dyadicConvolutionCPU(
     float *h_Result,

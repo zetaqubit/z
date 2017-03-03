@@ -146,7 +146,7 @@ runTest(int argc, char **argv)
     else
     {
         // custom output handling when no regression test running
-        // in this case check if the result is equivalent to the expected soluion
+        // in this case check if the result is equivalent to the expected solution
         bTestResult = compareData(reference, h_odata, num_threads, 0.0f, 0.0f);
     }
 
@@ -157,11 +157,5 @@ runTest(int argc, char **argv)
     checkCudaErrors(cudaFree(d_idata));
     checkCudaErrors(cudaFree(d_odata));
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits   
-    cudaDeviceReset();
     exit(bTestResult ? EXIT_SUCCESS : EXIT_FAILURE);
 }

@@ -16,15 +16,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include <algorithm>
-#include <GL/glew.h>
 
-#if defined(__APPLE__) || defined(MACOSX)
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#include <GLUT/glut.h>
-#else
-#include <GL/freeglut.h>
-#endif
-
+#define HELPERGL_EXTERN_GL_FUNC_IMPLEMENTATION
+#include <helper_gl.h>
 #include <cuda_runtime.h>
 #include <cuda_gl_interop.h>
 
@@ -229,7 +223,7 @@ ParticleSystem::initGrid(vec3f start, uint3 size, vec3f spacing, float jitter, v
     }
 }
 
-// initalize in random positions within cube
+// initialize in random positions within cube
 void
 ParticleSystem::initCubeRandom(vec3f origin, vec3f size, vec3f vel, float lifetime)
 {
@@ -384,7 +378,7 @@ ParticleSystem::setModelView(float *m)
     }
 }
 
-// dump particles to sdout for debugging
+// dump particles to stdout for debugging
 void
 ParticleSystem::dumpParticles(uint start, uint count)
 {

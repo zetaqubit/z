@@ -48,7 +48,7 @@
       <div id="site-content">
          <nav id="site-nav">
             <div class="category closed"><a href="../index.html" title="The root of the site.">CUDA Toolkit
-                  v7.0</a></div>
+                  v8.0</a></div>
             <div class="category"><a href="index.html" title="CUDA-MEMCHECK">CUDA-MEMCHECK</a></div>
             <ul>
                <li>
@@ -200,7 +200,7 @@
                   <div class="section-link"><a href="#cuda-fortran-support">9.&nbsp;CUDA Fortran Support</a></div>
                   <ul>
                      <li>
-                        <div class="section-link"><a href="#unique_1345687742">9.1.&nbsp;CUDA Fortran Specific Behavior</a></div>
+                        <div class="section-link"><a href="#unique_210502067">9.1.&nbsp;CUDA Fortran Specific Behavior</a></div>
                      </li>
                   </ul>
                </li>
@@ -239,19 +239,22 @@
                   <div class="section-link"><a href="#release-notes">C.&nbsp;Release Notes</a></div>
                   <ul>
                      <li>
-                        <div class="section-link"><a href="#new-features-7.0">C.1.&nbsp;New Features in 7.0</a></div>
+                        <div class="section-link"><a href="#new-features-8.0">C.1.&nbsp;New Features in 8.0</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#new-features-6.5">C.2.&nbsp;New Features in 6.5</a></div>
+                        <div class="section-link"><a href="#new-features-7.0">C.2.&nbsp;New Features in 7.0</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#new-features-6.0">C.3.&nbsp;New Features in 6.0</a></div>
+                        <div class="section-link"><a href="#new-features-6.5">C.3.&nbsp;New Features in 6.5</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#new-features-5.5">C.4.&nbsp;New Features in 5.5</a></div>
+                        <div class="section-link"><a href="#new-features-6.0">C.4.&nbsp;New Features in 6.0</a></div>
                      </li>
                      <li>
-                        <div class="section-link"><a href="#new-features-5.0">C.5.&nbsp;New Features in 5.0</a></div>
+                        <div class="section-link"><a href="#new-features-5.5">C.5.&nbsp;New Features in 5.5</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="#new-features-5.0">C.6.&nbsp;New Features in 5.0</a></div>
                      </li>
                   </ul>
                </li>
@@ -272,10 +275,10 @@
                   (<a href="../../pdf/CUDA_Memcheck.pdf">PDF</a>)
                   -
                   
-                  v7.0
+                  v8.0
                   (<a href="https://developer.nvidia.com/cuda-toolkit-archive">older</a>)
                   -
-                  Last updated March 5, 2015
+                  Last updated January 12, 2017
                   -
                   <a href="mailto:cudatools@nvidia.com?subject=CUDA Toolkit Documentation Feedback: CUDA-MEMCHECK">Send Feedback</a>
                   -
@@ -498,7 +501,7 @@
                                     <td class="entry" valign="top" width="20%" headers="d54e339" rowspan="1" colspan="1">language</td>
                                     <td class="entry" valign="top" width="20%" headers="d54e342" rowspan="1" colspan="1">c,fortran</td>
                                     <td class="entry" valign="top" width="20%" headers="d54e345" rowspan="1" colspan="1">c</td>
-                                    <td class="entry" valign="top" width="40%" headers="d54e348" rowspan="1" colspan="1">This controls application source language specific behavior in CUDA-MEMCHECK tools. For fortan specific behavior, see <a class="xref" href="index.html#unique_1345687742" shape="rect">CUDA Fortran Specific Behavior</a>.
+                                    <td class="entry" valign="top" width="40%" headers="d54e348" rowspan="1" colspan="1">This controls application source language specific behavior in CUDA-MEMCHECK tools. For fortan specific behavior, see <a class="xref" href="index.html#unique_210502067" shape="rect">CUDA Fortran Specific Behavior</a>.
                                     </td>
                                  </tr>
                                  <tr class="row">
@@ -1953,8 +1956,8 @@ nvcc -Xcompiler -rdynamic -lineinfo  -o out in.cu
                   <div class="body conbody">
                      <p class="p">This section describes support for CUDA Fortran.</p>
                   </div>
-                  <div class="topic concept nested1" id="unique_1345687742"><a name="unique_1345687742" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_1345687742" name="unique_1345687742" shape="rect">CUDA Fortran Specific Behavior</a></h3>
+                  <div class="topic concept nested1" id="unique_210502067"><a name="unique_210502067" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#unique_210502067" name="unique_210502067" shape="rect">CUDA Fortran Specific Behavior</a></h3>
                      <div class="body conbody">
                         <ul class="ul">
                            <li class="li">By default, error reports printed by CUDA-MEMCHECK contain 0-based C style values for thread index (threadIdx) and block index
@@ -2346,48 +2349,62 @@ The program no longer exists.
                               <caption><span class="tablecap">Table 10. Memcheck memory access error detection support</span></caption>
                               <thead class="thead" align="left">
                                  <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d54e2915" rowspan="1" colspan="1">Error Type</th>
-                                    <th class="entry" valign="top" width="16.666666666666664%" id="d54e2918" rowspan="1" colspan="1">SM 2.x</th>
-                                    <th class="entry" valign="top" width="16.666666666666664%" id="d54e2921" rowspan="1" colspan="1">SM 3.0</th>
-                                    <th class="entry" valign="top" width="16.666666666666664%" id="d54e2924" rowspan="1" colspan="1">SM 3.5</th>
-                                    <th class="entry" valign="top" width="16.666666666666664%" id="d54e2927" rowspan="1" colspan="1">SM 5.x</th>
+                                    <th class="entry" valign="top" width="28.57142857142857%" id="d54e2917" rowspan="1" colspan="1">Error Type</th>
+                                    <th class="entry" valign="top" width="14.285714285714285%" id="d54e2920" rowspan="1" colspan="1">SM 2.x</th>
+                                    <th class="entry" valign="top" width="14.285714285714285%" id="d54e2923" rowspan="1" colspan="1">SM 3.0</th>
+                                    <th class="entry" valign="top" width="14.285714285714285%" id="d54e2926" rowspan="1" colspan="1">SM 3.5</th>
+                                    <th class="entry" valign="top" width="14.285714285714285%" id="d54e2929" rowspan="1" colspan="1">SM 5.x</th>
+                                    <th class="entry" valign="top" width="14.285714285714285%" id="d54e2933" rowspan="1" colspan="1">SM 6.x</th>
                                  </tr>
                               </thead>
                               <tbody class="tbody">
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2915" rowspan="1" colspan="1">Global</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2918" rowspan="1" colspan="1">Yes</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2921" rowspan="1" colspan="1">Yes</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2924" rowspan="1" colspan="1">Yes</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2927" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d54e2917" rowspan="1" colspan="1">Global</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2920" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2923" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2926" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2929" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2933" rowspan="1" colspan="1">Yes</td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2915" rowspan="1" colspan="1">Shared</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2918" rowspan="1" colspan="1">Yes</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2921" rowspan="1" colspan="1">Yes</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2924" rowspan="1" colspan="1">Yes</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2927" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d54e2917" rowspan="1" colspan="1">Shared</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2920" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2923" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2926" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2929" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2933" rowspan="1" colspan="1">Yes</td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2915" rowspan="1" colspan="1">Local</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2918" rowspan="1" colspan="1">Yes</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2921" rowspan="1" colspan="1">Yes</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2924" rowspan="1" colspan="1">Yes</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2927" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d54e2917" rowspan="1" colspan="1">Local</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2920" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2923" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2926" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2929" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2933" rowspan="1" colspan="1">Yes</td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2915" rowspan="1" colspan="1">Global Atomic</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2918" rowspan="1" colspan="1">Yes</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2921" rowspan="1" colspan="1">Yes</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2924" rowspan="1" colspan="1">Yes</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2927" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d54e2917" rowspan="1" colspan="1">Global Atomic</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2920" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2923" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2926" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2929" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2933" rowspan="1" colspan="1">Yes</td>
                                  </tr>
                                  <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d54e2915" rowspan="1" colspan="1">Load through texture</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2918" rowspan="1" colspan="1">N/A</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2921" rowspan="1" colspan="1">N/A</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2924" rowspan="1" colspan="1">Yes</td>
-                                    <td class="entry" valign="top" width="16.666666666666664%" headers="d54e2927" rowspan="1" colspan="1">N/A</td>
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d54e2917" rowspan="1" colspan="1">Load through texture</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2920" rowspan="1" colspan="1">N/A</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2923" rowspan="1" colspan="1">N/A</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2926" rowspan="1" colspan="1">Yes</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2929" rowspan="1" colspan="1">N/A</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2933" rowspan="1" colspan="1">N/A</td>
+                                 </tr>
+                                 <tr class="row">
+                                    <td class="entry" valign="top" width="28.57142857142857%" headers="d54e2917" rowspan="1" colspan="1">System-scoped Atomics</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2920" rowspan="1" colspan="1">N/A</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2923" rowspan="1" colspan="1">N/A</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2926" rowspan="1" colspan="1">N/A</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2929" rowspan="1" colspan="1">N/A</td>
+                                    <td class="entry" valign="top" width="14.285714285714285%" headers="d54e2933" rowspan="1" colspan="1">Yes</td>
                                  </tr>
                               </tbody>
                            </table>
@@ -2415,101 +2432,101 @@ The program no longer exists.
                            <caption><span class="tablecap">Table 11. CUDA Exception Codes</span></caption>
                            <thead class="thead" align="left">
                               <tr class="row">
-                                 <th class="entry" valign="top" width="28.57142857142857%" id="d54e3059" rowspan="1" colspan="1">Exception code</th>
-                                 <th class="entry" valign="top" width="14.285714285714285%" id="d54e3062" rowspan="1" colspan="1">Precision of the Error</th>
-                                 <th class="entry" valign="top" width="21.428571428571427%" id="d54e3065" rowspan="1" colspan="1">Scope of the Error</th>
-                                 <th class="entry" valign="top" width="35.714285714285715%" id="d54e3068" rowspan="1" colspan="1">Description</th>
+                                 <th class="entry" valign="top" width="28.57142857142857%" id="d54e3108" rowspan="1" colspan="1">Exception code</th>
+                                 <th class="entry" valign="top" width="14.285714285714285%" id="d54e3111" rowspan="1" colspan="1">Precision of the Error</th>
+                                 <th class="entry" valign="top" width="21.428571428571427%" id="d54e3114" rowspan="1" colspan="1">Scope of the Error</th>
+                                 <th class="entry" valign="top" width="35.714285714285715%" id="d54e3117" rowspan="1" colspan="1">Description</th>
                               </tr>
                            </thead>
                            <tbody class="tbody">
                               <tr class="row">
-                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3059" rowspan="1" colspan="1">CUDA_EXCEPTION_1 : "Lane Illegal Address"</td>
-                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3062" rowspan="1" colspan="1">Precise</td>
-                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3065" rowspan="1" colspan="1">Per lane/thread error</td>
-                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3068" rowspan="1" colspan="1">This occurs when a thread accesses an illegal (out of bounds) global address.</td>
+                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3108" rowspan="1" colspan="1">CUDA_EXCEPTION_1 : "Lane Illegal Address"</td>
+                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3111" rowspan="1" colspan="1">Precise</td>
+                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3114" rowspan="1" colspan="1">Per lane/thread error</td>
+                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3117" rowspan="1" colspan="1">This occurs when a thread accesses an illegal (out of bounds) global address.</td>
                               </tr>
                               <tr class="row">
-                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3059" rowspan="1" colspan="1">CUDA_EXCEPTION_2 : "Lane User StackOverflow"</td>
-                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3062" rowspan="1" colspan="1">Precise</td>
-                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3065" rowspan="1" colspan="1">Per lane/thread error</td>
-                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3068" rowspan="1" colspan="1">This occurs when a thread exceeds its stack memory limit.</td>
+                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3108" rowspan="1" colspan="1">CUDA_EXCEPTION_2 : "Lane User StackOverflow"</td>
+                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3111" rowspan="1" colspan="1">Precise</td>
+                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3114" rowspan="1" colspan="1">Per lane/thread error</td>
+                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3117" rowspan="1" colspan="1">This occurs when a thread exceeds its stack memory limit.</td>
                               </tr>
                               <tr class="row">
-                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3059" rowspan="1" colspan="1">CUDA_EXCEPTION_3: "Device Hardware Stack Overflow" </td>
-                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3062" rowspan="1" colspan="1">Not precise</td>
-                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3065" rowspan="1" colspan="1">Global error on the GPU</td>
-                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3068" rowspan="1" colspan="1">This occurs when the application triggers a global hardware stack overflow. The main cause of this error is large amounts
+                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3108" rowspan="1" colspan="1">CUDA_EXCEPTION_3: "Device Hardware Stack Overflow" </td>
+                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3111" rowspan="1" colspan="1">Not precise</td>
+                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3114" rowspan="1" colspan="1">Global error on the GPU</td>
+                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3117" rowspan="1" colspan="1">This occurs when the application triggers a global hardware stack overflow. The main cause of this error is large amounts
                                     of divergence in the presence of function calls.
                                  </td>
                               </tr>
                               <tr class="row">
-                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3059" rowspan="1" colspan="1">CUDA_EXCEPTION_4: "Warp Illegal Instruction"</td>
-                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3062" rowspan="1" colspan="1">Not precise</td>
-                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3065" rowspan="1" colspan="1">Warp error</td>
-                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3068" rowspan="1" colspan="1">This occurs when any thread within a warp has executed an illegal instruction.</td>
+                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3108" rowspan="1" colspan="1">CUDA_EXCEPTION_4: "Warp Illegal Instruction"</td>
+                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3111" rowspan="1" colspan="1">Not precise</td>
+                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3114" rowspan="1" colspan="1">Warp error</td>
+                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3117" rowspan="1" colspan="1">This occurs when any thread within a warp has executed an illegal instruction.</td>
                               </tr>
                               <tr class="row">
-                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3059" rowspan="1" colspan="1">CUDA_EXCEPTION_5: "Warp Out-of-range Address"</td>
-                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3062" rowspan="1" colspan="1">Not precise</td>
-                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3065" rowspan="1" colspan="1">Warp error</td>
-                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3068" rowspan="1" colspan="1">This occurs when any thread within a warp accesses an address that is outside the valid range of local or shared memory regions.</td>
+                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3108" rowspan="1" colspan="1">CUDA_EXCEPTION_5: "Warp Out-of-range Address"</td>
+                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3111" rowspan="1" colspan="1">Not precise</td>
+                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3114" rowspan="1" colspan="1">Warp error</td>
+                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3117" rowspan="1" colspan="1">This occurs when any thread within a warp accesses an address that is outside the valid range of local or shared memory regions.</td>
                               </tr>
                               <tr class="row">
-                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3059" rowspan="1" colspan="1">CUDA_EXCEPTION_6: "Warp Misaligned Address"</td>
-                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3062" rowspan="1" colspan="1">Not precise</td>
-                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3065" rowspan="1" colspan="1">Warp error</td>
-                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3068" rowspan="1" colspan="1">This occurs when any thread within a warp accesses an address in the local or shared memory segments that is not correctly
+                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3108" rowspan="1" colspan="1">CUDA_EXCEPTION_6: "Warp Misaligned Address"</td>
+                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3111" rowspan="1" colspan="1">Not precise</td>
+                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3114" rowspan="1" colspan="1">Warp error</td>
+                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3117" rowspan="1" colspan="1">This occurs when any thread within a warp accesses an address in the local or shared memory segments that is not correctly
                                     aligned.
                                  </td>
                               </tr>
                               <tr class="row">
-                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3059" rowspan="1" colspan="1">CUDA_EXCEPTION_7: "Warp Invalid Address Space"</td>
-                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3062" rowspan="1" colspan="1">Not precise</td>
-                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3065" rowspan="1" colspan="1">Warp error</td>
-                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3068" rowspan="1" colspan="1">This occurs when any thread within a warp executes an instruction that accesses a memory space not permitted for that instruction.</td>
+                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3108" rowspan="1" colspan="1">CUDA_EXCEPTION_7: "Warp Invalid Address Space"</td>
+                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3111" rowspan="1" colspan="1">Not precise</td>
+                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3114" rowspan="1" colspan="1">Warp error</td>
+                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3117" rowspan="1" colspan="1">This occurs when any thread within a warp executes an instruction that accesses a memory space not permitted for that instruction.</td>
                               </tr>
                               <tr class="row">
-                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3059" rowspan="1" colspan="1">CUDA_EXCEPTION_8: "Warp Invalid PC"</td>
-                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3062" rowspan="1" colspan="1">Not precise</td>
-                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3065" rowspan="1" colspan="1">Warp error</td>
-                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3068" rowspan="1" colspan="1">This occurs when any thread within a warp advances its PC beyond the 40-bit address space.</td>
+                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3108" rowspan="1" colspan="1">CUDA_EXCEPTION_8: "Warp Invalid PC"</td>
+                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3111" rowspan="1" colspan="1">Not precise</td>
+                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3114" rowspan="1" colspan="1">Warp error</td>
+                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3117" rowspan="1" colspan="1">This occurs when any thread within a warp advances its PC beyond the 40-bit address space.</td>
                               </tr>
                               <tr class="row">
-                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3059" rowspan="1" colspan="1">CUDA_EXCEPTION_9: "Warp Hardware Stack Overflow"</td>
-                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3062" rowspan="1" colspan="1">Not precise</td>
-                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3065" rowspan="1" colspan="1">Warp error</td>
-                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3068" rowspan="1" colspan="1">This occurs when any thread in a warp triggers a hardware stack overflow. This should be a rare occurrence.</td>
+                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3108" rowspan="1" colspan="1">CUDA_EXCEPTION_9: "Warp Hardware Stack Overflow"</td>
+                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3111" rowspan="1" colspan="1">Not precise</td>
+                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3114" rowspan="1" colspan="1">Warp error</td>
+                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3117" rowspan="1" colspan="1">This occurs when any thread in a warp triggers a hardware stack overflow. This should be a rare occurrence.</td>
                               </tr>
                               <tr class="row">
-                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3059" rowspan="1" colspan="1">CUDA_EXCEPTION_10: "Device Illegal Address"</td>
-                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3062" rowspan="1" colspan="1">Not precise</td>
-                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3065" rowspan="1" colspan="1">Global error</td>
-                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3068" rowspan="1" colspan="1">This occurs when a thread accesses an illegal (out of bounds) global address.</td>
+                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3108" rowspan="1" colspan="1">CUDA_EXCEPTION_10: "Device Illegal Address"</td>
+                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3111" rowspan="1" colspan="1">Not precise</td>
+                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3114" rowspan="1" colspan="1">Global error</td>
+                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3117" rowspan="1" colspan="1">This occurs when a thread accesses an illegal (out of bounds) global address.</td>
                               </tr>
                               <tr class="row">
-                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3059" rowspan="1" colspan="1">CUDA_EXCEPTION_11: "Lane Misaligned Address"</td>
-                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3062" rowspan="1" colspan="1">Precise</td>
-                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3065" rowspan="1" colspan="1">Per lane/thread error</td>
-                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3068" rowspan="1" colspan="1">This occurs when a thread accesses a global address that is not correctly aligned.</td>
+                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3108" rowspan="1" colspan="1">CUDA_EXCEPTION_11: "Lane Misaligned Address"</td>
+                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3111" rowspan="1" colspan="1">Precise</td>
+                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3114" rowspan="1" colspan="1">Per lane/thread error</td>
+                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3117" rowspan="1" colspan="1">This occurs when a thread accesses a global address that is not correctly aligned.</td>
                               </tr>
                               <tr class="row">
-                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3059" rowspan="1" colspan="1">CUDA_EXCEPTION_12: "Warp Assert"</td>
-                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3062" rowspan="1" colspan="1">Precise</td>
-                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3065" rowspan="1" colspan="1">Per warp</td>
-                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3068" rowspan="1" colspan="1">This occurs when any thread in the warp hits a device side assertion.</td>
+                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3108" rowspan="1" colspan="1">CUDA_EXCEPTION_12: "Warp Assert"</td>
+                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3111" rowspan="1" colspan="1">Precise</td>
+                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3114" rowspan="1" colspan="1">Per warp</td>
+                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3117" rowspan="1" colspan="1">This occurs when any thread in the warp hits a device side assertion.</td>
                               </tr>
                               <tr class="row">
-                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3059" rowspan="1" colspan="1">CUDA_EXCEPTION_13: "Lane Syscall Error"</td>
-                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3062" rowspan="1" colspan="1">Precise</td>
-                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3065" rowspan="1" colspan="1">Per lane</td>
-                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3068" rowspan="1" colspan="1">This occurs when a particular thread causes an syscall error, such as calling <samp class="ph codeph">free()</samp> in a kernel on an already free'd pointer.
+                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3108" rowspan="1" colspan="1">CUDA_EXCEPTION_13: "Lane Syscall Error"</td>
+                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3111" rowspan="1" colspan="1">Precise</td>
+                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3114" rowspan="1" colspan="1">Per lane</td>
+                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3117" rowspan="1" colspan="1">This occurs when a particular thread causes an syscall error, such as calling <samp class="ph codeph">free()</samp> in a kernel on an already free'd pointer.
                                  </td>
                               </tr>
                               <tr class="row">
-                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3059" rowspan="1" colspan="1">"Unknown Exception"</td>
-                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3062" rowspan="1" colspan="1">Not precise</td>
-                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3065" rowspan="1" colspan="1">Global error</td>
-                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3068" rowspan="1" colspan="1">The precise cause of the exception is unknown. Potentially, this may be due to Device Hardware Stack overflows or a kernel
+                                 <td class="entry" valign="top" width="28.57142857142857%" headers="d54e3108" rowspan="1" colspan="1">"Unknown Exception"</td>
+                                 <td class="entry" valign="top" width="14.285714285714285%" headers="d54e3111" rowspan="1" colspan="1">Not precise</td>
+                                 <td class="entry" valign="top" width="21.428571428571427%" headers="d54e3114" rowspan="1" colspan="1">Global error</td>
+                                 <td class="entry" valign="top" width="35.714285714285715%" headers="d54e3117" rowspan="1" colspan="1">The precise cause of the exception is unknown. Potentially, this may be due to Device Hardware Stack overflows or a kernel
                                     generating an exception very close to its termination.
                                  </td>
                               </tr>
@@ -2521,8 +2538,27 @@ The program no longer exists.
                <div class="topic concept nested0" id="release-notes"><a name="release-notes" shape="rect">
                      <!-- --></a><h2 class="title topictitle1"><a href="#release-notes" name="release-notes" shape="rect">C.&nbsp;Release Notes</a></h2>
                   <div class="body conbody"></div>
+                  <div class="topic concept nested1" id="new-features-8.0"><a name="new-features-8.0" shape="rect">
+                        <!-- --></a><h3 class="title topictitle2"><a href="#new-features-8.0" name="new-features-8.0" shape="rect">C.1.&nbsp;New Features in 8.0</a></h3>
+                     <div class="body conbody">
+                        <ul class="ul">
+                           <li class="li"> Support for non-migratable system-scoped atomics checking on SM 6.x. For more information see <a class="xref" href="index.html#memcheck-tool" shape="rect">Memcheck Tool</a>.
+                              
+                           </li>
+                           <li class="li"> Support for reporting fatal CPU-side faults when Unified Memory is enabled. For more information see <a class="xref" href="index.html#memcheck-tool" shape="rect">Memcheck Tool</a>.
+                              
+                           </li>
+                           <li class="li"> Support for correctly determining the expected set of threads at a barrier in the presence of exited threads in <a class="xref" href="index.html#synccheck-tool" shape="rect">Synccheck Tool</a>.
+                              
+                           </li>
+                           <li class="li"> Support for SM 6.x
+                              
+                           </li>
+                        </ul>
+                     </div>
+                  </div>
                   <div class="topic concept nested1" id="new-features-7.0"><a name="new-features-7.0" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#new-features-7.0" name="new-features-7.0" shape="rect">C.1.&nbsp;New Features in 7.0</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#new-features-7.0" name="new-features-7.0" shape="rect">C.2.&nbsp;New Features in 7.0</a></h3>
                      <div class="body conbody">
                         <ul class="ul">
                            <li class="li"> Support for uninitialized global memory access checking. For more information see <a class="xref" href="index.html#initcheck-tool" shape="rect">Initcheck Tool</a>.
@@ -2538,7 +2574,7 @@ The program no longer exists.
                      </div>
                   </div>
                   <div class="topic concept nested1" id="new-features-6.5"><a name="new-features-6.5" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#new-features-6.5" name="new-features-6.5" shape="rect">C.2.&nbsp;New Features in 6.5</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#new-features-6.5" name="new-features-6.5" shape="rect">C.3.&nbsp;New Features in 6.5</a></h3>
                      <div class="body conbody">
                         <ul class="ul">
                            <li class="li"> More information printed for API errors
@@ -2554,7 +2590,7 @@ The program no longer exists.
                      </div>
                   </div>
                   <div class="topic concept nested1" id="new-features-6.0"><a name="new-features-6.0" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#new-features-6.0" name="new-features-6.0" shape="rect">C.3.&nbsp;New Features in 6.0</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#new-features-6.0" name="new-features-6.0" shape="rect">C.4.&nbsp;New Features in 6.0</a></h3>
                      <div class="body conbody">
                         <ul class="ul">
                            <li class="li"> Support for Unified Memory
@@ -2570,7 +2606,7 @@ The program no longer exists.
                      </div>
                   </div>
                   <div class="topic concept nested1" id="new-features-5.5"><a name="new-features-5.5" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#new-features-5.5" name="new-features-5.5" shape="rect">C.4.&nbsp;New Features in 5.5</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#new-features-5.5" name="new-features-5.5" shape="rect">C.5.&nbsp;New Features in 5.5</a></h3>
                      <div class="body conbody">
                         <ul class="ul">
                            <li class="li"> Analysis mode in racecheck tool. For more information,
@@ -2582,7 +2618,7 @@ The program no longer exists.
                      </div>
                   </div>
                   <div class="topic concept nested1" id="new-features-5.0"><a name="new-features-5.0" shape="rect">
-                        <!-- --></a><h3 class="title topictitle2"><a href="#new-features-5.0" name="new-features-5.0" shape="rect">C.5.&nbsp;New Features in 5.0</a></h3>
+                        <!-- --></a><h3 class="title topictitle2"><a href="#new-features-5.0" name="new-features-5.0" shape="rect">C.6.&nbsp;New Features in 5.0</a></h3>
                      <div class="body conbody">
                         <ul class="ul">
                            <li class="li">Reporting of data access hazards in shared memory accesses.
@@ -2723,6 +2759,19 @@ The program no longer exists.
                            The synccheck and initcheck tools do not support CUDA dynamic parallelism
                            
                         </li>
+                        <li class="li">
+                           The racecheck and initcheck tools do not support checking memory associated with value-based stream synchronization.
+                           This includes memory used with the following CUDA API functions:
+                           
+                           <ul class="ul">
+                              <li class="li"><samp class="ph codeph">cuStreamWaitValue32</samp></li>
+                              <li class="li"><samp class="ph codeph">cuStreamWriteValue32</samp></li>
+                              <li class="li"><samp class="ph codeph">cuStreamBatchMemOp</samp></li>
+                           </ul>
+                           
+                           Using those tools in the presence of above API functions might result in incorrect error reporting.
+                           
+                        </li>
                      </ul>
                   </div>
                </div>
@@ -2765,7 +2814,7 @@ The program no longer exists.
                      <div class="body refbody">
                         <div class="section">
                            <h3 class="title sectiontitle">Copyright</h3>
-                           <p class="p">© <span class="ph">2007</span>-<span class="ph">2015</span> NVIDIA
+                           <p class="p">© <span class="ph">2007</span>-<span class="ph">2017</span> NVIDIA
                               Corporation. All rights reserved.
                            </p>
                            <p class="p">This product includes software developed by the Syncro Soft SRL (http://www.sync.ro/).</p>

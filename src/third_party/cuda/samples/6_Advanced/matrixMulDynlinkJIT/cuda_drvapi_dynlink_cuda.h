@@ -312,7 +312,6 @@ typedef enum CUmemorytype_enum
 typedef enum CUcomputemode_enum
 {
     CU_COMPUTEMODE_DEFAULT           = 0,  /**< Default compute mode (Multiple contexts allowed per device) */
-    CU_COMPUTEMODE_EXCLUSIVE         = 1, /**< Compute-exclusive-thread mode (Only one context used by a single thread can be present on this device at a time) */
     CU_COMPUTEMODE_PROHIBITED        = 2  /**< Compute-prohibited mode (No contexts can be created on this device at this time) */
 #if __CUDA_API_VERSION >= 4000
                                        , CU_COMPUTEMODE_EXCLUSIVE_PROCESS = 3  /**< Compute-exclusive-process mode (Only one context used by a single process can be present on this device at a time) */
@@ -1800,6 +1799,12 @@ typedef CUresult CUDAAPI tcuCtxGetSharedMemConfig(CUsharedconfig *pConfig);
 typedef CUresult CUDAAPI tcuCtxSetSharedMemConfig(CUsharedconfig config);
 typedef CUresult CUDAAPI tcuCtxGetApiVersion(CUcontext ctx, unsigned int *version);
 
+/************************************
+ **
+ **    Profiler
+ **
+ ***********************************/
+typedef CUresult CUDAAPI tcuProfilerStop(void);
 
 /************************************
  ************************************/
@@ -1939,6 +1944,7 @@ extern tcuMipmappedArrayCreate         *cuMipmappedArrayCreate;
 extern tcuMipmappedArrayGetLevel       *cuMipmappedArrayGetLevel;
 extern tcuMipmappedArrayDestroy        *cuMipmappedArrayDestroy;
 
+extern tcuProfilerStop                    *cuProfilerStop;
 
 #ifdef __cplusplus
 }

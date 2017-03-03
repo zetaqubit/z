@@ -58,12 +58,6 @@ int main(int argc, char **argv)
 
     runTest(argc, argv);
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     printf("%s completed, returned %s\n",
            sampleName,
            testResult ? "OK" : "ERROR!");
@@ -111,7 +105,7 @@ void runTest(int argc, char **argv)
     //allocate mem for the result on host side
     int *hOData = (int *) malloc(memSize);
 
-    //initalize the memory
+    //initialize the memory
     for (unsigned int i = 0; i < numData; i++)
         hOData[i] = 0;
 
@@ -121,7 +115,7 @@ void runTest(int argc, char **argv)
     // allocate device memory for result
     int *dOData;
     checkCudaErrors(cudaMalloc((void **) &dOData, memSize));
-    // copy host memory to device to initialize to zers
+    // copy host memory to device to initialize to zero
     checkCudaErrors(cudaMemcpy(dOData,
                                hOData,
                                memSize,

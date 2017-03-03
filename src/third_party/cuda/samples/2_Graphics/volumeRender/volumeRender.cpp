@@ -25,7 +25,7 @@
 */
 
 // OpenGL Graphics includes
-#include <GL/glew.h>
+#include <helper_gl.h>
 #if defined (__APPLE__) || defined(MACOSX)
   #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   #include <GLUT/glut.h>
@@ -39,6 +39,7 @@
 // CUDA Runtime, Interop, and includes
 #include <cuda_runtime.h>
 #include <cuda_gl_interop.h>
+#include <cuda_profiler_api.h>
 #include <vector_types.h>
 #include <vector_functions.h>
 #include <driver_functions.h>
@@ -209,17 +210,17 @@ void display()
 #if 0
     // draw using glDrawPixels (slower)
     glRasterPos2i(0, 0);
-    glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
     glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-    glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
 #else
     // draw using texture
 
     // copy from pbo to texture
-    glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
     glBindTexture(GL_TEXTURE_2D, tex);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-    glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
 
     // draw textured quad
     glEnable(GL_TEXTURE_2D);
@@ -390,15 +391,12 @@ void cleanup()
     if (pbo)
     {
         cudaGraphicsUnregisterResource(cuda_pbo_resource);
-        glDeleteBuffersARB(1, &pbo);
+        glDeleteBuffers(1, &pbo);
         glDeleteTextures(1, &tex);
     }
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
+    // Calling cudaProfilerStop causes all profile data to be
     // flushed before the application exits
-    cudaDeviceReset();
+    checkCudaErrors(cudaProfilerStop());
 }
 
 void initGL(int *argc, char **argv)
@@ -409,11 +407,10 @@ void initGL(int *argc, char **argv)
     glutInitWindowSize(width, height);
     glutCreateWindow("CUDA volume rendering");
 
-    glewInit();
-
-    if (!glewIsSupported("GL_VERSION_2_0 GL_ARB_pixel_buffer_object"))
+    if (!isGLVersionSupported(2,0) ||
+        !areGLExtensionsSupported("GL_ARB_pixel_buffer_object"))
     {
-        printf("Required OpenGL extensions missing.");
+        printf("Required OpenGL extensions are missing.");
         exit(EXIT_SUCCESS);
     }
 }
@@ -426,15 +423,15 @@ void initPixelBuffer()
         checkCudaErrors(cudaGraphicsUnregisterResource(cuda_pbo_resource));
 
         // delete old buffer
-        glDeleteBuffersARB(1, &pbo);
+        glDeleteBuffers(1, &pbo);
         glDeleteTextures(1, &tex);
     }
 
     // create pixel buffer object for display
-    glGenBuffersARB(1, &pbo);
-    glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
-    glBufferDataARB(GL_PIXEL_UNPACK_BUFFER_ARB, width*height*sizeof(GLubyte)*4, 0, GL_STREAM_DRAW_ARB);
-    glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+    glGenBuffers(1, &pbo);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, pbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER_ARB, width*height*sizeof(GLubyte)*4, 0, GL_STREAM_DRAW_ARB);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
 
     // register this buffer object with CUDA
     checkCudaErrors(cudaGraphicsGLRegisterBuffer(&cuda_pbo_resource, pbo, cudaGraphicsMapFlagsWriteDiscard));

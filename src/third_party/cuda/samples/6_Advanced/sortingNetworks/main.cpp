@@ -10,7 +10,7 @@
  */
 
 /**
- * This sample implemenets bitonic sort and odd-even merge sort, algorithms
+ * This sample implements bitonic sort and odd-even merge sort, algorithms
  * belonging to the class of sorting networks.
  * While generally subefficient on large sequences
  * compared to algorithms with better asymptotic algorithmic complexity
@@ -141,11 +141,5 @@ int main(int argc, char **argv)
     free(h_InputVal);
     free(h_InputKey);
 
-    // cudaDeviceReset causes the driver to clean up all state. While
-    // not mandatory in normal operation, it is good practice.  It is also
-    // needed to ensure correct operation when the application is being
-    // profiled. Calling cudaDeviceReset causes all profile data to be
-    // flushed before the application exits
-    cudaDeviceReset();
     exit(flag ? EXIT_SUCCESS : EXIT_FAILURE);
 }
