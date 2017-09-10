@@ -24,3 +24,9 @@ data/genesis/caffe/*
 
 # Android Studio
 .idea/
+
+# Python
+*.pyc
+
+# IPython Notebook
+.ipynb_checkpoints/
