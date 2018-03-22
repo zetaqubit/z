@@ -1,9 +1,0 @@
-cudaroot=/home/z/Downloads/cuda_8.0.61
-libdir=${cudaroot}/lib64/stubs
-includedir=${cudaroot}/include
-
-Name: cufft
-Description: CUDA Fast Fourier Transform
-Version: 8.0
-Libs: -L${libdir} -lcufft
-Cflags: -I${includedir} 

@@ -1,9 +1,0 @@
-cudaroot=/home/z/Downloads/cuda_8.0.61
-libdir=${cudaroot}/lib64
-includedir=${cudaroot}/include
-
-Name: cuinj64
-Description: CUDA 64-bit Injection Library
-Version: 8.0
-Libs: -L${libdir} -lcuinj64
-Cflags: -I${includedir} 
