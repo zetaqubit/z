@@ -1,9 +1,0 @@
-cudaroot=/home/z/Downloads/cuda_8.0.61
-libdir=${cudaroot}/lib64
-includedir=${cudaroot}/include
-
-Name: cudart
-Description: CUDA Runtime Library
-Version: 8.0
-Libs: -L${libdir} -lcudart
-Cflags: -I${includedir} 

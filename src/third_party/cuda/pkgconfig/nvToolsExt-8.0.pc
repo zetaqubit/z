@@ -1,9 +1,0 @@
-cudaroot=/home/z/Downloads/cuda_8.0.61
-libdir=${cudaroot}/lib64
-includedir=${cudaroot}/include
-
-Name: nvToolsExt
-Description: NVIDIA Tools Extension
-Version: 8.0
-Libs: -L${libdir} -lnvToolsExt
-Cflags: -I${includedir} 

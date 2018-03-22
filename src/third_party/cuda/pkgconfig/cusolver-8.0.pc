@@ -1,9 +1,0 @@
-cudaroot=/home/z/Downloads/cuda_8.0.61
-libdir=${cudaroot}/lib64/stubs
-includedir=${cudaroot}/include
-
-Name: cusolver
-Description: CUDA Dense and Sparse Direct Linear Solvers and Eigen Solvers
-Version: 8.0
-Libs: -L${libdir} -lcusolver
-Cflags: -I${includedir} 
