@@ -1,0 +1,21 @@
+# Filter for rclone sync'ing Jupyter notebooks with Google Drive
+# to use Colab.
+# Syncs all .ipynb (excluding checkpoints) to /google_drive/git
+
+# Run from repo root dir.
+
+# Sync TO Google Drive:
+# rclone sync --filter-from rclone_filter.txt . drive_git:z
+
+# Sync FROM Google Drive:
+# rclone sync --filter-from rclone_filter.txt drive_git:z .
+
+# Mounting Google Drive:
+# rclone mount drive_git: /mnt/drive_git
+
+# Filter rules.
+- /data/**
+- /src/third_party/**
+- .ipynb_checkpoints/**
++ *.ipynb
+- *
